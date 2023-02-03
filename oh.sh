@@ -179,7 +179,7 @@ function script_menu {
 	echo ""
 	echo "   -C    set OH in CLIENT mode"
 	echo "   -P    set OH in PORTABLE mode"
-	echo "   -S    set OH in SERVER (Portable) mode"
+	echo "   -S    set OH in SERVER mode (portable)"
 	echo "   -l    set language: $OH_LANGUAGE_LIST"
 	echo "   -s    save OH configuration"
 	echo "   -X    clean/reset OH installation"
@@ -303,11 +303,12 @@ function set_oh_mode {
 		######## settings.properties language configuration
 		echo "Setting OH mode to $OH_MODE in OH configuration file -> settings.properties..."
 		sed -e "/^"MODE="/c"MODE=$OH_MODE"" -i ./$OH_DIR/rsc/settings.properties
-		echo "OH mode set to $OH_MODE"
 	else 
+		echo ""
 		echo ""
 		echo "Warning: settings.properties file not found."
 	fi
+	echo "OH mode set to $OH_MODE"
 }
 
 ###################################################################
@@ -389,7 +390,7 @@ echo "[Desktop Entry]
 	# The executable of the application, possibly with arguments
 	Exec=$OH_PATH/$SCRIPT_NAME -Z
 	# The icon to display
-	Icon=$OH_PATH/$OH_DIR/rsc/icons/oh.ico
+	Icon=$OH_PATH/oh.ico
 	# Describes whether this application needs to be run in a terminal or not
 	Terminal=true
 	# Describes the categories in which this entry should be shown
@@ -758,7 +759,6 @@ function parse_user_input {
 		DEMO_DATA="off"
 		set_oh_mode;
 		echo ""
-		echo "OH_MODE set to CLIENT mode."
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -766,7 +766,6 @@ function parse_user_input {
 		OH_MODE="PORTABLE"
 		set_oh_mode;
 		echo ""
-		echo "OH_MODE set to PORTABLE mode."
 		if (( $2==0 )); then opt="Z"; else read; fi
 		;;
 	###################################################
@@ -774,7 +773,6 @@ function parse_user_input {
 		OH_MODE="SERVER"
 		set_oh_mode;
 		echo ""
-		echo "OH_MODE set to SERVER mode."
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -801,8 +799,9 @@ function parse_user_input {
 			echo "Error - OH_MODE set to CLIENT mode. Cannot run with Demo data, exiting."
 			exit 1;
 		else
-			OH_MODE="PORTABLE"
 			DEMO_DATA="on"
+			# set database name
+			DATABASE_NAME="ohdemo"
 			echo "Demo data set to on."
 		fi
 
@@ -1154,9 +1153,7 @@ if [ "$DEMO_DATA" = "on" ]; then
 		echo "Found SQL demo database, starting OH with Demo data..."
 		DB_CREATE_SQL=$DB_DEMO
 		# reset database if exists
-		clean_database;  
-		# set DATABASE_NAME
-		#DATABASE_NAME="ohdemo" # TBD
+		# clean_database;  
 	else
 		echo "Error: no $DB_DEMO found! Exiting."
 		exit 1
