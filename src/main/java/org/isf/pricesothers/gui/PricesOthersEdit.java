@@ -150,15 +150,17 @@ public class PricesOthersEdit extends JDialog {
 
 				boolean result = false;
 				try {
-					if (insert) {      // inserting
-						result = pricesOthersManager.newOther(pOther);
-						if (result) {
+					if (insert) {	// inserting
+						PricesOthers insertedPricesOthers = pricesOthersManager.newOther(pOther);
+						if (insertedPricesOthers != null) {
 							fireOtherInserted();
+							result = true;
 						}
-					} else {             // updating
-						result = pricesOthersManager.updateOther(pOther);
-						if (result) {
+					} else {	// updating
+						PricesOthers updatedPricesOthers = pricesOthersManager.updateOther(pOther);
+						if (updatedPricesOthers != null) {
 							fireOtherUpdated();
+							result = true;
 						}
 					}
 				} catch (OHServiceException e) {

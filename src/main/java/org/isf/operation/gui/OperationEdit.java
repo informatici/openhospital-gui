@@ -291,15 +291,17 @@ public class OperationEdit extends JDialog {
 						operation.setMajor(0);
 					}
 
-					boolean result;
+					boolean result = false;
 					if (insert) { // inserting
-						result = operationBrowserManager.newOperation(operation);
-						if (result) {
+						Operation insertedOperation = operationBrowserManager.newOperation(operation);
+						if (insertedOperation != null) {
+							result = true;
 							fireOperationInserted();
 						}
 					} else { // updating
-						result = operationBrowserManager.updateOperation(operation);
-						if (result) {
+						Operation updatedOperation = operationBrowserManager.updateOperation(operation);
+						if (updatedOperation != null) {
+							result = true;
 							fireOperationUpdated();
 						}
 					}

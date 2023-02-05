@@ -136,16 +136,18 @@ public class ListEdit extends JDialog {
 
 				boolean result = false;
 				try {
-					if (insert) {      // inserting
-						result = priceListManager.newList(list);
-						if (result) {
+					if (insert) {	// inserting
+						PriceList insertedPriceList = priceListManager.newList(list);
+						if (insertedPriceList != null) {
 							fireListInserted();
+							result = true;
 						}
 					}
-					else {             // updating
-						result = priceListManager.updateList(list);
-						if (result) {
+					else {	// updating
+						PriceList updatedPriceList = priceListManager.updateList(list);
+						if (updatedPriceList != null) {
 							fireListUpdated();
+							result = true;
 						}
 					}
 				} catch (OHServiceException e) {

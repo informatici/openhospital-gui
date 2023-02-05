@@ -1897,7 +1897,10 @@ public class AdmissionBrowser extends ModalJFrame {
 						OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 					} else {
 						try {
-							result = admissionBrowserManager.newAdmission(admission);
+							Admission insertedAdmission = admissionBrowserManager.newAdmission(admission);
+							if (insertedAdmission != null) {
+								result = true;
+							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -1913,7 +1916,10 @@ public class AdmissionBrowser extends ModalJFrame {
 						OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 					} else {
 						try {
-							result = admissionBrowserManager.updateAdmission(admission);
+							Admission updatedAdmission = admissionBrowserManager.updateAdmission(admission);
+							if (updatedAdmission != null) {
+								result = true;
+							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}

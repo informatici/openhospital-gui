@@ -203,11 +203,10 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 				medicaldsrstockmovType.setCode(codeTextField.getText());
 				medicaldsrstockmovType.setType((String) typeComboBox.getSelectedItem());
 
-				boolean result;
 				if (insert) { // inserting
 					try {
-						result = medicaldsrstockmovTypeBrowserManager.newMedicaldsrstockmovType(medicaldsrstockmovType);
-						if (result) {
+						MovementType insertedMovementType = medicaldsrstockmovTypeBrowserManager.newMedicaldsrstockmovType(medicaldsrstockmovType);
+						if (insertedMovementType != null) {
 							fireMedicaldsrstockmovInserted(medicaldsrstockmovType);
 							dispose();
 						} else {
@@ -221,8 +220,8 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = medicaldsrstockmovTypeBrowserManager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
-							if (result) {
+							MovementType updatedMovementType = medicaldsrstockmovTypeBrowserManager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
+							if (updatedMovementType != null) {
 								fireMedicaldsrstockmovUpdated();
 								dispose();
 							} else {

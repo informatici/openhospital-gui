@@ -195,7 +195,8 @@ public class ExamRowEdit extends JDialog {
 				examRow.setExamCode(exam);
 
 				try {
-					if (examRowBrowsingManager.newExamRow(examRow)) {
+					ExamRow insertedExamRow = examRowBrowsingManager.newExamRow(examRow);
+					if (insertedExamRow != null) {
 						fireExamRowInserted();
 						dispose();
 					}

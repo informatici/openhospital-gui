@@ -726,18 +726,24 @@ public class PatVacEdit extends JDialog {
 				patVac.setPatient(selectedPatient);
 				patVac.setLock(0);
 
-				boolean result;
+				boolean result = false;
 				// handling db insert/update
 				if (insert) {
 					try {
-						result = patVacManager.newPatientVaccine(patVac);
+						PatientVaccine insertedPatientVaccine = patVacManager.newPatientVaccine(patVac);
+						if (insertedPatientVaccine != null) {
+							result = true;
+						}
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 						return;
 					}
 				} else {
 					try {
-						result = patVacManager.updatePatientVaccine(patVac);
+						PatientVaccine updatedPatientVaccine = patVacManager.updatePatientVaccine(patVac);
+						if (updatedPatientVaccine != null) {
+							result = true;
+						}
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 						return;

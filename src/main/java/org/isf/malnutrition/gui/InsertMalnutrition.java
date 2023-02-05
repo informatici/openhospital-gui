@@ -183,19 +183,19 @@ public class InsertMalnutrition extends JDialog {
 			maln.setDateSupp(suppDate.getDateStartOfDay());
 			maln.setDateConf(confDate.getDateStartOfDay());
 
-			if (inserting) {
-				boolean inserted = false;
+			if (inserting) {	//inserting
+				Malnutrition insertedMalnutrition = null;
 				try {
-					inserted = malnutritionManager.newMalnutrition(maln);
+					insertedMalnutrition = malnutritionManager.newMalnutrition(maln);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
-				if (inserted) {
+				if (insertedMalnutrition != null) {
 					fireMalnutritionInserted();
 					dispose();
 				}
 
-			} else {
+			} else {	//updating
 				Malnutrition updatedMaln = null;
 				try {
 					updatedMaln = malnutritionManager.updateMalnutrition(maln);

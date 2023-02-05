@@ -201,8 +201,8 @@ public class MedicalTypeBrowserEdit extends JDialog {
 				boolean result;
 				if (insert) { // inserting
 					try {
-						result = medicalTypeBrowserManager.newMedicalType(medicalType);
-						if (result) {
+						MedicalType insertedMedicalType = medicalTypeBrowserManager.newMedicalType(medicalType);
+						if (insertedMedicalType != null) {
 							fireMedicalInserted();
 							dispose();
 						} else {
@@ -216,8 +216,8 @@ public class MedicalTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = medicalTypeBrowserManager.updateMedicalType(medicalType);
-							if (result) {
+							MedicalType updatedMedicalType = medicalTypeBrowserManager.updateMedicalType(medicalType);
+							if (updatedMedicalType != null) {
 								fireMedicalUpdated();
 								dispose();
 							} else {

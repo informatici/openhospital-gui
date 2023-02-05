@@ -209,7 +209,8 @@ public class ExamTypeEdit extends JDialog {
 					examType.setCode(codeTextField.getText());
 
 					if (insert) {     // inserting
-						if (examTypeBrowserManager.newExamType(examType)) {
+						ExamType newExamType = examTypeBrowserManager.newExamType(examType);
+						if (newExamType != null) {
 							fireExamTypeInserted();
 							dispose();
 						} else {
@@ -219,7 +220,8 @@ public class ExamTypeEdit extends JDialog {
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							if (examTypeBrowserManager.updateExamType(examType)) {
+							ExamType updatedExamType = examTypeBrowserManager.newExamType(examType);
+							if (updatedExamType != null) {
 								fireExamTypeUpdated();
 								dispose();
 							} else {

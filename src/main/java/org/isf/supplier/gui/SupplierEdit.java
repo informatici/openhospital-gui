@@ -273,23 +273,25 @@ public class SupplierEdit extends JDialog {
 					supplier.setSupDeleted('N');
 				}
 				boolean result = false;
-				if (insert) { // inserting
+				if (insert) {	// inserting
 					try {
-						result = supplierBrowserManager.saveOrUpdate(supplier);
+						Supplier insertedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
+						if (insertedSupplier != null) {
+							fireSupplierInserted();
+							result = true;
+						}
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
-					if (result) {
-						fireSupplierInserted();
-					}
-				} else { // updating
+				} else {	// updating
 					try {
-						result = supplierBrowserManager.saveOrUpdate(supplier);
+						Supplier updatedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
+						if (updatedSupplier != null) {
+							fireSupplierUpdated();
+							result = true;
+						}
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
-					}
-					if (result) {
-						fireSupplierUpdated();
 					}
 				}
 				if (!result) {
