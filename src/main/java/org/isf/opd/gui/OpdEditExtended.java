@@ -1838,7 +1838,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				boolean isNextVisit = false;
 				LocalDateTime nextVisitDateTime = opdNextVisitDate.getLocalDateTimePermissive();
 				if (nextVisitDateTime != null) {
-					if (nextVisitDateTime.getMinute() == 0) {
+					if (nextVisitDateTime.getMinute() == 0 && nextVisitDateTime.getHour() == 0) {
 						MessageDialog.error(OpdEditExtended.this, "angal.opd.pleasechooseavalidtimeforthenextvisit.msg");
 						return;
 					}
