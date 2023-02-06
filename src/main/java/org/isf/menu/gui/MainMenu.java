@@ -476,6 +476,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	private void updateSessionAudit() {
 		try {
+			if (sessionAuditId == null) {
+				return;
+			}
 			Optional<SessionAudit> sa = sessionAuditManager.getSessionAudit(this.sessionAuditId);
 			if (sa.isPresent()) {
 				SessionAudit sessionAudit = sa.get();
