@@ -284,6 +284,13 @@ function set_path {
 			exit 1
 		fi
 	fi
+	# set original database name
+	ORIG_DATABASE_NAME="$DATABASE_NAME"
+	# set original data base_dir
+	DATA_BASEDIR=$DATA_DIR
+	# set DATA_DIR with db name
+	DATA_DIR=$DATA_BASEDIR/$DATABASE_NAME
+
 	OH_PATH_ESCAPED=$(echo $OH_PATH | sed -e 's/\//\\\//g')
 	DATA_DIR_ESCAPED=$(echo $DATA_DIR | sed -e 's/\//\\\//g')
 	TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
@@ -679,7 +686,7 @@ function clean_database {
 	get_confirmation;
 	echo "Removing data..."
 	# remove database files
-	rm -rf ./"$DATA_DIR"/*
+	rm -rf ./"$DATA_BASEDIR"/*
 	# remove socket and pid file
 	rm -rf ./$TMP_DIR/*
 }
@@ -812,11 +819,12 @@ function parse_user_input {
 			echo "Error - OH_MODE set to CLIENT mode. Cannot run with Demo data. Exiting."
 			exit 1;
 		fi	
+		if (( $2==0 )); then DEMO_DATA="off"; fi # workaround for -D option
 		case "$DEMO_DATA" in
 			*on*)
 				DEMO_DATA="off";
 				# set database name
-				DATABASE_NAME="oh"
+				DATABASE_NAME="$ORIG_DATABASE_NAME"
 			;;
 			*off*)
 				DEMO_DATA="on";
@@ -824,8 +832,12 @@ function parse_user_input {
 				DATABASE_NAME=$DEMO_DATABASE
 			;;
 		esac
-		WRITE_CONFIG_FILES=on;
-		write_config_files;
+
+		# set DATA_DIR with db name
+		DATA_DIR=$DATA_BASEDIR/$DATABASE_NAME
+		DATA_DIR_ESCAPED=$(echo $DATA_DIR | sed -e 's/\//\\\//g')
+
+		WRITE_CONFIG_FILES=on; write_config_files;
 
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
@@ -886,8 +898,6 @@ function parse_user_input {
 		else
 			read -n 2 -p "Please select language [$OH_LANGUAGE_LIST]: " OH_LANGUAGE
 		fi
-		# create config files if not present
-		#write_config_files;
 		set_language;
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
@@ -907,10 +917,7 @@ function parse_user_input {
 
 		echo "Do you want to save entered settings to OH configuration files?"
 		get_confirmation;
-		WRITE_CONFIG_FILES="on"
-		write_config_files;
-		#set_language;
-		#set_log_level;
+		WRITE_CONFIG_FILES="on"; write_config_files;
 		echo "Done!"
 		echo ""
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
@@ -923,7 +930,7 @@ function parse_user_input {
 		# check if portable mode is on
 		if [ "$OH_MODE" != "CLIENT" ]; then
 			# check if database already exists
-			if [ -d ./"$DATA_DIR"/$DATABASE_NAME ]; then
+			if [ -d ./"$DATA_DIR" ]; then
 				config_database;
 				start_database;
 			else
@@ -975,7 +982,7 @@ function parse_user_input {
 		echo ""
 		echo "Do you want to save current settings to OH configuration files?"
 		get_confirmation;
-		# do not overwrite files if existing
+		# do not overwrite configuration files if existing
 		write_config_files;
 		set_oh_mode;
 		set_language;
@@ -1173,12 +1180,13 @@ if [ "$DEMO_DATA" = "on" ]; then
 		echo "Error - OH_MODE set to $OH_MODE mode. Cannot run with Demo data. Exiting."
 		exit 1;
 	fi
+	
+	# set database name
+	DATABASE_NAME=$DEMO_DATABASE
 
 	if [ -f ./$SQL_DIR/$DB_DEMO ]; then
 		echo "Found SQL demo database, starting OH with Demo data..."
 		DB_CREATE_SQL=$DB_DEMO
-		# reset database if exists
-		# clean_database;  
 	else
 		echo "Error: no $DB_DEMO found! Exiting."
 		exit 1
@@ -1211,7 +1219,7 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	# config database
 	config_database;
 	# check if OH database already exists
-	if [ ! -d ./"$DATA_DIR"/$DATABASE_NAME ]; then
+	if [ ! -d ./"$DATA_DIR" ]; then
 		echo "OH database not found, starting from scratch..."
 		# prepare database
 		initialize_database;
