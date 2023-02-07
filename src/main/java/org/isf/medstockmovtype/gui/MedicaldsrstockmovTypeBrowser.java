@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements MedicaldsrstockmovTypeListener{
+public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements MedicaldsrstockmovTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<MovementType> pMedicaldsrstockmovType;
@@ -57,7 +57,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {80, 200, 40};
+	private int[] pColumnWidth = { 80, 200, 40 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
@@ -68,7 +68,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	private JTable jTable = null;
 	private MedicaldsrstockmovTypeBrowserModel model;
 	private int selectedrow;
-	private MedicaldsrstockmovTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 	private MovementType medicaldsrstockmovType = null;
 	private final JFrame myFrame;
 	
@@ -116,15 +116,15 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				MovementType mdsr = new MovementType("","","");
-				MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,mdsr, true);
+				MovementType mdsr = new MovementType("", "", "");
+				MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame, mdsr, true);
 				newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
 	}
-	
+
 	/**
 	 * This method initializes jEditButton	
 	 * 	
@@ -140,7 +140,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					medicaldsrstockmovType = (MovementType) (model.getValueAt(selectedrow, -1));
-					MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,medicaldsrstockmovType, false);
+					MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame, medicaldsrstockmovType, false);
 					newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -183,7 +183,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 						boolean deleted;
 
 						try {
-							deleted = manager.deleteMedicaldsrstockmovType(movType);
+							deleted = medicaldsrstockmovTypeBrowserManager.deleteMedicaldsrstockmovType(movType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -200,8 +200,8 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new MedicaldsrstockmovTypeBrowserModel();
 			jTable = new JTable(model);
@@ -217,7 +217,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 
 		public MedicaldsrstockmovTypeBrowserModel() {
 			try {
-				pMedicaldsrstockmovType = manager.getMedicaldsrstockmovType();
+				pMedicaldsrstockmovType = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
 			} catch (OHServiceException e) {
 				pMedicaldsrstockmovType = null;
 				OHServiceExceptionUtil.showMessages(e);

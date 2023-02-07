@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -45,7 +45,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DischargeTypeBrowserEdit extends JDialog{
+public class DischargeTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList dischargeTypeListeners = new EventListenerList();
@@ -63,27 +63,32 @@ public class DischargeTypeBrowserEdit extends JDialog{
     	dischargeTypeListeners.remove(DischargeTypeListener.class, listener);
     }
 
-    private void fireDischargeInserted(DischargeType anDischargeType) {
-        AWTEvent event = new AWTEvent(anDischargeType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireDischargeInserted(DischargeType anDischargeType) {
+		AWTEvent event = new AWTEvent(anDischargeType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DischargeTypeListener) listener).dischargeTypeInserted(event);
-	    }
-    }
-    private void fireDischargeUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DischargeTypeListener) listener).dischargeTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireDischargeUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DischargeTypeListener) listener).dischargeTypeUpdated(event);
-	    }
-    }
-    
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DischargeTypeListener) listener).dischargeTypeUpdated(event);
+		}
+	}
+
+	private DischargeTypeBrowserManager dischargeTypeBrowserManager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -102,10 +107,10 @@ public class DischargeTypeBrowserEdit extends JDialog{
 	 * because we need to update them
 	 */
 	public DischargeTypeBrowserEdit(JFrame owner, DischargeType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		dischargeType = old;//disease will be used for every operation
-		lastdescription= dischargeType.getDescription();
+		dischargeType = old; //dischargeType will be used for every operation
+		lastdescription = dischargeType.getDescription();
 		initialize();
 	}
 
@@ -191,14 +196,13 @@ public class DischargeTypeBrowserEdit extends JDialog{
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 
 				dischargeType.setDescription(descriptionTextField.getText());
 				dischargeType.setCode(codeTextField.getText());
 				boolean result;
 				if (insert) {      // inserting
 					try {
-						result = manager.newDischargeType(dischargeType);
+						result = dischargeTypeBrowserManager.newDischargeType(dischargeType);
 						if (result) {
 							fireDischargeInserted(dischargeType);
 						}
@@ -215,7 +219,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
 						dispose();
 					} else {
 						try {
-							result = manager.updateDischargeType(dischargeType);
+							result = dischargeTypeBrowserManager.updateDischargeType(dischargeType);
 							if (result) {
 								fireDischargeUpdated();
 							}

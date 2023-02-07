@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,57 +21,105 @@
  */
 package org.isf.utils.image;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import org.imgscalr.Scalr;
 
 public final class ImageUtil {
 
 	private ImageUtil() {
 	}
 
-	public static BufferedImage scaleImage(final BufferedImage src, final int boundWidth, final int boundHeight) {
-		final int originalWidth = src.getWidth();
-		final int originalHeight = src.getHeight();
-		int newWidth = originalWidth;
-		int newHeight = originalHeight;
-
-		// first check if we need to scale width
-		if (originalWidth > boundWidth) {
-			// scale width to fit
-			newWidth = boundWidth;
-			// scale height to maintain aspect ratio
-			newHeight = (newWidth * originalHeight) / originalWidth;
+	public static Image scaleImage(Image image, int maxDim) {
+		double scale = (double) maxDim / (double) image.getHeight(null);
+		if (image.getWidth(null) > image.getHeight(null)) {
+			scale = (double) maxDim / (double) image.getWidth(null);
 		}
+		int scaledW = (int) (scale * image.getWidth(null));
+		int scaledH = (int) (scale * image.getHeight(null));
 
-		// then check if we need to scale even with the new height
-		if (newHeight > boundHeight) {
-			// scale height to fit instead
-			newHeight = boundHeight;
-			// scale width to maintain aspect ratio
-			newWidth = (newHeight * originalWidth) / originalHeight;
+		return image.getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH);
+	}
+
+	public static BufferedImage scaleImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+		int originalWidth = originalImage.getWidth();
+		int originalHeight = originalImage.getHeight();
+		if (originalWidth > targetWidth || originalHeight > targetHeight) {
+			return Scalr.resize(originalImage, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, targetWidth, targetHeight, Scalr.OP_ANTIALIAS);
 		}
-
-		final BufferedImage resizedImg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g2 = resizedImg.createGraphics();
-		g2.setBackground(Color.WHITE);
-		g2.clearRect(0, 0, newWidth, newHeight);
-		g2.drawImage(src, 0, 0, newWidth, newHeight, null);
-		g2.dispose();
-		return resizedImg;
+		return originalImage;
 	}
 
 	public static byte[] imageToByte(final BufferedImage bufferedImage) {
 		try {
 			final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-			ImageIO.write(bufferedImage, "jpg", outStream);
+			ImageIO.write(bufferedImage, "png", outStream);
 			return outStream.toByteArray();
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to convert image to byte array", e);
 		}
 	}
+
+	public static BufferedImage fixImageFileSize(BufferedImage bufferedImage, int maximumFileSize) throws IOException {
+		return fixImageFileSize(bufferedImage, maximumFileSize, "png");
+	}
+
+	public static BufferedImage fixImageFileSize(BufferedImage bufferedImage, int maximumFileSize, String fileType)
+			throws IOException {
+		long arrSize = getArraySize(bufferedImage, fileType);
+		while (arrSize > maximumFileSize) {
+			long lastSize = arrSize;
+			int newTargetSize = (bufferedImage.getTileWidth() - ((bufferedImage.getTileWidth() / 100) * 10));
+			bufferedImage = Scalr.resize(bufferedImage, newTargetSize);
+			arrSize = getArraySize(bufferedImage, fileType);
+			if (arrSize == lastSize) {
+				break;
+			} 
+		}
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, fileType, baos);
+		return ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
+	}	
+
+	private static long getArraySize(BufferedImage bufferedImage, String fileType) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, fileType, baos);
+		baos.flush();
+		byte[] byteImage = baos.toByteArray();
+		long size = byteImage.length;
+		baos.close();
+		return size;	
+	}
+	
+	/**
+	 * Converts a given Image into a BufferedImage
+	 *
+	 * @param img The Image to be converted
+	 * @return The converted BufferedImage
+	 */
+	public static BufferedImage toBufferedImage(Image img) {
+		
+	    if (img instanceof BufferedImage) {
+	        return (BufferedImage) img;
+	    }
+
+	    // Create a buffered image with transparency
+	    BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+	    // Draw the image on to the buffered image
+	    Graphics2D bGr = bimage.createGraphics();
+	    bGr.drawImage(img, 0, 0, null);
+	    bGr.dispose();
+
+	    // Return the buffered image
+	    return bimage;
+	}
+
 }

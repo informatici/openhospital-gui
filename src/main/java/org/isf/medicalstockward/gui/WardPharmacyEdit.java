@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -93,12 +93,10 @@ public class WardPharmacyEdit extends JDialog {
 	private Double maxQty;
 	private int movSelectedAge;
 	private float movSelectedWeight;
-	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private List<Patient> pat = new ArrayList<>();
-	private List<MedicalWard> medList = null;
-	
-//	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel"; //$NON-NLS-1$
+	private List<MedicalWard> medList;
 	
 	private EventListenerList movementWardListeners = new EventListenerList();
 	
@@ -115,15 +113,16 @@ public class WardPharmacyEdit extends JDialog {
 	public void removeMovementWardListener(MovementWardListeners listener) {
 		movementWardListeners.remove(MovementWardListeners.class, listener);
 	}
-	
+
 	private void fireMovementWardUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = movementWardListeners.getListeners(MovementWardListeners.class);
-		for (int i = 0; i < listeners.length; i++) {
-			((MovementWardListeners)listeners[i]).movementUpdated(event);
+		for (EventListener listener : listeners) {
+			((MovementWardListeners) listener).movementUpdated(event);
 		}
 	}
 	
@@ -150,15 +149,15 @@ public class WardPharmacyEdit extends JDialog {
 	private JTextField getJTextFieldSearchPatient() {
 		if (jTextFieldSearchPatient == null) {
 			jTextFieldSearchPatient = new JTextField();
-			jTextFieldSearchPatient.setPreferredSize(new Dimension(100,20));
+			jTextFieldSearchPatient.setPreferredSize(new Dimension(100, 20));
 			jTextFieldSearchPatient.addKeyListener(new KeyListener() {
 
 				@Override
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
-				     if (key == KeyEvent.VK_ENTER) {
-				    	 jSearchButton.doClick();
-				     }
+					if (key == KeyEvent.VK_ENTER) {
+						jSearchButton.doClick();
+					}
 				}
 
 				@Override
@@ -169,27 +168,6 @@ public class WardPharmacyEdit extends JDialog {
 				public void keyTyped(KeyEvent e) {
 				}
 			});
-//			jTextFieldSearchPatient.addKeyListener(new KeyListener() {
-//				public void keyTyped(KeyEvent e) 
-//				{
-//					lastKey = ""; //$NON-NLS-1$
-//					String s = "" + e.getKeyChar(); //$NON-NLS-1$
-//					if (Character.isLetterOrDigit(e.getKeyChar())) {
-//						lastKey = s;
-//					}
-//					s = jTextFieldSearchPatient.getText() + lastKey;
-//					s.trim();
-//					
-//					jComboBoxPatients.removeAllItems();
-//					getJComboBoxPatients(s);
-//				}
-//
-//				//@Override
-//				public void keyPressed(KeyEvent e) {}
-//
-//				//@Override
-//				public void keyReleased(KeyEvent e) {}
-//			});
 		}
 		return jTextFieldSearchPatient;
 	}
@@ -202,7 +180,7 @@ public class WardPharmacyEdit extends JDialog {
 			jSearchButton.addActionListener(actionEvent -> {
 				jComboBoxPatients.removeAllItems();
 				try {
-					pat = patBrowser.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
+					pat = patientBrowserManager.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 					pat = new ArrayList<>();
@@ -214,7 +192,6 @@ public class WardPharmacyEdit extends JDialog {
 	}
 	
 	private JButton getJButtonTrashPatient() {
-		
 		if (jButtonTrashPatient == null) {
 			jButtonTrashPatient = new JButton();
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/trash_button.png")); //$NON-NLS-1$
@@ -237,16 +214,16 @@ public class WardPharmacyEdit extends JDialog {
 		
 		return jButtonTrashPatient;
 	}
-	
+
 	private JTextField getJTextFieldSearchMedical() {
 		if (jTextFieldSearchMedical == null) {
 			jTextFieldSearchMedical = new JTextField();
-			jTextFieldSearchMedical.setPreferredSize(new Dimension(100,20));
-			
+			jTextFieldSearchMedical.setPreferredSize(new Dimension(100, 20));
+
 			jTextFieldSearchMedical.addKeyListener(new KeyListener() {
+
 				@Override
-				public void keyTyped(KeyEvent e)
-				{
+				public void keyTyped(KeyEvent e) {
 					lastKey = ""; //$NON-NLS-1$
 					String s = "" + e.getKeyChar(); //$NON-NLS-1$
 					if (Character.isLetterOrDigit(e.getKeyChar())) {
@@ -254,27 +231,25 @@ public class WardPharmacyEdit extends JDialog {
 					}
 					s = jTextFieldSearchMedical.getText() + lastKey;
 					s = s.trim();
-					
+
 					jComboBoxDrugs.removeAllItems();
 					getJComboBoxDrugs(s);
 				}
-	
 
-				//@Override
 				@Override
-				public void keyPressed(KeyEvent e) {}
+				public void keyPressed(KeyEvent e) {
+				}
 
-				//@Override
 				@Override
-				public void keyReleased(KeyEvent e) {}
-				
+				public void keyReleased(KeyEvent e) {
+				}
+
 			});
 		}
 		return jTextFieldSearchMedical;
 	}
 	
 	private JButton getJButtonTrashMedical() {
-		
 		if (jButtonTrashMedical == null) {
 			jButtonTrashMedical = new JButton();
 			jButtonTrashMedical.setIcon(new ImageIcon("rsc/icons/trash_button.png")); //$NON-NLS-1$
@@ -401,8 +376,8 @@ public class WardPharmacyEdit extends JDialog {
 			Double startQty = 0.;
 			Double minQty = 0.;
 			Double stepQty = 0.5;
-			jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty,minQty,maxQty,stepQty));
-			jSpinnerQty.setPreferredSize(new Dimension(50,20));
+			jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty, minQty, maxQty, stepQty));
+			jSpinnerQty.setPreferredSize(new Dimension(50, 20));
 			if (movSelected != null) {
 				jSpinnerQty.setValue(movSelected.getQuantity());
 			}
@@ -411,8 +386,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelQty() {
-		JLabel jLabelQty= new JLabel();
-		jLabelQty.setText(MessageBundle.getMessage("angal.common.quantity.txt"));
+		JLabel jLabelQty = new JLabel(MessageBundle.getMessage("angal.common.quantity.txt"));
 		return jLabelQty;
 	}
 
@@ -428,20 +402,20 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JComboBox getJComboBoxPatients(String s) {
-		
+
 		String key = s;
 		String[] s1;
-				
+
 		if (jComboBoxPatients == null) {
 			jComboBoxPatients = new JComboBox();
-			jComboBoxPatients.setPreferredSize(new Dimension(200,20));
+			jComboBoxPatients.setPreferredSize(new Dimension(200, 20));
 		}
 		if (key == null || key.compareTo("") == 0) { //$NON-NLS-1$
 			jComboBoxPatients.addItem(MessageBundle.getMessage("angal.medicalstockwardedit.selectapatient")); //$NON-NLS-1$
 		}
-		
+
 		for (Patient elem : pat) {
-			if (key != null)	{
+			if (key != null) {
 				s1 = key.split(" ");
 				int a = 0;
 				for (int i = 0; i < s1.length; i++) {
@@ -456,17 +430,17 @@ public class WardPharmacyEdit extends JDialog {
 				jComboBoxPatients.addItem(elem);
 			}
 		}
-		
+
 		//Workaround for one item only
 		if (jComboBoxPatients.getItemCount() == 1) {
-			movSelectedPatient=(Patient)jComboBoxPatients.getSelectedItem();
+			movSelectedPatient = (Patient) jComboBoxPatients.getSelectedItem();
 		}
 		//Workaround for first item
 		if (jComboBoxPatients.getItemCount() > 0) {
 			Object item = jComboBoxPatients.getItemAt(0);
 			if (item instanceof Patient) {
-				movSelectedPatient=(Patient)item;
-			} 
+				movSelectedPatient = (Patient) item;
+			}
 		}
 		jTextFieldSearchPatient.requestFocus();
 		return jComboBoxPatients;
@@ -574,14 +548,12 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelPatient() {
-		JLabel jLabelPatient = new JLabel();
-		jLabelPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.patient")); //$NON-NLS-1$
+		JLabel jLabelPatient = new JLabel(MessageBundle.getMessage("angal.medicalstockwardedit.patient"));
 		return jLabelPatient;
 	}
 	
 	private JLabel getJLabelInternalUse() {
-		JLabel jLabelInternalUse = new JLabel();
-		jLabelInternalUse.setText(MessageBundle.getMessage("angal.medicalstockwardedit.internaluse")); //$NON-NLS-1$
+		JLabel jLabelInternalUse = new JLabel(MessageBundle.getMessage("angal.medicalstockwardedit.internaluse"));
 		return jLabelInternalUse;
 	}
 
@@ -591,10 +563,10 @@ public class WardPharmacyEdit extends JDialog {
 		if (jComboBoxDrugs == null) {
 			jComboBoxDrugs = new JComboBox();
 			jComboBoxDrugs.setDoubleBuffered(false);
-			jComboBoxDrugs.setPreferredSize(new Dimension(400,20));
+			jComboBoxDrugs.setPreferredSize(new Dimension(400, 20));
 			jComboBoxDrugs.setBorder(null);
 		}
-		
+
 		if (key == null || key.compareTo("") == 0) { //$NON-NLS-1$
 			jComboBoxDrugs.addItem(MessageBundle.getMessage("angal.medicalstockwardedit.selectadrug")); //$NON-NLS-1$
 		}
@@ -609,19 +581,18 @@ public class WardPharmacyEdit extends JDialog {
 			}
 
 		}
-		
+
 		//Workaround for one item only
 		if (jComboBoxDrugs.getItemCount() == 1) {
-			movSelectedMedical=(Medical)jComboBoxDrugs.getSelectedItem();
+			movSelectedMedical = (Medical) jComboBoxDrugs.getSelectedItem();
 		}
 		//Workaround for first item
 		if (jComboBoxDrugs.getItemCount() > 0) {
-			
+
 			if (jComboBoxDrugs.getItemAt(0) instanceof Patient) {
-				movSelectedMedical=(Medical)jComboBoxDrugs.getItemAt(0);
+				movSelectedMedical = (Medical) jComboBoxDrugs.getItemAt(0);
 			}
 		}
-		
 		return jComboBoxDrugs;
 	}
 
@@ -638,8 +609,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelDrug() {
-		JLabel jLabelDrug = new JLabel();
-		jLabelDrug.setText(MessageBundle.getMessage("angal.medicalstockwardedit.drug")); //$NON-NLS-1$
+		JLabel jLabelDrug = new JLabel(MessageBundle.getMessage("angal.medicalstockwardedit.drug"));
 		return jLabelDrug;
 	}
 

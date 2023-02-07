@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -45,7 +45,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DicomTypeEdit extends JDialog{
+public class DicomTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList dicomTypeListeners = new EventListenerList();
@@ -63,27 +63,32 @@ public class DicomTypeEdit extends JDialog{
     	dicomTypeListeners.remove(DicomTypeListener.class, listener);
     }
 
-    private void fireDicomTypeInserted(DicomType anDicomType) {
-        AWTEvent event = new AWTEvent(anDicomType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireDicomTypeInserted(DicomType anDicomType) {
+		AWTEvent event = new AWTEvent(anDicomType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DicomTypeListener) listener).dicomTypeInserted(event);
-	    }
-    }
-    private void fireDicomUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DicomTypeListener) listener).dicomTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireDicomUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DicomTypeListener) listener).dicomTypeUpdated(event);
-	    }
-    }
-    
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DicomTypeListener) listener).dicomTypeUpdated(event);
+		}
+	}
+
+	private DicomTypeBrowserManager dicomTypeBrowserManager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -101,10 +106,10 @@ public class DicomTypeEdit extends JDialog{
      * because we need to update them
 	 */
 	public DicomTypeEdit(JFrame owner, DicomType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		dicomType = old;
-		lastdescription= dicomType.getDicomTypeDescription();
+		lastdescription = dicomType.getDicomTypeDescription();
 		initialize();
 	}
 
@@ -190,14 +195,13 @@ public class DicomTypeEdit extends JDialog{
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 
 				dicomType.setDicomTypeDescription(descriptionTextField.getText());
 				dicomType.setDicomTypeID(codeTextField.getText());
 				boolean result;
 				if (insert) {    // inserting
 					try {
-						result = manager.newDicomType(dicomType);
+						result = dicomTypeBrowserManager.newDicomType(dicomType);
 						if (result) {
 							fireDicomTypeInserted(dicomType);
 						}
@@ -214,7 +218,7 @@ public class DicomTypeEdit extends JDialog{
 						dispose();
 					} else {
 						try {
-							result = manager.updateDicomType(dicomType);
+							result = dicomTypeBrowserManager.updateDicomType(dicomType);
 							if (result) {
 								fireDicomUpdated();
 							}

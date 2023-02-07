@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -47,7 +47,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeListener{
+public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<DeliveryType> pDeliveryType;
@@ -55,7 +55,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {80, 200};
+	private int[] pColumnWidth = { 80, 200 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
@@ -66,7 +66,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	private JTable jTable = null;
 	private DeliveryTypeBrowserModel model;
 	private int selectedrow;
-	private DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
+	private DeliveryTypeBrowserManager deliveryTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 	private DeliveryType deliveryType = null;
 	private final JFrame myFrame;
 	
@@ -114,8 +114,8 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				deliveryType = new DeliveryType("","");
-				DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, true);
+				deliveryType = new DeliveryType("", "");
+				DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame, deliveryType, true);
 				newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -138,7 +138,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					deliveryType = (DeliveryType) (model.getValueAt(selectedrow, -1));
-					DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, false);
+					DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame, deliveryType, false);
 					newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -177,7 +177,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 					DeliveryType delType = (DeliveryType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.dlvrtype.deletedeliverytype.fmt.msg", delType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryType(delType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (deliveryTypeBrowserManager.deleteDeliveryType(delType))) {
 							pDeliveryType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -191,7 +191,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DeliveryTypeBrowserModel();
 			jTable = new JTable(model);
@@ -204,11 +204,10 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	class DeliveryTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
 		public DeliveryTypeBrowserModel() {
 			try {
-				pDeliveryType = manager.getDeliveryType();
+				pDeliveryType = deliveryTypeBrowserManager.getDeliveryType();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

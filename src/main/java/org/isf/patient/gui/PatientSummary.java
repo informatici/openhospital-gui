@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -40,10 +40,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.utils.image.ImageUtil;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +66,7 @@ public class PatientSummary {
 	private int borderThickness = 10;
 	private int imageMaxWidth = 140;
 
-	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	public PatientSummary(Patient patient) {
 		super();
@@ -82,8 +84,7 @@ public class PatientSummary {
 
 		p.add(getPatientCard(), BorderLayout.NORTH);
 
-		JPanel dataPanel = null;
-		dataPanel = new JPanel();
+		JPanel dataPanel = new JPanel();
 		dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS));
 
 		dataPanel.add(setMyBorder(getPatientTaxCodePanel(), MessageBundle.getMessage("angal.admission.taxcode.label")));
@@ -103,32 +104,28 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientAddressAndCityPanel() {
-		JPanel dataPanel = null;
-		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
+		JPanel dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientAddressPanel(), MessageBundle.getMessage("angal.admission.address.label")));
 		dataPanel.add(setMyBorder(getPatientCityPanel(), MessageBundle.getMessage("angal.admission.city.label")));
 		return dataPanel;
 	}
 
 	private JPanel getPatientBloodAndEcoPanel() {
-		JPanel dataPanel = null;
-		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
+		JPanel dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientBloodTypePanel(), MessageBundle.getMessage("angal.admission.bloodtype.label")));
 		dataPanel.add(setMyBorder(getPatientEcoStatusPanel(), MessageBundle.getMessage("angal.admission.insurance.label")));
 		return dataPanel;
 	}
 
 	private JPanel getPatientMaritalAndProfession() {
-		JPanel dataPanel = null;
-		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
+		JPanel dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientMaritalStatusPanel(), MessageBundle.getMessage("angal.admission.maritalstatus.label")));
 		dataPanel.add(setMyBorder(getPatientProfessionPanel(), MessageBundle.getMessage("angal.admission.profession.label")));
 		return dataPanel;
 	}
 
 	private JPanel getPatientKinAndTelephonePanel() {
-		JPanel dataPanel = null;
-		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
+		JPanel dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientKinPanel(), MessageBundle.getMessage("angal.admission.nextofkin.label")));
 		dataPanel.add(setMyBorder(getPatientTelephonePanel(), MessageBundle.getMessage("angal.admission.telephone.label")));
 		return dataPanel;
@@ -176,9 +173,9 @@ public class PatientSummary {
 			patient = new Patient();
 		}
 		Integer code = patient.getCode();
-		JLabel patientCode = null;
+		JLabel patientCode;
 		if (code != null) {
-			patientCode = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ": " + code.toString());
+			patientCode = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ": " + code);
 		} else {
 			patientCode = new JLabel(" ");
 		}
@@ -189,11 +186,11 @@ public class PatientSummary {
 		
 		JLabel patientPhoto = new JLabel();
 		if (patient.getPatientProfilePhoto() != null && patient.getPatientProfilePhoto().getPhotoAsImage() != null) {
-			patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, patient.getPatientProfilePhoto().getPhotoAsImage())));
+			patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(patient.getPatientProfilePhoto().getPhotoAsImage(), GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH)));
 		} else {
 			try {
 				Image noPhotoImage = ImageIO.read(new File("rsc/images/nophoto.png"));
-				patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, noPhotoImage)));
+				patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(noPhotoImage, GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH)));
 			} catch (IOException ioe) {
 				LOGGER.error("rsc/images/nophoto.png is missing...");
 			}
@@ -238,9 +235,8 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientKinPanel() {
-		JLabel l = null;
+		JLabel l;
 		if (patient.getNextKin() == null || patient.getNextKin().equalsIgnoreCase("")) {
-			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
 			l = new JLabel(" ");
 		} else {
 			l = new JLabel(patient.getNextKin());
@@ -251,9 +247,8 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientTelephonePanel() {
-		JLabel l = null;
+		JLabel l;
 		if (patient.getTelephone() == null || patient.getTelephone().equalsIgnoreCase("")) {
-			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
 			l = new JLabel(" ");
 		} else {
 			l = new JLabel("" + patient.getTelephone());
@@ -264,7 +259,7 @@ public class PatientSummary {
 	}
 	
 	private JPanel getPatientAddressPanel() {
-		JLabel l = null;
+		JLabel l;
 		if (patient.getAddress() == null || patient.getAddress().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
@@ -276,7 +271,7 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientCityPanel() {
-		JLabel l = null;
+		JLabel l;
 		if (patient.getCity() == null || patient.getCity().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
@@ -289,7 +284,7 @@ public class PatientSummary {
 
 	// Panel for Blood Type
 	private JPanel getPatientBloodTypePanel() {
-		JLabel l = null;
+		JLabel l;
 		String c = patient.getBloodType();
 		if (c == null || c.equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt"))) {
 			l = new JLabel(" ");
@@ -302,7 +297,7 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientEcoStatusPanel() {
-		JLabel l = null;
+		JLabel l;
 		char c = patient.getHasInsurance();
 		if (c == 'Y') {
 			l = new JLabel(MessageBundle.getMessage("angal.admission.hasinsuranceyes.txt"));
@@ -317,11 +312,11 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientMaritalStatusPanel() {
-		JLabel l = null;
+		JLabel l;
 		if (patient.getMaritalStatus().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getMaritalStatus().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
+			l = new JLabel(patientBrowserManager.getMaritalTranslated(patient.getMaritalStatus()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
@@ -329,11 +324,11 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientProfessionPanel() {
-		JLabel l = null;
+		JLabel l;
 		if (patient.getProfession().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getProfession().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel(patientManager.getProfessionTranslated(patient.getProfession()));
+			l = new JLabel(patientBrowserManager.getProfessionTranslated(patient.getProfession()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);

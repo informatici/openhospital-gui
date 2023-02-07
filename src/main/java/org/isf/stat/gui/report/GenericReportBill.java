@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,8 +21,7 @@
  */
 package org.isf.stat.gui.report;
 
-import java.util.ArrayList;
-import java.util.Locale;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -37,12 +36,10 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.jasperreports.view.JasperViewer;
-
 /*
  * Created on 15/Jun/08
  */
-public class GenericReportBill {
+public class GenericReportBill extends DisplayReport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportBill.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
@@ -59,12 +56,7 @@ public class GenericReportBill {
             JasperReportResultDto jasperReportPDFResultDto = jasperReportsManager.getGenericReportBillPdf(billID, jasperFileName, show, askForPrint);
 
 			if (show) {
-                if (GeneralData.INTERNALVIEWER) {
-                    JasperViewer.viewReport(jasperReportPDFResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-                } else {
-                    Runtime rt = Runtime.getRuntime();
-                    rt.exec(GeneralData.VIEWER + " " + jasperReportPDFResultDto.getFilename());
-                }
+                showReport(jasperReportPDFResultDto);
 			}
 			
 			if (GeneralData.RECEIPTPRINTER) {
@@ -89,22 +81,13 @@ public class GenericReportBill {
         }
 	}
 	
-	public GenericReportBill(Integer billID, String jasperFileName, Patient patient, ArrayList<Integer> billListId, String dateFrom, String dateTo, boolean show, boolean askForPrint) {
+	public GenericReportBill(Integer billID, String jasperFileName, Patient patient, List<Integer> billListId, String dateFrom, String dateTo, boolean show, boolean askForPrint) {
 		try {
 			
 			JasperReportResultDto jasperReportPDFResultDto = jasperReportsManager.getGenericReportBillGroupedPdf(billID, jasperFileName, patient, billListId, dateFrom, dateTo, show, askForPrint);
 			
 			if (show) {
-				if (GeneralData.INTERNALVIEWER) {	
-					JasperViewer.viewReport(jasperReportPDFResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-				} else {
-					try {
-						Runtime rt = Runtime.getRuntime();
-						rt.exec(GeneralData.VIEWER + " " + jasperReportPDFResultDto.getFilename());
-					} catch (Exception exception) {
-						LOGGER.error(exception.getMessage(), exception);
-					}
-				}
+				showReport(jasperReportPDFResultDto);
 			}
 			
 			if (GeneralData.RECEIPTPRINTER) {				

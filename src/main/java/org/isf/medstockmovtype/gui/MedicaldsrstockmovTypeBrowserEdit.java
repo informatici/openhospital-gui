@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -46,44 +46,49 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
+public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList medicaldsrstockmovTypeListeners = new EventListenerList();
 
-    public interface MedicaldsrstockmovTypeListener extends EventListener {
-        void medicaldsrstockmovTypeUpdated(AWTEvent e);
-        void medicaldsrstockmovTypeInserted(AWTEvent e);
-    }
+	public interface MedicaldsrstockmovTypeListener extends EventListener {
 
-    public void addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener l) {
-    	medicaldsrstockmovTypeListeners.add(MedicaldsrstockmovTypeListener.class, l);
-    }
+		void medicaldsrstockmovTypeUpdated(AWTEvent e);
+
+		void medicaldsrstockmovTypeInserted(AWTEvent e);
+	}
+
+	public void addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener l) {
+		medicaldsrstockmovTypeListeners.add(MedicaldsrstockmovTypeListener.class, l);
+	}
 
     public void removeMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener listener) {
     	medicaldsrstockmovTypeListeners.remove(MedicaldsrstockmovTypeListener.class, listener);
     }
 
-    private void fireMedicaldsrstockmovInserted(MovementType anMedicaldsrstockmovType) {
-        AWTEvent event = new AWTEvent(anMedicaldsrstockmovType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireMedicaldsrstockmovInserted(MovementType anMedicaldsrstockmovType) {
+		AWTEvent event = new AWTEvent(anMedicaldsrstockmovType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeInserted(event);
-	    }
-    }
-    private void fireMedicaldsrstockmovUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
+		for (EventListener listener : listeners) {
+			((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireMedicaldsrstockmovUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
+		for (EventListener listener : listeners) {
+			((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -97,20 +102,18 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	private MovementType medicaldsrstockmovType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private MedicaldsrstockmovTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
-	
+	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+
 	/**
-	 * This is the default constructor; we pass the arraylist and the selectedrow
-     * because we need to update them
+	 * This is the default constructor
 	 */
-	public MedicaldsrstockmovTypeBrowserEdit(JFrame owner,MovementType old,boolean inserting) {
-		super(owner,true);
+	public MedicaldsrstockmovTypeBrowserEdit(JFrame owner, MovementType old, boolean inserting) {
+		super(owner, true);
 		insert = inserting;
 		medicaldsrstockmovType = old;//disease will be used for every operation
-		lastdescription= medicaldsrstockmovType.getDescription();
+		lastdescription = medicaldsrstockmovType.getDescription();
 		initialize();
 	}
-
 
 	/**
 	 * This method initializes this
@@ -200,11 +203,10 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 				medicaldsrstockmovType.setCode(codeTextField.getText());
 				medicaldsrstockmovType.setType((String) typeComboBox.getSelectedItem());
 
-				boolean result;
 				if (insert) { // inserting
 					try {
-						result = manager.newMedicaldsrstockmovType(medicaldsrstockmovType);
-						if (result) {
+						MovementType insertedMovementType = medicaldsrstockmovTypeBrowserManager.newMedicaldsrstockmovType(medicaldsrstockmovType);
+						if (insertedMovementType != null) {
 							fireMedicaldsrstockmovInserted(medicaldsrstockmovType);
 							dispose();
 						} else {
@@ -218,8 +220,8 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 						dispose();
 					} else {
 						try {
-							result = manager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
-							if (result) {
+							MovementType updatedMovementType = medicaldsrstockmovTypeBrowserManager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
+							if (updatedMovementType != null) {
 								fireMedicaldsrstockmovUpdated();
 								dispose();
 							} else {

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -22,16 +22,19 @@
 package org.isf.utils.jobjects;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.time.TimeTools;
 
 /**
  * @author Mwithi
@@ -39,28 +42,19 @@ import org.isf.generaldata.MessageBundle;
 public class StockLedgerDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private JFromDateToDateChooser dateRange;
 	private JPanel buttonsPanel;
 	private JButton buttonOK;
 	private JButton buttonCancel;
-	private Date dateFrom;
-	private Date dateTo;
+	private JPanel dateFromToPanel;
+	private GoodDateChooser dateFrom;
+	private GoodDateChooser dateTo;
 	private boolean cancel = false;
 
-	public StockLedgerDialog(Frame owner) {
+	public StockLedgerDialog(Frame owner, LocalDateTime from, LocalDateTime to) {
 		super(owner, true);
-		dateRange = new JFromDateToDateChooser();
-		initAndShow();
-	}
-
-	public StockLedgerDialog(Frame owner, Date dateFrom, Date dateTo) {
-		super(owner, true);
-		dateRange = new JFromDateToDateChooser(dateFrom, dateTo);
-		initAndShow();
-	}
-
-	private void initAndShow() {
-		add(dateRange, BorderLayout.CENTER);
+		dateFrom = new GoodDateChooser(from.toLocalDate());
+		dateTo = new GoodDateChooser(to.toLocalDate());
+		add(getDateFromToPanel(), BorderLayout.CENTER);
 		add(getButtonsPanel(), BorderLayout.SOUTH);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
@@ -69,6 +63,19 @@ public class StockLedgerDialog extends JDialog {
 		setVisible(true);
 	}
 
+	private JPanel getDateFromToPanel() {
+		if (dateFromToPanel == null) {
+			dateFromToPanel = new JPanel();
+			FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
+			layout.setHgap(5);
+			dateFromToPanel.setLayout(layout);
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
+			dateFromToPanel.add(dateFrom);
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
+			dateFromToPanel.add(dateTo);
+		}
+		return dateFromToPanel;
+	}
 	private JPanel getButtonsPanel() {
 		if (buttonsPanel == null) {
 			buttonsPanel = new JPanel();
@@ -102,26 +109,18 @@ public class StockLedgerDialog extends JDialog {
 				if (n != JOptionPane.OK_OPTION) {
 					cancel = true;
 				}
-				dateFrom = dateRange.getDateFrom();
-				dateTo = dateRange.getDateTo();
 				dispose();
 			});
 		}
 		return buttonOK;
 	}
 
-	/**
-	 * @return the dateFrom
-	 */
-	public Date getDateFrom() {
-		return dateFrom;
+	public LocalDateTime getLocalDateTimeFrom() {
+		return TimeTools.truncateToSeconds(dateFrom.getDateStartOfDay());
 	}
 
-	/**
-	 * @return the dateTo
-	 */
-	public Date getDateTo() {
-		return dateTo;
+	public LocalDateTime getLocalDateTimeTo() {
+		return TimeTools.truncateToSeconds(dateTo.getDateStartOfDay());
 	}
 
 	/**
@@ -130,4 +129,5 @@ public class StockLedgerDialog extends JDialog {
 	public boolean isCancel() {
 		return cancel;
 	}
+
 }

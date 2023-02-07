@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -22,15 +22,13 @@
 package org.isf.admission.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -41,22 +39,16 @@ import javax.swing.JPanel;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.stat.gui.report.GenericReportPatientVersion2;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.toedter.calendar.JDateChooser;
 
 public class PatientFolderReportModal extends ModalJFrame {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(PatientFolderReportModal.class);
-	private static final String DATE_FORMAT = "dd/MM/yyyy";
 
 	private JFrame parent;
 	private Integer patId;
 	private JPanel jPanelChooser;
-	private JDateChooser jDateChooserDateFrom;
-	private JDateChooser jDateChooserDateTo;
+	private GoodDateChooser jDateChooserDateFrom;
+	private GoodDateChooser jDateChooserDateTo;
 	private JPanel choosePanel;
 	private JButton launchReportButton;
 	private JButton closeButton;
@@ -75,11 +67,11 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JPanel allPanel;
 	private JCheckBox allCheck;
 	private JPanel labelPanel;
-	private GregorianCalendar fromDate;
-	private GregorianCalendar toDate;
+	private LocalDate fromDate;
+	private LocalDate toDate;
 	private String selectedReport;
 
-	public PatientFolderReportModal(JFrame parent, Integer code, GregorianCalendar fromDate, GregorianCalendar toDate, String selectedReport) {
+	public PatientFolderReportModal(JFrame parent, Integer code, LocalDate fromDate, LocalDate toDate, String selectedReport) {
 		this.parent = parent;
 		this.patId = code;
 		this.fromDate = fromDate;
@@ -114,63 +106,63 @@ public class PatientFolderReportModal extends ModalJFrame {
 		if (jPanelChooser == null) {
 			jPanelChooser = new JPanel();
 			
-			GridBagLayout gbl_jPanelExamination = new GridBagLayout();
-			gbl_jPanelExamination.columnWidths = new int[] { 0, 0, 0, 0 };
-			gbl_jPanelExamination.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
-			gbl_jPanelExamination.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
-			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
-			jPanelChooser.setLayout(gbl_jPanelExamination);
+			GridBagLayout gblPanelChooser = new GridBagLayout();
+			gblPanelChooser.columnWidths = new int[] { 0, 0, 0, 0 };
+			gblPanelChooser.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+			gblPanelChooser.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
+			gblPanelChooser.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+			jPanelChooser.setLayout(gblPanelChooser);
 
 			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.datefrom.label"));
-			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
-			gbc_jLabelDate.anchor = GridBagConstraints.WEST;
-			gbc_jLabelDate.insets = new Insets(10, 5, 5, 5);
-			gbc_jLabelDate.gridx = 0;
-			gbc_jLabelDate.gridy = 0;
-			jPanelChooser.add(jLabelDate, gbc_jLabelDate);
+			GridBagConstraints gbcLabelDate = new GridBagConstraints();
+			gbcLabelDate.anchor = GridBagConstraints.WEST;
+			gbcLabelDate.insets = new Insets(10, 5, 5, 5);
+			gbcLabelDate.gridx = 0;
+			gbcLabelDate.gridy = 0;
+			jPanelChooser.add(jLabelDate, gbcLabelDate);
 			
-			GridBagConstraints gbc_jDateChooserDate = new GridBagConstraints();
-			gbc_jDateChooserDate.anchor = GridBagConstraints.WEST;
-			gbc_jDateChooserDate.insets = new Insets(10, 5, 5, 5);
-			gbc_jDateChooserDate.gridx = 1;
-			gbc_jDateChooserDate.gridy = 0;
-			jPanelChooser.add(getJDateChooserDateFrom(), gbc_jDateChooserDate);
+			GridBagConstraints gbcDateChooserDate = new GridBagConstraints();
+			gbcDateChooserDate.anchor = GridBagConstraints.WEST;
+			gbcDateChooserDate.insets = new Insets(10, 5, 5, 5);
+			gbcDateChooserDate.gridx = 1;
+			gbcDateChooserDate.gridy = 0;
+			jPanelChooser.add(getJDateChooserDateFrom(), gbcDateChooserDate);
 			
 			JLabel jLabelDateto = new JLabel(MessageBundle.getMessage("angal.common.dateto.label"));
-			GridBagConstraints gbc_jLabelDateto = new GridBagConstraints();
-			gbc_jLabelDateto.anchor = GridBagConstraints.WEST;
-			gbc_jLabelDateto.insets = new Insets(10, 5, 5, 5);
-			gbc_jLabelDateto.gridx = 0;
-			gbc_jLabelDateto.gridy = 1;
-			jPanelChooser.add(jLabelDateto, gbc_jLabelDateto);
+			GridBagConstraints gbcLabelDateto = new GridBagConstraints();
+			gbcLabelDateto.anchor = GridBagConstraints.WEST;
+			gbcLabelDateto.insets = new Insets(10, 5, 5, 5);
+			gbcLabelDateto.gridx = 0;
+			gbcLabelDateto.gridy = 1;
+			jPanelChooser.add(jLabelDateto, gbcLabelDateto);
 			
-			GridBagConstraints gbc_jDateChooserDateto = new GridBagConstraints();
-			gbc_jDateChooserDateto.anchor = GridBagConstraints.WEST;
-			gbc_jDateChooserDateto.insets = new Insets(10, 5, 5, 5);
-			gbc_jDateChooserDateto.gridx = 1;
-			gbc_jDateChooserDateto.gridy = 1;
-			jPanelChooser.add(getJDateChooserDateTo(), gbc_jDateChooserDateto);
+			GridBagConstraints gbcDateChooserDateto = new GridBagConstraints();
+			gbcDateChooserDateto.anchor = GridBagConstraints.WEST;
+			gbcDateChooserDateto.insets = new Insets(10, 5, 5, 5);
+			gbcDateChooserDateto.gridx = 1;
+			gbcDateChooserDateto.gridy = 1;
+			jPanelChooser.add(getJDateChooserDateTo(), gbcDateChooserDateto);
 			
-			GridBagConstraints gbc_jSliderHeight = new GridBagConstraints();
-			gbc_jSliderHeight.insets = new Insets(5, 5, 5, 5);
-			gbc_jSliderHeight.fill = GridBagConstraints.WEST;
-			gbc_jSliderHeight.gridx = 0;
-			gbc_jSliderHeight.gridy = 2;
-			jPanelChooser.add(getValueReport(), gbc_jSliderHeight);
+			GridBagConstraints gbcSliderHeight = new GridBagConstraints();
+			gbcSliderHeight.insets = new Insets(5, 5, 5, 5);
+			gbcSliderHeight.fill = GridBagConstraints.WEST;
+			gbcSliderHeight.gridx = 0;
+			gbcSliderHeight.gridy = 2;
+			jPanelChooser.add(getValueReport(), gbcSliderHeight);
 
-			GridBagConstraints gbc_jPrintButton = new GridBagConstraints();
-			gbc_jPrintButton.insets = new Insets(5, 5, 5, 5);
-			gbc_jPrintButton.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jPrintButton.gridx = 0;
-			gbc_jPrintButton.gridy = 3;
-			jPanelChooser.add(getPrintButton(), gbc_jPrintButton);
+			GridBagConstraints gbcPrintButton = new GridBagConstraints();
+			gbcPrintButton.insets = new Insets(5, 5, 5, 5);
+			gbcPrintButton.fill = GridBagConstraints.HORIZONTAL;
+			gbcPrintButton.gridx = 0;
+			gbcPrintButton.gridy = 3;
+			jPanelChooser.add(getPrintButton(), gbcPrintButton);
 
-			GridBagConstraints gbc_jCancelButton = new GridBagConstraints();
-			gbc_jCancelButton.insets = new Insets(5, 5, 5, 5);
-			gbc_jCancelButton.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jCancelButton.gridx = 1;
-			gbc_jCancelButton.gridy = 3;
-			jPanelChooser.add(getCloseButton(), gbc_jCancelButton);
+			GridBagConstraints gbcCloseButton = new GridBagConstraints();
+			gbcCloseButton.insets = new Insets(5, 5, 5, 5);
+			gbcCloseButton.fill = GridBagConstraints.HORIZONTAL;
+			gbcCloseButton.gridx = 1;
+			gbcCloseButton.gridy = 3;
+			jPanelChooser.add(getCloseButton(), gbcCloseButton);
 		}
 		return jPanelChooser;
 	}
@@ -384,43 +376,33 @@ public class PatientFolderReportModal extends ModalJFrame {
 		return examinationCheck.isSelected();
 	}
 
-	private JDateChooser getJDateChooserDateFrom() {
+	private GoodDateChooser getJDateChooserDateFrom() {
 		if (jDateChooserDateFrom == null) {
-			jDateChooserDateFrom = new JDateChooser();
-			jDateChooserDateFrom.setPreferredSize(new Dimension(200, 40));
-			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			jDateChooserDateFrom.setDateFormatString(DATE_FORMAT);
-			jDateChooserDateFrom.setDate(fromDate.getTime());
+			jDateChooserDateFrom = new GoodDateChooser(fromDate);
 		}
 		return jDateChooserDateFrom;
 	}
 
-	private JDateChooser getJDateChooserDateTo() {
+	private GoodDateChooser getJDateChooserDateTo() {
 		if (jDateChooserDateTo == null) {
-			jDateChooserDateTo = new JDateChooser();
-			jDateChooserDateTo.setPreferredSize(new Dimension(200, 40));
-			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE));
-			jDateChooserDateTo.setDateFormatString(DATE_FORMAT);
-			jDateChooserDateTo.setDate(toDate.getTime());
+			jDateChooserDateTo = new GoodDateChooser(LocalDate.now());
 		}
 		return jDateChooserDateTo;
 	}
 
-	public Date getDateToValue() {
-
-		Date date = jDateChooserDateTo.getDate();
+	public LocalDateTime getDateToValue() {
+		LocalDate date = jDateChooserDateTo.getDate();
 		if (date == null) {
-			jDateChooserDateTo.setDate(new Date());
+			jDateChooserDateTo.setDate(LocalDate.now());
 		}
-		return jDateChooserDateTo.getDate();
+		return jDateChooserDateTo.getDateEndOfDay();
 	}
 
-	public Date getDateFromValue() {
-
-		Date date = jDateChooserDateFrom.getDate();
+	public LocalDateTime getDateFromValue() {
+		LocalDate date = jDateChooserDateFrom.getDate();
 		if (date == null) {
-			jDateChooserDateFrom.setDate(new Date());
+			jDateChooserDateFrom.setDate(LocalDate.now());
 		}
-		return jDateChooserDateFrom.getDate();
+		return jDateChooserDateFrom.getDateStartOfDay();
 	}
 }

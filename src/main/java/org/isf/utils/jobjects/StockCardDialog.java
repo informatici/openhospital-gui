@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -22,16 +22,19 @@
 package org.isf.utils.jobjects;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
+import org.isf.utils.time.TimeTools;
 
 /**
  * @author Mwithi
@@ -40,55 +43,52 @@ public class StockCardDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JTextFieldSearchModel textField;
-	private JFromDateToDateChooser dateRange;
+	private JPanel dateFromToPanel;
 	private JPanel buttonsPanel;
 	private JButton buttonOK;
 	private JButton buttonExcel;
 	private JButton buttonCancel;
-	private Date dateFrom;
-	private Date dateTo;
+	private GoodDateChooser dateFrom;
+	private GoodDateChooser dateTo;
 	private Medical medical;
 	private boolean excel;
 	private boolean cancel = false;
 
-	public StockCardDialog(Frame owner) {
-		super(owner, true);
-		textField = new JTextFieldSearchModel(this, Medical.class);
-		dateRange = new JFromDateToDateChooser();
-		initAndShow();
-	}
-
-	public StockCardDialog(Frame owner, Medical medical) {
+	public StockCardDialog(Frame owner, Medical medical, LocalDateTime from, LocalDateTime to) {
 		super(owner, true);
 		if (medical != null) {
 			textField = new JTextFieldSearchModel(this, medical);
 		} else {
 			textField = new JTextFieldSearchModel(this, Medical.class);
 		}
-		dateRange = new JFromDateToDateChooser();
-		initAndShow();
-	}
-
-	public StockCardDialog(Frame owner, Medical medical, Date dateFrom, Date dateTo) {
-		super(owner, true);
-		if (medical != null) {
-			textField = new JTextFieldSearchModel(this, medical);
-		} else {
-			textField = new JTextFieldSearchModel(this, Medical.class);
-		}
-		dateRange = new JFromDateToDateChooser(dateFrom, dateTo);
+		dateFrom = new GoodDateChooser(from.toLocalDate());
+		dateTo = new GoodDateChooser(to.toLocalDate());
 		initAndShow();
 	}
 
 	private void initAndShow() {
 		add(textField, BorderLayout.NORTH);
-		add(dateRange, BorderLayout.CENTER);
+		add(getDateFromToPanel(), BorderLayout.CENTER);
 		add(getButtonsPanel(), BorderLayout.SOUTH);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+
+	private JPanel getDateFromToPanel() {
+		if (dateFromToPanel == null) {
+			dateFromToPanel = new JPanel();
+			FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
+			layout.setHgap(5);
+			dateFromToPanel.setLayout(layout);
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
+			dateFromToPanel.add(dateFrom);
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
+			dateFromToPanel.add(dateTo);
+		}
+		return dateFromToPanel;
 	}
 
 	private JPanel getButtonsPanel() {
@@ -119,8 +119,6 @@ public class StockCardDialog extends JDialog {
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(actionEvent -> {
 				medical = (Medical) textField.getSelectedObject();
-				dateFrom = dateRange.getDateFrom();
-				dateTo = dateRange.getDateTo();
 				dispose();
 			});
 		}
@@ -133,27 +131,11 @@ public class StockCardDialog extends JDialog {
 			buttonExcel.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
 			buttonExcel.addActionListener(actionEvent -> {
 				medical = (Medical) textField.getSelectedObject();
-				dateFrom = dateRange.getDateFrom();
-				dateTo = dateRange.getDateTo();
 				excel = true;
 				dispose();
 			});
 		}
 		return buttonExcel;
-	}
-
-	/**
-	 * @return the dateFrom
-	 */
-	public Date getDateFrom() {
-		return dateFrom;
-	}
-
-	/**
-	 * @return the dateTo
-	 */
-	public Date getDateTo() {
-		return dateTo;
 	}
 
 	/**
@@ -175,6 +157,14 @@ public class StockCardDialog extends JDialog {
 	 */
 	public boolean isCancel() {
 		return cancel;
+	}
+
+	public LocalDateTime getLocalDateTimeFrom() {
+		return TimeTools.truncateToSeconds(dateFrom.getDateStartOfDay());
+	}
+
+	public LocalDateTime getLocalDateTimeTo() {
+		return TimeTools.truncateToSeconds(dateTo.getDateStartOfDay());
 	}
 
 }

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -44,8 +44,8 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DiseaseTypeBrowserEdit extends JDialog{
-	
+public class DiseaseTypeBrowserEdit extends JDialog {
+
 	private static final long serialVersionUID = 1L;
 	private EventListenerList diseaseTypeListeners = new EventListenerList();
 
@@ -62,27 +62,32 @@ public class DiseaseTypeBrowserEdit extends JDialog{
         diseaseTypeListeners.remove(DiseaseTypeListener.class, listener);
     }
 
-    private void fireDiseaseInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-        	
-			private static final long serialVersionUID = 1L;};
+	private void fireDiseaseInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DiseaseTypeListener) listener).diseaseTypeInserted(event);
-	    }
-    }
-    private void fireDiseaseUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-        	
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DiseaseTypeListener) listener).diseaseTypeUpdated(event);
-	    }
-    }
-    
+		EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DiseaseTypeListener) listener).diseaseTypeInserted(event);
+		}
+	}
+
+	private void fireDiseaseUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DiseaseTypeListener) listener).diseaseTypeUpdated(event);
+		}
+	}
+
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -100,10 +105,10 @@ public class DiseaseTypeBrowserEdit extends JDialog{
      * because we need to update them
 	 */
 	public DiseaseTypeBrowserEdit(JFrame owner, DiseaseType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		diseaseType = old;//disease will be used for every operation
-		lastdescription= diseaseType.getDescription();
+		diseaseType = old; //disease will be used for every operation
+		lastdescription = diseaseType.getDescription();
 		initialize();
 	}
 
@@ -189,7 +194,6 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 				try {
 					if (descriptionTextField.getText().equals(lastdescription)) {
@@ -199,7 +203,7 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 					diseaseType.setCode(codeTextField.getText());
 					boolean result;
 					if (insert) {      // inserting
-						result = manager.newDiseaseType(diseaseType);
+						result = diseaseTypeBrowserManager.newDiseaseType(diseaseType);
 						if (result) {
 							fireDiseaseInserted();
 						}
@@ -212,7 +216,7 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							result = manager.updateDiseaseType(diseaseType);
+							result = diseaseTypeBrowserManager.updateDiseaseType(diseaseType);
 							if (result) {
 								fireDiseaseUpdated();
 							}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,6 +21,8 @@
  */
 package org.isf.therapy.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,12 +38,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -79,17 +78,17 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JAgenda;
 import org.isf.utils.jobjects.JAgenda.AgendaDayObject;
+import org.isf.utils.jobjects.JMonthChooser;
+import org.isf.utils.jobjects.JYearChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.time.TimeTools;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.visits.gui.VisitView;
 import org.isf.visits.gui.VisitView.VisitListener;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.model.Ward;
-
-import com.toedter.calendar.JMonthChooser;
-import com.toedter.calendar.JYearChooser;
 
 public class TherapyEdit extends ModalJFrame implements VisitListener {
 
@@ -144,33 +143,31 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private Hashtable<Integer, TherapyRow> hashTableThRow;
 	private Hashtable<Integer, Visit> hashTableVisits;
 
-	private AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-	private MedicalBrowsingManager medBrowser = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
-	private TherapyManager thManager = Context.getApplicationContext().getBean(TherapyManager.class);
-	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private TherapyManager therapyManager = Context.getApplicationContext().getBean(TherapyManager.class);
+	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+
 	private List<Medical> medArray;
 	private List<Therapy> therapies = new ArrayList<>();
 	private List<TherapyRow> thRows = new ArrayList<>();
 	private List<Visit> visits = new ArrayList<>();
-	private List<Visit> removedVisits = new ArrayList<Visit>();
+	private List<Visit> removedVisits = new ArrayList<>();
 	private Ward ward;
 
 	public TherapyEdit(JFrame owner, Patient patient, boolean admitted) {
 		super();
+		setIconImage(new ImageIcon("./rsc/icons/oh.png").getImage());
 		try {
-			this.medArray = medBrowser.getMedicals();
+			this.medArray = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e1) {
 			this.medArray = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 		this.patient = patient;
 		if (admitted) {
-			try {
-				this.ward = admMan.getCurrentAdmission(patient).getWard();
-			} catch (OHServiceException e1) {
-				OHServiceExceptionUtil.showMessages(e1);
-			}
+			this.ward = admissionBrowserManager.getCurrentAdmission(patient).getWard();
 		}
 		initComponents();
 		addWindowListener(new WindowAdapter() {
@@ -230,7 +227,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		 * Rows in the therapies table
 		 */
 		try {
-			thRows = thManager.getTherapyRows(patient.getCode());
+			thRows = therapyManager.getTherapyRows(patient.getCode());
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -249,7 +246,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		 * Therapy(s) related to the rows in the therapies table
 		 */
 		try {
-			therapies = thManager.getTherapies(thRows);
+			therapies = therapyManager.getTherapies(thRows);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -257,7 +254,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		 * Visit(s) in the visits table
 		 */
 		try {
-			visits = vstManager.getVisits(patient.getCode());
+			visits = visitManager.getVisits(patient.getCode());
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -273,19 +270,17 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		}
 	}
 
-	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
-		   
+	class CenterTableCellRenderer extends DefaultTableCellRenderer {
+
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-				boolean hasFocus, int row, int column) {  
-		   
-			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			cell.setForeground(Color.BLACK);
-			setHorizontalAlignment(LEFT);	   
+			setHorizontalAlignment(LEFT);
 			return cell;
-	   }
+		}
 	}
 	
 	private void showAll() {
@@ -302,9 +297,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private String getDate() {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		return dateFormat.format(date);
+		return DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD).format(TimeTools.getNow());
 	}
 
 	private void showTherapies() {
@@ -314,10 +307,10 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private void showTherapy(Therapy th) {
-		for (GregorianCalendar gc : th.getDates()) {
-			if (gc.get(Calendar.YEAR) == yearChooser.getYear()) {
-				if (gc.get(Calendar.MONTH) == monthChooser.getMonth()) {
-					jAgenda.addElement(th, gc.get(Calendar.DAY_OF_MONTH));
+		for (LocalDateTime localDateTime : th.getDates()) {
+			if (localDateTime.getYear() == yearChooser.getYear()) {
+				if (localDateTime.getMonthValue() == monthChooser.getMonth() + 1) {
+					jAgenda.addElement(th, localDateTime.getDayOfMonth());
 					notifyCheckBox.setSelected(th.isNotify());
 				}
 			}
@@ -333,17 +326,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private void showVisit(Visit vs) {
-
-		final String dateTimeFormat = "dd/MM/yy HH:mm:ss";
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-		Date vis = vs.getDate().getTime();
-		sdf.setCalendar(vs.getDate());
-		String dateFormatted = sdf.format(vs.getDate().getTime());
-		if (vs.getDate().get(Calendar.YEAR) == yearChooser.getYear()) {
-			if (vs.getDate().get(Calendar.MONTH) == monthChooser.getMonth()) {
-
-				jAgenda.addElement(vs, vs.getDate().get(Calendar.DAY_OF_MONTH));
-
+		if (vs.getDate().getYear() == yearChooser.getYear()) {
+			if (vs.getDate().getMonthValue() == monthChooser.getMonth() + 1) {
+				jAgenda.addElement(vs, vs.getDate().getDayOfMonth());
 			}
 		}
 	}
@@ -362,7 +347,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			noteTextArea = new JTextArea(4, 100);
 			noteTextArea.setLineWrap(true);
 			noteTextArea.setEnabled(false);
-			//noteTextArea.setAutoscrolls(true);
 			noteScrollPane = new JScrollPane(noteTextArea);
 			noteTextArea.addFocusListener(new FocusListener() {
 
@@ -370,16 +354,14 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				public void focusLost(FocusEvent e) {
 					if (selectedTherapy != null) {
 						String note = noteTextArea.getText();
-						//if (selectedTherapy.getNote() != null && !selectedTherapy.getNote().equals(note))
-							selectedTherapy.setNote(note);
+						selectedTherapy.setNote(note);
 						hashTableThRow.get(selectedTherapy.getTherapyID()).setNote(note);
 						therapyModified = true;
 						saveButton.setEnabled(true);
 					}
 					if (selectedVisit != null) {
 						String note = noteTextArea.getText();
-						//if (selectedVisit.getNote() != null && !selectedVisit.getNote().equals(note))
-							selectedVisit.setNote(note);
+						selectedVisit.setNote(note);
 						hashTableVisits.get(selectedVisit.getVisitID()).setNote(note);
 						visitModified = true;
 						saveButton.setEnabled(true);
@@ -418,7 +400,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			visitPanel.add(getRemoveVisitButton());
 			visitPanel.add(getWorkSheetButton());
 			visitPanel.add(Box.createVerticalGlue());
-
 		}
 		return visitPanel;
 	}
@@ -461,12 +442,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			worksheetButton.setHorizontalAlignment(SwingConstants.LEFT);
 
 			worksheetButton.addActionListener(actionEvent -> {
-				
+
 				if (visitModified || therapyModified) {
 					MessageDialog.info(TherapyEdit.this, "angal.therapy.pleasesavechangesfirst.msg");
 					return;
 				}
-				
+
 				VisitView worksheet = new VisitView(TherapyEdit.this, patient, ward);
 				worksheet.addVisitListener(TherapyEdit.this);
 				worksheet.showAsModal(TherapyEdit.this);
@@ -607,7 +588,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			smsCheckBox.setAlignmentY(CENTER_ALIGNMENT);
 			smsCheckBox.addActionListener(actionEvent -> {
 				String telephone = patient.getTelephone();
-				if (smsCheckBox.isSelected() && (telephone.equals("") || telephone.length() < 7)) {
+				if (smsCheckBox.isSelected() && (telephone.isEmpty() || telephone.length() < 7)) {
 					MessageDialog.warning(TherapyEdit.this, "angal.therapy.theresnotelephonenumberassociatedwiththispatient");
 					int ok = JOptionPane.showConfirmDialog(
 							TherapyEdit.this,
@@ -658,27 +639,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		return actionsPanel;
 	}
 
-	/*
-	 * TODO: to be enabled in the future.
-	 * 
-	 * private JButton getReportButton() {
-		if (reportButton == null) {
-			reportButton = new JButton("Report");
-			reportButton.setIcon(new ImageIcon("rsc/icons/list_button.png"));
-			reportButton.setMnemonic(KeyEvent.VK_P);
-			reportButton.setMaximumSize(new Dimension(ActionsButtonWidth,
-					AllButtonHeight));
-			reportButton.setHorizontalAlignment(SwingConstants.LEFT);
-			reportButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent actionEvent) {
-
-				}
-			});
-		}
-		return reportButton;
-	}*/
-
 	private JButton getSaveButton() {
 		if (saveButton == null) {
 			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
@@ -704,7 +664,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
 						if (ok == JOptionPane.YES_OPTION) {
 							try {
-								thManager.deleteAllTherapies(patient.getCode());
+								therapyManager.deleteAllTherapies(patient.getCode());
 							} catch (OHServiceException ex) {
 								OHServiceExceptionUtil.showMessages(ex);
 							}
@@ -754,7 +714,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
 						if (ok == JOptionPane.YES_OPTION) {
 							try {
-								vstManager.deleteAllVisits(patient.getCode());
+								visitManager.deleteAllVisits(patient.getCode());
 							} catch (OHServiceException ex) {
 								OHServiceExceptionUtil.showMessages(ex);
 							}
@@ -762,9 +722,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 							return;
 						}
 					} else {
-						boolean result = false;
+						boolean result;
 						try {
-							result = vstManager.newVisits(visits, removedVisits);
+							result = visitManager.newVisits(visits, removedVisits);
 
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex, TherapyEdit.this);
@@ -794,8 +754,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				if (saveTherapies) {
 					boolean result = false;
 					try {
-						result = thManager.deleteAllTherapies(patient.getCode());
-						result = result && thManager.newTherapies(thRows);
+						result = therapyManager.deleteAllTherapies(patient.getCode());
+						result = result && therapyManager.newTherapies(thRows);
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -898,7 +858,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				available = true;
 				List<Medical> medOutStock = null;
 				try {
-					medOutStock = thManager.getMedicalsOutOfStock(therapies);
+					medOutStock = therapyManager.getMedicalsOutOfStock(therapies);
 				} catch (OHServiceException ex) {
 					available = false;
 					OHServiceExceptionUtil.showMessages(ex);
@@ -938,23 +898,19 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	protected void updateCheckLabel() {
 		if (checked) {
 			if (available) {
-				checkIconButton
-						.setIcon(new ImageIcon("rsc/icons/ok_dialog.png"));
-				therapyCheckLabel.setText(MessageBundle.getMessage("angal.therapy.availablem")); //$NON-NLS-1$
+				checkIconButton.setIcon(new ImageIcon("rsc/icons/ok_dialog.png"));
+				therapyCheckLabel.setText(MessageBundle.getMessage("angal.therapy.availablem"));
 				therapyCheckLabel.setForeground(Color.GREEN);
 			} else {
-				checkIconButton.setIcon(new ImageIcon(
-						"rsc/icons/delete_dialog.png"));
-				therapyCheckLabel.setText(MessageBundle.getMessage("angal.therapy.notavailablem")); //$NON-NLS-1$
+				checkIconButton.setIcon(new ImageIcon("rsc/icons/delete_dialog.png"));
+				therapyCheckLabel.setText(MessageBundle.getMessage("angal.therapy.notavailablem"));
 				therapyCheckLabel.setForeground(Color.RED);
 			}
 		} else {
-			checkIconButton
-					.setIcon(new ImageIcon("rsc/icons/delete_dialog.png"));
-			therapyCheckLabel.setText(MessageBundle.getMessage("angal.therapy.notcheckedm")); //$NON-NLS-1$
+			checkIconButton.setIcon(new ImageIcon("rsc/icons/delete_dialog.png"));
+			therapyCheckLabel.setText(MessageBundle.getMessage("angal.therapy.notcheckedm"));
 			therapyCheckLabel.setForeground(Color.RED);
 		}
-
 	}
 
 	/*
@@ -998,7 +954,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		thRows.add(thRow); // FOR DB;
 		Therapy thisTherapy = null;
 		try {
-			thisTherapy = thManager.createTherapy(thRow);
+			thisTherapy = therapyManager.createTherapy(thRow);
 		} catch (OHServiceException ex) {
 			OHServiceExceptionUtil.showMessages(ex);
 		}
@@ -1109,8 +1065,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				showAll();
 			});
 			yearChooser = new JYearChooser();
-			yearChooser.addPropertyChangeListener("year", propertyChangeEvent -> {
-				JYearChooser thisChooser = (JYearChooser) propertyChangeEvent.getSource();
+			yearChooser.addChangeListener(changeEvent -> {
+				JYearChooser thisChooser = (JYearChooser) changeEvent.getSource();
 				jAgenda.setYear(thisChooser.getYear());
 				showAll();
 			});
@@ -1130,8 +1086,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 			JList thisList = (JList) e.getSource();
 			ListModel model = thisList.getModel();
-			Therapy th = new Therapy();
-			Visit vs = new Visit();
+			Therapy th;
+			Visit vs;
 			int therapyID = 0;
 			int visitID =0;
 

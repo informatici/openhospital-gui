@@ -29,6 +29,7 @@ import java.awt.MenuContainer;
 import javax.swing.SwingUtilities;
 
 class DispatchedEvent {
+
 	private final Object mutex = new Object();
 	private final Object source;
 	private Component parent;
@@ -71,8 +72,7 @@ class DispatchedEvent {
 		}
 		if ((result != null) && result.isVisible()) {
 			return result;
-		} else {
-			return null;
 		}
+		return null;
 	}
 }

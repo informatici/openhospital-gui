@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,7 +21,6 @@
  */
 package org.isf.stat.gui.report;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.menu.manager.Context;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
@@ -29,26 +28,19 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.jasperreports.view.JasperViewer;
+public class GenericReportExamination extends DisplayReport {
 
-public class GenericReportExamination {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportExamination.class);
-	private JasperReportsManager jasperReportsManager = Context.getApplicationContext()
-			.getBean(JasperReportsManager.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportExamination(Integer patientID, Integer examId, String jasperFileName) {
 		try {
-			JasperReportResultDto jasperReportResultDto = jasperReportsManager
-					.getGenericReportPatientExaminationPdf(patientID, examId, jasperFileName);
-			if (GeneralData.INTERNALVIEWER)
-				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false);
-			else {
-				Runtime rt = Runtime.getRuntime();
-				rt.exec(GeneralData.VIEWER + " " + jasperReportResultDto.getFilename());
-			}
+			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPatientExaminationPdf(patientID, examId, jasperFileName);
+			showReport(jasperReportResultDto);
 		} catch (Exception e) {
 			LOGGER.error("", e);
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
 		}
 	}
+
 }

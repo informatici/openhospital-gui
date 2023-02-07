@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,16 +21,9 @@
  */
 package org.isf.utils.jobjects;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.time.LocalDate;
 
 import javax.swing.JPanel;
-
-import org.isf.generaldata.GeneralData;
-
-import com.toedter.calendar.JMonthChooser;
-import com.toedter.calendar.JYearChooser;
 
 /**
  * MonthYearChooser.java - 14/dic/2012
@@ -39,39 +32,20 @@ import com.toedter.calendar.JYearChooser;
  */
 public class JMonthYearChooser extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-	
-	private GregorianCalendar gc = new GregorianCalendar();
-	
-	/**
-	 * Create the dialog.
-	 */
+	private JMonthChooser month;
+	private JYearChooser year;
+
 	public JMonthYearChooser() {
-		
-		JMonthChooser month = new JMonthChooser();
-		month.setLocale(new Locale(GeneralData.LANGUAGE));
-		month.addPropertyChangeListener("month", propertyChangeEvent -> {
-			JMonthChooser theChooser = (JMonthChooser) propertyChangeEvent.getSource();
-			gc.set(Calendar.MONTH, theChooser.getMonth());
-		});
-		
-		
-		JYearChooser year = new JYearChooser();
-		year.setLocale(new Locale(GeneralData.LANGUAGE));
-		year.addPropertyChangeListener("year", propertyChangeEvent -> {
-			JYearChooser theChooser = (JYearChooser) propertyChangeEvent.getSource();
-			gc.set(Calendar.YEAR, theChooser.getYear());
-		});
-		
+		month = new JMonthChooser();
+		year = new JYearChooser();
 		JPanel datePanel = new JPanel();
 		datePanel.add(month);
 		datePanel.add(year);
 		this.add(datePanel);
 	}
-	
-	
-	public GregorianCalendar getDate() {
-		return gc;
+
+	public LocalDate getLocalDate() {
+		return LocalDate.of(year.getYear(), month.getMonth() + 1, 1);
 	}
-	
+
 }

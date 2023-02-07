@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -59,11 +59,11 @@ public class PatientPhotoPanel extends JPanel {
 	private static final long serialVersionUID = 9129641275344016618L;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
-
+	private static final String PROFILE_PICTURE_FORMAT = "png";
 	// Photo Components:
 	private JPanel jPhotoPanel = null;
 	private PhotoPanel externalPanel = null;
-	private PatientInsertExtended owner = null;
+	private PatientInsertExtended owner;
 	
 	private JButton jGetPhotoButton = null;
 	private JButton jAttachPhotoButton = null;
@@ -110,20 +110,22 @@ public class PatientPhotoPanel extends JPanel {
 
 			externalPanel.add(box, BorderLayout.NORTH);
 			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
-				final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
-				if (newImage != null) {
-					externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
-					patientFrame.setPatientPhoto(newImage);
+				
+				try {
+					BufferedImage bi = (BufferedImage) propertyChangeEvent.getNewValue();
+					if (bi != null) {
+						externalPanel.updatePhoto(ImageUtil.scaleImage(bi, 160, 160));
+						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, GeneralData.MAX_PROFILE_IMAGE_FILE_SIZE_BYTES, PROFILE_PICTURE_FORMAT));
+					} 
+				} catch (IOException e1) {
+					LOGGER.error("Oooops! Can't resize profile picture.");
+					e1.printStackTrace();
 				}
 			});
 
 			box.add(btnDeletePhoto);
 
-			if (patientHasPhoto) {
-				btnDeletePhoto.setVisible(true);
-			} else {
-				btnDeletePhoto.setVisible(false);
-			}
+			btnDeletePhoto.setVisible(patientHasPhoto);
 
 			final Box buttonBox1 = Box.createHorizontalBox();
 
@@ -192,10 +194,6 @@ public class PatientPhotoPanel extends JPanel {
 	
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		/*
-		 * javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
-		 * BorderFactory.createTitledBorder(title),null);
-		 */
 		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
 
 		c.setBorder(b2);

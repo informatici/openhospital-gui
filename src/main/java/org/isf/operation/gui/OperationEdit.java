@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -105,6 +105,9 @@ public class OperationEdit extends JDialog {
 		}
 	}
 
+	private OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -112,11 +115,10 @@ public class OperationEdit extends JDialog {
 	private JButton okButton = null;
 	private JTextField descriptionTextField = null;
 	private JTextField codeTextField = null;
-	private JComboBox<OperationType> typeComboBox = null;
+	private JComboBox<OperationType> operationTypeComboBox = null;
 	private String lastdescription;
 	private Operation operation;
 	private JRadioButton major = null;
-	private JRadioButton minor = null;
 	private JPanel radioButtonPanel;
 	private boolean insert;
 	private JComboBox<String> operBox;
@@ -176,7 +178,7 @@ public class OperationEdit extends JDialog {
 
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(typeLabel);
-			dataPanel.add(getTypeComboBox());
+			dataPanel.add(getOperationTypeComboBox());
 			dataPanel.add(codeLabel);
 			dataPanel.add(getCodeTextField());
 			dataPanel.add(descLabel);
@@ -259,9 +261,8 @@ public class OperationEdit extends JDialog {
 							MessageDialog.error(null, "angal.common.thecodeistoolongmaxchars.fmt.msg", 10);
 							return;
 						}
-						OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 
-						if (manager.isCodePresent(key)) {
+						if (operationBrowserManager.isCodePresent(key)) {
 							MessageDialog.error(null, "angal.common.thecodeisalreadyinuse.msg");
 							return;
 						}
@@ -270,19 +271,18 @@ public class OperationEdit extends JDialog {
 						MessageDialog.error(null, "angal.common.pleaseinsertavaliddescription.msg");
 						return;
 					}
-					OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 					if (descriptionTextField.getText().equals(lastdescription)) {
 					} else {
 
-						if (manager.descriptionControl(descriptionTextField.getText(),
-								((OperationType) typeComboBox.getSelectedItem()).getCode())) {
+						if (operationBrowserManager.descriptionControl(descriptionTextField.getText(),
+								((OperationType) operationTypeComboBox.getSelectedItem()).getCode())) {
 							MessageDialog.error(null, "angal.operation.operationalreadypresent");
 							return;
 						}
 					}
 					String opeForSelection = String.valueOf(operBox.getSelectedIndex()+1);
 					operation.setOpeFor(opeForSelection);
-					operation.setType((OperationType) typeComboBox.getSelectedItem());
+					operation.setType((OperationType) operationTypeComboBox.getSelectedItem());
 					operation.setDescription(descriptionTextField.getText());
 					operation.setCode(codeTextField.getText().trim().toUpperCase());
 					if (major.isSelected()) {
@@ -291,15 +291,17 @@ public class OperationEdit extends JDialog {
 						operation.setMajor(0);
 					}
 
-					boolean result;
+					boolean result = false;
 					if (insert) { // inserting
-						result = manager.newOperation(operation);
-						if (result) {
+						Operation insertedOperation = operationBrowserManager.newOperation(operation);
+						if (insertedOperation != null) {
+							result = true;
 							fireOperationInserted();
 						}
 					} else { // updating
-						result = manager.updateOperation(operation);
-						if (result) {
+						Operation updatedOperation = operationBrowserManager.updateOperation(operation);
+						if (updatedOperation != null) {
+							result = true;
 							fireOperationUpdated();
 						}
 					}
@@ -345,7 +347,7 @@ public class OperationEdit extends JDialog {
 			if (major == null) {
 
 				major = getRadioButton(MessageBundle.getMessage("angal.operation.major"), true);
-				minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), true);
+				JRadioButton minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), true);
 
 				ButtonGroup radioGroup = new ButtonGroup();
 
@@ -394,33 +396,40 @@ public class OperationEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes typeComboBox
+	 * This method initializes operationTypeComboBox
 	 * 
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox<OperationType> getTypeComboBox() {
-		if (typeComboBox == null) {
-			typeComboBox = new JComboBox<>();
-			if (insert) {
-				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
-				List<OperationType> types;
-				try {
-					types = manager.getOperationType();
-
-					for (OperationType elem : types) {
-						typeComboBox.addItem(elem);
+	private JComboBox<OperationType> getOperationTypeComboBox() {
+		if (operationTypeComboBox == null) {
+			operationTypeComboBox = new JComboBox<>();
+			try {
+				List<OperationType> types = operationTypeBrowserManager.getOperationType();
+				if (insert) {
+					if (types != null) {
+						for (OperationType elem : types) {
+							operationTypeComboBox.addItem(elem);
+						}
 					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-					types = null;
+				} else {
+					OperationType selectedOperationType = null;
+					if (types != null) {
+						for (OperationType elem : types) {
+							operationTypeComboBox.addItem(elem);
+							if (operation.getType().equals(elem)) {
+								selectedOperationType = elem;
+							}
+						}
+					} if (selectedOperationType != null) {
+						operationTypeComboBox.setSelectedItem(selectedOperationType);
+					}
 				}
-			} else {
-				typeComboBox.addItem(operation.getType());
-				typeComboBox.setEnabled(false);
-			}
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 
+			}
 		}
-		return typeComboBox;
+		return operationTypeComboBox;
 	}
 
 }

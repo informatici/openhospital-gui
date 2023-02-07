@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -61,18 +61,20 @@ public class VaccineEdit extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private EventListenerList vaccineListeners = new EventListenerList();
 
-    public interface VaccineListener extends EventListener {
-        void vaccineUpdated(AWTEvent e);
-        void vaccineInserted(AWTEvent e);
-    }
+	public interface VaccineListener extends EventListener {
 
-    public void addVaccineListener(VaccineListener l) {
-        vaccineListeners.add(VaccineListener.class, l);
-    }
+		void vaccineUpdated(AWTEvent e);
 
-    public void removeVaccineListener(VaccineListener listener) {
-        vaccineListeners.remove(VaccineListener.class, listener);
-    }
+		void vaccineInserted(AWTEvent e);
+	}
+
+	public void addVaccineListener(VaccineListener l) {
+		vaccineListeners.add(VaccineListener.class, l);
+	}
+
+	public void removeVaccineListener(VaccineListener listener) {
+		vaccineListeners.remove(VaccineListener.class, listener);
+	}
 
 	private void fireVaccineInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -98,6 +100,9 @@ public class VaccineEdit extends JDialog {
 		}
 	}
 
+	private VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -111,12 +116,12 @@ public class VaccineEdit extends JDialog {
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selected row
-     * because we need to update them
+	 * because we need to update them
 	 */
 	public VaccineEdit(JFrame owner, Vaccine old, boolean inserting) {
 		super(owner, true);
 		insert = inserting;
-		vaccine = old;		//operation will be used for every operation
+		vaccine = old;        //operation will be used for every operation
 		initialize();
 	}
 
@@ -166,7 +171,7 @@ public class VaccineEdit extends JDialog {
 			dataPanel = new JPanel();
 			dataPanel.setLayout(new SpringLayout());
 			dataPanel.add(vaccineTypeDescLabel);
-			dataPanel.add(getvaccineTypeComboBox());
+			dataPanel.add(getVaccineTypeComboBox());
 			dataPanel.add(codeLabel);
 			dataPanel.add(getCodeTextField());
 			dataPanel.add(descLabel);
@@ -222,10 +227,9 @@ public class VaccineEdit extends JDialog {
 
 				boolean result = false;
 				Vaccine savedVaccine;
-				VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 				if (insert) {
 					try {
-						savedVaccine = manager.newVaccine(vaccine);
+						savedVaccine = vaccineBrowserManager.newVaccine(vaccine);
 						if (savedVaccine != null) {
 							vaccine.setLock(savedVaccine.getLock());
 							result = true;
@@ -242,7 +246,7 @@ public class VaccineEdit extends JDialog {
 					}
 				} else {
 					try {
-						savedVaccine = manager.updateVaccine(vaccine);
+						savedVaccine = vaccineBrowserManager.updateVaccine(vaccine);
 						if (savedVaccine != null) {
 							vaccine.setLock(savedVaccine.getLock());
 							result = true;
@@ -299,26 +303,36 @@ public class VaccineEdit extends JDialog {
 	 *
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox<VaccineType> getvaccineTypeComboBox() {
+	private JComboBox<VaccineType> getVaccineTypeComboBox() {
 		if (vaccineTypeComboBox == null) {
 			vaccineTypeComboBox = new JComboBox<>();
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-			List<VaccineType> types = null;
 			try {
-				types = manager.getVaccineType();
+				List<VaccineType> types = vaccineTypeBrowserManager.getVaccineType();
+				if (insert) {
+					if (types != null) {
+						for (VaccineType elem : types) {
+							vaccineTypeComboBox.addItem(elem);
+						}
+					}
+				} else {
+					VaccineType selectedVaccineType = null;
+					if (types != null) {
+						for (VaccineType elem : types) {
+							vaccineTypeComboBox.addItem(elem);
+							if (vaccine.getVaccineType().equals(elem)) {
+								selectedVaccineType = elem;
+							}
+						}
+						if (selectedVaccineType != null) {
+							vaccineTypeComboBox.setSelectedItem(vaccine.getVaccineType());
+						}
+					}
+				}
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-			}
-			if (types != null) {
-				for (VaccineType elem : types) {
-					vaccineTypeComboBox.addItem(elem);
-				}
-			}
-			if (!insert) {
-				vaccineTypeComboBox.setSelectedItem(vaccine.getVaccineType());
-				vaccineTypeComboBox.setEnabled(false);				
 			}
 		}
 		return vaccineTypeComboBox;
 	}
+
 }

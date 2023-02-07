@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -62,29 +62,33 @@ public class PricesOthersEdit extends JDialog {
 	public void removeOtherListener(PricesOthersListener listener) {
 		pricesOthersListeners.remove(PricesOthersListener.class, listener);
 	}
-	
+
 	private void fireOtherInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
 		EventListener[] listeners = pricesOthersListeners.getListeners(PricesOthersListener.class);
 		for (EventListener listener : listeners) {
 			((PricesOthersListener) listener).pricesOthersInserted(event);
 		}
 	}
+
 	private void fireOtherUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = pricesOthersListeners.getListeners(PricesOthersListener.class);
 		for (EventListener listener : listeners) {
 			((PricesOthersListener) listener).pricesOthersUpdated(event);
 		}
 	}
-	
-	
+
+	private PricesOthersManager pricesOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
+
 	private static final long serialVersionUID = 1L;
 	private JPanel jPanelData;
 	private JPanel jPanelCodeDescription;
@@ -144,18 +148,19 @@ public class PricesOthersEdit extends JDialog {
 				pOther.setDischarge(jCheckBoxDischarge.isSelected());
 				pOther.setUndefined(jCheckBoxUndefined.isSelected());
 
-				PricesOthersManager pOtherManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 				boolean result = false;
 				try {
-					if (insert) {      // inserting
-						result = pOtherManager.newOther(pOther);
-						if (result) {
+					if (insert) {	// inserting
+						PricesOthers insertedPricesOthers = pricesOthersManager.newOther(pOther);
+						if (insertedPricesOthers != null) {
 							fireOtherInserted();
+							result = true;
 						}
-					} else {             // updating
-						result = pOtherManager.updateOther(pOther);
-						if (result) {
+					} else {	// updating
+						PricesOthers updatedPricesOthers = pricesOthersManager.updateOther(pOther);
+						if (updatedPricesOthers != null) {
 							fireOtherUpdated();
+							result = true;
 						}
 					}
 				} catch (OHServiceException e) {

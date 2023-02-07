@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -47,7 +47,7 @@ public class GroupEdit extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private EventListenerList groupListeners = new EventListenerList();
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
     public interface GroupListener extends EventListener {
         void groupUpdated(AWTEvent e);
@@ -104,10 +104,10 @@ public class GroupEdit extends JDialog {
 	public GroupEdit(UserGroupBrowsing parent, UserGroup old, boolean inserting) {
 		super(parent, inserting
 				? MessageBundle.getMessage("angal.groupsbrowser.newgroup.title")
-				: MessageBundle.getMessage("angal.groupsbrowser.editgroup.title"),true);
+				: MessageBundle.getMessage("angal.groupsbrowser.editgroup.title"), true);
 		addGroupListener(parent);
 		insert = inserting;
-		group = old;		
+		group = old;
 		initialize();
 	}
 
@@ -209,7 +209,7 @@ public class GroupEdit extends JDialog {
 				boolean result = false;
 				if (insert) {      // inserting
 					try {
-						result = manager.newUserGroup(group);
+						result = userBrowsingManager.newUserGroup(group);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
@@ -218,7 +218,7 @@ public class GroupEdit extends JDialog {
 					}
 				} else {         // updating
 					try {
-						result = manager.updateUserGroup(group);
+						result = userBrowsingManager.updateUserGroup(group);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}

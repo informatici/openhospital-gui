@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -47,7 +47,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryResultTypeListener{
+public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryResultTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<DeliveryResultType> pDeliveryResultType;
@@ -66,7 +66,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	private JTable jTable = null;
 	private DeliveryResultTypeBrowserModel model;
 	private int selectedrow;
-	private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
+	private DeliveryResultTypeBrowserManager deliveryResultTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 	private DeliveryResultType deliveryresultType = null;
 	private final JFrame myFrame;
 	
@@ -109,15 +109,14 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				deliveryresultType = new DeliveryResultType("","");
-				DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, true);
+				deliveryresultType = new DeliveryResultType("", "");
+				DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame, deliveryresultType, true);
 				newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -140,7 +139,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					deliveryresultType = (DeliveryResultType) (model.getValueAt(selectedrow, -1));
-					DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, false);
+					DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame, deliveryresultType, false);
 					newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -177,14 +176,14 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					DeliveryResultType resultType = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
-					int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg",resultType.getDescription());
+					int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg", resultType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryResultType(resultType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (deliveryResultTypeBrowserManager.deleteDeliveryResultType(resultType))) {
 							pDeliveryResultType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
 						}
-					} catch(OHServiceException ohServiceException) {
+					} catch (OHServiceException ohServiceException) {
 						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
@@ -193,7 +192,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DeliveryResultTypeBrowserModel();
 			jTable = new JTable(model);
@@ -206,11 +205,10 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 
 		public DeliveryResultTypeBrowserModel() {
 			try {
-				pDeliveryResultType = manager.getDeliveryResultType();
+				pDeliveryResultType = deliveryResultTypeBrowserManager.getDeliveryResultType();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

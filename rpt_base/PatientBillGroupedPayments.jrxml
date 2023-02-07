@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillGroupedPayments" pageWidth="535" pageHeight="535" whenNoDataType="NoPages" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="PatientBillGroupedPayments" whenResourceMissingType="Key" uuid="51bb74d3-10b1-409c-97ec-4f07ed47b344">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="billID" class="java.lang.String"/>
+	<parameter name="collectionbillsId" class="java.util.Collection" isForPrompting="false"/>
+	<parameter name="totalToPaid" class="java.math.BigDecimal" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT BLP_DATE, SUM(BLP_AMOUNT) AS BLP_AMOUNT FROM OH_BILLPAYMENTS
+WHERE $X{IN ,BLP_ID_BILL, collectionbillsId } ORDER BY BLP_DATE ASC]]>
+	</queryString>
+	<field name="BLP_DATE" class="java.sql.Timestamp"/>
+	<field name="BLP_AMOUNT" class="java.lang.Double"/>
+	<variable name="PAID" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{BLP_AMOUNT}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="50" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="466" y="7" width="67" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="c13946cf-c552-4792-adc6-064a718b6425"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BLP_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-3" x="341" y="26" width="118" height="19" uuid="a2028be8-199f-4863-aca8-6332c2291a0e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Balance}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-7" x="341" y="7" width="118" height="19" uuid="2343b81e-fc56-49c2-9d30-3d7f8df1db16"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Paid}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-8" x="466" y="26" width="67" height="19" uuid="f19e1538-9b33-4285-a2f5-8814b55be422"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalToPaid}.subtract(new BigDecimal($V{PAID}.intValue()))]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-1" mode="Transparent" x="3" y="1" width="531" height="1" uuid="5364321e-ad4d-44ba-94d3-d3b1b6eb63a7"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

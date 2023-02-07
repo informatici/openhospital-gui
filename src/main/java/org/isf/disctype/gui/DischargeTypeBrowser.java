@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia
  */
-public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeListener{
+public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<DischargeType> pDischargeType;
@@ -66,7 +66,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 	private JTable jTable = null;
 	private DischargeTypeBrowserModel model;
 	private int selectedrow;
-	private DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
+	private DischargeTypeBrowserManager dischargeTypeBrowserManager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 	private DischargeType dischargeType = null;
 	private final JFrame myFrame;
 
@@ -115,8 +115,8 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				DischargeType mdsr = new DischargeType("","");
-				DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,mdsr, true);
+				DischargeType mdsr = new DischargeType("", "");
+				DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame, mdsr, true);
 				newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -139,7 +139,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					dischargeType = (DischargeType) (model.getValueAt(selectedrow, -1));
-					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,dischargeType, false);
+					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame, dischargeType, false);
 					newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -181,7 +181,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 
 						boolean deleted;
 						try {
-							deleted = manager.deleteDischargeType(disType);
+							deleted = dischargeTypeBrowserManager.deleteDischargeType(disType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -199,7 +199,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DischargeTypeBrowserModel();
 			jTable = new JTable(model);
@@ -212,11 +212,10 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 	class DischargeTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 
 		public DischargeTypeBrowserModel() {
 			try {
-				pDischargeType = manager.getDischargeType();
+				pDischargeType = dischargeTypeBrowserManager.getDischargeType();
 			} catch (OHServiceException e) {
 				pDischargeType = null;
 				OHServiceExceptionUtil.showMessages(e);

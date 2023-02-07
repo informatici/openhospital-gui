@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -63,6 +63,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final DiseaseType ALL_DISEASETYPES = new DiseaseType("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
 
 	@Override
 	public void diseaseInserted(AWTEvent e) {
@@ -96,12 +97,12 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	};
 	private int[] pColumnWidth = {50, 180, 200};
 	private Disease disease;
-	private DefaultTableModel model ;
+	private DefaultTableModel model;
 	private JTable table;
 	private JFrame myFrame;
 	private DiseaseType pSelection;
-	private DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-	private DiseaseTypeBrowserManager disTypeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	
 	
 	public DiseaseBrowser() {
@@ -124,10 +125,10 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		buttonPanel.add(selectlabel);
 		
 		pbox = new JComboBox();
-		pbox.addItem(new DiseaseType("0", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
+		pbox.addItem(ALL_DISEASETYPES);
 		List<DiseaseType> type = null;
 		try {
-			type = disTypeManager.getDiseaseType();
+			type = diseaseTypeBrowserManager.getDiseaseType();
 		} catch(OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
@@ -139,7 +140,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		}
 		pbox.addActionListener(actionEvent -> {
 			pSelection = (DiseaseType) pbox.getSelectedItem();
-			if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.common.all.txt").toLowerCase()) == 0) {
+			if (pSelection.getDescription().compareTo(ALL_DISEASETYPES.getDescription()) == 0) {
 				model = new DiseaseBrowserModel();
 			} else {
 				model = new DiseaseBrowserModel(pSelection.getCode());
@@ -166,7 +167,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				disease = (Disease) (((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				disease = (Disease) model.getValueAt(selectedrow, -1);
 				DiseaseEdit editrecord = new DiseaseEdit(myFrame, disease, false);
 				editrecord.addDiseaseListener(DiseaseBrowser.this);
 				editrecord.setVisible(true);
@@ -181,10 +182,10 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				disease = (Disease) (((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				disease = (Disease) model.getValueAt(selectedrow, -1);
 				int answer = MessageDialog.yesNo(DiseaseBrowser.this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
 				try {
-					if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))) {
+					if ((answer == JOptionPane.YES_OPTION) && (diseaseBrowserManager.deleteDisease(disease))) {
 						disease.setIpdInInclude(false);
 						disease.setIpdOutInclude(false);
 						disease.setOpdInclude(false);
@@ -215,14 +216,14 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 
 		public DiseaseBrowserModel(String s) {
 			try {
-				pDisease = manager.getDisease(s);
+				pDisease = diseaseBrowserManager.getDisease(s);
 			} catch(OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 		public DiseaseBrowserModel() {
 			try {
-				pDisease = manager.getDiseaseAll();
+				pDisease = diseaseBrowserManager.getDiseaseAll();
 			} catch(OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

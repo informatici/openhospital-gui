@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,16 +21,17 @@
  */
 package org.isf.utils.jobjects;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.operation.manager.OperationBrowserManager;
@@ -40,32 +41,28 @@ import org.isf.utils.exception.OHServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OhTableOperationModel<T> implements TableModel{
+public class OhTableOperationModel<T> implements TableModel {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OhTableOperationModel.class);
-	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-	List<T> dataList;	
+	List<T> dataList;
 	List<T> filteredList;
-	OperationBrowserManager manageop = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	
 	public  OhTableOperationModel(List<T> dataList) {
 		this.dataList = dataList;
 		this.filteredList = new ArrayList<>();
 
 		if (dataList != null) {
-			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext(); ) {
-				T t = (T) iterator.next();
-				this.filteredList.add(t);
-			}
+			this.filteredList.addAll(dataList);
 		}
 	}
 
 	public int filter(String searchQuery) {
 		this.filteredList = new ArrayList<>();
 
-		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext(); ) {
-			Object object = (Object) iterator.next();
+		for (T t : this.dataList) {
+			Object object = t;
 			if (object instanceof OperationRow) {
 				OperationRow price = (OperationRow) object;
 				String strItem = price.getOperation().getCode() + price.getOpResult();
@@ -100,20 +97,16 @@ public class OhTableOperationModel<T> implements TableModel{
 		switch (columnIndex) {
 		case 0:
 			columnLabel= MessageBundle.getMessage("angal.operationrowlist.date").toUpperCase();
-			//columnLabel= "Date";
 			break;
 		case 1:
 			columnLabel= MessageBundle.getMessage("angal.operationrowlist.natureop").toUpperCase();
-			//columnLabel= "Nature Operation";
 			break;
 		case 2:
 			columnLabel= MessageBundle.getMessage("angal.common.result.txt").toUpperCase();
-			//columnLabel= "Resultat";
 			break;
 		case 3:
 			columnLabel= MessageBundle.getMessage("angal.operationrowedit.unitetrans").toUpperCase();
-			//columnLabel= "Unite Trans";
-			break;	
+			break;
 		default:
 			break;
 		}
@@ -139,18 +132,17 @@ public class OhTableOperationModel<T> implements TableModel{
 					case -1:
 						return opdObj;
 					case 0:
-						String dt = "";
 						try {
-							dt = dateTimeFormat.format(opdObj.getOpDate().getTime());
-							value = dt;
+							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY, new Locale(GeneralData.LANGUAGE));
+							value = currentDateFormat.format(opdObj.getOpDate());
 						} catch (Exception ex) {
-							value = opdObj.getOpDate().getTime().toString();
+							value = opdObj.getOpDate().toString();
 						}
 						break;
 					case 1:
 						Operation ope = null;
 						try {
-							ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
+							ope = operationBrowserManager.getOperationByCode(opdObj.getOperation().getCode());
 						} catch (OHServiceException ohServiceException) {
 							LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 						}
@@ -161,7 +153,7 @@ public class OhTableOperationModel<T> implements TableModel{
 						}
 						break;
 					case 2:
-						value = manageop.getResultDescriptionTranslated(opdObj.getOpResult());
+						value = operationBrowserManager.getResultDescriptionTranslated(opdObj.getOpResult());
 						break;
 					case 3:
 						value = opdObj.getTransUnit() + "";

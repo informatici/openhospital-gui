@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -53,49 +53,53 @@ import org.isf.vactype.model.VaccineType;
  * 19/10/2011 - Cla - version is now 1.0
  * ------------------------------------------
  */
-public class VaccineTypeEdit extends JDialog{
+public class VaccineTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-    private EventListenerList vaccineTypeListeners = new EventListenerList();
+	private EventListenerList vaccineTypeListeners = new EventListenerList();
 
-    public interface VaccineTypeListener extends EventListener {
-        void vaccineTypeUpdated(AWTEvent e);
-        void vaccineTypeInserted(AWTEvent e);
-    }
-    
-    public void addVaccineTypeListener(VaccineTypeListener l) {
-        vaccineTypeListeners.add(VaccineTypeListener.class, l);
-    }
+	public interface VaccineTypeListener extends EventListener {
 
-    public void removeVaccineTypeListener(VaccineTypeListener l) {
-    	vaccineTypeListeners.remove(VaccineTypeListener.class, l);
-    }
+		void vaccineTypeUpdated(AWTEvent e);
 
-    
-    private void fireVaccineInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		void vaccineTypeInserted(AWTEvent e);
+	}
 
-			private static final long serialVersionUID = 1L;};
+	public void addVaccineTypeListener(VaccineTypeListener l) {
+		vaccineTypeListeners.add(VaccineTypeListener.class, l);
+	}
 
-        EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((VaccineTypeListener) listener).vaccineTypeInserted(event);
-	    }
-    }
+	public void removeVaccineTypeListener(VaccineTypeListener l) {
+		vaccineTypeListeners.remove(VaccineTypeListener.class, l);
+	}
 
-    
-    private void fireVaccineUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireVaccineInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
 		EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((VaccineTypeListener) listener).vaccineTypeUpdated(event);
-	    }
-    }
-    
+		for (EventListener listener : listeners) {
+			((VaccineTypeListener) listener).vaccineTypeInserted(event);
+		}
+	}
+
+	private void fireVaccineUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
+		for (EventListener listener : listeners) {
+			((VaccineTypeListener) listener).vaccineTypeUpdated(event);
+		}
+	}
+
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -113,13 +117,12 @@ public class VaccineTypeEdit extends JDialog{
      * because we need to update them
 	 */
 	public VaccineTypeEdit(JFrame owner, VaccineType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		vaccineType = old;
-		lastdescription= vaccineType.getDescription();
+		lastdescription = vaccineType.getDescription();
 		initialize();
 	}
-
 
 	/**
 	 * This method initializes this
@@ -207,35 +210,31 @@ public class VaccineTypeEdit extends JDialog{
 				vaccineType.setDescription(descriptionTextField.getText());
 				vaccineType.setCode(codeTextField.getText());
 
-				boolean result;
-				VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-				if (insert) {// inserting
+				if (insert) {	// inserting
 					try {
-						result = manager.newVaccineType(vaccineType);
-						if (result) {
+						VaccineType insertedVaccineType = vaccineTypeBrowserManager.newVaccineType(vaccineType);
+						if (insertedVaccineType != null) {
 							fireVaccineInserted();
 							dispose();
 						} else {
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 					} catch (OHServiceException e1) {
-						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-				} else { // updating
+				} else {	// updating
 					if (descriptionTextField.getText().equals(lastdescription)) {
 						dispose();
 					} else {
 						try {
-							result = manager.updateVaccineType(vaccineType);
-							if (result) {
+							VaccineType updatedVaccineType = vaccineTypeBrowserManager.updateVaccineType(vaccineType);
+							if (updatedVaccineType != null) {
 								fireVaccineUpdated();
 								dispose();
 							} else {
 								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						} catch (OHServiceException e1) {
-							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 					}
@@ -293,4 +292,5 @@ public class VaccineTypeEdit extends JDialog{
 		}
 		return jDataPanel;
 	}
+
 }

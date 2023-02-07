@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -24,7 +24,6 @@ package org.isf.ward.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
@@ -44,6 +44,8 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+
+import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
  * This class shows a list of wards.
@@ -57,29 +59,25 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 
 	@Override
 	public void wardInserted(AWTEvent e) {
-		pWard.add(0,ward);
-		((WardBrowserModel)table.getModel()).fireTableDataChanged();
-		//table.updateUI();
+		pWard.add(0, ward);
+		((WardBrowserModel) table.getModel()).fireTableDataChanged();
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
 		}
 	}
-	
+
 	@Override
 	public void wardUpdated(AWTEvent e) {
-		pWard.set(selectedrow,ward);
-		((WardBrowserModel)table.getModel()).fireTableDataChanged();
+		pWard.set(selectedrow, ward);
+		((WardBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow >-1) {
-			table.setRowSelectionInterval(selectedrow,selectedrow);
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
+			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
-	
-	private int pfrmBase = 10;
-	private int pfrmWidth = 8;
-	private int pfrmHeight = 6;
-	private int pfrmBordX;
-	private int pfrmBordY;
+
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton jEditButton = null;
@@ -98,12 +96,14 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			MessageBundle.getMessage("angal.ward.beds.col").toUpperCase(),
 			MessageBundle.getMessage("angal.ward.nurses.col").toUpperCase(),
 			MessageBundle.getMessage("angal.ward.doctors.col").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.hasopd.col").toUpperCase(),
 			MessageBundle.getMessage("angal.ward.haspharmacy.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.male.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.common.female.txt").toUpperCase()
+			MessageBundle.getMessage("angal.common.female.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.duration.col").toUpperCase()
 	};
-	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30};
-	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class};
+	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30, 30, 30};
+	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, int.class};
 	private int selectedrow;
 	private List<Ward> pWard;
 	private Ward ward;
@@ -115,31 +115,23 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	public WardBrowser() {
 		super();
 		myFrame = this;
-		//check if in the db maternity ward exists
-		WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+		//check if in the db maternity and OPD wards exist
+		WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 		try {
-			manager.maternityControl(true);
+			wardBrowserManager.maternityControl(true);
+			wardBrowserManager.opdControl(true);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		initialize();
+		this.setTitle(MessageBundle.getMessage("angal.ward.wardbrowser.title"));
+		setContentPane(getJContentPane());
+		setMinimumSize(new Dimension(800, 400));
+		setPreferredSize(new Dimension(1100, 400));
+		pack();
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
-	/**
-	 * This method initializes this
-	 */
-	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.ward.wardbrowser.title"));
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
-		this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase * pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
-		this.setContentPane(getJContentPane());
-		
-	}
-	
+
 	/**
 	 * This method initializes jContentPane
 	 * 
@@ -147,10 +139,9 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
-			jContentPane = new JPanel();
-			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContentPane.add(getJScrollPane(), java.awt.BorderLayout.CENTER);
+			jContentPane = new JPanel(new BorderLayout());
+			jContentPane.add(getJScrollPane(), BorderLayout.CENTER);
+			jContentPane.add(getJButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -162,7 +153,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	 */
 	private JPanel getJButtonPanel() {
 		if (jButtonPanel == null) {
-			jButtonPanel = new JPanel();
+			jButtonPanel = new JPanel(new WrapLayout());
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
 			jButtonPanel.add(getJDeleteButton(), null);
@@ -185,8 +176,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-					WardEdit editrecord = new WardEdit(myFrame,ward,false);
+					ward = (Ward) (model.getValueAt(table.getSelectedRow(), -1));
+					WardEdit editrecord = new WardEdit(myFrame, ward, false);
 					editrecord.addWardListener(WardBrowser.this);
 					editrecord.setVisible(true);
 				}
@@ -205,8 +196,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				ward=new Ward(null,"","","","",null,null,null,false,false);	//operation will reference the new record
-				WardEdit newrecord = new WardEdit(myFrame,ward,true);
+				ward = new Ward(null, "", "", "", "", null, null, null, false, false);    //operation will reference the new record
+				WardEdit newrecord = new WardEdit(myFrame, ward, true);
 				newrecord.addWardListener(WardBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -227,11 +218,10 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
-					WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-					Ward ward = (Ward) (((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					Ward ward = (Ward) (model.getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))) {
+						if ((answer == JOptionPane.YES_OPTION) && (wardBrowserManager.deleteWard(ward))) {
 							pWard.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();
@@ -281,17 +271,20 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (table == null) {
 			model = new WardBrowserModel();
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
-			table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
-			table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
-			table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
-			table.getColumnModel().getColumn(4).setPreferredWidth(pColumnWidth[4]);
-			table.getColumnModel().getColumn(5).setPreferredWidth(pColumnWidth[5]);
-			table.getColumnModel().getColumn(6).setPreferredWidth(pColumnWidth[6]);
-			table.getColumnModel().getColumn(7).setPreferredWidth(pColumnWidth[7]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnWidth[8]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnWidth[9]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnWidth[10]);
+			TableColumnModel columnModel = table.getColumnModel();
+			columnModel.getColumn(0).setMaxWidth(pColumnWidth[0]);
+			columnModel.getColumn(1).setPreferredWidth(pColumnWidth[1]);
+			columnModel.getColumn(2).setPreferredWidth(pColumnWidth[2]);
+			columnModel.getColumn(3).setPreferredWidth(pColumnWidth[3]);
+			columnModel.getColumn(4).setPreferredWidth(pColumnWidth[4]);
+			columnModel.getColumn(5).setPreferredWidth(pColumnWidth[5]);
+			columnModel.getColumn(6).setPreferredWidth(pColumnWidth[6]);
+			columnModel.getColumn(7).setPreferredWidth(pColumnWidth[7]);
+			columnModel.getColumn(8).setPreferredWidth(pColumnWidth[8]);
+			columnModel.getColumn(8).setPreferredWidth(pColumnWidth[8]);
+			columnModel.getColumn(9).setPreferredWidth(pColumnWidth[9]);
+			columnModel.getColumn(10).setPreferredWidth(pColumnWidth[10]);
+			columnModel.getColumn(11).setPreferredWidth(pColumnWidth[11]);
 		}
 		return table;
 	}
@@ -301,9 +294,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		private static final long serialVersionUID = 1L;
 
 		public WardBrowserModel() {
-			WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			try {
-				pWard = manager.getWards();
+				pWard = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				pWard = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
@@ -331,30 +323,35 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		@Override
 		public Object getValueAt(int r, int c) {
 			Ward ward = pWard.get(r);
+			int i = 0;
 			if (c == 0) {
 				return ward.getCode();
 			} else if (c == -1) {
 				return ward;
-			} else if (c == 1) {
+			} else if (c == ++i) {
 				return ward.getDescription();
-			} else if (c == 2) {
+			} else if (c == ++i) {
 				return ward.getTelephone();
-			} else if (c == 3) {
+			} else if (c == ++i) {
 				return ward.getFax();
-			} else if (c == 4) {
+			} else if (c == ++i) {
 				return ward.getEmail();
-			} else if (c == 5) {
+			} else if (c == ++i) {
 				return ward.getBeds();
-			} else if (c == 6) {
+			} else if (c == ++i) {
 				return ward.getNurs();
-			} else if (c == 7) {
+			} else if (c == ++i) {
 				return ward.getDocs();
-			} else if (c == 8) {
+			} else if (c == ++i) {
+				return ward.isOpd();
+			} else if (c == ++i) {
 				return ward.isPharmacy();
-			} else if (c == 9) {
+			} else if (c == ++i) {
 				return ward.isMale();
-			} else if (c == 10) {
+			} else if (c == ++i) {
 				return ward.isFemale();
+			} else if (c == ++i) {
+				return ward.getVisitDuration();
 			}
 			return null;
 		}
@@ -366,10 +363,11 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		public Class<?> getColumnClass(int columnIndex) {
 			return pColumnClass[columnIndex];
 		}
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
+
 }

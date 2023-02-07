@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -45,15 +45,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class MedicalTypeBrowserEdit extends JDialog{
+public class MedicalTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList medicalTypeListeners = new EventListenerList();
 
-    public interface MedicalTypeListener extends EventListener {
-        void medicalTypeUpdated(AWTEvent e);
-        void medicalTypeInserted(AWTEvent e);
-    }
+	public interface MedicalTypeListener extends EventListener {
+
+		void medicalTypeUpdated(AWTEvent e);
+
+		void medicalTypeInserted(AWTEvent e);
+	}
 
     public void addMedicalTypeListener(MedicalTypeListener l) {
         medicalTypeListeners.add(MedicalTypeListener.class, l);
@@ -63,26 +65,29 @@ public class MedicalTypeBrowserEdit extends JDialog{
         medicalTypeListeners.remove(MedicalTypeListener.class, listener);
     }
 
-    private void fireMedicalInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireMedicalInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = medicalTypeListeners.getListeners(MedicalTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((MedicalTypeListener) listener).medicalTypeInserted(event);
-	    }
-    }
-    private void fireMedicalUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = medicalTypeListeners.getListeners(MedicalTypeListener.class);
+		for (EventListener listener : listeners) {
+			((MedicalTypeListener) listener).medicalTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireMedicalUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = medicalTypeListeners.getListeners(MedicalTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((MedicalTypeListener) listener).medicalTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = medicalTypeListeners.getListeners(MedicalTypeListener.class);
+		for (EventListener listener : listeners) {
+			((MedicalTypeListener) listener).medicalTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -95,17 +100,16 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	private MedicalType medicalType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private MedicalTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
+	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 
 	/**
-	 * This is the default constructor; we pass the arraylist and the selectedrow
-     * because we need to update them
+	 * This is the default constructor
 	 */
 	public MedicalTypeBrowserEdit(JFrame owner, MedicalType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		medicalType = old; //medical type will be used for every operation
-		lastdescription= medicalType.getDescription();
+		lastdescription = medicalType.getDescription();
 		initialize();
 	}
 
@@ -133,8 +137,8 @@ public class MedicalTypeBrowserEdit extends JDialog{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -197,8 +201,8 @@ public class MedicalTypeBrowserEdit extends JDialog{
 				boolean result;
 				if (insert) { // inserting
 					try {
-						result = manager.newMedicalType(medicalType);
-						if (result) {
+						MedicalType insertedMedicalType = medicalTypeBrowserManager.newMedicalType(medicalType);
+						if (insertedMedicalType != null) {
 							fireMedicalInserted();
 							dispose();
 						} else {
@@ -212,8 +216,8 @@ public class MedicalTypeBrowserEdit extends JDialog{
 						dispose();
 					} else {
 						try {
-							result = manager.updateMedicalType(medicalType);
-							if (result) {
+							MedicalType updatedMedicalType = medicalTypeBrowserManager.updateMedicalType(medicalType);
+							if (updatedMedicalType != null) {
 								fireMedicalUpdated();
 								dispose();
 							} else {

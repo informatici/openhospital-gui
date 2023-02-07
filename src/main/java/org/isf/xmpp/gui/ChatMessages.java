@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -20,6 +20,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.xmpp.gui;
+
+import static org.isf.utils.Constants.TIME_FORMAT_HH_MM_SS;
 
 import java.awt.Color;
 import java.awt.Insets;
@@ -48,7 +50,7 @@ public class ChatMessages extends JTextPane {
 	private Color blueColor = new Color(176, 23, 31);
 	private Color redColor = new Color(25, 25, 112);
 	private SimpleAttributeSet keyWord;
-	private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_HH_MM_SS);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ChatMessages.class);
 
@@ -66,14 +68,13 @@ public class ChatMessages extends JTextPane {
 	}
 
 	//print notification of file transfer
-	public void printNotification(String name, String file_transfer,
-			JButton accept, JButton reject) {
+	public void printNotification(String name, String fileTransfer, JButton accept, JButton reject) {
 
 		Document doc = getDocument();
 		int position = doc.getEndPosition().getOffset();
 		StyleConstants.setForeground(keyWord, greenColor);
 		try {
-			doc.insertString(position, "\n*** " + file_transfer + "\n", keyWord);
+			doc.insertString(position, "\n*** " + fileTransfer + "\n", keyWord);
 		} catch (BadLocationException badLocationException) {
 			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
@@ -93,11 +94,10 @@ public class ChatMessages extends JTextPane {
 			StyleConstants.setForeground(keyWord, redColor);
 		}
 		sDoc = getDocument();
-		sDoc.insertString(sDoc.getEndPosition().getOffset(), "(" + sdf.format(new Date()) + ") " + user + " : ", keyWord);
+		sDoc.insertString(sDoc.getEndPosition().getOffset(), "(" + simpleDateFormat.format(new Date()) + ") " + user + " : ", keyWord);
 		StyleConstants.setBold(keyWord, false);
 		StyleConstants.setForeground(keyWord, Color.black);
 		sDoc.insertString(sDoc.getEndPosition().getOffset(), message + "\n", keyWord);
-
 	}
 
 	public void printReport(String name, String report) {
@@ -130,7 +130,7 @@ public class ChatMessages extends JTextPane {
 		StyleConstants.setForeground(keyWord, greenColor);
 
 		try {
-			doc.insertString(position, MessageBundle.formatMessage("angal.xmpp.wantstosharewithyouthisreport.fmt.msg",name, typeReport), keyWord);
+			doc.insertString(position, MessageBundle.formatMessage("angal.xmpp.wantstosharewithyouthisreport.fmt.msg", name, typeReport), keyWord);
 		} catch (BadLocationException badLocationException) {
 			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
@@ -139,10 +139,9 @@ public class ChatMessages extends JTextPane {
 
 		insertComponent(view);
 		view.addActionListener(actionEvent -> {
-			new GenericReportFromDateToDate(fromDate, toDate, typeReport, typeReport, false);
+			new GenericReportFromDateToDate(fromDate, toDate, "rpt_base", typeReport, typeReport, false);
 			view.setEnabled(false);
 		});
-
 	}
 
 }

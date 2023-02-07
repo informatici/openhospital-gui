@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class OperationTypeBrowser extends ModalJFrame implements OperationTypeListener{
+public class OperationTypeBrowser extends ModalJFrame implements OperationTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<OperationType> pOperationType;
@@ -66,7 +66,9 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 	private JTable jTable = null;
 	private OperationTypeBrowserModel model;
 	private int selectedrow;
-	private OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
+	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
 	private OperationType operationType = null;
 	private final JFrame myFrame;
 
@@ -114,8 +116,8 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				operationType = new OperationType("","");
-				OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, true);
+				operationType = new OperationType("", "");
+				OperationTypeEdit newrecord = new OperationTypeEdit(myFrame, operationType, true);
 				newrecord.addOperationTypeListener(OperationTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -138,7 +140,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					operationType = (OperationType) (model.getValueAt(selectedrow, -1));
-					OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, false);
+					OperationTypeEdit newrecord = new OperationTypeEdit(myFrame, operationType, false);
 					newrecord.addOperationTypeListener(OperationTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -180,7 +182,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 
 						boolean deleted;
 						try {
-							deleted = manager.deleteOperationType(opType);
+							deleted = operationTypeBrowserManager.deleteOperationType(opType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -197,8 +199,8 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new OperationTypeBrowserModel();
 			jTable = new JTable(model);
@@ -213,9 +215,8 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		private static final long serialVersionUID = 1L;
 
 		public OperationTypeBrowserModel() {
-			OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 			try {
-				pOperationType = manager.getOperationType();
+				pOperationType = operationTypeBrowserManager.getOperationType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 				pOperationType = null;

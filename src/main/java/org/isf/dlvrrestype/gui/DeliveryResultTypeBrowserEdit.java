@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -44,15 +44,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DeliveryResultTypeBrowserEdit extends JDialog{
+public class DeliveryResultTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList deliveryresultTypeListeners = new EventListenerList();
 
-    public interface DeliveryResultTypeListener extends EventListener {
-        void deliveryresultTypeUpdated(AWTEvent e);
-        void deliveryresultTypeInserted(AWTEvent e);
-    }
+	public interface DeliveryResultTypeListener extends EventListener {
+
+		void deliveryresultTypeUpdated(AWTEvent e);
+
+		void deliveryresultTypeInserted(AWTEvent e);
+	}
 
     public void addDeliveryResultTypeListener(DeliveryResultTypeListener l) {
         deliveryresultTypeListeners.add(DeliveryResultTypeListener.class, l);
@@ -62,27 +64,32 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
         deliveryresultTypeListeners.remove(DeliveryResultTypeListener.class, listener);
     }
 
-    private void fireDeliveryResultInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireDeliveryResultInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DeliveryResultTypeListener) listener).deliveryresultTypeInserted(event);
-	    }
-    }
-    private void fireDeliveryResultUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DeliveryResultTypeListener) listener).deliveryresultTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireDeliveryResultUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DeliveryResultTypeListener) listener).deliveryresultTypeUpdated(event);
-	    }
-    }
-    
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DeliveryResultTypeListener) listener).deliveryresultTypeUpdated(event);
+		}
+	}
+
+	private DeliveryResultTypeBrowserManager deliveryResultTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -100,10 +107,10 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
      * because we need to update them
 	 */
 	public DeliveryResultTypeBrowserEdit(JFrame owner, DeliveryResultType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		deliveryresultType = old;//disease will be used for every operation
-		lastdescription= deliveryresultType.getDescription();
+		deliveryresultType = old;  // deliveryResult will be used for every operation
+		lastdescription = deliveryresultType.getDescription();
 		initialize();
 	}
 
@@ -189,14 +196,13 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 				try {
 
 					deliveryresultType.setDescription(descriptionTextField.getText());
 					deliveryresultType.setCode(codeTextField.getText());
 
 					if (insert) {     // inserting
-						if (manager.newDeliveryResultType(deliveryresultType)) {
+						if (deliveryResultTypeBrowserManager.newDeliveryResultType(deliveryresultType)) {
 							fireDeliveryResultInserted();
 							dispose();
 						} else {
@@ -206,7 +212,7 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							if (manager.updateDeliveryResultType(deliveryresultType)) {
+							if (deliveryResultTypeBrowserManager.updateDeliveryResultType(deliveryresultType)) {
 								fireDeliveryResultUpdated();
 								dispose();
 							} else {

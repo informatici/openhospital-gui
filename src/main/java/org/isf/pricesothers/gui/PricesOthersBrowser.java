@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -80,7 +80,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	protected static Class<?>[] cTypes = {String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class};
 	
 	private PricesOthers pOthers;
-	PricesOthersManager pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
+	private PricesOthersManager pricesOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 	private List<PricesOthers> pOthersArray;
 	private JFrame myFrame;
 	
@@ -127,7 +127,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 						boolean result = false;
 						try {
-							result = pOthersManager.deleteOther(pOthers);
+							result = pricesOthersManager.deleteOther(pOthers);
 						} catch (OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e);
 						}
@@ -168,7 +168,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jButtonNew.addActionListener(actionEvent -> {
-				PricesOthers pOther = new PricesOthers("", "", true,true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				PricesOthers pOther = new PricesOthers("", "", true, true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);
 				editOther.addOtherListener(PricesOthersBrowser.this);
 				editOther.setVisible(true);
@@ -201,9 +201,6 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jTablePricesOthers == null) {
 			jTablePricesOthers = new JTable() {
 
-				/**
-				 *
-				 */
 				private static final long serialVersionUID = 1L;
 
 				// Override this method so that it returns the preferred
@@ -230,9 +227,8 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		private static final long serialVersionUID = 1L;
 
 		public PricesOthersBrowserModel() {
-			pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 			try {
-				pOthersArray = pOthersManager.getOthers();
+				pOthersArray = pricesOthersManager.getOthers();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -34,6 +34,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -51,11 +52,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.dcm4che2.data.DicomObject;
-import org.dcm4che2.data.Tag;
-import org.dcm4che2.imageio.plugins.dcm.DicomImageReadParam;
-import org.dcm4che2.imageio.plugins.dcm.DicomStreamMetaData;
-import org.dcm4che2.io.DicomCodingException;
+import org.dcm4che3.data.Attributes;
+import org.dcm4che3.data.Tag;
+import org.dcm4che3.imageio.plugins.dcm.DicomImageReadParam;
+import org.dcm4che3.io.DicomInputStream;
+import org.dcm4che3.util.SafeClose;
 import org.imgscalr.Scalr;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.model.FileDicom;
@@ -66,6 +67,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.time.Converters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,15 +84,15 @@ public class DicomViewGui extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DicomViewGui.class);
 
 	// status of framereader
-	private int patID = -1;
-	private Patient ohPatient = null;
-	private String serieNumber = "";
+	private int patID;
+	private Patient ohPatient;
+	private String serieNumber;
 	private Long[] frames = null;
 
 	// status of frame
-	private int frameIndex = 0;
+	private int frameIndex;
 	private BufferedImage tmpImg = null;
-	private DicomObject tmpDicom = null;
+	private Attributes attributes = null;
 	private FileDicom tmpDbFile = null;
 
 	// GUI
@@ -203,18 +205,11 @@ public class DicomViewGui extends JPanel {
 			} else {
 				jSliderFrame.setEnabled(false);
 			}
-			
-			// center = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-			// ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			jPanelCenter = new JPanel();
 
-			// center.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
-
 			jPanelCenter.add(composeCenter(jPanelCenter.getWidth(), jPanelCenter.getHeight(), true));
 		}
-
-		// center.getViewport().setBackground(Color.BLACK);
 
 		jPanelCenter.setBackground(Color.BLACK);
 
@@ -235,16 +230,12 @@ public class DicomViewGui extends JPanel {
 		jPanelFooter.add(fp2);
 		setLayout(new BorderLayout());
 		setBackground(Color.BLACK);
-
-		// add(intestazione,BorderLayout.NORTH);
 		add(jPanelCenter, BorderLayout.CENTER);
 		add(jPanelFooter, BorderLayout.SOUTH);
-
 	}
 
 	void reInitComponent() {
 		if (patID <= 0) {
-			// center = new JScrollPane();
 			jPanelCenter = new JPanel();
 			jSliderFrame.setEnabled(false);
 			jSliderZoom.setEnabled(false);
@@ -266,11 +257,6 @@ public class DicomViewGui extends JPanel {
 			}
 
 			jPanelCenter.removeAll();
-			
-//			int perc = jSliderZoom.getValue();
-//			float value = (float) tmpImg.getWidth() * (float) perc / 100f;
-//			BufferedImage immagineResized = Scalr.resize(tmpImg, Math.round(value));
-
 			jPanelCenter.add(composeCenter(jPanelCenter.getWidth(), jPanelCenter.getHeight(), true));
 			validate();
 		}
@@ -293,16 +279,6 @@ public class DicomViewGui extends JPanel {
 		int perc = jSliderZoom.getValue();
 		float value = (float) tmpImg.getWidth() * (float) perc / 100f;
 		BufferedImage immagineResized = Scalr.resize(tmpImg, Math.round(value));
-
-		// if (immagineResized.getWidth()>immagineCanvas.getWidth())
-		// immagineResized =
-		// Scalr.resize(tmpImg,Math.round(immagineCanvas.getWidth()));
-		// immagineCanvas = new
-		// BufferedImage(immagineResized.getWidth(),immagineResized.getHeight(),BufferedImage.TYPE_INT_ARGB);
-
-		// drawQuadrant(immagineResized.getGraphics(),
-		// immagineResized.getHeight(),immagineResized.getWidth(),
-		// Color.LIGHT_GRAY);
 
 		Graphics2D canvas = (Graphics2D) imageCanvas.getGraphics();
 
@@ -362,7 +338,7 @@ public class DicomViewGui extends JPanel {
 		Color orig = canvas.getColor();
 		canvas.setColor(colScr);
 		int hi = 10;
-		String txt = "";
+		String txt;
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.oh"), 10, hi);
 		hi += VGAP;
 		txt = ohPatient.getName();
@@ -377,19 +353,19 @@ public class DicomViewGui extends JPanel {
 		hi += VGAP;
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.dicom"), 10, hi);
 		hi += VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientName) : tmpDbFile.getDicomPatientName();
+		txt = attributes != null ? attributes.getString(Tag.PatientName) : tmpDbFile.getDicomPatientName();
 		if (txt == null) {
 			txt = "";
 		}
 		canvas.drawString(MessageBundle.getMessage("angal.common.name.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientSex) : tmpDbFile.getDicomPatientSex();
+		txt = attributes != null ? attributes.getString(Tag.PatientSex) : tmpDbFile.getDicomPatientSex();
 		if (txt == null) {
 			txt = "";
 		}
 		canvas.drawString(MessageBundle.getMessage("angal.common.sex.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientAge) :  tmpDbFile.getDicomPatientAge();
+		txt = attributes != null ? attributes.getString(Tag.PatientAge) :  tmpDbFile.getDicomPatientAge();
 		if (txt == null) {
 			txt = "";
 		}
@@ -405,13 +381,10 @@ public class DicomViewGui extends JPanel {
 				canvas.drawImage(Scalr.resize(bi, 100), 10, hi, this);
 			}
 		}
-
-		// canvas.drawImage(bi, 10, hi,this);
 		canvas.setColor(orig);
 	}
 
 	private void drawInfoFrameBottomLeft(Graphics2D canvas, int w, int h) {
-
 		Color orig = canvas.getColor();
 		int hi = h - 20;
 		canvas.setColor(colScr);
@@ -426,31 +399,29 @@ public class DicomViewGui extends JPanel {
 	private void drawStudyUpRight(Graphics2D canvas, int w, int h) {
 
 		Color orig = canvas.getColor();
-		String txt = "";
+		String txt;
 		canvas.setColor(colScr);
 		int hi = 10;
 		int ws = w - 200;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.InstitutionName) :  tmpDbFile.getDicomInstitutionName();
+		txt = attributes != null ? attributes.getString(Tag.InstitutionName) :  tmpDbFile.getDicomInstitutionName();
 		if (txt == null) {
 			txt = "";
 		}
 		canvas.drawString(txt, ws, hi);
 		hi += VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.StudyID) : tmpDbFile.getDicomStudyId();
+		txt = attributes != null ? attributes.getString(Tag.StudyID) : tmpDbFile.getDicomStudyId();
 		if (txt == null) {
 			txt = "";
 		}
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.studyid") + " : " + txt, ws, hi);
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.StudyDescription) : tmpDbFile.getDicomStudyDescription();
+		txt = attributes != null ? attributes.getString(Tag.StudyDescription) : tmpDbFile.getDicomStudyDescription();
 		hi += VGAP;
 		if (txt == null) {
 			txt = "";
 		}
 		canvas.drawString(txt, ws, hi);
 		hi += VGAP;
-		txt = "";
-		Date d = null;
-		d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : tmpDbFile.getDicomStudyDate();
+		Date d = attributes != null ? attributes.getDate(Tag.StudyDate) : Converters.toDate(tmpDbFile.getDicomStudyDate());
 		DateFormat df = DateFormat.getDateInstance();
 		if (d != null) {
 			txt = df.format(d);
@@ -466,14 +437,14 @@ public class DicomViewGui extends JPanel {
 		int ws = w - 200;
 		int hi = h - 20;
 		canvas.setColor(colScr);
-		String txt = "";
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.SeriesDescription) : tmpDbFile.getDicomSeriesDescription();
+		String txt;
+		txt = attributes != null ? attributes.getString(Tag.SeriesDescription) : tmpDbFile.getDicomSeriesDescription();
 		if (txt == null) {
 			txt = "";
 		}
 		canvas.drawString(txt, ws, hi);
 		hi -= VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.SeriesNumber) : tmpDbFile.getDicomSeriesNumber() + "      ";
+		txt = attributes != null ? attributes.getString(Tag.SeriesNumber) : tmpDbFile.getDicomSeriesNumber() + "      ";
 		if (txt == null) {
 			txt = "";
 		}
@@ -507,22 +478,16 @@ public class DicomViewGui extends JPanel {
 	private void getImageFromJPG(FileDicom dett) {
 		try {
 			tmpImg = null;
-			Iterator<?> iter = ImageIO.getImageReadersByFormatName("jpg");
-			ImageReader reader = (ImageReader) new com.sun.imageio.plugins.jpeg.JPEGImageReader(null);
-			//JPEGImageReadParam param = new JPEGImageReadParam();
 			ImageInputStream imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
-			reader.setInput(imageInputStream, false);
-
 			try {
-				tmpImg = reader.read(0);//, param);
-			} catch (DicomCodingException dce) {
+				tmpImg = ImageIO.read(imageInputStream);
+			} catch (IOException ioException) {
 				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
 						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
 						OHSeverityLevel.ERROR));
 			}
-
-			imageInputStream.close();
-			this.tmpDicom = null;
+			//imageInputStream.close();
+			this.attributes = null;
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
 		}
@@ -534,27 +499,30 @@ public class DicomViewGui extends JPanel {
 	 * @param dett
 	 */
 	private void getImageFromDicom(FileDicom dett) {
+		ImageInputStream imageInputStream = null;
+		DicomInputStream dicomInputStream = null;
 		try {
 			tmpImg = null;
 			Iterator<?> iter = ImageIO.getImageReadersByFormatName("DICOM");
 			ImageReader reader = (ImageReader) iter.next();
 			DicomImageReadParam param = (DicomImageReadParam) reader.getDefaultReadParam();
-			ImageInputStream imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
+			imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
 			reader.setInput(imageInputStream, false);
 
 			try {
 				tmpImg = reader.read(0, param);
-			} catch (DicomCodingException dce) {
-				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
+			} catch (IOException ioException) {
+				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"),
 						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
 						OHSeverityLevel.ERROR));
 			}
-
-			imageInputStream.close();
-			DicomStreamMetaData dsmd = (DicomStreamMetaData) reader.getStreamMetadata();
-			this.tmpDicom = dsmd.getDicomObject();
+			dicomInputStream = new DicomInputStream(dett.getDicomData().getBinaryStream());
+			this.attributes = dicomInputStream.readDataset();
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
+		} finally {
+			SafeClose.close(imageInputStream);
+			SafeClose.close(dicomInputStream);
 		}
 	}
 
@@ -581,9 +549,6 @@ public class DicomViewGui extends JPanel {
 	private void setFrame(int frame) {
 		frameIndex = frame;
 		refreshFrame();
-
-		// center.getViewport().removeAll();
-		// center.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
 
 		resetMouseRelativePosition();
 		jPanelCenter.removeAll();
@@ -692,8 +657,7 @@ public class DicomViewGui extends JPanel {
 	class DicomViewGuiMouseListener implements MouseListener {
 
 		/**
-		 * Mouse pressed, enable mouse motion and set relative X,Y with the
-		 * click position
+		 * Mouse pressed, enable mouse motion and set relative X, Y with the click position
 		 */
 		@Override
 		public void mousePressed(MouseEvent e) {

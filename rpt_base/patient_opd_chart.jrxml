@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_opd_chart" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_opd_chart" whenResourceMissingType="Key" uuid="25ced88e-7415-4de7-b271-0dd0e47d2329">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="opdID" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./rpt_base/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Hospital" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Address" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="City" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Email" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Telephone" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="patientID" class="java.lang.String"/>
+	<parameter name="LOGO_PATH" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./rsc/images/logo.jpg"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT "ID" AS FIELD, OPD_PROG_YEAR AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+UNION
+SELECT "Date:" AS FIELD, DATE(OPD_DATE) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+UNION
+SELECT "Time:" AS FIELD, TIME_FORMAT(TIME(OPD_DATE), "%H:%i") AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+UNION
+SELECT "Type:" AS FIELD, IF(OPD_NEW_PAT='N','New Attendance','Re-Attendance') AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+UNION
+SELECT "Clinical Remarks:" AS FIELD, OPD_NOTE AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+UNION
+SELECT "Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A)) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+UNION
+SELECT "Second Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_2)) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+UNION
+SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_3)) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}]]>
+	</queryString>
+	<field name="FIELD" class="java.lang.String"/>
+	<field name="DETAIL" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="169" splitType="Stretch">
+			<textField>
+				<reportElement key="staticText-1" x="0" y="79" width="154" height="21" uuid="9652ae14-5cdb-44cf-b348-57bde0b69d43"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{OpdChart}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-1" x="0" y="114" width="535" height="55" uuid="be91e036-2881-4441-b7c3-5dda779d3d77"/>
+				<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_patsubreport.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-25" x="154" y="0" width="381" height="22" uuid="a896ca8a-1372-4d5f-945e-7622604cb381"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-26" x="154" y="22" width="381" height="17" uuid="e4824d74-48db-4718-b937-6a534e6b6bcb"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-27" x="154" y="39" width="381" height="17" uuid="6837097d-636f-486d-b04b-57d366720ff6"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-28" x="154" y="56" width="381" height="17" uuid="cad2f57c-7f70-4200-834d-501b145d0ef8"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-16" x="76" y="100" width="73" height="13" uuid="123d6ed4-9df9-41d6-8f34-e617a83c1aa9"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{version} +" 1.0"]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement key="image-1" x="0" y="0" width="154" height="73" uuid="308717e1-7b52-422b-a09d-172bcbc92d38"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{LOGO_PATH}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-29" positionType="Float" x="5" y="5" width="92" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="932f9685-c959-4ac7-9787-12afcd6292ce"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FIELD}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement key="textField-18" x="107" y="5" width="428" height="14" uuid="c8f67f70-4af2-43e3-b620-8f483827ef4a"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DETAIL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="14" splitType="Stretch">
+			<textField>
+				<reportElement key="staticText-20" x="378" y="0" width="157" height="13" uuid="b4ad7788-b488-4052-aee9-4aa14c95b268"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{DoctorSignature}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-4" x="378" y="1" width="157" height="1" uuid="e5f2e5b4-aadf-45c4-b92f-ef55e35b6991"/>
+			</line>
+			<textField evaluationTime="Report" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="false">
+				<reportElement key="textField-8" x="0" y="0" width="97" height="14" uuid="4dd96d0e-da6e-417a-9550-5cb4841b8b97"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

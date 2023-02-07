@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -55,6 +55,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 
 	private static final long serialVersionUID = 1L;
 
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+
 	private List<VaccineType> pVaccineType;
 	
 	private String[] pColumns = {
@@ -72,7 +74,6 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 	private JTable jTable = null;
 	private VaccineTypeBrowserModel model;
 	private int selectedrow;
-	private VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 	private VaccineType vaccineType = null;
 	
 	private final JFrame myFrame;
@@ -115,15 +116,14 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				vaccineType = new VaccineType("","");
-				VaccineTypeEdit newrecord = new VaccineTypeEdit(myFrame,vaccineType, true);
+				vaccineType = new VaccineType("", "");
+				VaccineTypeEdit newrecord = new VaccineTypeEdit(myFrame, vaccineType, true);
 				newrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -146,7 +146,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					vaccineType = (VaccineType) (model.getValueAt(selectedrow, -1));
-					VaccineTypeEdit editrecord = new VaccineTypeEdit(myFrame,vaccineType, false);
+					VaccineTypeEdit editrecord = new VaccineTypeEdit(myFrame, vaccineType, false);
 					editrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
 					editrecord.setVisible(true);
 				}
@@ -185,7 +185,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 					VaccineType vacType = (VaccineType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.vactype.deletevaccinetype.fmt.msg", vacType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteVaccineType(vacType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (vaccineTypeBrowserManager.deleteVaccineType(vacType))) {
 							pVaccineType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -198,8 +198,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new VaccineTypeBrowserModel();
 			jTable = new JTable(model);
@@ -214,9 +214,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		private static final long serialVersionUID = 1L;
 
 		public VaccineTypeBrowserModel() {
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			try {
-				pVaccineType = manager.getVaccineType();
+				pVaccineType = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

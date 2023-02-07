@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -129,7 +129,7 @@ public class MedicalEdit extends JDialog {
 	 * selectedrow because we need to update them
 	 */
 	public MedicalEdit(Medical old, boolean inserting, JFrame owner) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		try {
 			oldMedical = (Medical) old.clone();
@@ -240,21 +240,24 @@ public class MedicalEdit extends JDialog {
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					Medical newMedical = null;
 					boolean result = false;
 					if (insert) { // inserting
+						Medical newMedical = null;
 						try {
 							newMedical = (Medical) medical.clone();
 							newMedical.setType((MedicalType) typeComboBox.getSelectedItem());
 							newMedical.setDescription(descriptionTextField.getText());
-							newMedical.setProd_code(codeTextField.getText());
+							newMedical.setProdCode(codeTextField.getText());
 							newMedical.setPcsperpck(pcsperpckField.getValue());
 							newMedical.setMinqty(minQtiField.getValue());
 						} catch (CloneNotSupportedException cloneNotSupportedException) {
 							LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
 						}
 						try {
-							result = medicalBrowsingManager.newMedical(newMedical);
+							Medical insertedMedical = medicalBrowsingManager.newMedical(newMedical);
+							if (insertedMedical != null) {
+								result = true;
+							}
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1, MedicalEdit.this);
 							List<OHExceptionMessage> errors = e1.getMessages();
@@ -266,7 +269,10 @@ public class MedicalEdit extends JDialog {
 
 										if (ok == JOptionPane.OK_OPTION) {
 											try {
-												result = medicalBrowsingManager.newMedical(newMedical, true);
+												Medical insertedMedical = medicalBrowsingManager.newMedical(newMedical, true);
+												if (insertedMedical != null) {
+													result = true;
+												}
 											} catch (OHServiceException e2) {
 												OHServiceExceptionUtil.showMessages(e2);
 											}
@@ -282,11 +288,14 @@ public class MedicalEdit extends JDialog {
 					} else { // updating
 						oldMedical.setType((MedicalType) typeComboBox.getSelectedItem());
 						oldMedical.setDescription(descriptionTextField.getText());
-						oldMedical.setProd_code(codeTextField.getText());
+						oldMedical.setProdCode(codeTextField.getText());
 						oldMedical.setPcsperpck(pcsperpckField.getValue());
 						oldMedical.setMinqty(minQtiField.getValue());
 						try {
-							result = medicalBrowsingManager.updateMedical(oldMedical);
+							Medical updatedMedical = medicalBrowsingManager.updateMedical(oldMedical);
+							if (updatedMedical != null) {
+								result = true;
+							}
 						} catch (OHServiceException e1) {
 							List<OHExceptionMessage> errors = e1.getMessages();
 
@@ -298,7 +307,10 @@ public class MedicalEdit extends JDialog {
 
 										if (ok == JOptionPane.OK_OPTION) {
 											try {
-												result = medicalBrowsingManager.updateMedical(newMedical, true);
+												Medical updatedMedical = medicalBrowsingManager.updateMedical(oldMedical, true);
+												if (updatedMedical != null) {
+													result = true;
+												}
 											} catch (OHServiceException e2) {
 												OHServiceExceptionUtil.showMessages(e2);
 											}
@@ -317,7 +329,7 @@ public class MedicalEdit extends JDialog {
 							}
 							medical.setType((MedicalType) typeComboBox.getSelectedItem());
 							medical.setDescription(descriptionTextField.getText());
-							medical.setProd_code(codeTextField.getText());
+							medical.setProdCode(codeTextField.getText());
 							medical.setPcsperpck(pcsperpckField.getValue());
 							medical.setMinqty(minQtiField.getValue());
 							medical.setLock(updatedMedical.getLock());
@@ -350,9 +362,9 @@ public class MedicalEdit extends JDialog {
 	private VoLimitedTextField getDescriptionTextField() {
 		if (descriptionTextField == null) {
 			if (insert) {
-				descriptionTextField = new VoLimitedTextField(100,50);
+				descriptionTextField = new VoLimitedTextField(100, 50);
 			} else {
-				descriptionTextField = new VoLimitedTextField(100,50);
+				descriptionTextField = new VoLimitedTextField(100, 50);
 				descriptionTextField.setText(medical.getDescription());
 			}
 		}
@@ -370,7 +382,7 @@ public class MedicalEdit extends JDialog {
 				codeTextField = new VoLimitedTextField(5);
 			} else {
 				codeTextField = new VoLimitedTextField(5);
-				codeTextField.setText(medical.getProd_code());
+				codeTextField.setText(medical.getProdCode());
 			}
 		}
 		return codeTextField;
@@ -379,20 +391,20 @@ public class MedicalEdit extends JDialog {
 	private JTextField getMinQtiField() {
 		if (minQtiField == null) {
 			if (insert) {
-				minQtiField = new VoDoubleTextField(0,3);
+				minQtiField = new VoDoubleTextField(0, 3);
 			} else {
-				minQtiField = new VoDoubleTextField(medical.getMinqty(),3);
+				minQtiField = new VoDoubleTextField(medical.getMinqty(), 3);
 			}
 		}
 		return minQtiField;
 	}
-	
+
 	private JTextField getPcsperpckField() {
 		if (pcsperpckField == null) {
 			if (insert) {
-				pcsperpckField = new VoIntegerTextField(1,3);
+				pcsperpckField = new VoIntegerTextField(1, 3);
 			} else {
-				pcsperpckField = new VoIntegerTextField(medical.getPcsperpck(),3);
+				pcsperpckField = new VoIntegerTextField(medical.getPcsperpck(), 3);
 			}
 		}
 		return pcsperpckField;

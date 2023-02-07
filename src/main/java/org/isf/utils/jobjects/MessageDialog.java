@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -118,7 +118,8 @@ public class MessageDialog {
 		);
 	}
 
-	public static Object inputDialog(Component parentComponent, Icon icon, Object[] selectionValues, Object initSelection, String messageKey, Object... additionalArgs) {
+	public static Object inputDialog(Component parentComponent, Icon icon, Object[] selectionValues, Object initSelection, String messageKey,
+			Object... additionalArgs) {
 		return JOptionPane.showInputDialog(
 				parentComponent,
 				(additionalArgs.length == 0)
@@ -164,4 +165,5 @@ public class MessageDialog {
 			}
 		}
 	}
+
 }

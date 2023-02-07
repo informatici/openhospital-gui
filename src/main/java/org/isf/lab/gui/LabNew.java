@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -29,11 +29,10 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -66,7 +65,6 @@ import org.isf.exa.manager.ExamBrowsingManager;
 import org.isf.exa.manager.ExamRowBrowsingManager;
 import org.isf.exa.model.Exam;
 import org.isf.exa.model.ExamRow;
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
@@ -78,14 +76,16 @@ import org.isf.patient.model.Patient;
 import org.isf.priceslist.model.Price;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.OhTableModelExam;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LabNew extends JDialog implements SelectionListener {
+public class LabNew extends ModalJFrame implements SelectionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LabNew.class);
 
@@ -100,18 +100,20 @@ public class LabNew extends JDialog implements SelectionListener {
 		labListener.add(LabListener.class, l);
 		
 	}
-	
+
 	private void fireLabInserted() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = labListener.getListeners(LabListener.class);
 		for (EventListener listener : listeners) {
 			((LabListener) listener).labInserted();
 		}
 	}
-//---------------------------------------------------------------------------
+
+	//---------------------------------------------------------------------------
 	
     @Override
 	public void patientSelected(Patient patient) {
@@ -119,10 +121,10 @@ public class LabNew extends JDialog implements SelectionListener {
 		//INTERFACE
 		jTextFieldPatient.setText(patientSelected.getName());
 		jTextFieldPatient.setEditable(false);
-		jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.changepatient")); //$NON-NLS-1$
+		jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.changepatient"));
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.changethepatientassociatedwiththisexams")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
-		inOut = getIsAdmitted();
+		String inOut = getIsAdmitted();
 		if (inOut.equalsIgnoreCase("O")) {
 			jRadioButtonOPD.setSelected(true);
 		} else {
@@ -146,10 +148,9 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JButton jButtonPickPatient;
 	private JButton jButtonTrashPatient;
 	private JLabel jLabelDate;
-	private CustomJDateChooser jCalendarDate;
+	private GoodDateTimeSpinnerChooser jCalendarDate;
 	private JPanel jPanelMaterial;
 	private JComboBox<String> jComboBoxMaterial;
-	private JComboBox<String> jComboBoxExamResults;
 	private JPanel jPanelResults;
 	private JPanel jPanelNote;
 	private JPanel jPanelButtons;
@@ -159,55 +160,48 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JScrollPane jScrollPaneNote;
 	private JRadioButton jRadioButtonOPD;
 	private JRadioButton jRadioButtonIPD;
-	private ButtonGroup radioGroup;
 	private JPanel jOpdIpdPanel;
-	private String inOut;
-	
-	private static final Dimension PATIENT_DIMENSION = new Dimension(200,20);
-	private static final Dimension LABEL_DIMENSION = new Dimension(75,20);
+
+	private static final Dimension PATIENT_DIMENSION = new Dimension(200, 20);
+	private static final Dimension LABEL_DIMENSION = new Dimension(75, 20);
 	private static final int EAST_WIDTH = 200;
 	private static final int COMPONENT_HEIGHT = 20;
 	private static final int RESULT_HEIGHT = 200;
-	
-	private Object[] examClasses = {Exam.class, String.class};
+
+	private Object[] examClasses = { Exam.class, String.class };
 	private String[] examColumnNames = {
-            MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
-            MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
-        };
-	private int[] examColumnWidth = {200, 150};
-	private boolean[] examResizable = {true, false};
+			MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
+	};
+	private int[] examColumnWidth = { 200, 150 };
+	private boolean[] examResizable = { true, false };
 	
-	//TODO private boolean modified;
 	private Patient patientSelected = null;
 	private Laboratory selectedLab = null;
-	private JTextField txtResultValue;
-	
+
 	//Admission
-	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	
 	//Materials
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
 	private List<String> matList = labManager.getMaterialList();
 	
 	//Exams (ALL)
-	private ExamBrowsingManager exaManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 	private List<Exam> exaArray;
 	
 	//Results (ALL)
-	private ExamRowBrowsingManager examRowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 
 	//Arrays for this Patient
-	private ArrayList<ArrayList<LaboratoryRow>> examResults = new ArrayList<>();
-	private ArrayList<Laboratory> examItems = new ArrayList<>();
+	private List<List<LaboratoryRow>> examResults = new ArrayList<>();
+	private List<Laboratory> examItems = new ArrayList<>();
 	private ExamTableModel jTableModel;
-	private JButton printLabelButton;
 	private JTextField jTextFieldExamResult;
                 
 	public LabNew(JFrame owner) {
-		super(owner, true);
-		
 		try {
-			exaArray = exaManager.getExams();
+			exaArray = examBrowsingManager.getExams();
 		} catch (OHServiceException e) {
 			exaArray = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -217,15 +211,14 @@ public class LabNew extends JDialog implements SelectionListener {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.labnew.title"));
+		showAsModal(owner);
 	}
 
-                
 	public LabNew(JFrame owner, Patient patient) {
-        super(owner, true);
         patientSelected = patient;
         
 		try {
-			exaArray = exaManager.getExams();
+			exaArray = examBrowsingManager.getExams();
 		} catch (OHServiceException e) {
 			exaArray = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -235,10 +228,11 @@ public class LabNew extends JDialog implements SelectionListener {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.labnew.title"));
-		
+
 		if (patientSelected != null) {
 			patientSelected(patientSelected);
 		}
+		showAsModal(owner);
 	}
 
 	private void initComponents() {
@@ -259,10 +253,10 @@ public class LabNew extends JDialog implements SelectionListener {
 
 	private JTextArea getJTextAreaNote() {
 		if (jTextAreaNote == null) {
-			jTextAreaNote = new JTextArea(3,50);
+			jTextAreaNote = new JTextArea(3, 50);
 			jTextAreaNote.setText("");
 			jTextAreaNote.addKeyListener(new KeyListener() {
-				
+
 				@Override
 				public void keyTyped(KeyEvent e) {
 					selectedLab.setNote(jTextAreaNote.getText().trim());
@@ -270,12 +264,13 @@ public class LabNew extends JDialog implements SelectionListener {
 				}
 
 				@Override
-				public void keyPressed(KeyEvent e) {}
+				public void keyPressed(KeyEvent e) {
+				}
 
 				@Override
-				public void keyReleased(KeyEvent e) {}
+				public void keyReleased(KeyEvent e) {
+				}
 			});
-			//jTextAreaNote.setPreferredSize(TextAreaNoteDimension);
 		}
 		return jTextAreaNote;
 	}
@@ -295,9 +290,9 @@ public class LabNew extends JDialog implements SelectionListener {
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jButtonOK.addActionListener(actionEvent -> {
 
-				GregorianCalendar newDate = new GregorianCalendar();
+				LocalDateTime newDate;
 				try {
-					newDate.setTime(jCalendarDate.getDate());
+					newDate = jCalendarDate.getLocalDateTime();
 				} catch (Exception e1) {
 					MessageDialog.error(LabNew.this, "angal.lab.pleaseinsertavalidexamdate.msg");
 					return;
@@ -305,17 +300,19 @@ public class LabNew extends JDialog implements SelectionListener {
 				RememberDates.setLastLabExamDate(newDate);
 				String inOut = jRadioButtonOPD.isSelected() ? "O" : "I";
 
+				int row = 0;
 				for (Laboratory lab : examItems) {
 					lab.setDate(newDate);
-					lab.setExamDate(newDate);
 					lab.setInOutPatient(inOut);
 					lab.setPatient(patientSelected);
-					if (lab.getExam().getProcedure() == 3 && lab.getResult().isEmpty()) {
+					int procedure = lab.getExam().getProcedure();
+					if ((procedure == 1 || procedure == 3) && lab.getResult().isEmpty()) {
 						MessageDialog.error(LabNew.this, "angal.labnew.pleaseinsertavalidvalue");
 						//select the first exam with the missing value
-						jTableExams.setRowSelectionInterval(examItems.indexOf(lab), examItems.indexOf(lab));
+						jTableExams.setRowSelectionInterval(row, row);
 						return;
 					}
+					row++;
 				}
 
 				try {
@@ -331,13 +328,8 @@ public class LabNew extends JDialog implements SelectionListener {
 	}
 	
 	private String getIsAdmitted() {
-		Admission adm = new Admission();
-		try {
-			adm = admissionManager.getCurrentAdmission(patientSelected);
-		} catch(OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-		}
-		return (adm==null?"O":"I");					
+		Admission adm = admissionBrowserManager.getCurrentAdmission(patientSelected);
+		return (adm == null ? "O" : "I");				
 	}
 
 	private JPanel getJPanelButtons() {
@@ -372,8 +364,8 @@ public class LabNew extends JDialog implements SelectionListener {
 			Exam selectedExam = selectedLab.getExam();
 
 			if (selectedExam.getProcedure() == 1) {
-				txtResultValue = new JTextField();
-				jComboBoxExamResults = new JComboBox<>();
+				JTextField txtResultValue = new JTextField();
+				JComboBox<String> jComboBoxExamResults = new JComboBox<>();
 				jComboBoxExamResults.setMaximumSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 				jComboBoxExamResults.setMinimumSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 				jComboBoxExamResults.setPreferredSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
@@ -382,10 +374,14 @@ public class LabNew extends JDialog implements SelectionListener {
 				txtResultValue.setPreferredSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 				List<ExamRow> exaRowArray;
 				try {
-					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
+					exaRowArray = examRowBrowsingManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
 					LOGGER.error(ex.getMessage(), ex);
+				}
+				// no default result
+				if (selectedExam.getDefaultResult().isEmpty()) {
+					jComboBoxExamResults.addItem(" ");
 				}
 				if (exaRowArray != null) {
 					for (ExamRow exaRow : exaRowArray) {
@@ -411,7 +407,7 @@ public class LabNew extends JDialog implements SelectionListener {
 				jPanelResults.removeAll();
 				jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
 
-				ArrayList<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
+				List<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
 				boolean checked;
 				JPanel resultsContainer = new JPanel();
 				resultsContainer.setLayout(new GridLayout(0, 1));
@@ -422,7 +418,7 @@ public class LabNew extends JDialog implements SelectionListener {
 				jPanelResults.add(resultsContainerScroll);
 				List<ExamRow> exaRowArray;
 				try {
-					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
+					exaRowArray = examRowBrowsingManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
 					LOGGER.error(ex.getMessage(), ex);
@@ -507,7 +503,6 @@ public class LabNew extends JDialog implements SelectionListener {
 			jComboBoxMaterial.addActionListener(actionEvent -> {
 				selectedLab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
 				examItems.get(jTableExams.getSelectedRow()).setMaterial(selectedLab.getMaterial());
-//					jTableExams.updateUI();
 			});
 			jComboBoxMaterial.setPreferredSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 			jComboBoxMaterial.setMaximumSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
@@ -541,8 +536,8 @@ public class LabNew extends JDialog implements SelectionListener {
 			
 			jRadioButtonOPD = new JRadioButton(MessageBundle.getMessage("angal.labnew.opd.btn"));
 			jRadioButtonIPD = new JRadioButton(MessageBundle.getMessage("angal.labnew.ip.btn"));
-			
-			radioGroup = new ButtonGroup();
+
+			ButtonGroup radioGroup = new ButtonGroup();
 			radioGroup.add(jRadioButtonOPD);
 			radioGroup.add(jRadioButtonIPD);
 			
@@ -557,14 +552,14 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JButton getJButtonTrashPatient() {
 		if (jButtonTrashPatient == null) {
 			jButtonTrashPatient = new JButton();
-			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
+			jButtonTrashPatient.setPreferredSize(new Dimension(25, 25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.removepatientassociationwiththisexam")); //$NON-NLS-1$
 			jButtonTrashPatient.addActionListener(actionEvent -> {
 
 				patientSelected = null;
 				//INTERFACE
-				jTextFieldPatient.setText(""); //$NON-NLS-1$
+				jTextFieldPatient.setText("");
 				jTextFieldPatient.setEditable(false);
 				jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.findpatient.btn"));
 				jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.associateapatientwiththisexam")); //$NON-NLS-1$
@@ -629,11 +624,13 @@ public class LabNew extends JDialog implements SelectionListener {
 		return jPanelDate;
 	}
 
-	private CustomJDateChooser getJCalendarDate() {
+	private GoodDateTimeSpinnerChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			jCalendarDate = new CustomJDateChooser(RememberDates.getLastLabExamDateGregorian().getTime()); //To remind last used
-			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
+			LocalDateTime labDate = RememberDates.getLastLabExamDate();
+			if (labDate == null) {
+				labDate = TimeTools.getNow();
+			}
+			jCalendarDate = new GoodDateTimeSpinnerChooser(labDate);
 		}
 		return jCalendarDate;
 	}
@@ -710,8 +707,8 @@ public class LabNew extends JDialog implements SelectionListener {
 		}
 		return jTableExams;
 	}
-	
-	public JPanel getJPanelExamButtons() {
+
+	private JPanel getJPanelExamButtons() {
 		if (jPanelExamButtons == null) {
 			jPanelExamButtons = new JPanel();
 			jPanelExamButtons.setLayout(new BoxLayout(jPanelExamButtons, BoxLayout.X_AXIS));
@@ -747,7 +744,7 @@ public class LabNew extends JDialog implements SelectionListener {
 				dialog.setContentPane(examPicker);
 				dialog.setVisible(true);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-				ArrayList<Exam> exams = examPicker.getAllSelectedObject();
+				List<Exam> exams = examPicker.getAllSelectedObject();
 
 				Exam exa;
 				Laboratory lab;
@@ -773,6 +770,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					}
 
 					if (exa.getProcedure() == 1 || exa.getProcedure() == 3) {
+						// The exam may not have a default value
 						lab.setResult(exa.getDefaultResult());
 					} else { // exa.getProcedure() == 2
 						lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));

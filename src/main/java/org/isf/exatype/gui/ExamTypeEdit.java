@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -72,27 +72,32 @@ public class ExamTypeEdit extends JDialog {
         examTypeListeners.remove(ExamTypeListener.class, listener);
     }
 
-    private void fireExamTypeInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireExamTypeInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamTypeListener) listener).examTypeInserted(event);
-	    }
-    }
-    private void fireExamTypeUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
+		for (EventListener listener : listeners) {
+			((ExamTypeListener) listener).examTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireExamTypeUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamTypeListener) listener).examTypeUpdated(event);
-	    }
-    }
-    
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
+		for (EventListener listener : listeners) {
+			((ExamTypeListener) listener).examTypeUpdated(event);
+		}
+	}
+
+	private ExamTypeBrowserManager examTypeBrowserManager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -110,10 +115,10 @@ public class ExamTypeEdit extends JDialog {
      * because we need to update them
 	 */
 	public ExamTypeEdit(JFrame owner, ExamType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		examType = old;//examType will be used for every operation
-		lastdescription= examType.getDescription();
+		examType = old;   //examType will be used for every operation
+		lastdescription = examType.getDescription();
 		initialize();
 	}
 
@@ -199,13 +204,13 @@ public class ExamTypeEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
 				try {
 					examType.setDescription(descriptionTextField.getText());
 					examType.setCode(codeTextField.getText());
 
 					if (insert) {     // inserting
-						if (manager.newExamType(examType)) {
+						ExamType newExamType = examTypeBrowserManager.newExamType(examType);
+						if (newExamType != null) {
 							fireExamTypeInserted();
 							dispose();
 						} else {
@@ -215,7 +220,8 @@ public class ExamTypeEdit extends JDialog {
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							if (manager.updateExamType(examType)) {
+							ExamType updatedExamType = examTypeBrowserManager.newExamType(examType);
+							if (updatedExamType != null) {
 								fireExamTypeUpdated();
 								dispose();
 							} else {

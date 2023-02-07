@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -47,7 +47,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListener{
+public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<DiseaseType> pDiseaseType;
@@ -65,7 +65,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 	private JTable jTable = null;
 	private DiseaseTypeBrowserModel model;
 	private int selectedrow;
-	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	private DiseaseType diseaseType = null;
 	private final JFrame myFrame;
 	
@@ -113,8 +113,8 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				diseaseType = new DiseaseType("","");
-				DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, true);
+				diseaseType = new DiseaseType("", "");
+				DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame, diseaseType, true);
 				newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -137,7 +137,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					diseaseType = (DiseaseType) (model.getValueAt(selectedrow, -1));
-					DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, false);
+					DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame, diseaseType, false);
 					newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -176,7 +176,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 					DiseaseType diseaseType = (DiseaseType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.distype.deletediseasetype.fmt.msg", diseaseType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDiseaseType(diseaseType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (diseaseTypeBrowserManager.deleteDiseaseType(diseaseType))) {
 							pDiseaseType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -190,7 +190,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DiseaseTypeBrowserModel();
 			jTable = new JTable(model);
@@ -203,11 +203,10 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 	class DiseaseTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 		public DiseaseTypeBrowserModel() {
 			try {
-				pDiseaseType = manager.getDiseaseType();
+				pDiseaseType = diseaseTypeBrowserManager.getDiseaseType();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -45,15 +45,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class OperationTypeEdit extends JDialog{
+public class OperationTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList operationTypeListeners = new EventListenerList();
 
-    public interface OperationTypeListener extends EventListener {
-        void operationTypeUpdated(AWTEvent e);
-        void operationTypeInserted(AWTEvent e);
-    }
+	public interface OperationTypeListener extends EventListener {
+
+		void operationTypeUpdated(AWTEvent e);
+
+		void operationTypeInserted(AWTEvent e);
+	}
 
     public void addOperationTypeListener(OperationTypeListener l) {
         operationTypeListeners.add(OperationTypeListener.class, l);
@@ -63,27 +65,32 @@ public class OperationTypeEdit extends JDialog{
         operationTypeListeners.remove(OperationTypeListener.class, listener);
     }
 
-    private void fireOperationInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireOperationInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((OperationTypeListener) listener).operationTypeInserted(event);
-	    }
-    }
-    private void fireOperationUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
+		for (EventListener listener : listeners) {
+			((OperationTypeListener) listener).operationTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireOperationUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((OperationTypeListener) listener).operationTypeUpdated(event);
-	    }
-    }
-    
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
+		for (EventListener listener : listeners) {
+			((OperationTypeListener) listener).operationTypeUpdated(event);
+		}
+	}
+
+	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -101,10 +108,10 @@ public class OperationTypeEdit extends JDialog{
      * because we need to update them
 	 */
 	public OperationTypeEdit(JFrame owner, OperationType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		operationType = old;//operation will be used for every operation
-		lastdescription= operationType.getDescription();
+		lastdescription = operationType.getDescription();
 		initialize();
 	}
 
@@ -189,47 +196,42 @@ public class OperationTypeEdit extends JDialog{
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 				if (descriptionTextField.getText().equals(lastdescription)) {
 					dispose();
 				}
 				operationType.setDescription(descriptionTextField.getText());
 				operationType.setCode(codeTextField.getText());
 				boolean result = false;
-				if (insert) {      // inserting
+				if (insert) {	// inserting
 					try {
-						result = manager.newOperationType(operationType);
+						OperationType insertedOperatoinType = operationTypeBrowserManager.newOperationType(operationType);
+						if (insertedOperatoinType != null) {
+							fireOperationInserted();
+							result = true;
+						}
 					} catch (OHServiceException e1) {
-						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-					if (result) {
-						fireOperationInserted();
-					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-					} else {
-						dispose();
-					}
-				} else {                          // updating
+				} else {	// updating
 					if (descriptionTextField.getText().equals(lastdescription)) {
 						dispose();
 					} else {
 						try {
-							result = manager.updateOperationType(operationType);
+							OperationType updatedOperationType = operationTypeBrowserManager.updateOperationType(operationType);
+							if (updatedOperationType != null) {
+								fireOperationUpdated();
+								result = true;
+							}
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
 							result = false;
 						}
-						if (result) {
-							fireOperationUpdated();
-						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
 					}
+				}
+				if (!result) {
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+				} else {
+					dispose();
 				}
 			});
 		}

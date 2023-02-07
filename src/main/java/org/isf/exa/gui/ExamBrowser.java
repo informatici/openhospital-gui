@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -24,10 +24,8 @@ package org.isf.exa.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.awt.FlowLayout;
 import java.util.List;
-import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -37,14 +35,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.RowFilter;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 import org.isf.exa.gui.ExamEdit.ExamListener;
 import org.isf.exa.manager.ExamBrowsingManager;
@@ -56,8 +49,6 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * ------------------------------------------
@@ -70,15 +61,14 @@ import org.slf4j.LoggerFactory;
  * 10/11/2006 - ross - corrected exam deletion, before it was never deleted
  * ------------------------------------------
  */
-public class ExamBrowser extends ModalJFrame implements ExamListener{
+public class ExamBrowser extends ModalJFrame implements ExamListener {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExamBrowser.class);
 	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
 	private int selectedrow;
-	private JComboBox pbox;
-	private List<Exam> pExam;
+	private JComboBox<ExamType> examTypeFilter;
+	private List<Exam> examList;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
@@ -86,36 +76,28 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			MessageBundle.getMessage("angal.exa.proc.col").toUpperCase(),
 			MessageBundle.getMessage("angal.exa.default.col").toUpperCase()
 	};
-	private int[] pColumnWidth = {60,330,160,60,130};
+	private int[] pColumnWidth = { 60, 330, 160, 60, 200 };
 	private Exam exam;
 
 	private DefaultTableModel model ;
 	private JTable table;
 	private final JFrame myFrame;
-	private String pSelection;
 	private JButton jButtonNew;
 	private JButton jButtonEdit;
 	private JButton jButtonClose;
 	private JButton jButtonShow;
-	private JButton jButtonDelete;
 	private JPanel jContentPanel;
 	private JPanel buttonPanel;
-	private JTextField searchTextField;
-	private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
-	
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+
 	public ExamBrowser() {
-		myFrame=this;
+		myFrame = this;
 		setTitle(MessageBundle.getMessage("angal.exa.exambrowser.title"));
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-        final int pfrmBase = 20;
-        final int pfrmWidth = 15;
-        final int pfrmHeight = 8;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		
-        
-        this.setContentPane(getJContentPanel());
+		this.setContentPane(getJContentPanel());
+		setMinimumSize(new Dimension(800, 400));
+		pack();
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
 
@@ -123,36 +105,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		if (jContentPanel == null) {
 			jContentPanel = new JPanel();
 			jContentPanel.setLayout(new BorderLayout());
-			jContentPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContentPanel.add(new JScrollPane(getJTable()),BorderLayout.CENTER);
-			
-			JPanel panelSearch = new JPanel();
-			jContentPanel.add(panelSearch, BorderLayout.NORTH);
-			
-			JLabel searchLabel = new JLabel(MessageBundle.getMessage("angal.exams.find"));
-			panelSearch.add(searchLabel);
-			
-			searchTextField = new JTextField();
-			searchTextField.setColumns(20);
-			searchTextField.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					filterExam();
-				}
-
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					filterExam();
-				}
-
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					filterExam();
-				}
-			});
-			panelSearch.add(searchTextField);
-                        //jContentPanel.add(panelSearch);
-			validate();
+			jContentPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContentPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 		}
 		return jContentPanel;
 	}
@@ -160,7 +114,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	private JPanel getJButtonPanel() {
 		if (buttonPanel == null) {
-			buttonPanel = new JPanel();
+			buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 			buttonPanel.add(new JLabel(MessageBundle.getMessage("angal.exa.selecttype")));
 			buttonPanel.add(getJComboBoxExamType());
 			buttonPanel.add(getJButtonNew());
@@ -172,35 +126,32 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		return buttonPanel;
 	}
 
-	private JComboBox getJComboBoxExamType() {
-		if (pbox == null) {
-			pbox = new JComboBox();
-			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
+	private JComboBox<ExamType> getJComboBoxExamType() {
+		if (examTypeFilter == null) {
+			examTypeFilter = new JComboBox<>();
+			examTypeFilter.addItem(new ExamType("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
 			List<ExamType> type;
 			try {
-				type = manager.getExamType();	//for efficiency in the sequent for
+				type = examBrowsingManager.getExamType();
 			} catch (OHServiceException e1) {
 				type = null;
 				OHServiceExceptionUtil.showMessages(e1);
 			}
 			if (null != type) {
 				for (ExamType elem : type) {
-					pbox.addItem(elem);
+					examTypeFilter.addItem(elem);
 				}
 			}
-			pbox.addActionListener(actionEvent -> reloadTable());
+			examTypeFilter.addActionListener(actionEvent -> reloadTable());
 		}
-		return pbox;
+		return examTypeFilter;
 	}
 
-	private TableRowSorter<TableModel> sorter;
 	private JTable getJTable() {
 		if (table == null) {
 			model = new ExamBrowsingModel();
 			table = new JTable(model);
 			table.setAutoCreateColumnsFromModel(false);
-			sorter = new TableRowSorter<>(model);
-		    table.setRowSorter(sorter);
 			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 			table.getColumnModel().getColumn(2).setMinWidth(pColumnWidth[2]);
@@ -211,11 +162,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				if (!selectionEvent.getValueIsAdjusting()) {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
-					if (exam.getProcedure() == 3) {
-						jButtonShow.setEnabled(false);
-					} else {
-						jButtonShow.setEnabled(true);
-					}
+					jButtonShow.setEnabled(exam.getProcedure() != 3);
 				}
 			});
 		}
@@ -223,7 +170,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	}
 
 	private JButton getJButtonDelete() {
-		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		JButton jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		jButtonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
@@ -237,7 +184,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				boolean deleted;
 
 				try {
-					deleted = manager.deleteExam(examToDelete);
+					deleted = examBrowsingManager.deleteExam(examToDelete);
 				} catch (OHServiceException e1) {
 					deleted = false;
 					OHServiceExceptionUtil.showMessages(e1);
@@ -317,27 +264,27 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		
 		public ExamBrowsingModel(String s) {
 			try {
-				pExam = manager.getExamsByTypeDescription(s);
+				examList = examBrowsingManager.getExamsByTypeDescription(s);
                                 
 			} catch (OHServiceException e) {
-				pExam = null;
+				examList = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 		public ExamBrowsingModel() {
 			try {
-				pExam = manager.getExams();
+				examList = examBrowsingManager.getExams();
 			} catch (OHServiceException e) {
-				pExam = null;
+				examList = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 		@Override
 		public int getRowCount() {
-			if (pExam == null) {
+			if (examList == null) {
 				return 0;
 			}
-			return pExam.size();
+			return examList.size();
 		}
 		
 		@Override
@@ -352,7 +299,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 
 		@Override
 		public Object getValueAt(int r, int c) {
-			Exam exam = pExam.get(r);
+			Exam exam = examList.get(r);
 			if (c == -1) {
 				return exam;
 			} else if (c == 0) {
@@ -371,7 +318,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
@@ -391,32 +337,9 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			table.setRowSelectionInterval(0, 0);
 		}
 	}
-	
-	private void filterExam() {
-		String s = searchTextField.getText().trim();
-		if (s.length() == 0) {
-			sorter.setRowFilter(null);
-		} else {
-			try {
-				String[] tokens = s.split(" ");
-				ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
 
-				for (String value : tokens) {
-					String token = value.toLowerCase();
-
-					RowFilter<Object, Object> filter = RowFilter.regexFilter("(?i)" + token);
-					filters.add(filter);
-				}
-
-				sorter.setRowFilter(RowFilter.andFilter(filters));
-			} catch (PatternSyntaxException pse) {
-				LOGGER.error("Bad regex pattern");
-			}
-		}
-	}
-	
 	private void reloadTable() {
-		pSelection=pbox.getSelectedItem().toString();
+		String pSelection = examTypeFilter.getSelectedItem().toString();
 		if (pSelection.compareTo(STR_ALL) == 0) {
 			model = new ExamBrowsingModel();
 		} else {

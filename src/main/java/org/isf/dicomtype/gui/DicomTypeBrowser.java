@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -68,7 +68,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 	private JTable jTable = null;
 	private DicomTypeBrowserModel model;
 	private int selectedrow;
-	private DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
+	private DicomTypeBrowserManager dicomTypeBrowserManager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 	private DicomType dicomType = null;
 	private final JFrame myFrame;
 	
@@ -94,7 +94,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.dicomtype.dicomtypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+
 	}
 	
 	
@@ -193,7 +193,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 						boolean deleted;
 
 						try {
-							deleted = manager.deleteDicomType(dicomType);
+							deleted = dicomTypeBrowserManager.deleteDicomType(dicomType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -211,7 +211,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DicomTypeBrowserModel();
 			jTable = new JTable(model);
@@ -224,11 +224,10 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 	class DicomTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 
 		public DicomTypeBrowserModel() {
 			try {
-				pDicomType = manager.getDicomType();
+				pDicomType = dicomTypeBrowserManager.getDicomType();
 			} catch (OHServiceException e) {
 				pDicomType = null;
 				OHServiceExceptionUtil.showMessages(e);
@@ -267,7 +266,6 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}

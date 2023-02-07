@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalExpiration" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="PharmaceuticalExpiration" whenResourceMissingType="Key" uuid="b9099a0c-14d9-4ffe-a517-c8b93d5d8656">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="Hospital" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Address" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="City" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Email" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Telephone" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="LOGO_PATH" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./rsc/images/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fromdate" class="java.util.Date"/>
+	<parameter name="todate" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT * FROM (
+SELECT MDSRT_DESC, MMV_MDSR_ID, MDSR_DESC, MMV_LT_ID_A, LT_DUE_DATE, SUM(CASE WHEN MMVT_TYPE LIKE '+%' then MMV_QTY else -MMV_QTY end) AS QTY
+FROM OH_MEDICALDSRSTOCKMOV
+JOIN OH_MEDICALDSR ON MMV_MDSR_ID = MDSR_ID
+JOIN OH_MEDICALDSRLOT ON MMV_LT_ID_A = LT_ID_A
+JOIN OH_MEDICALDSRSTOCKMOVTYPE ON MMV_MMVT_ID_A = MMVT_ID_A
+JOIN OH_MEDICALDSRTYPE ON MDSR_MDSRT_ID_A = MDSRT_ID_A
+WHERE MMV_LT_ID_A IN (
+SELECT LT_ID_A
+FROM OH_MEDICALDSRLOT
+WHERE DATE(LT_DUE_DATE) between DATE($P{fromdate}) and DATE($P{todate}) OR DATE(LT_DUE_DATE) < DATE($P{fromdate})
+)
+GROUP BY MMV_MDSR_ID, MMV_LT_ID_A
+ORDER BY MDSRT_DESC, MDSR_DESC, LT_DUE_DATE ASC
+) AS EXPIRING_MEDICALS
+WHERE QTY > 0]]>
+	</queryString>
+	<field name="MDSRT_DESC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="MDSRT_DESC"/>
+		<property name="com.jaspersoft.studio.field.label" value="MDSRT_DESC"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicaldsrtype"/>
+	</field>
+	<field name="MMV_MDSR_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="MMV_MDSR_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="MMV_MDSR_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicaldsrstockmov"/>
+	</field>
+	<field name="MDSR_DESC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="MDSR_DESC"/>
+		<property name="com.jaspersoft.studio.field.label" value="MDSR_DESC"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicaldsr"/>
+	</field>
+	<field name="MMV_LT_ID_A" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="MMV_LT_ID_A"/>
+		<property name="com.jaspersoft.studio.field.label" value="MMV_LT_ID_A"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicaldsrstockmov"/>
+	</field>
+	<field name="LT_DUE_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="LT_DUE_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="LT_DUE_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="medicaldsrlot"/>
+	</field>
+	<field name="QTY" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="QTY"/>
+		<property name="com.jaspersoft.studio.field.label" value="QTY"/>
+	</field>
+	<group name="MDSR_TYPE">
+		<groupExpression><![CDATA[$F{MDSRT_DESC}]]></groupExpression>
+		<groupHeader>
+			<band height="30" splitType="Stretch">
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-6" x="0" y="0" width="535" height="23" forecolor="#000066" backcolor="#FFFFFF" uuid="4b5a1e31-b109-40ca-b56f-31a1540a9f7d"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="DejaVu Sans" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MDSRT_DESC}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50" splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="MDSR_DESC">
+		<groupExpression><![CDATA[$F{MDSR_DESC}]]></groupExpression>
+		<groupHeader>
+			<band height="32" splitType="Stretch">
+				<rectangle radius="0">
+					<reportElement key="rectangle" mode="Opaque" x="0" y="28" width="535" height="2" forecolor="#000099" backcolor="#000099" uuid="b1963dec-24cb-4822-9214-393028834c45"/>
+					<graphicElement>
+						<pen lineWidth="0.0" lineStyle="Solid"/>
+					</graphicElement>
+				</rectangle>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement key="textField" x="81" y="2" width="454" height="23" forecolor="#000066" backcolor="#FFFFFF" uuid="b767eef6-3217-4310-8a26-796f4b8bfbe2"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="DejaVu Sans" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MDSR_DESC}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-1" mode="Opaque" x="0" y="2" width="67" height="23" forecolor="#FFFFFF" backcolor="#0000CC" uuid="a3a1ce0c-64cc-4fd7-a1db-b8bef5ecb299"/>
+					<box leftPadding="5">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="DejaVu Sans" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MMV_MDSR_ID}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="10" splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="133" splitType="Stretch">
+			<rectangle radius="0">
+				<reportElement key="rectangle-1" mode="Opaque" x="0" y="2" width="535" height="48" forecolor="#00CCCC" backcolor="#000099" uuid="864cb293-3049-42fe-86dc-8b23ae78b422"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement key="staticText" x="5" y="5" width="468" height="40" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="3d4ba071-41a6-4bf7-b81e-3e7c964f4788"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="24" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{ExpiringMedicals}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement key="line" mode="Opaque" x="0" y="60" width="535" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="1b5a7618-e0d8-4e99-be3d-ca68d85fe8ef"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<image hAlign="Right" vAlign="Middle" onErrorType="Icon">
+				<reportElement key="image-1" x="476" y="6" width="56" height="40" uuid="a8184997-791d-4a2d-8aa2-4b32b550f85e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{LOGO_PATH} + "logo_report.png"]]></imageExpression>
+			</image>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<reportElement key="textField-2" x="0" y="60" width="535" height="22" uuid="4d7b3dab-bd80-4081-b4b7-cdd4c485ce9b"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<reportElement key="textField-3" x="0" y="82" width="535" height="17" uuid="b7be46ad-4313-447e-b10e-8b6064dd81b7"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<reportElement key="textField-4" x="0" y="99" width="535" height="17" uuid="f45b7f87-c961-49eb-9d2c-b3c1c8f37388"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<reportElement key="textField-5" x="0" y="116" width="535" height="17" uuid="8dcdd3f9-3b65-451a-af5c-7dbadd53882c"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="6" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="71" y="0" width="139" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="7c48c14b-6ba5-4da4-aea6-6fc756677a39"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["[" + $F{MMV_LT_ID_A}.toUpperCase() + "]"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText" positionType="Float" x="0" y="0" width="67" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="38ae8abd-c8a5-4acb-866b-b1c291eea007"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{LotId}+":"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="287" y="0" width="59" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="2d66dd18-a2cb-4ed9-9db9-40e9b8910f44"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText" positionType="Float" x="218" y="0" width="65" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="5606100a-5eca-4480-9283-3fb0c81ce8dc"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Quantity}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-1" positionType="Float" x="388" y="0" width="65" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="e49ef9bc-faa3-4ab6-a6dc-2eca70384c31"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{ExpDate}+":"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-7" x="460" y="0" width="75" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="a3fb2e84-9da4-4564-9137-9aab7f23b4f8"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LT_DUE_DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="27" splitType="Stretch">
+			<rectangle radius="0">
+				<reportElement key="rectangle-2" mode="Opaque" x="0" y="5" width="535" height="20" forecolor="#000099" backcolor="#000099" uuid="5a7bba05-1c16-48c0-a262-760a3507faf0"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="325" y="4" width="174" height="19" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="81b229ec-38ca-47c9-a024-7cbfd5acbdfc"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="499" y="4" width="36" height="19" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="9d66afe3-7808-4c92-ab8c-2f4ddbfd2ac3"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line" mode="Opaque" x="0" y="1" width="535" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="ffc50261-17f5-4b5e-8678-baf1bea60896"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="1" y="6" width="209" height="19" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="8daad99f-3a0b-4339-a12a-ef33f1f4a2ee"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

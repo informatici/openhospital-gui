@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -56,32 +56,37 @@ public class ListEdit extends JDialog {
 	public void addListListener(ListListener l) {
 		listListeners.add(ListListener.class, l);
 	}
-	
+
 	public void removeListListener(ListListener listener) {
 		listListeners.remove(ListListener.class, listener);
 	}
-	
+
 	private void fireListInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
 		EventListener[] listeners = listListeners.getListeners(ListListener.class);
 		for (EventListener listener : listeners) {
 			((ListListener) listener).listInserted(event);
 		}
 	}
+
 	private void fireListUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = listListeners.getListeners(ListListener.class);
 		for (EventListener listener : listeners) {
 			((ListListener) listener).listUpdated(event);
 		}
 	}
-	
+
+	private PriceListManager priceListManager = Context.getApplicationContext().getBean(PriceListManager.class);
+
 	private static final long serialVersionUID = 1L;
 	private JPanel jPanelData;
 	private JPanel jPanelButtons;
@@ -129,22 +134,23 @@ public class ListEdit extends JDialog {
 				list.setDescription(jTextFieldDescription.getText());
 				list.setCurrency(jTextFieldCurrency.getText());
 
-				PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 				boolean result = false;
-				try{
-					if (insert) {      // inserting
-						result = listManager.newList(list);
-						if (result) {
+				try {
+					if (insert) {	// inserting
+						PriceList insertedPriceList = priceListManager.newList(list);
+						if (insertedPriceList != null) {
 							fireListInserted();
+							result = true;
 						}
 					}
-					else {             // updating
-						result = listManager.updateList(list);
-						if (result) {
+					else {	// updating
+						PriceList updatedPriceList = priceListManager.updateList(list);
+						if (updatedPriceList != null) {
 							fireListUpdated();
+							result = true;
 						}
 					}
-				} catch(OHServiceException e) {
+				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
 				if (!result) {

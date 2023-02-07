@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -60,18 +60,20 @@ public class ExamShow extends JDialog implements ExamRowListener {
 
 	private static final long serialVersionUID = 1L;
 
+	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
 	private JButton closeButton = null;
-	private Exam exam = null;
+	private Exam exam;
 	private JButton newButton = null;
 	private JButton deleteButton = null;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {50,250};
+	private int[] pColumnWidth = { 50, 250 };
 	private DefaultTableModel model ;
 	private JTable table;
 	private ExamRow examRow = null;
@@ -103,21 +105,21 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
-	
+
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			dataPanel= new JPanel();
-                        
+			dataPanel = new JPanel();
+
 			model = new ExamRowBrowsingModel(exam.getCode());
 			table = new JTable(model);
 			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-			jContentPane.add(new JScrollPane(table),BorderLayout.CENTER);
+			jContentPane.add(new JScrollPane(table), BorderLayout.CENTER);
 		}
 		return dataPanel;
 	}
@@ -163,12 +165,11 @@ public class ExamShow extends JDialog implements ExamRowListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 					ExamRow row = (ExamRow) (((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.exa.deleteexamresult.fmt.msg", row.getDescription());
 					if ((answer == JOptionPane.YES_OPTION)) {
 						try {
-							boolean deleted = manager.deleteExamRow(row);
+							boolean deleted = examRowBrowsingManager.deleteExamRow(row);
 
 							if (deleted) {
 								examRowDeleted();
@@ -187,12 +188,10 @@ public class ExamShow extends JDialog implements ExamRowListener {
 
 		private static final long serialVersionUID = 1L;
 
-		private ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-
 		public ExamRowBrowsingModel(String aCode) {
 
 			try {
-				pExamRow = manager.getExamRowByExamCode(aCode);
+				pExamRow = examRowBrowsingManager.getExamRowByExamCode(aCode);
 			} catch (OHServiceException e) {
 				pExamRow = null;
 				OHServiceExceptionUtil.showMessages(e);

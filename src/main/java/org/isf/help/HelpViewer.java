@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -24,10 +24,14 @@ package org.isf.help;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
+import org.isf.generaldata.Version;
 import org.isf.utils.jobjects.MessageDialog;
 
 /**
@@ -40,28 +44,38 @@ public class HelpViewer extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	private static final String MANUAL_PDF_FILE = "UserManual.pdf";
+	private static final String USER_MANUAL_PREFIX = "https://github.com/informatici/openhospital-doc/blob/";
+	private static final String USER_MANUAL_SUFFIX = "/doc_user/UserManual.adoc";
 
 	public HelpViewer() {
 		GeneralData.getGeneralData();
-		String doc_file = GeneralData.DOC_DIR + File.separator + MANUAL_PDF_FILE;
-		File file = new File(doc_file);
-		if (file != null) {
-			if (Desktop.isDesktopSupported()) { //Try to find system PDF viewer
-				try {
-					Desktop.getDesktop().open(file);
-				} catch (IOException | IllegalArgumentException e) {
-					MessageDialog.error(HelpViewer.this, "angal.help.userguidenotfound");
+		String docFile = GeneralData.DOC_DIR + File.separator + MANUAL_PDF_FILE;
+		File file = new File(docFile);
+		if (Desktop.isDesktopSupported()) { //Try to find system PDF viewer
+			try {
+				Desktop.getDesktop().open(file);
+			} catch (IOException | IllegalArgumentException e) {
+				// Either system viewer or file is not found
+				int answer = MessageDialog.yesNo(HelpViewer.this, "angal.help.userguidenotfound.msg");
+				if (answer == JOptionPane.NO_OPTION) {
+					return;
 				}
-			} else if (!GeneralData.INTERNALVIEWER) { //Try specified PDF viewer, if any
 				try {
-					Runtime rt = Runtime.getRuntime();
-					rt.exec(GeneralData.VIEWER + " " + file);
-				} catch (IOException e) {
-					MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfoundoruserguidenotfound");
+					Version.getVersion();
+					Desktop.getDesktop().browse(new URI(USER_MANUAL_PREFIX + Version.VER_MAJOR + '.' + Version.VER_MINOR + '.' + Version.VER_RELEASE + USER_MANUAL_SUFFIX));
+				} catch (IOException | URISyntaxException ex) {
+					MessageDialog.error(this, "angal.help.userguidenotfound.msg");
 				}
-			} else { //abort operation
-				MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfound");
 			}
+		} else if (!GeneralData.INTERNALVIEWER) { //Try specified PDF viewer, if any
+			try {
+				Runtime rt = Runtime.getRuntime();
+				rt.exec(GeneralData.VIEWER + ' ' + file);
+			} catch (IOException e) {
+				MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfoundoruserguidenotfound.msg");
+			}
+		} else { //abort operation
+			MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfound.msg");
 		}
 	}
 

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -20,6 +20,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.dicom.gui;
+
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -60,11 +62,11 @@ import org.isf.utils.time.TimeTools;
 public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 	private static final long serialVersionUID = 1L;
-	private int patID = -1;
-	private DicomGui dicomViewer = null;
+	private int patID;
+	private DicomGui dicomViewer;
 	private DicomThumbsModel dicomThumbsModel;
 	boolean thumbnailViewEnabled = true;
-	boolean thumbnails = false;
+	boolean thumbnails;
 
 	/**
 	 * Initialize Component
@@ -167,10 +169,9 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 		dicomThumbsModel.clear();
 
-		for (int i = 0; i < fdb.length; i++) {
-			dicomThumbsModel.addInstance(fdb[i]);
+		for (FileDicom fileDicom : fdb) {
+			dicomThumbsModel.addInstance(fileDicom);
 		}
-
 	}
 
 	public static class DicomThumbsModel extends AbstractListModel {
@@ -228,7 +229,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			
 			// Header of thumbnail
 			JPanel header = new JPanel(new BorderLayout(), false);
-			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
+			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), DATE_FORMAT_DD_MM_YYYY_HH_MM));
 			date.setForeground(Color.LIGHT_GRAY);
 			JLabel type = new JLabel(instance.getDicomType() == null ? MessageBundle.getMessage("angal.common.notdefined.txt") : instance.getDicomType().toString());
 			type.setForeground(Color.LIGHT_GRAY);
@@ -284,7 +285,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 			// Header of thumbnail
 			JPanel header = new JPanel(new BorderLayout(), false);
-			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
+			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), DATE_FORMAT_DD_MM_YYYY_HH_MM));
 			date.setForeground(Color.LIGHT_GRAY);
 			JLabel type = new JLabel(instance.getDicomType() == null? MessageBundle.getMessage("angal.common.notdefined.txt") : instance.getDicomType().toString());
 			type.setForeground(Color.LIGHT_GRAY);

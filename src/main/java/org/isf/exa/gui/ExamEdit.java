@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -79,26 +79,29 @@ public class ExamEdit extends JDialog {
     	examListeners.remove(ExamListener.class, listener);
     }
 
-    private void fireExamInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireExamInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamListener) listener).examInserted(event);
-	    }
-    }
-    private void fireExamUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = examListeners.getListeners(ExamListener.class);
+		for (EventListener listener : listeners) {
+			((ExamListener) listener).examInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireExamUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamListener) listener).examUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = examListeners.getListeners(ExamListener.class);
+		for (EventListener listener : listeners) {
+			((ExamListener) listener).examUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -114,20 +117,20 @@ public class ExamEdit extends JDialog {
 	private JComboBox<String> procComboBox = null;
 	private VoLimitedTextField defTextField = null;
 	private JLabel typeLabel = null;
-	private JComboBox typeComboBox = null;
+	private JComboBox<ExamType> examTypeComboBox = null;
 	private Exam exam;
 	private boolean insert;
 	
-	private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
     
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
-	public ExamEdit(JFrame owner,Exam old,boolean inserting) {
-		super(owner,true);
+	public ExamEdit(JFrame owner, Exam old, boolean inserting) {
+		super(owner, true);
 		insert = inserting;
-		exam = old;		//medical will be used for every operation
+		exam = old;        // exam will be used for every operation
 		initialize();
 	}
 
@@ -161,8 +164,8 @@ public class ExamEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -181,7 +184,7 @@ public class ExamEdit extends JDialog {
 			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default") + ':');
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(typeLabel);
-			dataPanel.add(getTypeComboBox());
+			dataPanel.add(getExamTypeComboBox());
 			dataPanel.add(codeLabel);
 			dataPanel.add(getCodeTextField());
 			dataPanel.add(descLabel);
@@ -238,7 +241,7 @@ public class ExamEdit extends JDialog {
 				} else {
 					int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
 
-					exam.setExamtype((ExamType) typeComboBox.getSelectedItem());
+					exam.setExamtype((ExamType) examTypeComboBox.getSelectedItem());
 					exam.setDescription(descriptionTextField.getText());
 
 					exam.setCode(codeTextField.getText().toUpperCase());
@@ -248,7 +251,7 @@ public class ExamEdit extends JDialog {
 					boolean result = false;
 					if (insert) {
 						try {
-							if (manager.isKeyPresent(exam)) {
+							if (examBrowsingManager.isKeyPresent(exam)) {
 								MessageDialog.error(ExamEdit.this, "angal.exa.changethecodebecauseisalreadyinuse");
 								return;
 							}
@@ -256,7 +259,7 @@ public class ExamEdit extends JDialog {
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 						try {
-							result = manager.newExam(exam);
+							result = examBrowsingManager.newExam(exam);
 							if (result) {
 								fireExamInserted();
 							}
@@ -265,7 +268,10 @@ public class ExamEdit extends JDialog {
 						}
 					} else {
 						try {
-							result = manager.updateExam(exam);
+							Exam updatedExam = examBrowsingManager.updateExam(exam);
+							if (updatedExam != null) {
+								result = true;
+							}
 							if (result) {
 								fireExamUpdated();
 							}
@@ -337,33 +343,40 @@ public class ExamEdit extends JDialog {
 	}
 	
 	/**
-	 * This method initializes typeComboBox	
+	 * This method initializes examTypeComboBox
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	private JComboBox getTypeComboBox() {
-		if (typeComboBox == null) {
-			typeComboBox = new JComboBox();
-			if (insert) {
-				List<ExamType> types;
-				try {
-					types = manager.getExamType();
-				} catch (OHServiceException e) {
-					types = null;
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				if (null != types) {
-					for (ExamType elem : types) {
-						typeComboBox.addItem(elem);
+	private JComboBox<ExamType> getExamTypeComboBox() {
+		if (examTypeComboBox == null) {
+			examTypeComboBox = new JComboBox<>();
+			try {
+				List<ExamType> types = examBrowsingManager.getExamType();
+				if (insert) {
+					if (null != types) {
+						for (ExamType elem : types) {
+							examTypeComboBox.addItem(elem);
+						}
+					}
+				} else {
+					ExamType selectExamType = null;
+					if (null != types) {
+						for (ExamType elem : types) {
+							examTypeComboBox.addItem(elem);
+							if (exam.getExamtype().equals(elem)) {
+								selectExamType = elem;
+							}
+						}
+					}
+					if (selectExamType != null) {
+						examTypeComboBox.setSelectedItem(selectExamType);
 					}
 				}
-			} else {
-				typeComboBox.addItem(exam.getExamtype());
-				typeComboBox.setEnabled(false);
+			} catch (OHServiceException ohServiceException) {
+				OHServiceExceptionUtil.showMessages(ohServiceException);
 			}
-			
 		}
-		return typeComboBox;
+		return examTypeComboBox;
 	}
 
 }

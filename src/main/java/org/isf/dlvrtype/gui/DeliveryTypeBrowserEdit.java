@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -44,13 +44,15 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DeliveryTypeBrowserEdit extends JDialog{
+public class DeliveryTypeBrowserEdit extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private EventListenerList deliveryTypeListeners = new EventListenerList();
 
     public interface DeliveryTypeListener extends EventListener {
+
         void deliveryTypeUpdated(AWTEvent e);
+
         void deliveryTypeInserted(AWTEvent e);
     }
 
@@ -65,23 +67,28 @@ public class DeliveryTypeBrowserEdit extends JDialog{
     private void fireDeliveryInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-            private static final long serialVersionUID = 1L;};
+            private static final long serialVersionUID = 1L;
+        };
 
         EventListener[] listeners = deliveryTypeListeners.getListeners(DeliveryTypeListener.class);
         for (EventListener listener : listeners) {
             ((DeliveryTypeListener) listener).deliveryTypeInserted(event);
         }
     }
+
     private void fireDeliveryUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-            private static final long serialVersionUID = 1L;};
+            private static final long serialVersionUID = 1L;
+        };
 
         EventListener[] listeners = deliveryTypeListeners.getListeners(DeliveryTypeListener.class);
         for (EventListener listener : listeners) {
             ((DeliveryTypeListener) listener).deliveryTypeUpdated(event);
         }
     }
+
+    private DeliveryTypeBrowserManager deliveryTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
     private JPanel jContentPane = null;
     private JPanel dataPanel = null;
@@ -100,11 +107,11 @@ public class DeliveryTypeBrowserEdit extends JDialog{
      * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
      */
-    public DeliveryTypeBrowserEdit(JFrame owner,DeliveryType old,boolean inserting) {
-        super(owner,true);
+    public DeliveryTypeBrowserEdit(JFrame owner, DeliveryType old, boolean inserting) {
+        super(owner, true);
         insert = inserting;
-        deliveryType = old;//disease will be used for every operation
-        lastdescription= deliveryType.getDescription();
+        deliveryType = old; // deliveryType will be used for every operation
+        lastdescription = deliveryType.getDescription();
         initialize();
     }
     
@@ -190,7 +197,6 @@ public class DeliveryTypeBrowserEdit extends JDialog{
             okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
             okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
             okButton.addActionListener(actionEvent -> {
-                DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
                 try {
                     if (descriptionTextField.getText().equals(lastdescription)) {
@@ -200,7 +206,7 @@ public class DeliveryTypeBrowserEdit extends JDialog{
                     deliveryType.setCode(codeTextField.getText());
                     boolean result;
                     if (insert) {      // inserting
-                        result = manager.newDeliveryType(deliveryType);
+                        result = deliveryTypeBrowserManager.newDeliveryType(deliveryType);
                         if (result) {
                             fireDeliveryInserted();
                         }
@@ -213,7 +219,7 @@ public class DeliveryTypeBrowserEdit extends JDialog{
                         if (descriptionTextField.getText().equals(lastdescription)) {
                             dispose();
                         } else {
-                            result = manager.updateDeliveryType(deliveryType);
+                            result = deliveryTypeBrowserManager.updateDeliveryType(deliveryType);
                             if (result) {
                                 fireDeliveryUpdated();
                             }

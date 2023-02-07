@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -38,6 +38,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -57,7 +58,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	@Override
 	public void userInserted(AWTEvent e) {
 		User u = (User) e.getSource();
-		pUser.add(0, u);
+		userList.add(0, u);
 		((UserBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
 		if (table.getRowCount() > 0) {
@@ -67,7 +68,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 	@Override
 	public void userUpdated(AWTEvent e) {
-		pUser.set(selectedrow, user);
+		userList.set(selectedrow, user);
 		((UserBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
 		if ((table.getRowCount() > 0) && (selectedrow > -1)) {
@@ -77,8 +78,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 	private int selectedrow;
 	private JLabel selectlabel;
-	private JComboBox pbox;
-	private List<User> pUser;
+	private JComboBox<UserGroup> userGroupFilter;
+	private List<User> userList;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.userbrowser.user.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
@@ -92,7 +93,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private String pSelection;
 
 	private UserBrowsing myFrame;
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public UserBrowsing() {
 
@@ -113,21 +114,21 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		selectlabel = new JLabel(MessageBundle.getMessage("angal.userbrowser.selectgroup.label"));
 		buttonPanel.add(selectlabel);
 
-		pbox = new JComboBox();
-		pbox.addItem(ALL_STR);
+		userGroupFilter = new JComboBox<>();
+		userGroupFilter.addItem(new UserGroup(ALL_STR, ALL_STR));
 		List<UserGroup> group = null;
 		try {
-			group = manager.getUserGroup();
+			group = userBrowsingManager.getUserGroup();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		if (group != null) {
 			for (UserGroup elem : group) {
-				pbox.addItem(elem);
+				userGroupFilter.addItem(elem);
 			}
 		}
-		pbox.addActionListener(actionEvent -> {
-			pSelection = pbox.getSelectedItem().toString();
+		userGroupFilter.addActionListener(actionEvent -> {
+			pSelection = userGroupFilter.getSelectedItem().toString();
 			if (pSelection.compareTo(ALL_STR) == 0) {
 				model = new UserBrowserModel();
 			} else {
@@ -136,7 +137,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 			model.fireTableDataChanged();
 			table.updateUI();
 		});
-		buttonPanel.add(pbox);
+		buttonPanel.add(userGroupFilter);
 
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
@@ -187,7 +188,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				});
 				String newPassword = "";
 				JPanel stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-				stepPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step1.pleaseinsertanew.password.label")));
+				stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.fmt.msg", GeneralData.STRONGLENGTH)));
 				stepPanel.add(pwd);
 
 				while (newPassword.isEmpty()) {
@@ -198,10 +199,16 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 						return;
 					}
 					newPassword = new String(pwd.getPassword());
-					if (newPassword.isEmpty() || newPassword.length() < 6) {
-						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleast6characters.msg");
+					if (newPassword.isEmpty() || newPassword.length() < GeneralData.STRONGLENGTH) {
+						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 						newPassword = "";
 						pwd.setText("");
+					} else {
+						if (!userBrowsingManager.isPasswordStrong(newPassword)) {
+							MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+							newPassword = "";
+							pwd.setText("");
+						}
 					}
 				}
 
@@ -221,12 +228,25 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				// 3. Check & Save
 				if (!newPassword.equals(newPassword2)) {
 					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
+					newPassword = null;
+					newPassword2 = null;
+					return;
+				}
+
+				// BCrypt has a maximum length of 72 characters
+				// see for example, https://security.stackexchange.com/questions/152430/what-maximum-password-length-to-choose-when-using-bcrypt
+				if (newPassword.length() > 72) {
+					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+					newPassword = null;
+					newPassword2 = null;
 					return;
 				}
 				String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+				newPassword = null;
+				newPassword2 = null;
 				user.setPasswd(hashed);
 				try {
-					if (manager.updatePassword(user)) {
+					if (userBrowsingManager.updatePassword(user)) {
 						MessageDialog.info(UserBrowsing.this, "angal.userbrowser.thepasswordhasbeenchanged.msg");
 					}
 				} catch (OHServiceException e) {
@@ -245,8 +265,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				User selectedUser = (User) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.userbrowser.deleteuser.fmt.msg", selectedUser.getUserName());
 				try {
-					if ((JOptionPane.YES_OPTION == answer) && manager.deleteUser(selectedUser)) {
-						pUser.remove(table.getSelectedRow());
+					if ((JOptionPane.YES_OPTION == answer) && userBrowsingManager.deleteUser(selectedUser)) {
+						userList.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
 					}
@@ -275,7 +295,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		public UserBrowserModel(String s) {
 			try {
-				pUser = manager.getUser(s);
+				userList = userBrowsingManager.getUser(s);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -283,7 +303,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		public UserBrowserModel() {
 			try {
-				pUser = manager.getUser();
+				userList = userBrowsingManager.getUser();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -291,10 +311,10 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		@Override
 		public int getRowCount() {
-			if (pUser == null) {
+			if (userList == null) {
 				return 0;
 			}
-			return pUser.size();
+			return userList.size();
 		}
 
 		@Override
@@ -310,13 +330,13 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
-				return pUser.get(r).getUserName();
+				return userList.get(r).getUserName();
 			} else if (c == -1) {
-				return pUser.get(r);
+				return userList.get(r);
 			} else if (c == 1) {
-				return pUser.get(r).getUserGroupName();
+				return userList.get(r).getUserGroupName();
 			} else if (c == 2) {
-				return pUser.get(r).getDesc();
+				return userList.get(r).getDesc();
 			}
 			return null;
 		}

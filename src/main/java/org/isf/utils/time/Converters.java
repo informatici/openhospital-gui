@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,11 +21,12 @@
  */
 package org.isf.utils.time;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.GregorianCalendar;
-
-import org.joda.time.DateTime;
+import java.util.Optional;
 
 /**
  * @author nicosalvato on 2016-08-25.
@@ -33,86 +34,19 @@ import org.joda.time.DateTime;
  */
 public class Converters {
 
-    /**
-     * Returns a {@link String} representing the date in format {@code yyyy-MM-dd HH:mm:ss}.
-     * @param datetime {@link GregorianCalendar} object.
-     * @return the date in format {@code yyyy-MM-dd HH:mm:ss}.
-     */
-    public static String convertToSQLDate(GregorianCalendar datetime) {
-        if (datetime == null) {
-            return null;
-        }
-        return convertToSQLDate(datetime.getTime());
+    public static LocalDate convertToLocalDate(Date dateToConvert) {
+        return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    /**
-     * Returns a {@link String} representing the date in format {@code yyyy-MM-dd HH:mm:ss}.
-     * @param datetime {@link Date} input.
-     * @return the date in format {@code yyyy-MM-dd HH:mm:ss}.
-     */
-    public static String convertToSQLDate(Date datetime) {
-        if (datetime == null) {
-            return null;
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(datetime);
+    public static Date toDate(LocalDateTime localDateTime) {
+        return Optional.ofNullable(localDateTime)
+                .map(ldt -> ldt.atZone(ZoneId.systemDefault()).toInstant())
+                .map(Date::from)
+                .orElse(null);
     }
 
-    /**
-     * Returns a {@link String} representing the date in format {@code yyyy-MM-dd}.
-     * @param date {@link Date} object.
-     * @return the date in format {@code yyyy-MM-dd}.
-     */
-    public static String convertToSQLDateLimited(GregorianCalendar date) {
-        if (date == null) {
-            return null;
-        }
-        return convertToSQLDateLimited(date.getTime());
+    public static LocalDate parseStringToLocalDate(String dateStr, String dateFormat) {
+        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(dateFormat));
     }
 
-    /**
-     * Returns a {@link String} representing the date in format {@code yyyy-MM-dd}.
-     * @param date {@link Date} object.
-     * @return the date in format {@code yyyy-MM-dd}.
-     */
-    public static String convertToSQLDateLimited(Date date) {
-        if (date == null) {
-            return null;
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(date);
-    }
-
-    /**
-     * Converts a {@link GregorianCalendar} to a {@link Date}.
-     * @param calendar the calendar to convert.
-     * @return the converted value or {@code null} if the passed value is {@code null}.
-     */
-    public static Date toDate(GregorianCalendar calendar) {
-        if (calendar == null) {
-            return null;
-        }
-        return new Date(calendar.getTimeInMillis());
-    }
-    
-    public static DateTime toDateTime(GregorianCalendar calendar) {
-        if (calendar == null) {
-            return null;
-        }
-        return new DateTime(calendar.getTimeInMillis());
-    }
-
-    /**
-     * Converts the specified {@link java.sql.Date} to a {@link GregorianCalendar}.
-     * @param date the date to convert.
-     * @return the converted date.
-     */
-    public static GregorianCalendar toCalendar(Date date) {
-        if (date == null) {
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-        return calendar;
-    }
 }

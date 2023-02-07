@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -45,15 +45,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class PregnantTreatmentTypeEdit extends JDialog{
+public class PregnantTreatmentTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList pregnantTreatmentTypeListeners = new EventListenerList();
 
-    public interface PregnantTreatmentTypeListener extends EventListener {
-        void pregnantTreatmentTypeUpdated(AWTEvent e);
-        void pregnantTreatmentTypeInserted(AWTEvent e);
-    }
+	public interface PregnantTreatmentTypeListener extends EventListener {
+
+		void pregnantTreatmentTypeUpdated(AWTEvent e);
+
+		void pregnantTreatmentTypeInserted(AWTEvent e);
+	}
 
     public void addPregnantTreatmentTypeListener(PregnantTreatmentTypeListener l) {
     	pregnantTreatmentTypeListeners.add(PregnantTreatmentTypeListener.class, l);
@@ -63,27 +65,32 @@ public class PregnantTreatmentTypeEdit extends JDialog{
     	pregnantTreatmentTypeListeners.remove(PregnantTreatmentTypeListener.class, listener);
     }
 
-    private void firePregnantTreatmentInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void firePregnantTreatmentInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeInserted(event);
-	    }
-    }
-    private void firePregnantTreatmentUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
+		for (EventListener listener : listeners) {
+			((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void firePregnantTreatmentUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeUpdated(event);
-	    }
-    }
-    
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
+		for (EventListener listener : listeners) {
+			((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeUpdated(event);
+		}
+	}
+
+	private PregnantTreatmentTypeBrowserManager pregnantTreatmentTypeBrowserManager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -101,10 +108,10 @@ public class PregnantTreatmentTypeEdit extends JDialog{
      * because we need to update them
 	 */
 	public PregnantTreatmentTypeEdit(JFrame owner, PregnantTreatmentType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		pregnantTreatmentType = old;// PregnantTreatmentType will be used for every operation
-		lastdescription= pregnantTreatmentType.getDescription();
+		lastdescription = pregnantTreatmentType.getDescription();
 		initialize();
 	}
 
@@ -190,7 +197,6 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 
 				try {
 					if (descriptionTextField.getText().equals(lastdescription)) {
@@ -198,31 +204,29 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 					}
 					pregnantTreatmentType.setDescription(descriptionTextField.getText());
 					pregnantTreatmentType.setCode(codeTextField.getText());
-					boolean result;
-					if (insert) {      // inserting
-						result = manager.newPregnantTreatmentType(pregnantTreatmentType);
-						if (result) {
+					boolean result = false;
+					if (insert) {	// inserting
+						
+						PregnantTreatmentType insertedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
+						if (insertedPregnantTreatmentType != null) {
 							firePregnantTreatmentInserted();
+							result = true;
 						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
-					} else {                          // updating
+					} else {	// updating
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							result = manager.updatePregnantTreatmentType(pregnantTreatmentType);
-							if (result) {
+							PregnantTreatmentType updatedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.updatePregnantTreatmentType(pregnantTreatmentType);
+							if (updatedPregnantTreatmentType != null) {
 								firePregnantTreatmentUpdated();
-							}
-							if (!result) {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							} else {
-								dispose();
+								result = true;
 							}
 						}
+					}
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					} else {
+						dispose();
 					}
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);

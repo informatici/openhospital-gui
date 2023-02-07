@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -37,7 +37,7 @@ import javax.swing.text.JTextComponent;
  * The TextPrompt class will display a prompt over top of a text component when
  * the Document of the text field is empty. The Show property is used to
  * determine the visibility of the prompt.
- * 
+ * <p>
  * The Font and foreground Color of the prompt will default to those properties
  * of the parent text component. You are free to change the properties after
  * class construction.
@@ -121,7 +121,7 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 
 	/**
 	 * Get the Show property
-	 * 
+	 *
 	 * @return the Show property.
 	 */
 	public Show getShow() {
@@ -145,7 +145,7 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 
 	/**
 	 * Get the showPromptOnce property
-	 * 
+	 *
 	 * @return the showPromptOnce property.
 	 */
 	public boolean getShowPromptOnce() {
@@ -228,4 +228,5 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 	@Override
 	public void changedUpdate(DocumentEvent e) {
 	}
+
 }

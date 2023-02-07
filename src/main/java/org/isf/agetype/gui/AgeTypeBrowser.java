@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -63,8 +63,9 @@ public class AgeTypeBrowser extends ModalJFrame {
 	private JButton jEditSaveButton = null;
 	private JButton jCloseButton = null;
 	private JTable jTable = null;
-	private AgeTypeBrowserModel model;
 	private boolean edit = false;
+
+	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 
 	/**
 	 * This method initializes
@@ -121,9 +122,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 					if (jTable.isEditing()) {
 						jTable.getCellEditor().stopCellEditing();
 					}
-					AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 					try {
-						manager.updateAgeType(pAgeType);
+						ageTypeBrowserManager.updateAgeType(pAgeType);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -151,14 +151,13 @@ public class AgeTypeBrowser extends ModalJFrame {
 		return jCloseButton;
 	}
 
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
-			model = new AgeTypeBrowserModel();
-			jTable = new JTable(model);
+			jTable = new JTable(new AgeTypeBrowserModel());
 			for (int i = 0; i < pColumns.length; i++) {
 				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
 			}
-			jTable.setDefaultRenderer(Object.class,new ColorTableCellRenderer());
+			jTable.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
 		}
 		return jTable;
 	}
@@ -166,11 +165,10 @@ public class AgeTypeBrowser extends ModalJFrame {
 	class AgeTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
-		
+
 		public AgeTypeBrowserModel() {
 			try {
-				pAgeType = manager.getAgeType();
+				pAgeType = ageTypeBrowserManager.getAgeType();
 			} catch (OHServiceException e) {
 				pAgeType = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
@@ -232,14 +230,9 @@ public class AgeTypeBrowser extends ModalJFrame {
 		@Override
 		public boolean isCellEditable(int r, int c) {
 			if (edit) {
-				if (c == 1 || c == 2) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
+				return c == 1 || c == 2;
 			}
+			return false;
 		}
 	}
 	

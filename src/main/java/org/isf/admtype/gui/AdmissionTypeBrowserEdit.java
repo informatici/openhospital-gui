@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -45,7 +45,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class AdmissionTypeBrowserEdit extends JDialog{
+public class AdmissionTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList admissionTypeListeners = new EventListenerList();
@@ -63,27 +63,32 @@ public class AdmissionTypeBrowserEdit extends JDialog{
     	admissionTypeListeners.remove(LaboratoryTypeListener.class, listener);
     }
 
-    private void fireAdmissionInserted(AdmissionType anAdmissionType) {
-        AWTEvent event = new AWTEvent(anAdmissionType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireAdmissionInserted(AdmissionType anAdmissionType) {
+		AWTEvent event = new AWTEvent(anAdmissionType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((LaboratoryTypeListener) listener).admissionTypeInserted(event);
-	    }
-    }
-    private void fireAdmissionUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
+		for (EventListener listener : listeners) {
+			((LaboratoryTypeListener) listener).admissionTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireAdmissionUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((LaboratoryTypeListener) listener).admissionTypeUpdated(event);
-	    }
-    }
-    
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
+		for (EventListener listener : listeners) {
+			((LaboratoryTypeListener) listener).admissionTypeUpdated(event);
+		}
+	}
+
+	private AdmissionTypeBrowserManager admissionTypeBrowserManager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -101,10 +106,10 @@ public class AdmissionTypeBrowserEdit extends JDialog{
      * because we need to update them
 	 */
 	public AdmissionTypeBrowserEdit(JFrame owner, AdmissionType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		admissionType = old;//disease will be used for every operation
-		lastdescription= admissionType.getDescription();
+		admissionType = old; //admissionType will be used for every operation
+		lastdescription = admissionType.getDescription();
 		initialize();
 	}
 
@@ -189,7 +194,6 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
 				if (descriptionTextField.getText().equals(lastdescription)) {
 					dispose();
@@ -200,7 +204,7 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 				boolean result;
 				if (insert) {      // inserting
 					try {
-						result = manager.newAdmissionType(admissionType);
+						result = admissionTypeBrowserManager.newAdmissionType(admissionType);
 						if (result) {
 							fireAdmissionInserted(admissionType);
 						}
@@ -217,7 +221,7 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 						dispose();
 					} else {
 						try {
-							result = manager.updateAdmissionType(admissionType);
+							result = admissionTypeBrowserManager.updateAdmissionType(admissionType);
 							if (result) {
 								fireAdmissionUpdated();
 							}

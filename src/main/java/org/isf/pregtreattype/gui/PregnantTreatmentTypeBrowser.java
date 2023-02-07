@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -48,9 +48,12 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener{
+public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener {
 
 	private static final long serialVersionUID = 1L;
+
+	private PregnantTreatmentTypeBrowserManager pregnantTreatmentTypeBrowserManager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
+
 	private List<PregnantTreatmentType> pPregnantTreatmentType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
@@ -66,7 +69,6 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 	private JTable jTable = null;
 	private PregnantTreatmentTypeBrowserModel model;
 	private int selectedrow;
-	private PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 	private PregnantTreatmentType pregnantTreatmentType = null;
 	private final JFrame myFrame;
 
@@ -108,15 +110,14 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				pregnantTreatmentType = new PregnantTreatmentType("","");
-				PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame,pregnantTreatmentType, true);
+				pregnantTreatmentType = new PregnantTreatmentType("", "");
+				PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame, pregnantTreatmentType, true);
 				newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -139,7 +140,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					pregnantTreatmentType = (PregnantTreatmentType) (model.getValueAt(selectedrow, -1));
-					PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame,pregnantTreatmentType, false);
+					PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame, pregnantTreatmentType, false);
 					newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -178,7 +179,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 					PregnantTreatmentType preTreatmentType = (PregnantTreatmentType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.preagtreattype.deletetreatmenttype.fmt.msg", preTreatmentType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deletePregnantTreatmentType(preTreatmentType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (pregnantTreatmentTypeBrowserManager.deletePregnantTreatmentType(preTreatmentType))) {
 							pPregnantTreatmentType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -191,8 +192,8 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new PregnantTreatmentTypeBrowserModel();
 			jTable = new JTable(model);
@@ -207,9 +208,8 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		private static final long serialVersionUID = 1L;
 
 		public PregnantTreatmentTypeBrowserModel() {
-			PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 			try {
-				pPregnantTreatmentType = manager.getPregnantTreatmentType();
+				pPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.getPregnantTreatmentType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
