@@ -116,6 +116,7 @@ $script:OH_SINGLE_USER="no"
 # set DEMO_DATA to on to enable demo database loading - default set to off
 # ---> Warning <--- __requires deletion of all portable data__
 $script:DEMO_DATA="off"
+$script:DEMO_DATABASE="ohdemo"
 
 # set JAVA_BIN 
 # Uncomment this if you want to use system wide JAVA
@@ -331,6 +332,8 @@ function read_settings {
 		$script:OH_MODE=$oh_settings.MODE
 		$script:OH_LANGUAGE=$oh_settings.LANGUAGE
 		$script:OH_SINGLE_USER=$oh_settings.SINGLE_USER
+		$script:OH_DOC_DIR=$oh_settings.OH_DOC_DIR
+		$script:DEMO_DATA=$oh_settings.DEMODATA
 		################################################
 	}
 }
@@ -347,6 +350,15 @@ function set_path {
 			Write-Host "Error - $SCRIPT_NAME not found in the current PATH. Please browse to the directory where Open Hospital was unzipped or set up OH_PATH properly." -ForegroundColor Yellow
 			Read-Host; exit 1
 		}
+	
+	        # set original database name
+	        $script:ORIG_DATABASE_NAME="$DATABASE_NAME"
+
+	        # set original data base_dir
+	        $script:DATA_BASEDIR=$DATA_DIR
+	        # set DATA_DIR with db name
+	        $script:DATA_DIR="$DATA_BASEDIR/$DATABASE_NAME"
+
 		# set path variable with / in place of \ for configuration files
 		$script:OH_PATH_SUBSTITUTE=$OH_PATH -replace "\\", "/"
 	}
@@ -354,11 +366,6 @@ function set_path {
 
 ###################################################################
 function set_oh_mode {
-	#if ( !( $OH_MODE -eq "PORTABLE" ) -And !( $OH_MODE -eq "CLIENT" ) -And !( $OH_MODE -eq "SERVER" ) ) {
-	#	Write-Host "Error - OH_MODE not defined [CLIENT - PORTABLE - SERVER]! Exiting." -ForegroundColor Red
-	#	Read-Host;
-	#	exit 1
-	#}
 	# if settings.properties is present set OH mode
 	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties" -PathType leaf ) {
 		Write-Host "Configuring OH mode..."
@@ -370,6 +377,21 @@ function set_oh_mode {
 		Write-Host "Warning: settings.properties file not found." -ForegroundColor Yellow
 	}
 	Write-Host "OH mode set to $OH_MODE." -ForeGroundcolor Green
+}
+
+###################################################################
+function set_demo_data {
+	# if settings.properties is present set DEMO mode
+	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties" -PathType leaf ) {
+		Write-Host "Configuring DEMO data..."
+	        ######## settings.properties DEMO data configuration
+		Write-Host "Setting DEMO data to $DEMO_DATA in OH configuration files-> settings.properties..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties") -replace('^(DEMODATA.+)',"DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
+	}
+	else {
+		Write-Host "Warning: settings.properties file not found." -ForegroundColor Yellow
+	}
+	Write-Host "DEMO data set to $DEMO_DATA." -ForeGroundcolor Green
 }
 
 ###################################################################
@@ -674,7 +696,7 @@ function set_database_root_pw {
 				Start-Process -FilePath "$OH_PATH/$MYSQL_DIR/bin/mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 			}
 			catch {
-				Write-Host "Error: MySQL root password not set! Exiting." -ForegroundColor Red
+				Write-Host "Error: MySQL root password not set! Try resetting installation with option [X]. Exiting." -ForegroundColor Red
 				shutdown_database;
 				Read-Host; exit 2
 			}
@@ -775,7 +797,7 @@ function clean_database {
 	Get-Process mysqld -ErrorAction SilentlyContinue | Stop-Process -PassThru
 	Write-Host "Removing data..."
 	# remove database files
-	$filetodel="$OH_PATH\$DATA_DIR\*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH\$DATA_BASEDIR\*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	# remove socket and pid file
 	$filetodel="$OH_PATH\$TMP_DIR\*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 }
@@ -859,6 +881,8 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("PHOTO_DIR","$PHOTO_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 		# set singleuser = yes / no
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("YES_OR_NO","$OH_SINGLE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
+		# set DEMO DATA
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 	}
 }
 
@@ -957,13 +981,25 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		"D"	{ # demo mode 
 			# exit if OH is configured in CLIENT mode
 			if ( $OH_MODE -eq "CLIENT" ) {
-				Write-Host "Error - OH_MODE set to CLIENT mode. Cannot run with Demo data." -ForeGroundcolor Red
-				Read-Host;
+				Write-Host "Error - OH_MODE set to CLIENT mode. Cannot run with Demo data. Exiting" -ForeGroundcolor Red
+				Read-Host; exit 1;
 			}
-			$DEMO_DATA="on"
-			# set database name
-			$script:DATABASE_NAME="ohdemo"
-			Write-Host "Demo data set to on."
+			switch -CaseSensitive( $script:DEMO_DATA ) {
+			"on"	{ # 
+				$script:DEMO_DATA="off"
+				# set database name
+				$script:DATABASE_NAME="$script:ORIG_DATABASE_NAME"
+				}
+			"off"	{ # 
+				$script:DEMO_DATA="on"
+				# set database name
+				$script:DATABASE_NAME=$DEMO_DATABASE
+				}
+			}
+	        	# set DATA_DIR with db name
+		        $script:DATA_DIR="$DATA_BASEDIR/$DATABASE_NAME"
+			$script:WRITE_CONFIG_FILES="on"; write_config_files;
+			#set_demo_data;
 			Read-Host "Press any key to continue";
 		}
 		###################################################
@@ -1009,10 +1045,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		###################################################
 		"l"	{ # set language 
 			$script:OH_LANGUAGE = Read-Host "Select language: $OH_LANGUAGE_LIST (default is en)"
-			# create config files if not present
-			#write_config_files;
 			set_language;
-			#$script:WRITE_CONFIG_FILES="on"
 			Read-Host "Press any key to continue";
 		}
 		###################################################
@@ -1031,10 +1064,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			$script:DATABASE_PASSWORD=Read-Host	"Enter database password [DATABASE_PASSWORD]"
 			Write-Host				"Do you want to save entered settings to OH configuration files?"
 			get_confirmation;
-			$script:WRITE_CONFIG_FILES="on"
-			write_config_files;
-			#set_log_level;
-			#set_language;
+			$script:WRITE_CONFIG_FILES="on"; write_config_files;
 			Write-Host "Done!"
 			Read-Host "Press any key to continue";
 		}
@@ -1045,7 +1075,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			# check if portable mode is on
 			if ( !($OH_MODE -eq "CLIENT" )) {
 				# check if database already exists
-				if ( !(Test-Path "$OH_PATH/$DATA_DIR/$DATABASE_NAME")) {
+				if ( !(Test-Path "$OH_PATH/$DATA_DIR")) {
 			        	Write-Host "Error: no data found! Exiting." -ForegroundColor Red
 					exit 2;
 				}
@@ -1094,8 +1124,10 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		###################################################
 		"s"	{ # save / write config files
 			Write-Host "Do you want to save current settings to OH configuration files?"
+			
 			get_confirmation;
-			write_config_files;
+			# overwrite configuration files if existing
+			$script:WRITE_CONFIG_FILES="on"; write_config_files;
 			set_oh_mode;
 			set_language;
 			set_log_level;
@@ -1123,13 +1155,15 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		}
 		###################################################
 		"v"	{ # display software version and configuration
-	        	Write-Host "--------- Software version ---------"
+	        	Write-Host "--------- OH version ---------"
 			Get-Content $OH_PATH\$OH_DIR\rsc\version.properties | Where-Object {$_.length -gt 0} | Where-Object {!$_.StartsWith("#")} | ForEach-Object {
 			$var = $_.Split('=',2).Trim()
 			New-Variable -Force -Scope Private -Name $var[0] -Value $var[1] 
 			}
 			# show configuration
 			Write-Host "Open Hospital version:" $VER_MAJOR $VER_MINOR $VER_RELEASE
+			Write-Host ""
+	        	Write-Host "--------- Software version ---------"
 			Write-Host "$MYSQL_NAME version: $MYSQL_DIR"
 			Write-Host "JAVA version: $JAVA_DISTRO"
 			Write-Host ""
@@ -1147,7 +1181,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host "DATABASE_NAME=$DATABASE_NAME"
 			Write-Host "DATABASE_USER=$DATABASE_USER"
 			Write-Host ""
-			Write-Host "--- Dicom ---"
+			Write-Host "--- Imaging / Dicom ---"
 			Write-Host "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
 			Write-Host "DICOM_STORAGE=$DICOM_STORAGE"
 			Write-Host "DICOM_DIR=$DICOM_DIR"
@@ -1178,6 +1212,14 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host "Cleaning Open Hospital installation..."
 			clean_files;
 			clean_database;
+			# unset variables
+			Clear-Variable -name OH_MODE
+			Clear-Variable -name OH_LANGUAGE
+			Clear-Variable -name OH_SINGLE_USER
+			Clear-Variable -name LOG_LEVEL
+			Clear-Variable -name DEMO_DATA
+			# set defaults
+			set_defaults;
 			Write-Host "Done!"
 			Read-Host "Press any key to continue";
 		}
@@ -1216,14 +1258,14 @@ Write-Host "Interactive mode is set to $script:INTERACTIVE_MODE"
 if ( $DEMO_DATA -eq "on" ) {
 	# exit if OH is configured in CLIENT mode
 	if ( $OH_MODE -eq "CLIENT" ) {
-		Write-Host "Error - OH_MODE is set to $OH_MODE mode. Cannot run with Demo data, exiting." -ForeGroundcolor Red
+		Write-Host "Error - OH_MODE is set to $OH_MODE mode. Cannot run with Demo data. Exiting." -ForeGroundcolor Red
 		Read-Host; 
 		exit 1
 	}
 	
-	# reset database if exists
-	#clean_database;
-
+	# set database name
+	$script:DATABASE_NAME=$DEMO_DATABASE
+	
 	if (Test-Path -Path "$OH_PATH/$SQL_DIR/$DB_DEMO" -PathType leaf) {
 	        Write-Host "Found SQL demo database, starting OH with Demo data..."
 		$DB_CREATE_SQL=$DB_DEMO
@@ -1261,7 +1303,7 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 	# config database
 	config_database;
 	# check if OH database already exists
-	if ( !(Test-Path "$OH_PATH/$DATA_DIR/$DATABASE_NAME") ) {
+	if ( !(Test-Path "$OH_PATH/$DATA_DIR") ) {
 		Write-Host "OH database not found, starting from scratch..."
 		# prepare database
 		initialize_database;
@@ -1327,6 +1369,9 @@ else {
 
 	# generate config files if not existent
 	write_config_files;
+
+	# check / set demo data if enabled
+	#set_demo_data;
 
 	Write-Host "Starting Open Hospital GUI..."
 

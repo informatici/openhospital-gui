@@ -3,6 +3,7 @@
 ###########################################
 # external settings
 MODE=OH_MODE
+DEMODATA=off
 
 # internal settings, modules, directories
 LANGUAGE=OH_LANGUAGE

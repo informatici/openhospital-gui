@@ -61,6 +61,7 @@ LOG_LEVEL="INFO"
 # set DEMO_DATA to on to enable demo database loading - default set to off
 # ---> Warning <--- __requires deletion of all portable data__
 DEMO_DATA="off"
+DEMO_DATABASE="ohdemo"
 
 # set JAVA_BIN
 # Uncomment this if you want to use system wide JAVA
@@ -223,7 +224,7 @@ function read_settings {
 		OH_LANGUAGE=$LANGUAGE
 		OH_MODE=$MODE
 		OH_SINGLE_USER=$SINGLE_USER
-		#############################
+		DEMO_DATA=$DEMODATA
 	fi
 }
 
@@ -283,6 +284,13 @@ function set_path {
 			exit 1
 		fi
 	fi
+	# set original database name
+	ORIG_DATABASE_NAME="$DATABASE_NAME"
+	# set original data base_dir
+	DATA_BASEDIR=$DATA_DIR
+	# set DATA_DIR with db name
+	DATA_DIR=$DATA_BASEDIR/$DATABASE_NAME
+
 	OH_PATH_ESCAPED=$(echo $OH_PATH | sed -e 's/\//\\\//g')
 	DATA_DIR_ESCAPED=$(echo $DATA_DIR | sed -e 's/\//\\\//g')
 	TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
@@ -292,15 +300,10 @@ function set_path {
 
 ###################################################################
 function set_oh_mode {
-	#if [ -z ${OH_MODE+x} ]; then
-	#	echo "Error - OH_MODE not defined [CLIENT - PORTABLE - SERVER]! Exiting."
-	#	# if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
-	#	exit 1
-	#fi
 	# if settings.properties is present set OH mode
 	if [ -f ./$OH_DIR/rsc/settings.properties ]; then
 		echo "Configuring OH mode..."
-		######## settings.properties language configuration
+		######## settings.properties OH mode configuration
 		echo "Setting OH mode to $OH_MODE in OH configuration file -> settings.properties..."
 		sed -e "/^"MODE="/c"MODE=$OH_MODE"" -i ./$OH_DIR/rsc/settings.properties
 	else 
@@ -309,6 +312,23 @@ function set_oh_mode {
 		echo "Warning: settings.properties file not found."
 	fi
 	echo "OH mode set to $OH_MODE"
+}
+
+
+###################################################################
+function set_demo_data {
+	# if settings.properties is present set OH mode
+	if [ -f ./$OH_DIR/rsc/settings.properties ]; then
+		echo "Configuring DEMO data..."
+		######## settings.properties DEMO data configuration
+		echo "Setting DEMO data to $DEMO_DATA in OH configuration file -> settings.properties..."
+		sed -e "/^"DEMODATA="/c"DEMODATA=$DEMO_DATA"" -i ./$OH_DIR/rsc/settings.properties
+	else 
+		echo ""
+		echo ""
+		echo "Warning: settings.properties file not found."
+	fi
+	echo "DEMO data set to $DEMO_DATA"
 }
 
 ###################################################################
@@ -533,7 +553,7 @@ function config_database {
 function initialize_database {
 	# create data directory
 	mkdir -p "./$DATA_DIR"
-	# inizialize MariDB/MySQL
+	# initialize MariaDB/MySQL
 	echo "Initializing $MYSQL_NAME database on port $DATABASE_PORT..."
 	case "$MYSQL_DIR" in 
 	*mariadb*)
@@ -577,7 +597,7 @@ function set_database_root_pw {
 	./$MYSQL_DIR/bin/mysql -u root --skip-password --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DATABASE_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
 	if [ $? -ne 0 ]; then
-		echo "Error: $MYSQL_NAME root password not set! Exiting."
+		echo "Error: $MYSQL_NAME root password not set! Try resetting installation with option [X]. Exiting."
 		shutdown_database;
 		exit 2
 	fi
@@ -666,7 +686,7 @@ function clean_database {
 	get_confirmation;
 	echo "Removing data..."
 	# remove database files
-	rm -rf ./"$DATA_DIR"/*
+	rm -rf ./"$DATA_BASEDIR"/*
 	# remove socket and pid file
 	rm -rf ./$TMP_DIR/*
 }
@@ -745,8 +765,9 @@ function write_config_files {
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/settings.properties ]; then
 		[ -f ./$OH_DIR/rsc/settings.properties ] && mv -f ./$OH_DIR/rsc/settings.properties ./$OH_DIR/rsc/settings.properties.old
 		echo "Writing OH configuration file -> settings.properties..."
-		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
-		-e "s&PHOTO_DIR&$PHOTO_DIR&g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
+		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" \
+		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" -e "s&PHOTO_DIR&$PHOTO_DIR&g" \
+		./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
 	fi
 }
 
@@ -787,7 +808,6 @@ function parse_user_input {
 		esac
 		# create config files if not present
 		#write_config_files;
-		# set log level
 		set_log_level;
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
@@ -796,14 +816,28 @@ function parse_user_input {
 		echo ""
 		# exit if OH is configured in CLIENT mode
 		if [ "$OH_MODE" = "CLIENT" ]; then
-			echo "Error - OH_MODE set to CLIENT mode. Cannot run with Demo data, exiting."
+			echo "Error - OH_MODE set to CLIENT mode. Cannot run with Demo data. Exiting."
 			exit 1;
-		else
-			DEMO_DATA="on"
-			# set database name
-			DATABASE_NAME="ohdemo"
-			echo "Demo data set to on."
-		fi
+		fi	
+		if (( $2==0 )); then DEMO_DATA="off"; fi # workaround for -D option
+		case "$DEMO_DATA" in
+			*on*)
+				DEMO_DATA="off";
+				# set database name
+				DATABASE_NAME="$ORIG_DATABASE_NAME"
+			;;
+			*off*)
+				DEMO_DATA="on";
+				# set database name
+				DATABASE_NAME=$DEMO_DATABASE
+			;;
+		esac
+
+		# set DATA_DIR with db name
+		DATA_DIR=$DATA_BASEDIR/$DATABASE_NAME
+		DATA_DIR_ESCAPED=$(echo $DATA_DIR | sed -e 's/\//\\\//g')
+
+		WRITE_CONFIG_FILES=on; write_config_files;
 
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
@@ -864,8 +898,6 @@ function parse_user_input {
 		else
 			read -n 2 -p "Please select language [$OH_LANGUAGE_LIST]: " OH_LANGUAGE
 		fi
-		# create config files if not present
-		#write_config_files;
 		set_language;
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
@@ -885,10 +917,7 @@ function parse_user_input {
 
 		echo "Do you want to save entered settings to OH configuration files?"
 		get_confirmation;
-		WRITE_CONFIG_FILES="on"
-		write_config_files;
-		#set_language;
-		#set_log_level;
+		WRITE_CONFIG_FILES="on"; write_config_files;
 		echo "Done!"
 		echo ""
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
@@ -901,7 +930,7 @@ function parse_user_input {
 		# check if portable mode is on
 		if [ "$OH_MODE" != "CLIENT" ]; then
 			# check if database already exists
-			if [ -d ./"$DATA_DIR"/$DATABASE_NAME ]; then
+			if [ -d ./"$DATA_DIR" ]; then
 				config_database;
 				start_database;
 			else
@@ -953,7 +982,8 @@ function parse_user_input {
 		echo ""
 		echo "Do you want to save current settings to OH configuration files?"
 		get_confirmation;
-		write_config_files;
+		# overwrite configuration files if existing
+		WRITE_CONFIG_FILES=on; write_config_files;
 		set_oh_mode;
 		set_language;
 		set_log_level;
@@ -982,9 +1012,11 @@ function parse_user_input {
 	###################################################
 	v)	# display software version and configuration
 		echo ""
-		echo "--------- Software version ---------"
+		echo "--------- OH version ---------"
 		source "./$OH_DIR/rsc/version.properties"
 		echo "Open Hospital version:" $VER_MAJOR.$VER_MINOR.$VER_RELEASE
+		echo ""
+		echo "--------- Software version ---------"
 		echo "$MYSQL_NAME version: $MYSQL_DIR"
 		echo "JAVA version: $JAVA_DISTRO"
 		echo ""
@@ -1002,7 +1034,7 @@ function parse_user_input {
 		echo "DATABASE_NAME=$DATABASE_NAME"
 		echo "DATABASE_USER=$DATABASE_USER"
 		echo ""
-		echo "--- Dicom ---"
+		echo "--- Imaging / Dicom ---"
 		echo "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
 		echo "DICOM_STORAGE=$DICOM_STORAGE"
 		echo "DICOM_DIR=$DICOM_DIR"
@@ -1145,15 +1177,16 @@ echo ""
 if [ "$DEMO_DATA" = "on" ]; then
 	# exit if OH is configured in CLIENT mode
 	if [[ "$OH_MODE" = "CLIENT" ]]; then
-		echo "Error - OH_MODE set to $OH_MODE mode. Cannot run with Demo data, exiting."
+		echo "Error - OH_MODE set to $OH_MODE mode. Cannot run with Demo data. Exiting."
 		exit 1;
 	fi
+	
+	# set database name
+	DATABASE_NAME=$DEMO_DATABASE
 
 	if [ -f ./$SQL_DIR/$DB_DEMO ]; then
 		echo "Found SQL demo database, starting OH with Demo data..."
 		DB_CREATE_SQL=$DB_DEMO
-		# reset database if exists
-		# clean_database;  
 	else
 		echo "Error: no $DB_DEMO found! Exiting."
 		exit 1
@@ -1183,11 +1216,12 @@ initialize_dir_structure;
 if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	# check for MariaDB/MySQL software
 	mysql_check;
+	# config database
 	config_database;
 	# check if OH database already exists
-	if [ ! -d ./"$DATA_DIR"/$DATABASE_NAME ]; then
+	if [ ! -d ./"$DATA_DIR" ]; then
 		echo "OH database not found, starting from scratch..."
-		# prepare MySQL
+		# prepare database
 		initialize_database;
 		# start database
 		start_database;	
@@ -1233,6 +1267,9 @@ else
 
 	# generate config files if not existent
 	write_config_files;
+
+	# check / set demo data if enabled
+	#set_demo_data;
 
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch
