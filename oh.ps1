@@ -1126,8 +1126,8 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host "Do you want to save current settings to OH configuration files?"
 			
 			get_confirmation;
-			# do not overwrite configuration files if existing
-			write_config_files;
+			# overwrite configuration files if existing
+			$script:WRITE_CONFIG_FILES="on"; write_config_files;
 			set_oh_mode;
 			set_language;
 			set_log_level;
@@ -1212,6 +1212,14 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host "Cleaning Open Hospital installation..."
 			clean_files;
 			clean_database;
+			# unset variables
+			Clear-Variable -name OH_MODE
+			Clear-Variable -name OH_LANGUAGE
+			Clear-Variable -name OH_SINGLE_USER
+			Clear-Variable -name LOG_LEVEL
+			Clear-Variable -name DEMO_DATA
+			# set defaults
+			set_defaults;
 			Write-Host "Done!"
 			Read-Host "Press any key to continue";
 		}

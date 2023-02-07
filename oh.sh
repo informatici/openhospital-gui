@@ -982,8 +982,8 @@ function parse_user_input {
 		echo ""
 		echo "Do you want to save current settings to OH configuration files?"
 		get_confirmation;
-		# do not overwrite configuration files if existing
-		write_config_files;
+		# overwrite configuration files if existing
+		WRITE_CONFIG_FILES=on; write_config_files;
 		set_oh_mode;
 		set_language;
 		set_log_level;
