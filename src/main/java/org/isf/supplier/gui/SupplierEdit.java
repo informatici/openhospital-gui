@@ -78,8 +78,9 @@ public class SupplierEdit extends JDialog {
 		};
 
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((SupplierListener) listener).supplierInserted(event);
+		}
 	}
 
 	private void fireSupplierUpdated() {
@@ -89,8 +90,9 @@ public class SupplierEdit extends JDialog {
 		};
 
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((SupplierListener) listener).supplierUpdated(event);
+		}
 	}
 	
 	private int pfrmBase = 16;
