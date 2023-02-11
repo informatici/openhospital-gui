@@ -93,10 +93,11 @@ public class ScaledJSlider extends JSlider {
 	private void setPrecision(double step) {
 		String number = String.valueOf(step);
 		String[] result = number.split("\\.");
-		if (result.length == 2)
+		if (result.length == 2) {
 			this.precision = result[1].length();
-		else
+		} else {
 			this.precision = 0;
+		}
 	}
 
 	/**
@@ -119,8 +120,9 @@ public class ScaledJSlider extends JSlider {
 	 * @return the nearest integer to the provided {@code Double} value, or min or max if value is out of range
 	 */
 	private int convertFromDoubleToInt(Double doubleValue, double scaledMin, double step, double scaledMax) {
-		if (doubleValue == null)
+		if (doubleValue == null) {
 			return (int) Math.round(scaledInit * (1. / step));
+		}
 		int intValue;
 		if (doubleValue >= scaledMax) {
 			intValue = (int) (scaledMax * (1. / step));
