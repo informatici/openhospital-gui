@@ -25,7 +25,7 @@ or any similar SQL database (e.g. MariaDB).
 
 ### Launch within IDE
 
-Be sure to have configured properly the classpath for the project (see [7 Installing Open Hospital 1.11.0 in Eclipse EE](https://github.com/informatici/openhospital-doc/blob/develop/doc_admin/AdminManual.adoc#7-installing-open-hospital-1-11-0-in-eclipse-ee))
+Be sure to have configured properly the classpath for the project (see [5 Installing Open Hospital 1.11.0 in Eclipse EE](https://github.com/informatici/openhospital-doc/blob/develop/doc_admin/AdminManual.adoc#5-installing-open-hospital-1-12-0-in-eclipse-ee))
 
 Before running the application, you should generate the config files with the `g)` option, or manually copying and renaming the files `*.dist` files in `rsc/` folder and edit them accordingly:
 
