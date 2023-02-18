@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.Duration;
 import java.util.EventListener;
 import java.util.List;
 
@@ -55,6 +56,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.layout.SpringUtilities;
+import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +123,6 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	protected JTextField login;
 	private JPasswordField pwd;
 	private MainMenu parent;
-	private User returnUser;
 	private boolean usersListLogin;
 
 	
@@ -134,11 +135,6 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		LoginPanel panel = new LoginPanel(this);
 		add(panel);
 		pack();
-
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-
-		Dimension mySize = getSize();
 
 		pack();
 		setLocationRelativeTo(null);
@@ -180,22 +176,55 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		String userName = usersListLogin ? (String) usersList.getSelectedItem() : login.getText();
 		String passwd = new String(pwd.getPassword());
 		boolean found = false;
-		for (User u : users) {
-			if (u.getUserName().equals(userName) && BCrypt.checkpw(passwd, u.getPasswd())) {
-				returnUser = u;
-				found = true;
+		User user = null;
+		try {
+			for (User u : users) {
+				if (u.getUserName().equals(userName)) {
+					user = userBrowsingManager.getUserByName(u.getUserName());
+					if (user.isAccountLocked()) {
+						boolean isUnlocked = userBrowsingManager.unlockWhenTimeExpired(user);
+						if (!isUnlocked) {
+							Duration duration = Duration.between(TimeTools.getNow(), user.getLockedTime().plusMinutes(GeneralData.PASSWORDLOCKTIME));
+							MessageDialog.error(this, "angal.login.accountisstilllockedformoreminutes.fmt.msg", duration.toMinutes());
+							pwd.setText("");
+							pwd.grabFocus();
+							return;
+						}
+					}
+					if (BCrypt.checkpw(passwd, u.getPasswd())) {
+						found = true;
+					}
+					break;
+				}
 			}
-		}
-		if (!found) {
+			if (found) {
+				// good PW, so reset failed attempts if there are any
+				if (user.getFailedAttempts() > 0) {
+					userBrowsingManager.resetFailedAttempts(user);
+				}
+				fireLoginInserted(user);
+				removeLoginListener(parent);
+				UserSession.setUser(user);
+				dispose();
+				return;
+			}
+			if (user.isAccountLocked()) {
+				MessageDialog.error(this, "angal.login.accountislocked.msg");
+				return;
+			}
 			LOGGER.warn("Login failed: {}", MessageBundle.getMessage("angal.login.passwordisincorrectpleaseretry.msg"));
 			MessageDialog.error(this, "angal.login.passwordisincorrectpleaseretry.msg");
 			pwd.setText("");
 			pwd.grabFocus();
-		} else {
-			fireLoginInserted(returnUser);
-			removeLoginListener(parent);
-			UserSession.setUser(returnUser);
-			dispose();
+			userBrowsingManager.increaseFailedAttempts(user);
+			if (user.getFailedAttempts() > GeneralData.PASSWORDTRIES) {
+				userBrowsingManager.lockUser(user);
+				MessageDialog.error(this, "angal.login.accountisnowlockedforminutes.fmt.msg", GeneralData.PASSWORDLOCKTIME);
+			}
+		} catch (OHServiceException e1) {
+			LOGGER.error("Error while logging in user: {}. Exiting.", userName);
+			OHServiceExceptionUtil.showMessages(e1);
+			System.exit(1);
 		}
 	}
 
