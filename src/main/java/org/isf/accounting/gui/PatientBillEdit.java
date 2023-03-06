@@ -348,7 +348,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	public PatientBillEdit(JFrame owner, Patient patient) {
 		super(owner, true);
 		thisBill = new Bill();
-		load_dataset();
+		loadDataset();
 		initData(thisBill, true);
 		initComponents();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
