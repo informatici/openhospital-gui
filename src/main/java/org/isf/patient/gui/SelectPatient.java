@@ -628,10 +628,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 				return patient.getCode();
 			} else if (c == 1) {
 				return patient.getName();
-			} /*
-				 * else if (c == 2) { return patient.getAge(); } else if (c == 3) { return patient.getSex(); } else if (c == 4) { return patient.getCity() + " "
-				 * + patient.getAddress(); }
-				 */
+			}
 			return null;
 		}
 
