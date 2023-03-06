@@ -72,6 +72,7 @@ import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
 import org.isf.accounting.model.BillItems;
 import org.isf.accounting.model.BillPayments;
+import org.isf.admission.gui.AdmittedPatientBrowser;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.generaldata.GeneralData;
@@ -213,9 +214,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						return;
 					}
 				} else {
-					MessageDialog.yesNo(null, "angal.admission.thereismorethanonependingbillforthispatientcontinue.msg");
-					// TODO: the response is not checked; something needs to be done here
-					return;
+					MessageDialog.error(null, "angal.newbill.multipleopenedbillsnotallowedpleasesolve.msg");
+					dispose();
 				}
 			}
 		}
@@ -299,11 +299,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	 */
 	private Bill thisBill;
 
-	/**
-	 * oldObject (editing)
-	 */
-	private Bill oldBill;
-
 	// Tables
 	private Object[] billClasses = { Price.class, Integer.class, Double.class };
 	private String[] billColumnNames = { MessageBundle.getMessage("angal.newbill.item.col").toUpperCase(),
@@ -338,8 +333,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private String user = UserBrowsingManager.getCurrentUser();
 
-	/*
-	 * new bill from scratch
+	/**
+	 * new bill from {@link MainMenu}
 	 */
 	public PatientBillEdit() {
 		thisBill = new Bill();
@@ -347,20 +342,31 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		pbe.setVisible(true);
 	}
 
-	/*
-	 * new bill from patient
+	/**
+	 * new bill from {@link AdmittedPatientBrowser}
 	 */
 	public PatientBillEdit(JFrame owner, Patient patient) {
+		super(owner, true);
 		thisBill = new Bill();
-		thisBill.setIsPatient(true);
-		thisBill.setBillPatient(patient);
-		thisBill.setPatName(patient.getName());
-		thisBill.setAdmission(admissionBrowserManager.getCurrentAdmission(patient));
-		new PatientBillEdit(owner, thisBill, true);
+		load_dataset();
+		initData(thisBill, true);
+		initComponents();
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(null);
+		setResizable(false);
+
+		// Workaround to run patientSelected method after the GUI is completed and showing
+		addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+				patientSelected(patient);
+			}
+		});
 	}
 
-	/*
-	 * new or edit bill
+	/**
+	 * new or edit bill from {@link BillBrowser}
 	 */
 	public PatientBillEdit(JFrame owner, Bill bill, boolean inserting) {
 		super(owner, true);
@@ -371,7 +377,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		setLocationRelativeTo(null);
 		setResizable(false);
 
-		// Workaround to run checkBill after the GUI is completed and showing
+		// Workaround to run checkBill method after the GUI is completed and showing
 		addWindowListener(new WindowAdapter() {
 
 			@Override
@@ -405,7 +411,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			thisBill.setPriceList(lstArray.get(0));
 		} else {
 			try {
-				oldBill = (Bill) bill.clone();
 				thisBill = (Bill) bill.clone();
 				if (insert) {
 					LocalDateTime date = RememberDates.getLastBillDate();
@@ -680,7 +685,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	}
 
 	private void setPriceListArray() {
-		this.prcListArray = prcArray.stream().filter(price -> price.getList().getId() == thisBill.getPriceList().getId()).collect(Collectors.toList());
+		this.prcListArray = this.prcArray.stream().filter(price -> price.getList().getId() == thisBill.getPriceList().getId()).collect(Collectors.toList());
 
 		/*
 		 * Create a hashTable with the selected prices.
@@ -699,7 +704,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JLabel getJLabelWard() {
 		if (jLabelWard == null) {
 			jLabelWard = new JLabel();
-			jLabelWard.setPreferredSize(WardDimension); // TODO: improve Layout
+			jLabelWard.setPreferredSize(WardDimension); // TODO: improve Layouts avoiding fixed dimensions
 			jLabelWard.setHorizontalAlignment(SwingConstants.RIGHT);
 		}
 		setJLabelWard();
@@ -783,7 +788,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JLabel getJLabelUser() {
 		if (jLabelUser == null) {
 			jLabelUser = new JLabel(MainMenu.getUser().getUserName());
-			jLabelUser.setPreferredSize(UserDimension); // TODO: improve Layout
+			jLabelUser.setPreferredSize(UserDimension); // improve Layouts avoiding fixed dimensions
 			jLabelUser.setHorizontalAlignment(SwingConstants.RIGHT);
 			jLabelUser.setForeground(Color.BLUE);
 			jLabelUser.setFont(new Font(jLabelUser.getFont().getName(), Font.BOLD, jLabelUser.getFont().getSize() + 2));
@@ -835,7 +840,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				sp.addSelectionListener(PatientBillEdit.this);
 				sp.pack();
 				sp.setVisible(true);
-
 			});
 
 		}
@@ -1721,8 +1725,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
 			}
 			modified = true;
-			jTableBill.updateUI();
 			updateTotals();
+			updateGUI();
 		}
 	}
 
@@ -1730,17 +1734,14 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		updateTotal();
 		updateBigTotal();
 		updateBalance();
-//		jTableTotal.getModel().setValueAt(total, 0, 2);
-//		jTableBigTotal.getModel().setValueAt(bigTotal, 0, 2);
-//		jTableBalance.getModel().setValueAt(balance, 0, 2);
 	}
 
 	private void addItem(BillItems item) {
 		if (item != null) {
 			billItems.add(item);
 			modified = true;
-			jTableBill.updateUI();
 			updateTotals();
+			updateGUI();
 		}
 	}
 
@@ -1754,18 +1755,16 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			}
 			modified = true;
 			Collections.sort(payItems);
-			jTablePayment.updateUI();
 			updateBalance();
-			jTableBalance.getModel().setValueAt(balance, 0, 2);
+			updateGUI();
 		}
 	}
 
 	private void removeItem(int row) {
 		if (row != -1 && row >= billItemsSaved) {
 			billItems.remove(row);
-			jTableBill.updateUI();
-			jTableBill.clearSelection();
 			updateTotals();
+			updateGUI();
 		} else {
 			MessageDialog.error(null, "angal.newbill.youcannotdeletealreadysaveditems.msg");
 		}
@@ -1774,9 +1773,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private void removePayment(int row) {
 		if (row != -1 && row >= payItemsSaved) {
 			payItems.remove(row);
-			jTablePayment.updateUI();
-			jTablePayment.clearSelection();
 			updateTotals();
+			updateGUI();
 		} else {
 			MessageDialog.error(null, "angal.newbill.youcannotdeletepastpayments.msg");
 		}
