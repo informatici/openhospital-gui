@@ -590,9 +590,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	}
 
 	private String createMessage(List<String> notFoundPriceList, List<String> changedPriceList) {
-		StringBuilder message = new StringBuilder("Some prices not found and some other changed:\nNot found : ");
-		message.append(String.join(", ", notFoundPriceList)).append("\nChanged : ").append(String.join(", ", changedPriceList))
-						.append("\n\nDo you want to update the existing items prices?");
 		return MessageBundle.formatMessage("angal.newbill.somepricesnotfoundandsomeotherchangeddoyouwanttoupdatetheitemsprices.fmt.msg",
 						String.join(", ", notFoundPriceList), String.join(", ", changedPriceList));
 	}
