@@ -370,7 +370,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	 */
 	public PatientBillEdit(JFrame owner, Bill bill, boolean inserting) {
 		super(owner, true);
-		load_dataset();
+		loadDataset();
 		initData(bill, inserting);
 		initComponents();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -389,7 +389,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		});
 	}
 
-	private void load_dataset() {
+	private void loadDataset() {
 		try {
 			this.prcArray = priceListManager.getPrices();
 			this.lstArray = priceListManager.getLists();
