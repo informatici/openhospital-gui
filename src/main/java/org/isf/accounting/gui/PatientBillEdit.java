@@ -1141,9 +1141,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				}
 
 				if (insert) {
-					Bill newBill = new Bill(0, // Bill ID
+					Bill newBill = new Bill(
+									0, // Bill ID
 									thisBill.getDate(), // from calendar
-									null, // most recent payment, will be set later
+									null, // updateDate from most recent payment, will be set later
 									true, // is a PriceList? always true, non-pricelist not managed
 									thisBill.getPriceList(), // List
 									thisBill.getPriceList().getName(), // List name
@@ -1157,7 +1158,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 									thisBill.getAdmission()); // Admission
 
 					try {
-						billBrowserManager.newBill(newBill, billItems, payItems);
+						billBrowserManager.newBill(newBill, billItems, payItems); // TODO: to verify if when can just pass thisBill
 						thisBill.setId(newBill.getId());
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex, PatientBillEdit.this);
@@ -1167,9 +1168,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					dispose();
 
 				} else {
-					Bill updateBill = new Bill(thisBill.getId(), // Bill ID
+					Bill updateBill = new Bill(
+									thisBill.getId(), // Bill ID
 									thisBill.getDate(), // from calendar
-									null, // most recent payment, will be set later
+									null, // updateDate from most recent payment, will be set later
 									true, // is a PriceList? always true, non-pricelist not managed
 									thisBill.getPriceList(), // List
 									thisBill.getPriceList().getName(), // List name
@@ -1183,7 +1185,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 									thisBill.getAdmission()); // Admission
 
 					try {
-						billBrowserManager.updateBill(updateBill, billItems, payItems);
+						billBrowserManager.updateBill(updateBill, billItems, payItems); // TODO: to verify if when can just pass thisBill
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex, PatientBillEdit.this);
 						return;
