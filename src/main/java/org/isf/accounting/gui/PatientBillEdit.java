@@ -301,8 +301,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	// Tables
 	private Object[] billClasses = { Price.class, Integer.class, Double.class };
-	private String[] billColumnNames = { MessageBundle.getMessage("angal.newbill.item.col").toUpperCase(),
-			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(), MessageBundle.getMessage("angal.common.amount.txt").toUpperCase() };
+	private String[] billColumnNames = {
+			MessageBundle.getMessage("angal.newbill.item.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.amount.txt").toUpperCase()
+	};
 	private Object[] paymentClasses = { Date.class, Double.class };
 
 	// Hospital info
