@@ -298,6 +298,7 @@ public class ReportLauncher extends ModalJFrame{
 
 			jMonthComboBox.setSelectedIndex(month - 1);
 
+                        // TODO: fix how the layout of the last two fields are done; adding spaces is a hack
 			jYearLabel = new JLabel("                    " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox<>();
 
