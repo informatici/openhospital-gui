@@ -298,7 +298,7 @@ public class ReportLauncher extends ModalJFrame{
 
 			jMonthComboBox.setSelectedIndex(month - 1);
 
-			jYearLabel = new JLabel("                  " + MessageBundle.getMessage("angal.stat.year"));
+			jYearLabel = new JLabel("                    " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox<>();
 
 			for (int i = 0; i < 20; i++) {
