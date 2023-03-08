@@ -19,12 +19,12 @@
 	<parameter name="type" class="java.lang.String" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[SELECT * FROM OH_OPERATIONROW
-LEFT JOIN OH_OPERATION ON OPER_ID=OPE_ID_A
+LEFT JOIN OH_OPERATION ON OPER_OPE_ID_A=OPE_ID_A
 WHERE ($P{type} like 'Opd%' AND OPER_OPD_ID = $P{id}) 
    OR ($P{type} like 'ADM%' AND OPER_ADMISSION_ID = $P{id})]]>
 	</queryString>
 	<field name="OPER_ID_A" class="java.lang.Integer"/>
-	<field name="OPER_ID" class="java.lang.String"/>
+	<field name="OPER_OPE_ID_A" class="java.lang.String"/>
 	<field name="OPER_PRESCRIBER" class="java.lang.String"/>
 	<field name="OPER_RESULT" class="java.lang.String"/>
 	<field name="OPER_OPDATE" class="java.sql.Timestamp"/>
