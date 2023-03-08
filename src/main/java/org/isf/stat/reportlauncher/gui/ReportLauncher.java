@@ -280,7 +280,8 @@ public class ReportLauncher extends ModalJFrame{
 				}
 			});
 			
-			jMonthLabel = new JLabel("        " + MessageBundle.getMessage("angal.stat.month"));
+			// TODO: fix how the layout of the last two fields are done; adding spaces is a hack
+			jMonthLabel = new JLabel("               " + MessageBundle.getMessage("angal.stat.month"));
 			
 			jMonthComboBox = new JComboBox<>();
 			jMonthComboBox.addItem(MessageBundle.getMessage("angal.stat.january"));
@@ -298,7 +299,8 @@ public class ReportLauncher extends ModalJFrame{
 
 			jMonthComboBox.setSelectedIndex(month - 1);
 
-			jYearLabel = new JLabel("        " + MessageBundle.getMessage("angal.stat.year"));
+                        // TODO: fix how the layout of the last two fields are done; adding spaces is a hack
+			jYearLabel = new JLabel("                    " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox<>();
 
 			for (int i = 0; i < 20; i++) {
