@@ -555,7 +555,7 @@ echo "Using $JAVA_BIN"
 function mysql_check {
 if [ ! -d "./$MYSQL_DIR" ]; then
 	if [ ! -f "./$MYSQL_DIR.$EXT" ]; then
-		echo "Warning - $MYSQL_NAME not found. Do you want to download it ?"
+		echo "Warning - $MYSQL_NAME not found. Do you want to download it?"
 		get_confirmation;
 		# download mysql binary
 		echo "Downloading $MYSQL_DIR..."
@@ -1123,22 +1123,22 @@ function parse_user_input {
 	X)	# clean
 		echo ""
         	echo "Cleaning Open Hospital installation..."
-		echo "Warning: do you want to remove all existing log files ?"
+		echo "Warning: do you want to remove all existing log files?"
 		read -p "Press [y] to confirm: " choice
 		if [ "$choice" = "y" ]; then
 			clean_log_files;
 		fi
-		echo "Warning: do you want to remove all existing configuration files ?"
+		echo "Warning: do you want to remove all existing configuration files?"
 		read -p "Press [y] to confirm: " choice
 		if [ "$choice" = "y" ]; then
 			clean_conf_files;
 		fi
-		echo "Warning: do you want to remove all existing data and databases ?"
+		echo "Warning: do you want to remove all existing data and databases?"
 		read -p "Press [y] to confirm: " choice
 		if [ "$choice" = "y" ]; then		
 			echo "--->>> This operation cannot be undone"
-			echo "--->>> Are you sure ?"
-			read -p "(y) ? " choice
+			echo "--->>> Are you sure?"
+			read -p "Press [y] to confirm: " choice
 			if [ "$choice" = "y" ]; then		
 				clean_database;
         			echo "Done!"
