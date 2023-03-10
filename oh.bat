@@ -146,7 +146,7 @@ set ARCH=32
 
 REM ######## MySQL Software
 REM # MariaDB 64bit
-REM https://archive.mariadb.org/mariadb-10.6.12/winx64-packages/mariadb-10.6.12-winx64.zip
+REM https://archive.mariadb.org/mariadb-10.6.11/winx64-packages/mariadb-10.6.11-winx64.zip
 
 REM # MariaDB 32bit
 REM https://archive.mariadb.org/mariadb-10.6.5/win32-packages/mariadb-10.6.5-win32.zip
@@ -317,6 +317,8 @@ set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\images
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\bin\OH-gui.jar
 
 REM # Setup native_lib_path for current architecture
+REM # with DICOM workaround - force NATIVE_LIB to 32bit
+
 if %PROCESSOR_ARCHITECTURE%==AMD64 if not %ARCH%==32 (
 	set NATIVE_LIB_PATH=%OH_PATH%\%OH_DIR%\lib\native\Win64
 ) else (
