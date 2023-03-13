@@ -1201,7 +1201,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host ""
 			Write-Host "--- Database ---"
 			Write-Host "DATABASE_SERVER=$DATABASE_SERVER"
-			Write-Host "DATABASE_PORT=$DATABASE_PORT"
+			Write-Host "DATABASE_PORT=$DATABASE_PORT (default)"
 			Write-Host "DATABASE_NAME=$DATABASE_NAME"
 			Write-Host "DATABASE_USER=$DATABASE_USER"
 			Write-Host ""

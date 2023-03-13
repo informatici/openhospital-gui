@@ -1090,7 +1090,7 @@ function parse_user_input {
 		echo ""
 		echo "--- Database ---"
 		echo "DATABASE_SERVER=$DATABASE_SERVER"
-		echo "DATABASE_PORT=$DATABASE_PORT"
+		echo "DATABASE_PORT=$DATABASE_PORT (default)"
 		echo "DATABASE_NAME=$DATABASE_NAME"
 		echo "DATABASE_USER=$DATABASE_USER"
 		echo ""
