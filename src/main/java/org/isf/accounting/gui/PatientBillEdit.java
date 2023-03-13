@@ -1926,10 +1926,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			super(new Object[][] { { "<html><b>" + MessageBundle.getMessage("angal.common.total.txt").toUpperCase() + "</b></html>", currencyCod, total } },
 							new String[] { "", "", "" });
 		}
-
-		private JTableTotalModel(Object[][] data, Object[] columnNames) {
-			super(data, columnNames);
-		}
 		@Override
 		public Class< ? > getColumnClass(int columnIndex) {
 			return types[columnIndex];
@@ -1954,11 +1950,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					{ "<html><b>" + MessageBundle.getMessage("angal.newbill.balance.txt").toUpperCase() + "</b></html>", currencyCod, balance } },
 							new String[] { "", "", "" });
 		}
-
-		private JTableBalanceModel(Object[][] data, Object[] columnNames) {
-			super(data, columnNames);
-		}
-
 		@Override
 		public Class< ? > getColumnClass(int columnIndex) {
 			return types[columnIndex];
@@ -1978,9 +1969,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		private JTableBigTotalModel() {
 			super(new Object[][] { { "<html><b>" + MessageBundle.getMessage("angal.newbill.topay.txt") + "</b></html>", currencyCod, bigTotal } },
 							new String[] { "", "", "" });
-		}
-		private JTableBigTotalModel(Object[][] data, Object[] columnNames) {
-			super(data, columnNames);
 		}
 		@Override
 		public Class< ? > getColumnClass(int columnIndex) {
