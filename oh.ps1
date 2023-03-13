@@ -303,18 +303,8 @@ function set_path {
 			Write-Host "Error - $SCRIPT_NAME not found in the current PATH. Please browse to the directory where Open Hospital was unzipped or set up OH_PATH properly." -ForegroundColor Yellow
 			Read-Host; exit 1
 		}
-	
-	        # set original database name
-	        $script:ORIG_DATABASE_NAME="$DATABASE_NAME"
-
-	        # set original data base_dir
-	        $script:DATA_BASEDIR=$DATA_DIR
-	        # set DATA_DIR with db name
-	        $script:DATA_DIR="$DATA_BASEDIR/$DATABASE_NAME"
-
-		# set path variable with / in place of \ for configuration files
-		$script:OH_PATH_SUBSTITUTE=$OH_PATH -replace "\\", "/"
 	}
+	
 }
 
 ###################################################################
@@ -393,8 +383,9 @@ function set_defaults {
 	# set original database name
 	$script:ORIG_DATABASE_NAME="$DATABASE_NAME"
 	# set original data base_dir
-	$script:DATA_BASEDIR="$DATA_DIR"
-	# set escaped values
+	$script:ORIG_DATADIR="$DATA_DIR"
+	# set escaped values (/ in place of \)
+	$script:OH_PATH_SUBSTITUTE=$OH_PATH -replace "\\", "/"
 }
 
 ###################################################################
@@ -408,10 +399,12 @@ function set_values {
 		$script:DATABASE_NAME="$script:ORIG_DATABASE_NAME"
 		}
 	}
-	#
+	
 	# set DATA_DIR with db name
-	# 
-	$script:DATA_DIR="$DATA_BASEDIR/$DATABASE_NAME"
+	$script:DATA_DIR="$ORIG_DATADIR/$DATABASE_NAME"
+	#
+	# set escaped values (/ in place of \)
+	$script:DATA_DIR=$DATA_DIR -replace "\\", "/"
 }
 
 ###################################################################

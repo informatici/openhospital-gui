@@ -336,7 +336,7 @@ function set_defaults {
 	# set original database name
 	ORIG_DATABASE_NAME="$DATABASE_NAME"
 	# set original data base_dir
-	DATA_BASEDIR="$DATA_DIR"
+	ORIG_DATADIR="$DATA_DIR"
 	# set escaped values
 	OH_PATH_ESCAPED=$(echo $OH_PATH | sed -e 's/\//\\\//g')
 	TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
@@ -355,10 +355,10 @@ function set_values {
 				DATABASE_NAME="$ORIG_DATABASE_NAME"
 			;;
 	esac
-	#
+	
 	# set DATA_DIR with db name
+	DATA_DIR=$ORIG_DATADIR/$DATABASE_NAME
 	#
-	DATA_DIR=$DATA_BASEDIR/$DATABASE_NAME
 	# set escaped values
 	DATA_DIR_ESCAPED=$(echo $DATA_DIR | sed -e 's/\//\\\//g')
 }
