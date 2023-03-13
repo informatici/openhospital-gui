@@ -639,8 +639,8 @@ function mysql_check {
 
 ###################################################################
 function config_database {
-#	Write-Host "Checking for $MYSQL_NAME config file..."
-#	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE" -PathType leaf) ) {
+	Write-Host "Checking for $MYSQL_NAME config file..."
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE" -PathType leaf) ) {
 	if (Test-Path "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE" -PathType leaf) { mv -Force "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE" "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE.old" }
 
 		# find a free TCP port to run MariaDB/MySQL starting from the default port
@@ -676,7 +676,7 @@ function config_database {
 		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("DATA_DIR","$DATA_DIR") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
 		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("TMP_DIR","$TMP_DIR") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
 		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("LOG_DIR","$LOG_DIR") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
-#	}
+	}
 }
 
 ###################################################################
