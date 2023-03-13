@@ -295,9 +295,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private BigDecimal bigTotal = new BigDecimal(0);
 	private BigDecimal balance = new BigDecimal(0);
 	private boolean insert;
-	private boolean modified = false;
+	private boolean modified;
 	private boolean keepDate = true;
-	private boolean paid = false;
+	private boolean paid;
 	private LocalDateTime today = TimeTools.getNow();
 
 	/**
@@ -1007,8 +1007,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jScrollPaneBalance = new JScrollPane();
 			jScrollPaneBalance.setViewportView(getJTableBalance());
 			jScrollPaneBalance.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-			jScrollPaneBalance.setMaximumSize(PatientBillEdit.BALANCE_TABLE_SIZE);
-			jScrollPaneBalance.setMinimumSize(PatientBillEdit.BALANCE_TABLE_SIZE);
+			jScrollPaneBalance.setMaximumSize(BALANCE_TABLE_SIZE);
+			jScrollPaneBalance.setMinimumSize(BALANCE_TABLE_SIZE);
 			jScrollPaneBalance.setPreferredSize(BALANCE_TABLE_SIZE);
 		}
 		return jScrollPaneBalance;
@@ -1526,7 +1526,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						String quantity = (String) JOptionPane.showInputDialog(PatientBillEdit.this, MessageBundle.getMessage("angal.newbill.howmanydays.txt"),
 										MessageBundle.getMessage("angal.newbill.days.title"), JOptionPane.PLAIN_MESSAGE, icon, null, qty);
 						try {
-							if (quantity == null || quantity.equals("")) {
+							if (quantity == null || quantity.isEmpty()) {
 								return;
 							}
 							qty = Integer.parseInt(quantity);
