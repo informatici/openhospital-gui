@@ -486,8 +486,8 @@ public class PatVacEdit extends JDialog {
 			if (key != null) {
 				// Search key extended to name and code
 				StringBuilder sbName = new StringBuilder();
-				sbName.append(elem.getSecondName().toUpperCase());
-				sbName.append(elem.getFirstName().toUpperCase());
+				sbName.append(elem.getSecondName());
+				sbName.append(elem.getFirstName());
 				sbName.append(elem.getCode());
 				String name = sbName.toString();
 
