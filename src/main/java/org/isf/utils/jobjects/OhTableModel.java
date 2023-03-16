@@ -191,7 +191,7 @@ public class OhTableModel<T> implements TableModel {
 			if (obj instanceof Price) {
 				Price priceObj = (Price) obj;
 				if (columnIndex == 0) {
-					value = priceObj.getItem() != null ? priceObj.getItem() : priceObj.getId() + "";
+					value = priceObj.getItem() != null ? priceObj.getItem() : String.valueOf(priceObj.getId());
 				} else {
 					value = priceObj.getDesc();
 				}
@@ -199,7 +199,7 @@ public class OhTableModel<T> implements TableModel {
 			if (obj instanceof MedicalWard) {
 				MedicalWard mdwObj = (MedicalWard) obj;
 				if (columnIndex == 0) {
-					value = mdwObj.getMedical().getProdCode() != null ? mdwObj.getMedical().getProdCode() : mdwObj.getMedical().getCode() + "";
+					value = mdwObj.getMedical().getProdCode() != null ? mdwObj.getMedical().getProdCode() : String.valueOf(mdwObj.getMedical().getCode());
 				} else {
 					value = mdwObj.getMedical().getDescription();
 				}
@@ -207,7 +207,7 @@ public class OhTableModel<T> implements TableModel {
 			if (obj instanceof PricesOthers) {
 				PricesOthers mdwObj = (PricesOthers) obj;
 				if (columnIndex == 0) {
-					value = mdwObj.getCode() != null ? mdwObj.getCode() : mdwObj.getId() + "";
+					value = mdwObj.getCode() != null ? mdwObj.getCode() : String.valueOf(mdwObj.getId());
 				} else {
 					value = mdwObj.getDescription();
 				}
@@ -216,7 +216,7 @@ public class OhTableModel<T> implements TableModel {
 			if (obj instanceof BillItems) {
 				BillItems mdwObj = (BillItems) obj;
 				if (columnIndex == 0) {
-					value = mdwObj.getItemDisplayCode() != null ? mdwObj.getItemDisplayCode() : mdwObj.getId() + "";
+					value = mdwObj.getItemDisplayCode() != null ? mdwObj.getItemDisplayCode() : String.valueOf(mdwObj.getId());
 				} else {
 					value = mdwObj.getItemDescription();
 				}

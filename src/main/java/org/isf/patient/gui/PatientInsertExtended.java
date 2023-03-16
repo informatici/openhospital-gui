@@ -1508,7 +1508,7 @@ public class PatientInsertExtended extends JDialog {
 				}
 			});
 			if (!insert) {
-				jAgeYears.setText("" + years);
+				jAgeYears.setText(String.valueOf(years));
 			}
 		}
 		return jAgeYears;
@@ -1531,7 +1531,7 @@ public class PatientInsertExtended extends JDialog {
 				}
 			});
 			if (!insert) {
-				jAgeMonths.setText("" + months);
+				jAgeMonths.setText(String.valueOf(months));
 			}
 		}
 		return jAgeMonths;
@@ -1554,7 +1554,7 @@ public class PatientInsertExtended extends JDialog {
 				}
 			});
 			if (!insert) {
-				jAgeDays.setText("" + days);
+				jAgeDays.setText(String.valueOf(days));
 			}
 		}
 		return jAgeDays;

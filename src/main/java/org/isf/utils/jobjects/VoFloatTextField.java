@@ -39,7 +39,7 @@ public class VoFloatTextField extends JTextField {
 	 * @param columns - number of columns to show
 	 */
 	public VoFloatTextField(int defval, int columns) {
-		super("" + defval, columns);
+		super(String.valueOf(defval), columns);
 	}
 
 	public VoFloatTextField(String defval, int columns) {

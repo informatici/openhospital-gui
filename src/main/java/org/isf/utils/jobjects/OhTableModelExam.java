@@ -107,7 +107,7 @@ public class OhTableModelExam<T> implements TableModel {
 			if (obj != null) {
 				Exam mdwObj = obj;
 				if (columnIndex == 0) {
-					value = mdwObj.getCode() + "";
+					value = mdwObj.getCode();
 				} else {
 					value = mdwObj.getDescription();
 				}

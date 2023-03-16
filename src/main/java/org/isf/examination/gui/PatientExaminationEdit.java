@@ -281,17 +281,18 @@ public class PatientExaminationEdit extends ModalJFrame {
 		jSliderHeight.setValue(patex.getPex_height());
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
 		jSliderWeight.setValue(patex.getPex_weight() != null ? patex.getPex_weight() : 0);
-		jSpinnerAPmin.setText(patex.getPex_ap_min() != null ? String.valueOf(patex.getPex_ap_min()) : "" + ExaminationParameters.AP_MIN_INIT);
-		jSpinnerAPmax.setText(patex.getPex_ap_max() != null ? String.valueOf(patex.getPex_ap_max()) : "" + ExaminationParameters.AP_MAX_INIT);
+		jSpinnerAPmin.setText(patex.getPex_ap_min() != null ? String.valueOf(patex.getPex_ap_min()) : String.valueOf(ExaminationParameters.AP_MIN_INIT));
+		jSpinnerAPmax.setText(patex.getPex_ap_max() != null ? String.valueOf(patex.getPex_ap_max()) : String.valueOf(ExaminationParameters.AP_MAX_INIT));
 		jSliderHR.setValue(patex.getPex_hr() != null ? patex.getPex_hr() : ExaminationParameters.HR_INIT);
-		jTextFieldHR.setText(patex.getPex_hr() != null ? String.valueOf(patex.getPex_hr()) : "" + ExaminationParameters.HR_INIT);
+		jTextFieldHR.setText(patex.getPex_hr() != null ? String.valueOf(patex.getPex_hr()) : String.valueOf(ExaminationParameters.HR_INIT));
 		jSliderTemp.setValue(patex.getPex_temp());
-		jTextFieldTemp.setText(patex.getPex_temp() != null ? String.valueOf(patex.getPex_temp()) : "" + ExaminationParameters.TEMP_INIT);
+		jTextFieldTemp.setText(patex.getPex_temp() != null ? String.valueOf(patex.getPex_temp()) : String.valueOf(ExaminationParameters.TEMP_INIT));
 		jSliderSaturation.setValue(patex.getPex_sat());
-		jTextFieldSaturation.setText(patex.getPex_sat() != null ? String.valueOf(patex.getPex_sat()) : "" + ExaminationParameters.SAT_INIT);
+		jTextFieldSaturation.setText(patex.getPex_sat() != null ? String.valueOf(patex.getPex_sat()) : String.valueOf(ExaminationParameters.SAT_INIT));
 		jSliderHGT.setValue(patex.getPex_hgt() != null ? patex.getPex_hgt() : ExaminationParameters.HGT_INIT);
-		jTextFieldHGT.setText(patex.getPex_hgt() != null ? String.valueOf(patex.getPex_hgt()) : "" + ExaminationParameters.HGT_INIT);
-		jTextFieldDiuresisVolume.setText(patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) : "" + ExaminationParameters.DIURESIS_INIT);
+		jTextFieldHGT.setText(patex.getPex_hgt() != null ? String.valueOf(patex.getPex_hgt()) : String.valueOf(ExaminationParameters.HGT_INIT));
+		jTextFieldDiuresisVolume.setText(patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) :
+				String.valueOf(ExaminationParameters.DIURESIS_INIT));
 		jComboBoxDiuresisType.setSelectedItem(patex.getPex_diuresis_desc() != null ?
 				examinationBrowserManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) :
 				examinationBrowserManager.getDiuresisDescriptionTranslated(ExaminationParameters.DIURESIS_DESC_INIT));
@@ -299,7 +300,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				examinationBrowserManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc()) :
 				examinationBrowserManager.getBowelDescriptionTranslated(ExaminationParameters.BOWEL_DESC_INIT));
 		jSliderRR.setValue(patex.getPex_rr() != null ? patex.getPex_rr() : ExaminationParameters.RR_INIT);
-		jTextFieldRR.setText(patex.getPex_rr() != null ? String.valueOf(patex.getPex_rr()) : "" + ExaminationParameters.RR_INIT);
+		jTextFieldRR.setText(patex.getPex_rr() != null ? String.valueOf(patex.getPex_rr()) : String.valueOf(ExaminationParameters.RR_INIT));
 		jComboBoxAuscultation.setSelectedItem(patex.getPex_auscultation() != null ?
 				examinationBrowserManager.getAuscultationTranslated(patex.getPex_auscultation()) :
 				examinationBrowserManager.getAuscultationTranslated(ExaminationParameters.AUSCULTATION_INIT));
