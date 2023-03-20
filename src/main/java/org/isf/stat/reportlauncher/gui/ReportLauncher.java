@@ -241,7 +241,7 @@ public class ReportLauncher extends ModalJFrame{
 				folderNameFileNameMap.put("rpt_extra", loadedFiles.stream().map(t -> t.getName().replace(".jasper", "")).collect(Collectors.toList()));
 			
 				reportNameFileMap = new HashMap<>();
-				List<String> jRptComboBoxList = new LinkedList<String>();
+				List<String> jRptComboBoxList = new LinkedList<>();
 				for(File f: jasperFilesInFolder) {
 					try {
 						Properties props = ConfigurationProperties.loadPropertiesFile(

@@ -681,7 +681,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	public JComboBox<Disease> getDiseaseBox() {
 		if (jDiseaseBox == null) {
-			jDiseaseBox = new JComboBox<Disease>();
+			jDiseaseBox = new JComboBox<>();
 
 		}
 		try {
@@ -1169,7 +1169,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				}
 				progYearFilter.setText("");
 				patientCodeFilter.setText("");
-				List<Opd> opdList = new ArrayList<Opd>();
+				List<Opd> opdList = new ArrayList<>();
 				Optional<Opd> opd = opdBrowserManager.getOpdById(code);
 				if (opd.isPresent()) {
 					opdList.add(opd.get());
