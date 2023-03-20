@@ -39,7 +39,7 @@ public class VoIntegerTextField extends JTextField {
 	 * @param columns - number of columns to show
 	 */
 	public VoIntegerTextField(int defval, int columns) {
-		super("" + defval, columns);
+		super(String.valueOf(defval), columns);
 	}
 
 	@Override

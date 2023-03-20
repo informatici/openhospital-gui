@@ -426,13 +426,13 @@ abstract class OperationRowBase extends JPanel {
 			textDate.setDateTime(opeRow.getOpDate());
 
 			textAreaRemark.setText(opeRow.getRemarks());
-			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
+			textFieldUnit.setText(String.valueOf(opeRow.getTransUnit()));
 		}
 
 		/* ***** resultat **** */
 		int index = 0;
 		for (int i = 0; i < operationResults.size(); i++) {
-			if (opeRow.getOpResult() != null && (operationBrowserManager.getResultDescriptionKey(operationResults.get(i) + "")).equals(opeRow.getOpResult())) { //$NON-NLS-1$
+			if (opeRow.getOpResult() != null && (operationBrowserManager.getResultDescriptionKey(operationResults.get(i))).equals(opeRow.getOpResult())) {
 				index = i;
 			}
 		}

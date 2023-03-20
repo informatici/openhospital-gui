@@ -328,7 +328,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 					@Override
 					public void keyTyped(KeyEvent e) {
 						lastKey = "";
-						String s = "" + e.getKeyChar();
+						String s = String.valueOf(e.getKeyChar());
 						if (Character.isLetterOrDigit(e.getKeyChar())) {
 							lastKey = s;
 						}

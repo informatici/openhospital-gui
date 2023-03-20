@@ -344,10 +344,10 @@ public class DicomViewGui extends JPanel {
 		txt = ohPatient.getName();
 		canvas.drawString(MessageBundle.getMessage("angal.common.name.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
-		txt = "" + ohPatient.getAge();
+		txt = String.valueOf(ohPatient.getAge());
 		canvas.drawString(MessageBundle.getMessage("angal.common.age.txt") + txt, 10, hi);
 		hi += VGAP;
-		txt = "" + ohPatient.getSex();
+		txt = String.valueOf(ohPatient.getSex());
 		canvas.drawString(MessageBundle.getMessage("angal.common.sex.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		hi += VGAP;

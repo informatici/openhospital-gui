@@ -249,7 +249,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				public void keyTyped(KeyEvent e) {
 					if (altKeyReleased) {
 						lastKey = "";
-						String s = "" + e.getKeyChar();
+						String s = String.valueOf(e.getKeyChar());
 						if (Character.isLetterOrDigit(e.getKeyChar())) {
 							lastKey = s;
 						}

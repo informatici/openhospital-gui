@@ -225,7 +225,7 @@ public class WardPharmacyEdit extends JDialog {
 				@Override
 				public void keyTyped(KeyEvent e) {
 					lastKey = ""; //$NON-NLS-1$
-					String s = "" + e.getKeyChar(); //$NON-NLS-1$
+					String s = String.valueOf(e.getKeyChar());
 					if (Character.isLetterOrDigit(e.getKeyChar())) {
 						lastKey = s;
 					}

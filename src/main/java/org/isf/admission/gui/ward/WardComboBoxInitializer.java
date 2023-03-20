@@ -91,11 +91,11 @@ public class WardComboBoxInitializer {
 	}
 
 	private boolean isFemale(Patient patient) {
-		return ("" + patient.getSex()).equalsIgnoreCase("F");
+		return (String.valueOf(patient.getSex())).equalsIgnoreCase("F");
 	}
 
 	private boolean isMale(Patient patient) {
-		return ("" + patient.getSex()).equalsIgnoreCase("M");
+		return (String.valueOf(patient.getSex())).equalsIgnoreCase("M");
 	}
 
 }

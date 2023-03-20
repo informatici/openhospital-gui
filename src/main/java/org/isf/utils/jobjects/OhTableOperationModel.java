@@ -156,7 +156,7 @@ public class OhTableOperationModel<T> implements TableModel {
 						value = operationBrowserManager.getResultDescriptionTranslated(opdObj.getOpResult());
 						break;
 					case 3:
-						value = opdObj.getTransUnit() + "";
+						value = String.valueOf(opdObj.getTransUnit());
 						break;
 					default:
 						break;

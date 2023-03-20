@@ -252,7 +252,7 @@ public class LabEditExtended extends ModalJFrame {
 				@Override
 				public void keyTyped(KeyEvent e) {
 					lastKey = "";
-					String keyChar = "" + e.getKeyChar();
+					String keyChar = String.valueOf(e.getKeyChar());
 					if (Character.isLetterOrDigit(e.getKeyChar())) {
 						lastKey = keyChar;
 					}
@@ -447,8 +447,8 @@ public class LabEditExtended extends ModalJFrame {
 
 	private void setPatient(Patient labPat) {
 		patTextField.setText(labPat.getName());
-		ageTextField.setText(labPat.getAge()+"");
-		sexTextField.setText(labPat.getSex()+"");
+		ageTextField.setText(String.valueOf(labPat.getAge()));
+		sexTextField.setText(String.valueOf(labPat.getSex()));
 		noteTextArea.setText(labPat.getNote());		
 	}
 
@@ -630,7 +630,7 @@ public class LabEditExtended extends ModalJFrame {
 				lab.setInOutPatient((inPatientCheckBox.isSelected() ? "I" : "O"));
 				lab.setPatient(labPat);
 				lab.setPatName(labPat.getName());
-				lab.setSex(labPat.getSex() + "");
+				lab.setSex(String.valueOf(labPat.getSex()));
 
 				if (examSelected.getProcedure() == 1) {
 					lab.setResult(examRowComboBox.getSelectedItem().toString());

@@ -884,7 +884,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (saveYProg != null) {
 				yProgTextField = new JTextField(saveYProg);
 			} else if (editing) {
-				yProgTextField = new JTextField("" + admission.getYProg());
+				yProgTextField = new JTextField(String.valueOf(admission.getYProg()));
 			} else {
 				yProgTextField = new JTextField("");
 			}
@@ -943,7 +943,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				} else {
 					String wardId = ((Ward) wardBox.getSelectedItem()).getCode();
 					if (editing && wardId.equalsIgnoreCase(admission.getWard().getCode())) {
-						yProgTextField.setText("" + admission.getYProg());
+						yProgTextField.setText(String.valueOf(admission.getYProg()));
 					} else {
 						int nextProg = 1;
 						try {
@@ -951,7 +951,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
-						yProgTextField.setText("" + nextProg);
+						yProgTextField.setText(String.valueOf(nextProg));
 
 						// get default selected warn default beds number
 						int nBeds = ((Ward) wardBox.getSelectedItem()).getBeds();

@@ -350,8 +350,8 @@ public class LabEdit extends ModalJFrame {
 				if (patientComboBox.getSelectedIndex() > 0) {
 					patSelected = (Patient) patientComboBox.getSelectedItem();
 					patTextField.setText(patSelected.getName());
-					ageTextField.setText(patSelected.getAge() + "");
-					sexTextField.setText(patSelected.getSex() + "");
+					ageTextField.setText(String.valueOf(patSelected.getAge()));
+					sexTextField.setText(String.valueOf(patSelected.getSex()));
 					Admission admission = admissionBrowserManager.getCurrentAdmission(patSelected);
 					inPatientCheckBox.setSelected(admission != null);
 				}

@@ -314,7 +314,7 @@ public class PatVacEdit extends JDialog {
 				@Override
 				public void keyTyped(KeyEvent e) {
 					lastKey = "";
-					String s = "" + e.getKeyChar();
+					String s = String.valueOf(e.getKeyChar());
 					if (Character.isLetterOrDigit(e.getKeyChar())) {
 						lastKey = s;
 					}
@@ -533,8 +533,8 @@ public class PatVacEdit extends JDialog {
 	 */
 	private void setPatient(Patient selectedPatient) {
 		patTextField.setText(selectedPatient.getName());
-		ageTextField.setText(selectedPatient.getAge() + "");
-		sexTextField.setText(selectedPatient.getSex() + "");
+		ageTextField.setText(String.valueOf(selectedPatient.getAge()));
+		sexTextField.setText(String.valueOf(selectedPatient.getSex()));
 		dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), 
 						MessageBundle.formatMessage("angal.patvac.patientcode.fmt.msg", selectedPatient.getCode())));
 	}
@@ -681,7 +681,7 @@ public class PatVacEdit extends JDialog {
 		if (sexTextField == null) {
 			sexTextField = new VoLimitedTextField(1, 1);
 			if (!insert) {
-				sexTextField.setText("" + patVac.getPatSex());
+				sexTextField.setText(String.valueOf(patVac.getPatSex()));
 			}
 		}
 		return sexTextField;

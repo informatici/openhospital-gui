@@ -39,7 +39,7 @@ public class VoDoubleTextField extends JTextField {
 	 * @param columns - number of columns to show
 	 */
 	public VoDoubleTextField(double defval, int columns) {
-		super("" + defval, columns);
+		super(String.valueOf(defval), columns);
 	}
 
 	@Override
