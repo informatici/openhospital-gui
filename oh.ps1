@@ -972,6 +972,7 @@ function clean_log_files {
 
 ###################################################################
 function start_gui {
+	Write-Host "Starting Open Hospital GUI..."
 	# OH GUI launch
 	cd "$OH_PATH\$OH_DIR" # workaround for hard coded paths
 
@@ -985,7 +986,6 @@ $JAVA_ARGS="-client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library
 	# go back to starting directory
 	cd "$CURRENT_DIR"
 }
-
 
 ###################################################################
 function parse_user_input {
@@ -1473,7 +1473,7 @@ else {
 	# check / set demo data if enabled
 	#set_demo_data;
 
-	Write-Host "Starting Open Hospital GUI..."
+	# start OH gui
 	start_gui;
 
 	# Close and exit
