@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -45,6 +46,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -69,6 +71,8 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
 import org.isf.menu.manager.Context;
+import org.isf.patconsensus.manager.PatientConsensusBrowserManager;
+import org.isf.patconsensus.model.PatientConsensus;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.patient.model.PatientProfilePhoto;
@@ -107,6 +111,7 @@ public class PatientInsertExtended extends JDialog {
 	
 
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
+	private PatientConsensusBrowserManager patientConsensusManager = Context.getApplicationContext().getBean(PatientConsensusBrowserManager.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
 	
@@ -531,6 +536,8 @@ public class PatientInsertExtended extends JDialog {
 
 						try {
 							patient = patientBrowserManager.savePatient(patient);
+							consensus.setPatient(patient);
+							patientConsensusManager.updatePatientConsensus(consensus);
 							if (patientHistory != null) {
 								patientHistory.setPatientId(patient.getCode());
 								patientHistoryManager.saveOrUpdate(patientHistory);
@@ -614,6 +621,8 @@ public class PatientInsertExtended extends JDialog {
 
 					try {
 						patient = patientBrowserManager.savePatient(patient);
+						consensus.setPatient(patient);
+						patientConsensusManager.updatePatientConsensus(consensus);
 						if (patientHistory != null) {
 							patientHistory.setPatientId(patient.getCode());
 							patientHistoryManager.saveOrUpdate(patientHistory);
@@ -2166,10 +2175,62 @@ public class PatientInsertExtended extends JDialog {
 			if (photoPanel != null) {
 				jRightPanel.add(photoPanel, BorderLayout.NORTH);
 			}
-			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);
+			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);	
+			jRightPanel.add(getConsensus(), BorderLayout.SOUTH);
 
 		}
 		return jRightPanel;
+	}
+	private PatientConsensus consensus;
+	private JPanel getConsensus() {
+		try {
+			consensus = this.patientConsensusManager.getPatientConsensusByUserId(patient.getCode()).get();
+		} catch (RuntimeException e) {
+			consensus = new PatientConsensus(); 
+			e.printStackTrace();
+		} catch (OHServiceException e1) {
+			consensus = new PatientConsensus(); 
+			e1.printStackTrace();
+		}
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		JCheckBox checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.consensus.txt"));
+		checkbox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				consensus.setConsensusFlag(!consensus.isConsensusFlag());
+				}
+			});
+		checkbox.setSelected(consensus.isConsensusFlag());
+		panel.add(checkbox);
+		checkbox =  new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.administrative.txt"));
+		checkbox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				consensus.setAdministrativeFlag(!consensus.isAdministrativeFlag());
+				}
+			});
+		checkbox.setSelected(consensus.isAdministrativeFlag());
+		panel.add(checkbox);
+		checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.service.txt"));
+		checkbox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				consensus.setServiceFlag(!consensus.isServiceFlag());
+				}
+			});
+		checkbox.setSelected(consensus.isServiceFlag());
+		panel.add(checkbox);
+		panel
+		.setBorder(
+				BorderFactory
+						.createCompoundBorder(
+								BorderFactory.createCompoundBorder(
+										BorderFactory.createTitledBorder(
+												MessageBundle.getMessage("angal.patient.consensus.border")),
+										BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+								panel.getBorder()));
+		return panel;
 	}
 
 	private JScrollPane getJNoteScrollPane() {
