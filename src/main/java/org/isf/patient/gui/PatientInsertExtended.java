@@ -2193,6 +2193,7 @@ public class PatientInsertExtended extends JDialog {
 			}
 		} catch (OHServiceException e) {
 			consensus = new PatientConsensus(); 
+			LOGGER.debug(e.getMessage());
 		}
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
