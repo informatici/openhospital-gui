@@ -2193,32 +2193,17 @@ public class PatientInsertExtended extends JDialog {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		JCheckBox checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.consensus.txt"));
-		checkbox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				consensus.setConsensusFlag(!consensus.isConsensusFlag());
-				}
-			});
+		checkbox.addActionListener(e -> consensus.setConsensusFlag(!consensus.isConsensusFlag()));
 		checkbox.setSelected(consensus.isConsensusFlag());
 		panel.add(checkbox);
 
 		checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.service.txt"));
-		checkbox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				consensus.setServiceFlag(!consensus.isServiceFlag());
-				}
-			});
+		checkbox.addActionListener(e -> consensus.setServiceFlag(!consensus.isServiceFlag()));
 		checkbox.setSelected(consensus.isServiceFlag());
 		panel.add(checkbox);
 		
 		checkbox =  new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.administrative.txt"));
-		checkbox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				consensus.setAdministrativeFlag(!consensus.isAdministrativeFlag());
-				}
-			});
+		checkbox.addActionListener(e -> consensus.setAdministrativeFlag(!consensus.isAdministrativeFlag()));
 		checkbox.setSelected(consensus.isAdministrativeFlag());
 		panel.add(checkbox);
 		
