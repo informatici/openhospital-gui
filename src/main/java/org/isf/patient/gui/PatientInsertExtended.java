@@ -164,6 +164,8 @@ public class PatientInsertExtended extends JDialog {
 	private boolean justSave;
 	private Patient patient;
 
+	private PatientConsensus consensus;
+	
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 
@@ -2181,7 +2183,7 @@ public class PatientInsertExtended extends JDialog {
 		}
 		return jRightPanel;
 	}
-	private PatientConsensus consensus;
+
 	private JPanel getConsensus() {
 		try {
 			consensus = this.patientConsensusManager.getPatientConsensusByUserId(patient.getCode()).get();
