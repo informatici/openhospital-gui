@@ -2201,15 +2201,7 @@ public class PatientInsertExtended extends JDialog {
 			});
 		checkbox.setSelected(consensus.isConsensusFlag());
 		panel.add(checkbox);
-		checkbox =  new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.administrative.txt"));
-		checkbox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				consensus.setAdministrativeFlag(!consensus.isAdministrativeFlag());
-				}
-			});
-		checkbox.setSelected(consensus.isAdministrativeFlag());
-		panel.add(checkbox);
+
 		checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.service.txt"));
 		checkbox.addActionListener(new ActionListener() {
 			@Override
@@ -2219,8 +2211,18 @@ public class PatientInsertExtended extends JDialog {
 			});
 		checkbox.setSelected(consensus.isServiceFlag());
 		panel.add(checkbox);
-		panel
-		.setBorder(
+		
+		checkbox =  new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.administrative.txt"));
+		checkbox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				consensus.setAdministrativeFlag(!consensus.isAdministrativeFlag());
+				}
+			});
+		checkbox.setSelected(consensus.isAdministrativeFlag());
+		panel.add(checkbox);
+		
+		panel.setBorder(
 				BorderFactory
 						.createCompoundBorder(
 								BorderFactory.createCompoundBorder(
