@@ -2187,12 +2187,8 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel getConsensus() {
 		try {
 			consensus = this.patientConsensusManager.getPatientConsensusByUserId(patient.getCode()).get();
-		} catch (RuntimeException e) {
+		} catch (RuntimeException | OHServiceException e) {
 			consensus = new PatientConsensus(); 
-			e.printStackTrace();
-		} catch (OHServiceException e1) {
-			consensus = new PatientConsensus(); 
-			e1.printStackTrace();
 		}
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
