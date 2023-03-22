@@ -2192,6 +2192,7 @@ public class PatientInsertExtended extends JDialog {
 		}
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
 		JCheckBox checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.consensus.txt"));
 		checkbox.addActionListener(e -> consensus.setConsensusFlag(!consensus.isConsensusFlag()));
 		checkbox.setSelected(consensus.isConsensusFlag());
@@ -2207,14 +2208,14 @@ public class PatientInsertExtended extends JDialog {
 		checkbox.setSelected(consensus.isAdministrativeFlag());
 		panel.add(checkbox);
 		
-		panel.setBorder(
-				BorderFactory
-						.createCompoundBorder(
+		panel.setBorder(BorderFactory.createCompoundBorder(
 								BorderFactory.createCompoundBorder(
 										BorderFactory.createTitledBorder(
 												MessageBundle.getMessage("angal.patient.consensus.border")),
-										BorderFactory.createEmptyBorder(5, 5, 5, 5)),
-								panel.getBorder()));
+												BorderFactory.createEmptyBorder(5, 5, 5, 5)), panel.getBorder()
+								)
+				);
+		
 		return panel;
 	}
 
