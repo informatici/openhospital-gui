@@ -170,12 +170,19 @@ $script:EXT="zip"
 $script:MYSQL_CONF_FILE="my.cnf"
 
 # OH files
-$script:SETTINGS_FILE="settings.properties"
-$script:DATABASE_SETTINGS="database.properties"
 $script:OH_GUI="OH-gui.jar"
+$script:OH_SETTINGS="settings.properties"
+$script:DATABASE_SETTINGS="database.properties"
+$script:IMAGING_SETTINGS="dicom.properties"
+$script:LOG4J_SETTINGS="log4j.properties"
 
 # help file
 $script:HELP_FILE="OH-readme.txt"
+
+# set default database name
+$script:DEFAULT_DATABASE_NAME="$DATABASE_NAME"
+# set default data base_dir
+$script:DEFAULT_DATADIR="$DATA_DIR"
 
 ############## Architecture and external software ##############
 
@@ -329,16 +336,15 @@ function read_settings {
 	}
 
 	# check for OH settings file and read values
-	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE" -PathType leaf ) {
+	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS" -PathType leaf ) {
 		Write-Host "Reading OH settings file..."
-		$oh_settings = [pscustomobject](Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE" -Raw | ConvertFrom-StringData)
-		##############   saved settings   ##############
+		$oh_settings = [pscustomobject](Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS" -Raw | ConvertFrom-StringData)
+		
 		$script:OH_MODE=$oh_settings.MODE
 		$script:OH_LANGUAGE=$oh_settings.LANGUAGE
 		$script:OH_SINGLE_USER=$oh_settings.SINGLE_USER
 		$script:OH_DOC_DIR=$oh_settings.OH_DOC_DIR
 		$script:DEMO_DATA=$oh_settings.DEMODATA
-		################################################
 	}
 		
 	# check for database settings file and read values
@@ -346,13 +352,12 @@ function read_settings {
 		Write-Host "Reading database settings file..."
 		$db_settings = [pscustomobject](Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS" -Raw | ConvertFrom-StringData)
 
-		$script:DATABASE_USER=$db_settings."jdbc.username"
-		$script:DATABASE_PASSWORD=$db_settings."jdbc.password"
-
 		$DATABASE_URL=$db_settings."jdbc.url"
 		$script:DATABASE_SERVER=$DATABASE_URL.TrimStart("jdbc:mysql://").Split(":",2)[0]
 		$script:DATABASE_PORT=$DATABASE_URL.TrimStart("jdbc:mysql://").Split(":",2)[1].Split("/",2)[0]
 		$script:DATABASE_NAME=$DATABASE_URL.TrimStart("jdbc:mysql://").Split(":",2)[1].Split("/",2)[1]
+		$script:DATABASE_USER=$db_settings."jdbc.username"
+		$script:DATABASE_PASSWORD=$db_settings."jdbc.password"
 	}
 	else {
 		Write-Host "Warning: configuration file $DATABASE_SETTINGS not found." -ForegroundColor Yellow
@@ -402,28 +407,14 @@ function set_defaults {
 		$script:DEMO_DATA="off"
 	}
 
-	# set original database name
-	$script:ORIG_DATABASE_NAME="$DATABASE_NAME"
-	# set original data base_dir
-	$script:ORIG_DATADIR="$DATA_DIR"
-	# set escaped values (/ in place of \)
+	# set escaped path (/ in place of \)
 	$script:OH_PATH_SUBSTITUTE=$OH_PATH -replace "\\", "/"
 }
 
 ###################################################################
-function set_values {
-	# set database name for demo data
-	switch -CaseSensitive( $script:DEMO_DATA ) {
-	"on"	{ # 
-		$script:DATABASE_NAME=$DEMO_DATABASE
-		}
-	"off"	{ # 
-		$script:DATABASE_NAME="$script:ORIG_DATABASE_NAME"
-		}
-	}
-	
+function set_db_name {
 	# set DATA_DIR with db name
-	$script:DATA_DIR="$ORIG_DATADIR/$DATABASE_NAME"
+	$script:DATA_DIR="$DEFAULT_DATADIR/$DATABASE_NAME"
 	#
 	# set escaped values (/ in place of \)
 	$script:DATA_DIR=$DATA_DIR -replace "\\", "/"
@@ -431,32 +422,30 @@ function set_values {
 
 ###################################################################
 function set_oh_mode {
-	# if $SETTINGS_FILE is present set OH mode
-	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE" -PathType leaf ) {
+	# if $OH_SETTINGS is present set OH mode
+	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS" -PathType leaf ) {
 		Write-Host "Configuring OH mode..."
-	        ######## $SETTINGS_FILE language configuration
-		Write-Host "Setting OH mode to $OH_MODE in OH configuration files-> $SETTINGS_FILE..."
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE") -replace('^(MODE.+)',"MODE=$OH_MODE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"
+	        ######## $OH_SETTINGS language configuration
+		Write-Host "Setting OH mode to $OH_MODE in OH configuration files-> $OH_SETTINGS..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS") -replace('^(MODE.+)',"MODE=$OH_MODE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 	}
 	else {
-		Write-Host "Warning: $SETTINGS_FILE file not found." -ForegroundColor Yellow
+		Write-Host "Warning: $OH_SETTINGS file not found." -ForegroundColor Yellow
 	}
 	Write-Host "OH mode set to $OH_MODE." -ForeGroundcolor Green
 }
 
 ###################################################################
 function set_demo_data {
-	# if $SETTINGS_FILE is present set DEMO mode
-	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE" -PathType leaf ) {
-		Write-Host "Configuring DEMO data..."
-	        ######## $SETTINGS_FILE DEMO data configuration
-		Write-Host "Setting DEMO data to $DEMO_DATA in OH configuration files-> $SETTINGS_FILE..."
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE") -replace('^(DEMODATA.+)',"DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"
+	# set database name for demo data
+	switch -CaseSensitive( $script:DEMO_DATA ) {
+	"on"	{ # 
+		$script:DATABASE_NAME=$DEMO_DATABASE
+		}
+	"off"	{ # 
+		$script:DATABASE_NAME="$script:DEFAULT_DATABASE_NAME"
+		}
 	}
-	else {
-		Write-Host "Warning: $SETTINGS_FILE file not found." -ForegroundColor Yellow
-	}
-	Write-Host "DEMO data set to $DEMO_DATA." -ForeGroundcolor Green
 }
 
 ###################################################################
@@ -473,42 +462,43 @@ function set_language {
 	# set database creation script in chosen language
 	$script:DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
 
-	# if $SETTINGS_FILE is present set language
-	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE" -PathType leaf ) {
+	# if $OH_SETTINGS is present set language
+	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS" -PathType leaf ) {
 		Write-Host "Configuring OH language..."
-	        ######## $SETTINGS_FILE language configuration
-		Write-Host "Setting language to $OH_LANGUAGE in OH configuration files-> $SETTINGS_FILE..."
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE") -replace('^(LANGUAGE.+)',"LANGUAGE=$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"
+	        ######## $OH_SETTINGS language configuration
+		Write-Host "Setting language to $OH_LANGUAGE in OH configuration files-> $OH_SETTINGS..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS") -replace('^(LANGUAGE.+)',"LANGUAGE=$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		Write-Host "Language set to $OH_LANGUAGE."
 	}
 	else {
-		Write-Host "Warning: $SETTINGS_FILE file not found." -ForegroundColor Yellow
+		Write-Host "Warning: $OH_SETTINGS file not found." -ForegroundColor Yellow
 	}
 }
 
 
 ###################################################################
 function set_log_level {
-	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties" -PathType leaf ) {
-		######## log4j.properties log_level configuration
-		Write-Host "Setting log level in OH configuration file -> log4j.properties..."
+	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS" -PathType leaf ) {
+		######## $LOG4J_SETTINGS log_level configuration
+		Write-Host "Setting log level in OH configuration file -> $LOG4J_SETTINGS..."
 		switch -CaseSensitive( $script:LOG_LEVEL ) {
 		###################################################
 		"INFO"	{
-			(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DEBUG","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+			(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("DEBUG","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
 			break;
 			}
 		"DEBUG"	{
-			(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("INFO","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+			(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("INFO","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
 			}
 		default {
 			Write-Host "Invalid log level option: $LOG_LEVEL." -ForegroundColor Red
 			exit 2;
 			}
 		}
+		Write-Host "Log level set to $script:LOG_LEVEL" -ForeGroundcolor Green
 	}
 	else {
-		Write-Host "Warning: log4j.properties file not found." -ForegroundColor Yellow
+		Write-Host "Warning: $LOG4J_SETTINGS file not found." -ForegroundColor Yellow
 	}
 }
 
@@ -520,6 +510,23 @@ function initialize_dir_structure {
 	[System.IO.Directory]::CreateDirectory("$OH_PATH/$DICOM_DIR") > $null
 	[System.IO.Directory]::CreateDirectory("$OH_PATH/$PHOTO_DIR") > $null
 	[System.IO.Directory]::CreateDirectory("$OH_PATH/$BACKUP_DIR") > $null
+}
+
+###################################################################
+function download_file ($download_url,$download_file){
+	Write-Host "Downloading $download_file from $download_url..."
+	try {
+        	$wc = new-object System.Net.WebClient
+	        $wc.DownloadFile("$download_url\$download_file","$OH_PATH\$download_file")
+	}
+	catch [System.Net.WebException],[System.IO.IOException] {
+		Write-Host "Unable to download $download_file from $download_url" -ForegroundColor Red
+		Read-Host; exit 1;
+	}
+	catch {
+		Write-Host "An error occurred. Exiting." -ForegroundColor Red
+		Read-Host; exit 1;
+	}
 }
 
 ###################################################################
@@ -551,12 +558,6 @@ function java_lib_setup {
 	# include OH jar file
 	$script:OH_CLASSPATH="$OH_PATH\$OH_DIR\bin\$OH_GUI"
 
-	# include all jar files under lib\
-	$script:jarlist= Get-ChildItem "$OH_PATH\$OH_DIR\lib" -Filter *.jar |  % { $_.FullName }
-	ForEach( $n in $jarlist ){
-		$script:OH_CLASSPATH="$n;$OH_CLASSPATH"
-	}
-	
 	# include all needed directories
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\bundle\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rpt_base\"
@@ -566,23 +567,13 @@ function java_lib_setup {
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rsc\icons\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rsc\images\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\lib\"
-}
-
-###################################################################
-function download_file ($download_url,$download_file){
-	Write-Host "Downloading $download_file from $download_url..."
-	try {
-        	$wc = new-object System.Net.WebClient
-	        $wc.DownloadFile("$download_url\$download_file","$OH_PATH\$download_file")
+	
+	# include all jar files under lib\
+	$script:jarlist= Get-ChildItem "$OH_PATH\$OH_DIR\lib" -Filter *.jar |  % { $_.FullName }
+	ForEach( $n in $jarlist ){
+		$script:OH_CLASSPATH="$n;$OH_CLASSPATH"
 	}
-	catch [System.Net.WebException],[System.IO.IOException] {
-		Write-Host "Unable to download $download_file from $download_url" -ForegroundColor Red
-		Read-Host; exit 1;
-	}
-	catch {
-		Write-Host "An error occurred. Exiting." -ForegroundColor Red
-		Read-Host; exit 1;
-	}
+	
 }
 
 ###################################################################
@@ -670,6 +661,8 @@ function config_database {
 		#}
 		### end windows 10 only ###
 
+		# convert port to integer
+		$script:DATABASE_PORT=[int]$DATABASE_PORT
 		### windows 7/10 ###
 		do {
 			$socktest = (New-Object System.Net.Sockets.TcpClient).ConnectAsync("$DATABASE_SERVER", $DATABASE_PORT).Wait(1000) 
@@ -683,7 +676,7 @@ function config_database {
 		Write-Host "Found TCP port $DATABASE_PORT!"
 
 		Write-Host "Writing $MYSQL_NAME config files..."
-		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
+		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
 		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
 		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("DATABASE_SERVER","$DATABASE_SERVER") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
 		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("DATABASE_PORT","$DATABASE_PORT") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
@@ -878,26 +871,26 @@ function write_config_files {
 	Write-Host "Checking for OH configuration files..."
 
 	######## DICOM setup
-	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties" -PathType leaf) ) {
-		if (Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/dicom.properties $OH_PATH/$OH_DIR/rsc/dicom.properties.old }
-		Write-Host "Writing OH configuration file -> dicom.properties..."
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS" -PathType leaf) ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS $OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.old }
+		Write-Host "Writing OH configuration file -> $IMAGING_SETTINGS..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
 	}
 
-	######## log4j.properties setup
-	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties" -PathType leaf) ) {
-		if (Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/log4j.properties $OH_PATH/$OH_DIR/rsc/log4j.properties.old }
-		Write-Host "Writing OH configuration file -> log4j.properties..."
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties.dist").replace("DBSERVER","$DATABASE_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBPORT","$DATABASE_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBPASS","$DATABASE_PASSWORD") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBNAME","$DATABASE_NAME") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("LOG_LEVEL","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("LOG_DEST","../$LOG_DIR/$OH_LOG_FILE") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+	######## $LOG4J_SETTINGS setup
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS" -PathType leaf) ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS $OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.old }
+		Write-Host "Writing OH configuration file -> $LOG4J_SETTINGS..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.dist").replace("DBSERVER","$DATABASE_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("DBPORT","$DATABASE_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("DBPASS","$DATABASE_PASSWORD") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("DBNAME","$DATABASE_NAME") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("LOG_LEVEL","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("LOG_DEST","../$LOG_DIR/$OH_LOG_FILE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
 	}
 
 	######## $DATABASE_SETTINGS setup 
@@ -916,22 +909,22 @@ function write_config_files {
 		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.password=$DATABASE_PASSWORD"
 	}
 
-	######## $SETTINGS_FILE setup
-	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE" -PathType leaf) ) {
-		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE $OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE.old }
-		Write-Host "Writing OH configuration file -> $SETTINGS_FILE..."
+	######## $OH_SETTINGS setup
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS" -PathType leaf) ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$OH_SETTINGS $OH_PATH/$OH_DIR/rsc/$OH_SETTINGS.old }
+		Write-Host "Writing OH configuration file -> $OH_SETTINGS..."
 		# set OH mode
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE.dist").replace("OH_MODE","$OH_MODE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS.dist").replace("OH_MODE","$OH_MODE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set LANGUAGE
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set DOC_DIR
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set PHOTO_DIR
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE").replace("PHOTO_DIR","$PHOTO_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("PHOTO_DIR","$PHOTO_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set singleuser = yes / no
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE").replace("YES_OR_NO","$OH_SINGLE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("YES_OR_NO","$OH_SINGLE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set DEMO DATA
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 	}
 }
 
@@ -953,14 +946,14 @@ function clean_conf_files {
 	# remove configuration files - leave only .dist files
 	Write-Host "Removing configuration files..."
 	$filetodel="$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/$SETTINGS_FILE.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/log4j.properties"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/log4j.properties.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/dicom.properties"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/dicom.properties.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 }
 
 ###################################################################
@@ -976,7 +969,7 @@ function start_gui {
 	# OH GUI launch
 	cd "$OH_PATH\$OH_DIR" # workaround for hard coded paths
 
-	#$JAVA_ARGS="-client -Dlog4j.configuration=`"`'$OH_PATH\$OH_DIR\rsc\log4j.properties`'`" -Dsun.java2d.dpiaware=false -Djava.library.path=`"`'$NATIVE_LIB_PATH`'`" -cp `"`'$OH_CLASSPATH`'`" org.isf.menu.gui.Menu"
+	#$JAVA_ARGS="-client -Dlog4j.configuration=`"`'$OH_PATH\$OH_DIR\rsc\$LOG4J_SETTINGS`'`" -Dsun.java2d.dpiaware=false -Djava.library.path=`"`'$NATIVE_LIB_PATH`'`" -cp `"`'$OH_CLASSPATH`'`" org.isf.menu.gui.Menu"
 
 	# log4j configuration is now read directly
 $JAVA_ARGS="-client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=`"$NATIVE_LIB_PATH`" -cp `"`'$OH_CLASSPATH`'`" org.isf.menu.gui.Menu"
@@ -998,6 +991,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		###################################################
 		"C"	{ # start in CLIENT mode
 			$script:OH_MODE="CLIENT"
+			$script:DEMO_DATA="off"
 			set_oh_mode;
 			Read-Host "Press any key to continue";
 		}
@@ -1027,7 +1021,6 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			#write_config_files;
 			# set configuration
 			set_log_level;
-			Write-Host "Log level set to $script:LOG_LEVEL" -ForeGroundcolor Green
 			Read-Host "Press any key to continue";
 		}
 		###################################################
@@ -1046,8 +1039,9 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				$script:DEMO_DATA="on"
 				}
 			}
-			# update confuration settings
-			set_values;
+			# update configuration settings
+			set_demo_data;
+			set_db_name;
 
 			$script:WRITE_CONFIG_FILES="on"; write_config_files;
 			
@@ -1101,6 +1095,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		}
 		###################################################
 		"m"	{ # configure OH database connection manually
+			$script:DEMO_DATA="off"
 			#$script:OH_SINGLE_USER=Read-Host	"Please select Single user configuration (yes/no)" 
 	                #### script:OH_SINGLE_USER=${OH_SINGLE_USER:-Off} # set default # TBD
 			Write-Host 				""
@@ -1108,14 +1103,12 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host 				""
 			$script:DATABASE_SERVER=Read-Host	"Enter database server IP address [DATABASE_SERVER]"
 			$script:DATABASE_PORT=Read-Host		"Enter database server TCP port [DATABASE_PORT]"
-			# convert to integer
-			$script:DATABASE_PORT=[int]$DATABASE_PORT
 			$script:DATABASE_NAME=Read-Host		"Enter database database name [DATABASE_NAME]"
 			$script:DATABASE_USER=Read-Host		"Enter database user name [DATABASE_USER]"
 			$script:DATABASE_PASSWORD=Read-Host	"Enter database password [DATABASE_PASSWORD]"
 			Write-Host				"Do you want to save entered settings to OH configuration files?"
 			get_confirmation 1;
-			set_values;
+			set_db_name;
 			$script:WRITE_CONFIG_FILES="on"; write_config_files;
 			Write-Host "Done!"
 			Read-Host "Press any key to continue";
@@ -1164,7 +1157,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 					# check if mysql utilities exist
 					mysql_check;
 					if ( !($OH_MODE -eq "CLIENT" )) {
-						set_values;
+						set_db_name;
 						config_database;
 						initialize_dir_structure;
 						initialize_database;
@@ -1233,8 +1226,8 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host "--- Database ---"
 			Write-Host "DATABASE_SERVER=$DATABASE_SERVER"
 			Write-Host "DATABASE_PORT=$DATABASE_PORT"
-			Write-Host "DATABASE_USER=$DATABASE_USER"
 			Write-Host "DATABASE_NAME=$DATABASE_NAME"
+			Write-Host "DATABASE_USER=$DATABASE_USER"
 			Write-Host ""
 			Write-Host "--- Imaging / Dicom ---"
 			Write-Host "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
@@ -1341,7 +1334,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 set_path;
 read_settings;
 set_defaults;
-set_values;
+set_db_name;
 
 # set working dir to OH base dir
 cd "$OH_PATH" # workaround for hard coded paths
@@ -1361,7 +1354,7 @@ if ( $DEMO_DATA -eq "on" ) {
 		exit 1
 	}
 	
-	# set database name
+	# set database name to demo
 	$script:DATABASE_NAME=$DEMO_DATABASE
 	
 	if (Test-Path -Path "$OH_PATH/$SQL_DIR/$DB_DEMO" -PathType leaf) {
@@ -1373,6 +1366,7 @@ if ( $DEMO_DATA -eq "on" ) {
 		Read-Host;
 		exit 1
 	}
+	set_db_name;
 }
 
 # display running configuration
@@ -1469,9 +1463,6 @@ else {
 
 	# generate config files if not existent
 	write_config_files;
-
-	# check / set demo data if enabled
-	#set_demo_data;
 
 	# start OH gui
 	start_gui;
