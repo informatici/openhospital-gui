@@ -476,7 +476,7 @@ public class PatientInsertExtended extends JDialog {
 					}
 					
 					if (!consensus.isConsensusFlag()) {
-						MessageDialog.error(null, "angal.patient.consensus.consensus.mandatory.txt");
+						MessageDialog.error(null, "angal.patient.consensus.consensus.mandatory.msg");
 						ok = false;
 					}
 					
