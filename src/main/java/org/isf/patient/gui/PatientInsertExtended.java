@@ -565,10 +565,6 @@ public class PatientInsertExtended extends JDialog {
 						}
 					}
 				} else {// Update
-					if (!consensus.isConsensusFlag()) {
-						MessageDialog.error(null, "angal.patient.consensus.consensus.mandatory.txt");
-						return;
-					}
 					patient.setFirstName(firstName);
 					patient.setSecondName(secondName);
 					if (radiof.isSelected()) {
