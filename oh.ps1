@@ -136,7 +136,7 @@ $script:DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 $script:DICOM_DIR="data/dicom_storage"
 
 # path and directories
-$script:OH_DIR="."
+$script:OH_DIR="oh"
 $script:OH_DOC_DIR="../doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
@@ -513,7 +513,7 @@ function initialize_dir_structure {
 }
 
 ###################################################################
-function download_file ($download_url,$download_file){
+function download_file ($download_url,$download_file) {
 	Write-Host "Downloading $download_file from $download_url..."
 	try {
         	$wc = new-object System.Net.WebClient
@@ -570,7 +570,7 @@ function java_lib_setup {
 	
 	# include all jar files under lib\
 	$script:jarlist= Get-ChildItem "$OH_PATH\$OH_DIR\lib" -Filter *.jar |  % { $_.FullName }
-	ForEach( $n in $jarlist ){
+	ForEach( $n in $jarlist ) {
 		$script:OH_CLASSPATH="$n;$OH_CLASSPATH"
 	}
 	
