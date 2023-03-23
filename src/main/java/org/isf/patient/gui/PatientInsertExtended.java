@@ -474,6 +474,12 @@ public class PatientInsertExtended extends JDialog {
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
+					
+					if (!consensus.isConsensusFlag()) {
+						MessageDialog.error(null, "angal.patient.consensus.consensus.mandatory.txt");
+						ok = false;
+					}
+					
 					if (ok) {
 						patient.setFirstName(firstName);
 						patient.setSecondName(secondName);
@@ -559,7 +565,10 @@ public class PatientInsertExtended extends JDialog {
 						}
 					}
 				} else {// Update
-
+					if (!consensus.isConsensusFlag()) {
+						MessageDialog.error(null, "angal.patient.consensus.consensus.mandatory.txt");
+						return;
+					}
 					patient.setFirstName(firstName);
 					patient.setSecondName(secondName);
 					if (radiof.isSelected()) {
