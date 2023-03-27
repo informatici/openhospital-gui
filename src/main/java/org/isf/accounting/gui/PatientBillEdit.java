@@ -1146,6 +1146,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonSave.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonSave.addActionListener(actionEvent -> {
 
+				/*
+				 * we check again for underlying data changes
+				 */
+				loadDataset();
+				checkBill();
+
 				if (thisBill.getPriceList() == null) { // FIXME: workaround ? to be removed ?
 					thisBill.setPriceList(lstArray.get(0));
 				}
