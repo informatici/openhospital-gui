@@ -136,7 +136,7 @@ $script:DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 $script:DICOM_DIR="data/dicom_storage"
 
 # path and directories
-$script:OH_DIR="oh"
+$script:OH_DIR="."
 $script:OH_DOC_DIR="../doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
