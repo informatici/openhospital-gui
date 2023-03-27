@@ -498,6 +498,14 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				thisBill.setPriceList(list);
 				thisBill.setListName(list.getName());
 				modified = true;
+			} else {
+				PriceList priceListFound = priceList.get();
+				if (!priceListFound.getCurrency().equals("") && !priceListFound.getCurrency().equals(this.currencyCod)) {
+					MessageDialog.info(PatientBillEdit.this,
+									MessageBundle.formatMessage("angal.newbill.thepricelistcurrencycodehaschangedarrow.fmt.msg",
+													priceListFound.getCurrency(), this.currencyCod));
+					setCurrencyCodeFromList(priceListFound);
+				}
 			}
 		}
 
@@ -569,6 +577,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						thisBill.setAdmission(currentAdmission);
 						modified = true;
 					}
+				}
+				if (!thisBill.getAdmission().getWard().equals(currentAdmission.getWard())) {
+					MessageDialog.info(PatientBillEdit.this,
+									MessageBundle.formatMessage("angal.newbill.thepatienthasbeentransferredmeanwhilearrow.fmt.msg",
+													thisBill.getAdmission().getWard(), currentAdmission.getWard()));
 				}
 
 			} else { // Patient not found
