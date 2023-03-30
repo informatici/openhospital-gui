@@ -113,6 +113,8 @@ import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ------------------------------------------
@@ -152,6 +154,8 @@ import org.isf.ward.model.Ward;
 public class OpdEditExtended extends ModalJFrame implements PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpdEditExtended.class);
 
 	public static final int DEFAULT_VISIT_DURATION = 30;
 	
@@ -1726,8 +1730,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		}
 		return jButtonExamination;
 	}
-	
-	
+
 	private JButton getJAnamnesisButton() {
 		if (jAnamnesisButton == null) {
 			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
@@ -1735,22 +1738,21 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			OpdEditExtended self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
 				try {
-				PatientHistory ph = new PatientHistory();
-				ph.setPatientId(opdPatient.getCode());
-				Patient patient = this.patientBrowserManager.getPatientById(opdPatient.getCode());
-				PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(opdPatient.getCode())).orElse(ph);
-				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
-				PatientHistoryEdit dialog = new PatientHistoryEdit(OpdEditExtended.this, pph, true);
-				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-				dialog.pack();
-				dialog.setLocationRelativeTo(null);
-				dialog.setModal(insert);
-				dialog.setVisible(true);
-			} catch (OHServiceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-				});
+					PatientHistory ph = new PatientHistory();
+					ph.setPatientId(opdPatient.getCode());
+					Patient patient = this.patientBrowserManager.getPatientById(opdPatient.getCode());
+					PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(opdPatient.getCode())).orElse(ph);
+					PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
+					PatientHistoryEdit dialog = new PatientHistoryEdit(OpdEditExtended.this, pph, true);
+					dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+					dialog.pack();
+					dialog.setLocationRelativeTo(null);
+					dialog.setModal(insert);
+					dialog.setVisible(true);
+				} catch (OHServiceException e) {
+					LOGGER.error("Exception in getJAnamnesisButton method.", e);
+				}
+			});
 		}
 		return jAnamnesisButton;
 	}
