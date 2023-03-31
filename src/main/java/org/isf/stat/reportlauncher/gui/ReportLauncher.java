@@ -271,7 +271,7 @@ public class ReportLauncher extends ModalJFrame{
 				);
 				
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("Exception in getJParameterSelectionPanel method.", e);
 			} 
 			
 			jRptComboBox.addActionListener(actionEvent -> {
@@ -361,7 +361,7 @@ public class ReportLauncher extends ModalJFrame{
 					jToDateField.setVisible(false);
 				}
 			} catch (JRException e) {
-				e.printStackTrace();
+				LOGGER.error("Exception in selectAction method.", e);
 			}
 		}
 	}
