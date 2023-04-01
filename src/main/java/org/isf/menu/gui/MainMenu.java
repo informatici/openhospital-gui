@@ -122,8 +122,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private static User myUser;
 	private static List<UserMenuItem> myMenu;
 
-	final static int menuXPosition = 10;
-	final static int menuYDisplacement = 75;
+	static final int menuXPosition = 10;
+	static final int menuYDisplacement = 75;
 
 	// singleUser=true : one user
 	private boolean singleUser;
