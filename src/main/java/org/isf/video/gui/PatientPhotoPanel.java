@@ -118,8 +118,7 @@ public class PatientPhotoPanel extends JPanel {
 						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, GeneralData.MAX_PROFILE_IMAGE_FILE_SIZE_BYTES, PROFILE_PICTURE_FORMAT));
 					} 
 				} catch (IOException e1) {
-					LOGGER.error("Oooops! Can't resize profile picture.");
-					e1.printStackTrace();
+					LOGGER.error("Oooops! Can't resize profile picture.", e1);
 				}
 			});
 

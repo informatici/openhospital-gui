@@ -498,6 +498,14 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				thisBill.setPriceList(list);
 				thisBill.setListName(list.getName());
 				modified = true;
+			} else {
+				PriceList priceListFound = priceList.get();
+				if (!priceListFound.getCurrency().equals("") && !priceListFound.getCurrency().equals(this.currencyCod)) {
+					MessageDialog.info(PatientBillEdit.this,
+									MessageBundle.formatMessage("angal.newbill.thepricelistcurrencycodehaschangedarrow.fmt.msg",
+													priceListFound.getCurrency(), this.currencyCod));
+					setCurrencyCodeFromList(priceListFound);
+				}
 			}
 		}
 
@@ -569,6 +577,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						thisBill.setAdmission(currentAdmission);
 						modified = true;
 					}
+				}
+				if (!thisBill.getAdmission().getWard().equals(currentAdmission.getWard())) {
+					MessageDialog.info(PatientBillEdit.this,
+									MessageBundle.formatMessage("angal.newbill.thepatienthaschangedwardsarrow.fmt.msg",
+													thisBill.getAdmission().getWard(), currentAdmission.getWard()));
 				}
 
 			} else { // Patient not found
@@ -1145,6 +1158,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonSave.setIcon(new ImageIcon("rsc/icons/save_button.png"));
 			jButtonSave.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonSave.addActionListener(actionEvent -> {
+
+				/*
+				 * we check again for underlying data changes
+				 */
+				loadDataset();
+				checkBill();
 
 				if (thisBill.getPriceList() == null) { // FIXME: workaround ? to be removed ?
 					thisBill.setPriceList(lstArray.get(0));
