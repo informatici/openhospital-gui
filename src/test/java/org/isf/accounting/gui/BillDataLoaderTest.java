@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 
 public class BillDataLoaderTest {
 	
-	private final static String NO_USERNAME = null;
+	private static final String NO_USERNAME = null;
     @Test
     public void shouldLoadPendingBillsFromManagerForParentPatient() throws OHServiceException {
         // given:

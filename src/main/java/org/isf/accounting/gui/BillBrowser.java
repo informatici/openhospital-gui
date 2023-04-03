@@ -102,7 +102,7 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
  */
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
-	protected final static String NO_USERNAME = null;
+	protected static final String NO_USERNAME = null;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillBrowser.class);
 	private static final ImageIcon ADMISSION_ICON = new ImageIcon("rsc/icons/bed_icon.png");
