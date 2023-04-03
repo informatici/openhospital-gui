@@ -801,7 +801,7 @@ public class MovStockBrowser extends ModalJFrame {
 					MessageDialog.error(null, "angal.medicalstock.chooseavalidmovementdate.msg");
 					dateOk = false;
 				}
-			} else if (movFrom.compareTo(movTo) > 0) {
+			} else if (movFrom.isAfter(movTo)) {
 				MessageDialog.error(null, "angal.medicalstock.movementdatefromcannotbelaterthanmovementdateto");
 				dateOk = false;
 			}
@@ -814,7 +814,7 @@ public class MovStockBrowser extends ModalJFrame {
 						MessageDialog.error(null, "angal.medicalstock.chooseavalidpreparationdate");
 						dateOk = false;
 					}
-				} else if (prepFrom.compareTo(prepTo) > 0) {
+				} else if (prepFrom.isAfter(prepTo)) {
 					MessageDialog.error(null, "angal.medicalstock.preparationdatefromcannotbelaterpreparationdateto");
 					dateOk = false;
 				}
@@ -827,7 +827,7 @@ public class MovStockBrowser extends ModalJFrame {
 					MessageDialog.error(null, "angal.medicalstock.chooseavalidduedate.msg");
 					dateOk = false;
 				}
-			} else if (dueFrom.compareTo(dueTo) > 0) {
+			} else if (dueFrom.isAfter(dueTo)) {
 				MessageDialog.error(null, "angal.medicalstock.duedatefromcannotbelaterthanduedateto");
 				dateOk = false;
 			}
