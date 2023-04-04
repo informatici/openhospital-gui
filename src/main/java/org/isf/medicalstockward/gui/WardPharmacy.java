@@ -173,7 +173,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private GoodDateChooser jCalendarTo;
 	private Ward wardSelected;
 	private MovementWard movSelected;
-	private boolean added = false;
+	private boolean added;
 	private String[] columnsIncomes = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.from.txt").toUpperCase(),
@@ -213,9 +213,9 @@ public class WardPharmacy extends ModalJFrame implements
 	private int weightFrom;
 	private int weightTo;
 	private boolean editAllowed;
-	private JButton jPrintTableButton = null;
-	private JButton jExportToExcelButton = null;
-	private JButton jRectifyButton = null;
+	private JButton jPrintTableButton;
+	private JButton jExportToExcelButton;
+	private JButton jRectifyButton;
 	private JButton jButtonStockCard;
 	private JButton jButtonStockLedger;
 

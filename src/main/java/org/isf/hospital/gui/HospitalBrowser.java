@@ -55,9 +55,9 @@ public class HospitalBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JPanel jDataPanel = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JPanel jDataPanel;
 	private GoodTimeChooser visitStartField;
 	private GoodTimeChooser visitEndField;
 	private VoIntegerTextField durationField;

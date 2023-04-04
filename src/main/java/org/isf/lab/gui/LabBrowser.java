@@ -94,17 +94,17 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		filterButton.doClick();
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel jButtonPanel = null;
-	private JButton buttonEdit = null;
-	private JButton buttonNew = null;
-	private JButton buttonDelete = null;
-	private JButton buttonClose = null;
-	private JButton printTableButton = null;
-	private JButton filterButton = null;
-	private JPanel jSelectionPanel = null;
-	private JTable jTable = null;
-	private JComboBox comboExams = null;
+	private JPanel jContentPane;
+	private JPanel jButtonPanel;
+	private JButton buttonEdit;
+	private JButton buttonNew;
+	private JButton buttonDelete;
+	private JButton buttonClose;
+	private JButton printTableButton;
+	private JButton filterButton;
+	private JPanel jSelectionPanel;
+	private JTable jTable;
+	private JComboBox comboExams;
 	private int pfrmHeight;
 	private List<Laboratory> pLabs;
 	private String[] pColumns = {
@@ -123,7 +123,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private LabBrowsingModel model;
 	private Laboratory laboratory;
 	private int selectedrow;
-	private String typeSelected = null;
+	private String typeSelected;
 	private JPanel dateFilterPanel;
 	private GoodDateChooser dateFrom;
 	private GoodDateChooser dateTo;

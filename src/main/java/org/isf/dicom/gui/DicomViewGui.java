@@ -87,20 +87,20 @@ public class DicomViewGui extends JPanel {
 	private int patID;
 	private Patient ohPatient;
 	private String serieNumber;
-	private Long[] frames = null;
+	private Long[] frames;
 
 	// status of frame
 	private int frameIndex;
-	private BufferedImage tmpImg = null;
-	private Attributes attributes = null;
-	private FileDicom tmpDbFile = null;
+	private BufferedImage tmpImg;
+	private Attributes attributes;
+	private FileDicom tmpDbFile;
 
 	// GUI
-	private JPanel jPanelHeader = null;
-	private JPanel jPanelCenter = null;
-	private JPanel jPanelFooter = null;
-	private JSlider jSliderZoom = null;
-	private JSlider jSliderFrame = null;
+	private JPanel jPanelHeader;
+	private JPanel jPanelCenter;
+	private JPanel jPanelFooter;
+	private JSlider jSliderZoom;
+	private JSlider jSliderFrame;
 	
 	// GUI parameters
 	private int x = -1;
@@ -597,14 +597,14 @@ public class DicomViewGui extends JPanel {
 	/**
 	 * relative X in mouse motion
 	 */
-	int p1x = 0;
-	int p2x = 0;
+	int p1x;
+	int p2x;
 
 	/**
 	 * relative Y in mouse motion
 	 */
-	int p1y = 0;
-	int p2y = 0;
+	int p1y;
+	int p2y;
 	
 	/**
 	 * Mouse wheel listener for DicomViewGui

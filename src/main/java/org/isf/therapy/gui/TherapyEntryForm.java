@@ -101,7 +101,7 @@ public class TherapyEntryForm extends JDialog {
 	 */
 	private List<Medical> medArray;
 	private Therapy therapy;
-	private TherapyRow thRow = null;
+	private TherapyRow thRow;
 	private JList medicalsList;
 	private JScrollPane medicalListscrollPane;
 	private JPanel dayWeeksMonthsPanel;

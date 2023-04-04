@@ -208,11 +208,11 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private boolean editing;
 
-	private Admission admission = null;
+	private Admission admission;
 
 	private PatientSummary ps;
 
-	private JTextArea textArea = null;
+	private JTextArea textArea;
 
 	private JTabbedPane jTabbedPaneAdmission;
 
@@ -224,58 +224,58 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private int pregnancyTabIndex;
 
-	private JPanel jContentPane = null;
+	private JPanel jContentPane;
 
 	// enable is if patient is female
-	private boolean enablePregnancy = false;
+	private boolean enablePregnancy;
 
 	// viewing is if you set ward to pregnancy
-	private boolean viewingPregnancy = false;
+	private boolean viewingPregnancy;
 
-	private LocalDateTime visitDate = null;
+	private LocalDateTime visitDate;
 
-	private VoLimitedTextField weightField = null;
+	private VoLimitedTextField weightField;
 
-	private GoodDateTimeSpinnerChooser visitDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser visitDateFieldCal;
 
-	private JComboBox treatmTypeBox = null;
+	private JComboBox treatmTypeBox;
 
 	private LocalDateTime deliveryDate = TimeTools.getNow();
 
-	private GoodDateTimeSpinnerChooser deliveryDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser deliveryDateFieldCal;
 
-	private JComboBox deliveryTypeBox = null;
+	private JComboBox deliveryTypeBox;
 
-	private JComboBox deliveryResultTypeBox = null;
+	private JComboBox deliveryResultTypeBox;
 
-	private List<PregnantTreatmentType> treatmTypeList = null;
+	private List<PregnantTreatmentType> treatmTypeList;
 
-	private List<DeliveryType> deliveryTypeList = null;
+	private List<DeliveryType> deliveryTypeList;
 
-	private List<DeliveryResultType> deliveryResultTypeList = null;
+	private List<DeliveryResultType> deliveryResultTypeList;
 
-	private LocalDateTime ctrl1Date = null;
+	private LocalDateTime ctrl1Date;
 
-	private LocalDateTime ctrl2Date = null;
+	private LocalDateTime ctrl2Date;
 
-	private LocalDateTime abortDate = null;
+	private LocalDateTime abortDate;
 
-	private GoodDateTimeSpinnerChooser ctrl1DateFieldCal = null;
+	private GoodDateTimeSpinnerChooser ctrl1DateFieldCal;
 
-	private GoodDateTimeSpinnerChooser ctrl2DateFieldCal = null;
+	private GoodDateTimeSpinnerChooser ctrl2DateFieldCal;
 
-	private GoodDateTimeSpinnerChooser abortDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser abortDateFieldCal;
 
 	private JComboBox<Ward> wardBox;
 
 	// save value during a switch
-	private Ward saveWard = null;
+	private Ward saveWard;
 
-	private String saveYProg = null;
+	private String saveYProg;
 
-	private JTextField yProgTextField = null;
+	private JTextField yProgTextField;
 
-	private JTextField FHUTextField = null;
+	private JTextField FHUTextField;
 
 	private JPanel wardPanel;
 
@@ -285,11 +285,11 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JComboBox diseaseInBox;
 
-	private List<Disease> diseaseInList = null;
+	private List<Disease> diseaseInList;
 
-	private List<Disease> diseaseOutList = null;
+	private List<Disease> diseaseOutList;
 
-	private List<Disease> diseaseAllList = null;
+	private List<Disease> diseaseAllList;
 
 	private JCheckBox malnuCheck;
 
@@ -299,21 +299,21 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private LocalDateTime dateIn;
 
-	private GoodDateTimeSpinnerChooser dateInFieldCal = null;
+	private GoodDateTimeSpinnerChooser dateInFieldCal;
 
-	private JComboBox admTypeBox = null;
+	private JComboBox admTypeBox;
 
-	private List<AdmissionType> admTypeList = null;
+	private List<AdmissionType> admTypeList;
 
 	private JPanel admissionDatePanel;
 
 	private JPanel admissionTypePanel;
 
-	private JComboBox diseaseOut1Box = null;
+	private JComboBox diseaseOut1Box;
 
-	private JComboBox diseaseOut2Box = null;
+	private JComboBox diseaseOut2Box;
 
-	private JComboBox diseaseOut3Box = null;
+	private JComboBox diseaseOut3Box;
 
 	private JPanel diseaseOutPanel;
 
@@ -323,13 +323,13 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JPanel diseaseOut3Panel;
 
-	private LocalDateTime dateOut = null;
+	private LocalDateTime dateOut;
 
-	private GoodDateTimeSpinnerChooser dateOutFieldCal = null;
+	private GoodDateTimeSpinnerChooser dateOutFieldCal;
 
-	private JComboBox disTypeBox = null;
+	private JComboBox disTypeBox;
 
-	private List<DischargeType> disTypeList = null;
+	private List<DischargeType> disTypeList;
 
 	private JPanel dischargeDatePanel;
 
@@ -337,17 +337,17 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JPanel bedDaysPanel;
 
-	private JPanel buttonPanel = null;
+	private JPanel buttonPanel;
 
 	private JLabel labelRequiredFields;
 
-	private JButton closeButton = null;
+	private JButton closeButton;
 
-	private JButton saveButton = null;
+	private JButton saveButton;
 
-	private JButton jButtonExamination = null;
+	private JButton jButtonExamination;
 
-	private JButton jAnamnesisButton = null;
+	private JButton jAnamnesisButton;
 
 	private JPanel visitDatePanel;
 
@@ -1519,7 +1519,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		return dischargeDatePanel;
 	}
 
-	private JComboBox shareWith = null;
+	private JComboBox shareWith;
 
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {

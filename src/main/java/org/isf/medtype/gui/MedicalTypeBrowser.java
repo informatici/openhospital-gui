@@ -57,17 +57,17 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {80, 200};
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private MedicalTypeBrowserModel model;
 	private int selectedrow;
 	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
-	private MedicalType medicalType = null;
+	private MedicalType medicalType;
 	private final JFrame myFrame;
 	
 	/**

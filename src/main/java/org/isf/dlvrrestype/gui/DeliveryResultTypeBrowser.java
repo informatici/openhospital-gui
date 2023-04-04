@@ -57,17 +57,17 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	};
 	private int[] pColumnWidth = {80, 200};
 
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private DeliveryResultTypeBrowserModel model;
 	private int selectedrow;
 	private DeliveryResultTypeBrowserManager deliveryResultTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
-	private DeliveryResultType deliveryresultType = null;
+	private DeliveryResultType deliveryresultType;
 	private final JFrame myFrame;
 	
 	/**

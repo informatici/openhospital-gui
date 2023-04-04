@@ -162,10 +162,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JButton jButtonDelete;
 	private JButton jButtonClose;
 	private Patient patientParent;
-	private JTextField jAffiliatePersonJTextField = null;
+	private JTextField jAffiliatePersonJTextField;
 	private JButton jButtonReport;
 	private JComboBox<String> jComboUsers;
-	private JTextField medicalJTextField = null;
+	private JTextField medicalJTextField;
 	private JMonthChooser jComboBoxMonths;
 	private JYearChooser jComboBoxYears;
 	private JPanel panelSupRange;

@@ -103,14 +103,14 @@ public class VaccineEdit extends JDialog {
 	private VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private JTextField codeTextField = null;
-	private JComboBox<VaccineType> vaccineTypeComboBox = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField codeTextField;
+	private JComboBox<VaccineType> vaccineTypeComboBox;
 	private Vaccine vaccine;
 	private boolean insert;
 

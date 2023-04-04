@@ -169,7 +169,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 		setVisible(true);
 	}
 
-	private JPanel jContentPane = null;
+	private JPanel jContentPane;
 
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
@@ -182,8 +182,8 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 	
 	
-	private JPanel patientData = null;
-	private boolean isMalnutrition = false;
+	private JPanel patientData;
+	private boolean isMalnutrition;
 	
 	private JPanel getPatientDataPanel() {
 		patientData = new JPanel();
@@ -229,7 +229,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	
 	private JScrollPane scrollPane;
 	
-	private JPanel tablesPanel=null;
+	private JPanel tablesPanel;
 	
 	private JPanel getTablesPanel() {
 		tablesPanel = new JPanel(new BorderLayout());
@@ -271,10 +271,10 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 
 	
-	private JButton closeButton=null;
-	private JButton editButton=null;
-	private JButton deleteButton=null;
-	private JButton malnutritionButton=null;
+	private JButton closeButton;
+	private JButton editButton;
+	private JButton deleteButton;
+	private JButton malnutritionButton;
 	
 	private JButton getCloseButton() {
 		if (closeButton == null) {

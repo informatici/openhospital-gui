@@ -220,36 +220,36 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private static final String LAST_OPD_LABEL = "<html><i>" + MessageBundle.getMessage("angal.opd.lastopdvisitm.txt") + "</i></html>:";
 	private static final String LAST_NOTE_LABEL = "<html><i>" + MessageBundle.getMessage("angal.opd.lastopdnote.txt") + "</i></html>:";
 
-	private JPanel jPanelMain = null;
+	private JPanel jPanelMain;
 	private JPanel jPanelNorth;
 	private JPanel jPanelCentral;
-	private JPanel jPanelData = null;
-	private JPanel jPanelButtons = null;
+	private JPanel jPanelData;
+	private JPanel jPanelButtons;
 
-	private JComboBox diseaseTypeBox = null;
-	private JComboBox diseaseBox1 = null;
-	private JComboBox diseaseBox2 = null;
-	private JComboBox diseaseBox3 = null;
-	private LocalDateTime visitDateOpd = null;
+	private JComboBox diseaseTypeBox;
+	private JComboBox diseaseBox1;
+	private JComboBox diseaseBox2;
+	private JComboBox diseaseBox3;
+	private LocalDateTime visitDateOpd;
 	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM, new Locale(GeneralData.LANGUAGE));
-	private GoodDateTimeSpinnerChooser opdDateFieldCal = null;
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JButton jButtonExamination = null;
-	private JButton jAnamnesisButton = null;
-	private JRadioButton rePatientButton = null;
-	private JRadioButton newPatientButton = null;
-	private JCheckBox referralToCheckBox = null;
-	private JCheckBox referralFromCheckBox = null;
+	private GoodDateTimeSpinnerChooser opdDateFieldCal;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JButton jButtonExamination;
+	private JButton jAnamnesisButton;
+	private JRadioButton rePatientButton;
+	private JRadioButton newPatientButton;
+	private JCheckBox referralToCheckBox;
+	private JCheckBox referralFromCheckBox;
 
-	private JPanel jPanelPatient = null;
+	private JPanel jPanelPatient;
 
-	private VoLimitedTextField jFieldFirstName = null;
-	private VoLimitedTextField jFieldSecondName = null;
-	private VoLimitedTextField jFieldAddress = null;
-	private VoLimitedTextField jFieldCity = null;
-	private VoLimitedTextField jFieldNextKin = null;
-	private VoLimitedTextField jFieldAge = null;
+	private VoLimitedTextField jFieldFirstName;
+	private VoLimitedTextField jFieldSecondName;
+	private VoLimitedTextField jFieldAddress;
+	private VoLimitedTextField jFieldCity;
+	private VoLimitedTextField jFieldNextKin;
+	private VoLimitedTextField jFieldAge;
 
 	private Opd opd;
 	private boolean insert;
@@ -259,23 +259,23 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JComboBox jComboPatResult;
 	private JRadioButton radiof;
 	private JRadioButton radiom;
-	private JButton jPatientEditButton = null;
-	private JButton jSearchButton = null;
-	private JLabel jLabelLastOpdVisit = null;
-	private JLabel jFieldLastOpdVisit = null;
-	private JLabel jLabelLastOpdNote = null;
-	private JLabel jFieldLastOpdNote = null;
+	private JButton jPatientEditButton;
+	private JButton jSearchButton;
+	private JLabel jLabelLastOpdVisit;
+	private JLabel jFieldLastOpdVisit;
+	private JLabel jLabelLastOpdNote;
+	private JLabel jFieldLastOpdNote;
 
-	private Patient opdPatient = null;
-	private JPanel jNotePanel = null;
-	private JTextArea jNoteTextArea = null;
-	private JPanel jPatientNotePanel = null;
-	private JTextArea jPatientNote = null;
-	private JPanel jOpdNumberPanel = null;
-	private JTextField jOpdNumField = null;
-	private JComboBox<Ward> opdWardBox = null;
-	private JComboBox<Ward> nextVisitWardBox = null;
-	private JButton nextVisitClearButton = null;
+	private Patient opdPatient;
+	private JPanel jNotePanel;
+	private JTextArea jNoteTextArea;
+	private JPanel jPatientNotePanel;
+	private JTextArea jPatientNote;
+	private JPanel jOpdNumberPanel;
+	private JTextField jOpdNumField;
+	private JComboBox<Ward> opdWardBox;
+	private JComboBox<Ward> nextVisitWardBox;
+	private JButton nextVisitClearButton;
 
 	/*
 	 * Managers and Arrays

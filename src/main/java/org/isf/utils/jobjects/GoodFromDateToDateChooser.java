@@ -39,11 +39,11 @@ public class GoodFromDateToDateChooser extends JDialog {
 	private JButton buttonOK;
 	private JButton buttonExcel;
 	private JButton buttonCancel;
-	private boolean isCancel = false;
+	private boolean isCancel;
 	private JPanel datesChooserPanel;
 	private LocalDate dateFrom;
 	private LocalDate dateTo;
-	private boolean isExcel = false;
+	private boolean isExcel;
 
 	public GoodFromDateToDateChooser(ModalJFrame owner) {
 		super(owner, true);

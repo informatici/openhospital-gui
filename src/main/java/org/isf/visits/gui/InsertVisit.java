@@ -97,12 +97,12 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	/*
 	 * Return Value
 	 */
-	private LocalDateTime visitDate = null;
+	private LocalDateTime visitDate;
 	private JPanel wardPanel;
 	private JComboBox<Ward> wardBox;
 	private Ward ward;
 	private Visit visit;
-	private boolean insert = false;
+	private boolean insert;
 	
 	/*
 	 * Managers

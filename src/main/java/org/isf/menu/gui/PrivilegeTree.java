@@ -320,6 +320,6 @@ class UserItemNameTreeCellRenderer extends DefaultTreeCellRenderer {
 		return this;
 	}
 
-	private Font plainFont = null;
+	private Font plainFont;
 
 }

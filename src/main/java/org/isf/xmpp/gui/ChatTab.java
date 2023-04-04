@@ -67,8 +67,8 @@ public class ChatTab extends JTabbedPane {
 
 		private static final long serialVersionUID = 1L;
 		int tab_number;
-		ImageIcon reg = null;
-		ImageIcon over = null;
+		ImageIcon reg;
+		ImageIcon over;
 		ChatTab tabReference;
 		JLabel user;
 

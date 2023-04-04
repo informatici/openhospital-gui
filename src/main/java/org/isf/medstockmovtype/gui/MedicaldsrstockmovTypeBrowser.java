@@ -59,17 +59,17 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	};
 	private int[] pColumnWidth = { 80, 200, 40 };
 
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private MedicaldsrstockmovTypeBrowserModel model;
 	private int selectedrow;
 	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
-	private MovementType medicaldsrstockmovType = null;
+	private MovementType medicaldsrstockmovType;
 	private final JFrame myFrame;
 	
 	/**

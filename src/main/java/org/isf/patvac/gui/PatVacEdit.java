@@ -81,31 +81,31 @@ public class PatVacEdit extends JDialog {
 	private boolean insert;
 
 	private PatientVaccine patVac;
-	private JPanel jContentPane = null;
-	private JPanel buttonPanel = null;
-	private JPanel dataPanel = null;
-	private JPanel dataPatient = null;
+	private JPanel jContentPane;
+	private JPanel buttonPanel;
+	private JPanel dataPanel;
+	private JPanel dataPatient;
 
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JButton jSearchButton = null;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JButton jSearchButton;
 
-	private JComboBox<Vaccine> vaccineComboBox = null;
-	private JComboBox<Object> patientComboBox = null;
-	private JComboBox<VaccineType> vaccineTypeComboBox = null;
+	private JComboBox<Vaccine> vaccineComboBox;
+	private JComboBox<Object> patientComboBox;
+	private JComboBox<VaccineType> vaccineTypeComboBox;
 
-	private VoLimitedTextField patTextField = null;
-	private VoLimitedTextField ageTextField = null;
-	private VoLimitedTextField sexTextField = null;
-	private VoLimitedTextField progrTextField = null;
+	private VoLimitedTextField patTextField;
+	private VoLimitedTextField ageTextField;
+	private VoLimitedTextField sexTextField;
+	private VoLimitedTextField progrTextField;
 
 	private JTextField jTextPatientSrc;
 	private Patient selectedPatient;
 	private String lastKey;
 	private String s;
-	private List<Patient> patientList = null;
-	private GoodDateChooser vaccineDateFieldCal = null;
-	private LocalDateTime dateIn = null;
+	private List<Patient> patientList;
+	private GoodDateChooser vaccineDateFieldCal;
+	private LocalDateTime dateIn;
 	private int patNextYProg;
 
 	private JPanel centerPanel;

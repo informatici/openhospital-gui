@@ -151,7 +151,7 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	// COMPONENTS: Main
-	private JPanel jMainPanel = null;
+	private JPanel jMainPanel;
 	private boolean insert;
 	private boolean justSave;
 	private Patient patient;
@@ -160,156 +160,156 @@ public class PatientInsertExtended extends JDialog {
 	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 
 	// COMPONENTS: Data
-	private JPanel jDataPanel = null;
+	private JPanel jDataPanel;
 
 	// COMPONENTS: Anagraph
-	private JPanel jDataContainPanel = null;
-	private JPanel jAnagraphPanel = null;
+	private JPanel jDataContainPanel;
+	private JPanel jAnagraphPanel;
 
 	// First Name Components:
-	private JPanel jFirstName = null;
-	private JPanel jFirstNameLabelPanel = null;
-	private JPanel jFirstNameFieldPanel = null;
-	private JLabel jFirstNameLabel = null;
-	private JTextField jFirstNameTextField = null;
+	private JPanel jFirstName;
+	private JPanel jFirstNameLabelPanel;
+	private JPanel jFirstNameFieldPanel;
+	private JLabel jFirstNameLabel;
+	private JTextField jFirstNameTextField;
 
 	// Second Name Components:
-	private JPanel jSecondName = null;
-	private JPanel jSecondNameLabelPanel = null;
-	private JPanel jSecondNameFieldPanel = null;
-	private JLabel jSecondNameLabel = null;
-	private JTextField jSecondNameTextField = null;
+	private JPanel jSecondName;
+	private JPanel jSecondNameLabelPanel;
+	private JPanel jSecondNameFieldPanel;
+	private JLabel jSecondNameLabel;
+	private JTextField jSecondNameTextField;
 
 	// AgeTypeSelection:
-	private JPanel jAgeType = null;
-	private JPanel jAgeTypeButtonGroup = null;
-	private JPanel jAgeTypeSelection = null;
-	private JPanel jAgeTypeBirthDatePanel = null;
-	private JRadioButton jAgeTypeAge = null;
-	private JRadioButton jAgeTypeBirthDate = null;
-	private JRadioButton jAgeTypeDescription = null;
+	private JPanel jAgeType;
+	private JPanel jAgeTypeButtonGroup;
+	private JPanel jAgeTypeSelection;
+	private JPanel jAgeTypeBirthDatePanel;
+	private JRadioButton jAgeTypeAge;
+	private JRadioButton jAgeTypeBirthDate;
+	private JRadioButton jAgeTypeDescription;
 
 	// Age Components:
-	private JPanel jAge = null;
-	private JTextField jAgeYears = null;
-	private JTextField jAgeMonths = null;
-	private JTextField jAgeDays = null;
+	private JPanel jAge;
+	private JTextField jAgeYears;
+	private JTextField jAgeMonths;
+	private JTextField jAgeDays;
 	private int years;
 	private int months;
 	private int days;
 
 	// BirthDate Components:
-	private JPanel jBirthDate = null;
-	private JPanel jBirthDateLabelPanel = null;
-	private JLabel jBirthDateLabel = null;
-	private JPanel jBirthDateGroupPanel = null;
-	private LocalDate birthDate = null;
-	private JLabel jBirthDateAge = null;
+	private JPanel jBirthDate;
+	private JPanel jBirthDateLabelPanel;
+	private JLabel jBirthDateLabel;
+	private JPanel jBirthDateGroupPanel;
+	private LocalDate birthDate;
+	private JLabel jBirthDateAge;
 	private GoodDateChooser jBirthDateChooser;
 
 	// AgeDescription Components:
 	private int ageType;
 	private int ageTypeMonths;
-	private JPanel jAgeDesc = null;
-	private JPanel jAgeDescPanel = null;
-	private JPanel jAgeMonthsPanel = null;
-	private JComboBox jAgeDescComboBox = null;
-	private JComboBox jAgeMonthsComboBox = null;
-	private JLabel jAgeMonthsLabel = null;
+	private JPanel jAgeDesc;
+	private JPanel jAgeDescPanel;
+	private JPanel jAgeMonthsPanel;
+	private JComboBox jAgeDescComboBox;
+	private JComboBox jAgeMonthsComboBox;
+	private JLabel jAgeMonthsLabel;
 
 	// Sex Components:
-	private JPanel jSexPanel = null;
-	private JPanel jSexLabelPanel = null;
-	private JRadioButton radiof = null;
-	private JRadioButton radiom = null;
+	private JPanel jSexPanel;
+	private JPanel jSexLabelPanel;
+	private JRadioButton radiof;
+	private JRadioButton radiom;
 
 	// Address Components:
-	private JPanel jAddress = null;
-	private JPanel jAddressLabelPanel = null;
-	private JPanel jAddressFieldPanel = null;
-	private JTextField jAddressTextField = null;
+	private JPanel jAddress;
+	private JPanel jAddressLabelPanel;
+	private JPanel jAddressFieldPanel;
+	private JTextField jAddressTextField;
 
 	// Address Components:
-	private JPanel jTaxCodePanel = null;
-	private JPanel jTaxCodeLabelPanel = null;
-	private JPanel jTaxCodeFieldPanel = null;
-	private JTextField jTaxCodeTextField = null;
+	private JPanel jTaxCodePanel;
+	private JPanel jTaxCodeLabelPanel;
+	private JPanel jTaxCodeFieldPanel;
+	private JTextField jTaxCodeTextField;
 
 	// City Components:
-	private JPanel jCity = null;
-	private JPanel jCityLabelPanel = null;
-	private JPanel jCityFieldPanel = null;
-	private JTextField jCityTextField = null;
+	private JPanel jCity;
+	private JPanel jCityLabelPanel;
+	private JPanel jCityFieldPanel;
+	private JTextField jCityTextField;
 
 	// NextKin Components:
-	private JPanel jNextKin = null;
-	private JPanel jNextKinLabelPanel = null;
-	private JPanel jNextKinFieldPanel = null;
-	private JTextField jNextKinTextField = null;
+	private JPanel jNextKin;
+	private JPanel jNextKinLabelPanel;
+	private JPanel jNextKinFieldPanel;
+	private JTextField jNextKinTextField;
 
 	// Telephone Components:
-	private JPanel jTelephone = null;
-	private JPanel jTelephoneLabelPanel = null;
-	private JPanel jTelephoneFieldPanel = null;
-	private JTextField jTelephoneTextField = null;
+	private JPanel jTelephone;
+	private JPanel jTelephoneLabelPanel;
+	private JPanel jTelephoneFieldPanel;
+	private JTextField jTelephoneTextField;
 
 	// COMPONENTS: Extension
-	private JPanel jExtensionContent = null;
+	private JPanel jExtensionContent;
 
 	// BloodType Components:
-	private JPanel jBloodTypePanel = null;
-	private JComboBox jBloodTypeComboBox = null;
+	private JPanel jBloodTypePanel;
+	private JComboBox jBloodTypeComboBox;
 
 	// Father Components:
 	private JPanel jFatherPanelOptions;
-	private JPanel jFatherPanel = null;
-	private JTextField jFatherNameTextField = null;
-	private JPanel jFatherAlivePanel = null;
-	private JRadioButton jFatherDead = null;
-	private JRadioButton jFatherAlive = null;
-	private JRadioButton jFatherUnknown = null;
+	private JPanel jFatherPanel;
+	private JTextField jFatherNameTextField;
+	private JPanel jFatherAlivePanel;
+	private JRadioButton jFatherDead;
+	private JRadioButton jFatherAlive;
+	private JRadioButton jFatherUnknown;
 
 	// Mother Components:
 	private JPanel jMotherOptions;
-	private JPanel jMotherPanel = null;
-	private JTextField jMotherNameTextField = null;
-	private JPanel jMotherAlivePanel = null;
-	private JRadioButton jMotherDead = null;
-	private JRadioButton jMotherAlive = null;
-	private JRadioButton jMotherUnknown = null;
+	private JPanel jMotherPanel;
+	private JTextField jMotherNameTextField;
+	private JPanel jMotherAlivePanel;
+	private JRadioButton jMotherDead;
+	private JRadioButton jMotherAlive;
+	private JRadioButton jMotherUnknown;
 
 	// Profession Components:
-	private JPanel jProfessionPanel = null;
-	private JComboBox jProfessionComboBox = null;
+	private JPanel jProfessionPanel;
+	private JComboBox jProfessionComboBox;
 
 	// ParentTogether Components:
-	private JPanel jParentPanel = null;
-	private JPanel jParentNoPanel = null;
-	private JRadioButton jParentYes = null;
-	private JRadioButton jParentNo = null;
-	private JRadioButton jParentUnknown = null;
+	private JPanel jParentPanel;
+	private JPanel jParentNoPanel;
+	private JRadioButton jParentYes;
+	private JRadioButton jParentNo;
+	private JRadioButton jParentUnknown;
 
 	// HasInsurance Components:
-	private JPanel jInsurancePanel = null;
-	private JPanel jInsuranceNoPanel = null;
-	private JRadioButton jInsuranceYes = null;
-	private JRadioButton jInsuranceNo = null;
-	private JRadioButton jInsuranceUnknown = null;
+	private JPanel jInsurancePanel;
+	private JPanel jInsuranceNoPanel;
+	private JRadioButton jInsuranceYes;
+	private JRadioButton jInsuranceNo;
+	private JRadioButton jInsuranceUnknown;
 
 	// MaritalStatus Components:
-	private JPanel jMaritalPanel = null;
-	private JComboBox jMaritalStatusComboBox = null;
+	private JPanel jMaritalPanel;
+	private JComboBox jMaritalStatusComboBox;
 
 	// COMPONENTS: Note
-	private JPanel jRightPanel = null;
-	private JScrollPane jNoteScrollPane = null;
-	private JTextArea jNoteTextArea = null;
+	private JPanel jRightPanel;
+	private JScrollPane jNoteScrollPane;
+	private JTextArea jNoteTextArea;
 
 	// COMPONENTS: Buttons
-	private JPanel jButtonPanel = null;
-	private JButton jOkButton = null;
-	private JButton jAnamnesisButton = null;
-	private JButton jCancelButton = null;
+	private JPanel jButtonPanel;
+	private JButton jOkButton;
+	private JButton jAnamnesisButton;
+	private JButton jCancelButton;
 
 	private JLabel labelRequiredFields;
 

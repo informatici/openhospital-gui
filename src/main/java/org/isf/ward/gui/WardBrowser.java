@@ -78,15 +78,15 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
-	private JPanel jContentPane = null;
-	private JPanel jButtonPanel = null;
-	private JButton jEditButton = null;
-	private JButton jNewButton = null;
-	private JButton jDeleteButton = null;
-	private JButton jCloseButton = null;
-	private JScrollPane jScrollPane = null;
-	private JTable table = null;
-	private DefaultTableModel model = null;
+	private JPanel jContentPane;
+	private JPanel jButtonPanel;
+	private JButton jEditButton;
+	private JButton jNewButton;
+	private JButton jDeleteButton;
+	private JButton jCloseButton;
+	private JScrollPane jScrollPane;
+	private JTable table;
+	private DefaultTableModel model;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),

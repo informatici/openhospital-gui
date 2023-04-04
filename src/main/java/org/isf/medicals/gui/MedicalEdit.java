@@ -107,17 +107,17 @@ public class MedicalEdit extends JDialog {
 		}
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private VoIntegerTextField pcsperpckField = null;
-	private VoLimitedTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
-	private VoDoubleTextField minQtiField = null;
-	private JComboBox<MedicalType> typeComboBox = null;
-	private Medical oldMedical = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private VoIntegerTextField pcsperpckField;
+	private VoLimitedTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
+	private VoDoubleTextField minQtiField;
+	private JComboBox<MedicalType> typeComboBox;
+	private Medical oldMedical;
 	private Medical medical;
 	private boolean insert;
 

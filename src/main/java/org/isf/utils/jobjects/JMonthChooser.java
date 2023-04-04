@@ -44,7 +44,7 @@ import org.isf.generaldata.GeneralData;
 public class JMonthChooser extends JPanel implements ItemListener, ChangeListener {
 
 	private int month;
-	private int oldSpinnerValue = 0;
+	private int oldSpinnerValue;
 	private JComboBox<String> comboBox;
 	private JSpinner spinner;
 	private boolean initialized;
