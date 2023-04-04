@@ -198,17 +198,15 @@ public class WardPharmacyEdit extends JDialog {
 			jButtonTrashPatient.setBorderPainted(false);
 			jButtonTrashPatient.setPreferredSize(new Dimension(20, 20));
 			jButtonTrashPatient.addActionListener(actionEvent -> {
-				if (true) {
-					jTextFieldSearchPatient.setText(""); //$NON-NLS-1$
-					jComboBoxPatients.removeAllItems();
-					getJComboBoxPatients(""); //$NON-NLS-1$
-					jTextFieldSearchPatient.requestFocus();
-					movSelectedPatient = null;
-					movSelectedAge = 0;
-					movSelectedWeight = 0;
-					jAgeTextField.setText("0");
-					jWeightTextField.setText("0");
-				}
+				jTextFieldSearchPatient.setText(""); //$NON-NLS-1$
+				jComboBoxPatients.removeAllItems();
+				getJComboBoxPatients(""); //$NON-NLS-1$
+				jTextFieldSearchPatient.requestFocus();
+				movSelectedPatient = null;
+				movSelectedAge = 0;
+				movSelectedWeight = 0;
+				jAgeTextField.setText("0");
+				jWeightTextField.setText("0");
 			});
 		}	
 		
@@ -256,13 +254,11 @@ public class WardPharmacyEdit extends JDialog {
 			jButtonTrashMedical.setBorderPainted(false);
 			jButtonTrashMedical.setPreferredSize(new Dimension(20, 20));
 			jButtonTrashMedical.addActionListener(actionEvent -> {
-				if (true) {
-					jTextFieldSearchMedical.setText(""); //$NON-NLS-1$
-					jComboBoxDrugs.removeAllItems();
-					getJComboBoxDrugs(""); //$NON-NLS-1$
-					jTextFieldSearchMedical.requestFocus();
-					movSelectedMedical = null;
-				}
+				jTextFieldSearchMedical.setText(""); //$NON-NLS-1$
+				jComboBoxDrugs.removeAllItems();
+				getJComboBoxDrugs(""); //$NON-NLS-1$
+				jTextFieldSearchMedical.requestFocus();
+				movSelectedMedical = null;
 			});
 		}
 		return jButtonTrashMedical;
