@@ -84,9 +84,6 @@ import org.isf.video.gui.PatientPhotoPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
-import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
-
 /**
  * ------------------------------------------
  * PatientInsertExtended - model for the patient entry
@@ -796,19 +793,15 @@ public class PatientInsertExtended extends JDialog {
 			}
 
 			jBirthDateChooser = new GoodDateChooser(birthDate, false);
-			jBirthDateChooser.addDateChangeListener(new DateChangeListener() {
-
-				@Override
-				public void dateChanged(DateChangeEvent event) {
-					LocalDate newDate = event.getNewDate();
-					if (newDate != null) {
-						calcAge(newDate);
-						birthDate = newDate;
-					} else {
-						birthDate = null;
-						getJBirthDateAge();
-						jBirthDateAge.setText("");
-					}
+			jBirthDateChooser.addDateChangeListener(event -> {
+				LocalDate newDate = event.getNewDate();
+				if (newDate != null) {
+					calcAge(newDate);
+					birthDate = newDate;
+				} else {
+					birthDate = null;
+					getJBirthDateAge();
+					jBirthDateAge.setText("");
 				}
 			});
 			jBirthDateGroupPanel.add(jBirthDateChooser, BorderLayout.WEST);

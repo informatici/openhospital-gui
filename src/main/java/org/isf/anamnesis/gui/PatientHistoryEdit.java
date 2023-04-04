@@ -34,7 +34,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
@@ -1606,13 +1605,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyDietNormal == null) {
 			jCheckBoxPhyDietNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diet.normal.txt")); //$NON-NLS-1$
 			buttonGroupDiet.add(jCheckBoxPhyDietNormal);
-			jCheckBoxPhyDietNormal.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyNutritionNormal(true);
-				}
-			});
+			jCheckBoxPhyDietNormal.addActionListener(e -> path.setPhyNutritionNormal(true));
 		}
 		return jCheckBoxPhyDietNormal;
 	}
@@ -1621,13 +1614,9 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyDietAbnormal == null) {
 			jCheckBoxPhyDietAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diet.other.txt")); //$NON-NLS-1$
 			buttonGroupDiet.add(jCheckBoxPhyDietAbnormal);
-			jCheckBoxPhyDietAbnormal.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyNutritionNormal(false);
-					jTextFieldPhyDietAbnormalText.requestFocus();
-				}
+			jCheckBoxPhyDietAbnormal.addActionListener(e -> {
+				path.setPhyNutritionNormal(false);
+				jTextFieldPhyDietAbnormalText.requestFocus();
 			});
 		}
 		return jCheckBoxPhyDietAbnormal;
@@ -1637,13 +1626,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyAlvoNormal == null) {
 			jCheckBoxPhyAlvoNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alvo.normal.txt")); //$NON-NLS-1$
 			buttonGroupAlvo.add(jCheckBoxPhyAlvoNormal);
-			jCheckBoxPhyAlvoNormal.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyAlvoNormal(true);
-				}
-			});
+			jCheckBoxPhyAlvoNormal.addActionListener(e -> path.setPhyAlvoNormal(true));
 		}
 		return jCheckBoxPhyAlvoNormal;
 	}
@@ -1652,13 +1635,9 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyAlvoAbnormal == null) {
 			jCheckBoxPhyAlvoAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alvo.other.txt")); //$NON-NLS-1$
 			buttonGroupAlvo.add(jCheckBoxPhyAlvoAbnormal);
-			jCheckBoxPhyAlvoAbnormal.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyAlvoNormal(false);
-					jTextFieldPhyAlvoAbnormalText.requestFocus();
-				}
+			jCheckBoxPhyAlvoAbnormal.addActionListener(e -> {
+				path.setPhyAlvoNormal(false);
+				jTextFieldPhyAlvoAbnormalText.requestFocus();
 			});
 		}
 		return jCheckBoxPhyAlvoAbnormal;
@@ -1668,13 +1647,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyDiuresisNormal == null) {
 			jCheckBoxPhyDiuresisNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diuresis.normal.txt")); //$NON-NLS-1$
 			buttonGroupDiuresis.add(jCheckBoxPhyDiuresisNormal);
-			jCheckBoxPhyDiuresisNormal.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyDiuresisNormal(true);
-				}
-			});
+			jCheckBoxPhyDiuresisNormal.addActionListener(e -> path.setPhyDiuresisNormal(true));
 		}
 		return jCheckBoxPhyDiuresisNormal;
 	}
@@ -1683,13 +1656,9 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyDiuresisAbnormal == null) {
 			jCheckBoxPhyDiuresisAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diuresis.other.txt")); //$NON-NLS-1$
 			buttonGroupDiuresis.add(jCheckBoxPhyDiuresisAbnormal);
-			jCheckBoxPhyDiuresisAbnormal.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyDiuresisNormal(false);
-					jTextFieldPhyDiuresisAbnormalText.requestFocus();
-				}
+			jCheckBoxPhyDiuresisAbnormal.addActionListener(e -> {
+				path.setPhyDiuresisNormal(false);
+				jTextFieldPhyDiuresisAbnormalText.requestFocus();
 			});
 		}
 		return jCheckBoxPhyDiuresisAbnormal;
@@ -1700,13 +1669,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyAlcoolNo == null) {
 			jCheckBoxPhyAlcoolNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.no.txt")); //$NON-NLS-1$
 			buttonGroupAlcool.add(jCheckBoxPhyAlcoolNo);
-			jCheckBoxPhyAlcoolNo.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyAlcool(false);
-				}
-			});
+			jCheckBoxPhyAlcoolNo.addActionListener(e -> path.setPhyAlcool(false));
 		}
 		return jCheckBoxPhyAlcoolNo;
 	}
@@ -1715,13 +1678,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhySmokeNo == null) {
 			jCheckBoxPhySmokeNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.smoke.no.txt")); //$NON-NLS-1$
 			buttonGroupSmoke.add(jCheckBoxPhySmokeNo);
-			jCheckBoxPhySmokeNo.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhySmoke(false);
-				}
-			});
+			jCheckBoxPhySmokeNo.addActionListener(e -> path.setPhySmoke(false));
 		}
 		return jCheckBoxPhySmokeNo;
 	}
@@ -1730,13 +1687,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyDrugsNo == null) {
 			jCheckBoxPhyDrugsNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.drugs.no.txt")); //$NON-NLS-1$
 			buttonGroupDrugs.add(jCheckBoxPhyDrugsNo);
-			jCheckBoxPhyDrugsNo.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyDrug(false);
-				}
-			});
+			jCheckBoxPhyDrugsNo.addActionListener(e -> path.setPhyDrug(false));
 		}
 		return jCheckBoxPhyDrugsNo;
 	}
@@ -1747,13 +1698,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyAlcoolYes == null) {
 			jCheckBoxPhyAlcoolYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes.txt")); //$NON-NLS-1$
 			buttonGroupAlcool.add(jCheckBoxPhyAlcoolYes);
-			jCheckBoxPhyAlcoolYes.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyAlcool(true);
-				}
-			});
+			jCheckBoxPhyAlcoolYes.addActionListener(e -> path.setPhyAlcool(true));
 		}
 		return jCheckBoxPhyAlcoolYes;
 	}
@@ -1762,13 +1707,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhySmokeYes == null) {
 			jCheckBoxPhySmokeYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes.txt")); //$NON-NLS-1$
 			buttonGroupSmoke.add(jCheckBoxPhySmokeYes);
-			jCheckBoxPhySmokeYes.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhySmoke(true);
-				}
-			});
+			jCheckBoxPhySmokeYes.addActionListener(e -> path.setPhySmoke(true));
 		}
 		return jCheckBoxPhySmokeYes;
 	}
@@ -1777,13 +1716,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyDrugsYes == null) {
 			jCheckBoxPhyDrugsYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes.txt")); //$NON-NLS-1$
 			buttonGroupDrugs.add(jCheckBoxPhyDrugsYes);
-			jCheckBoxPhyDrugsYes.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyDrug(true);
-				}
-			});
+			jCheckBoxPhyDrugsYes.addActionListener(e -> path.setPhyDrug(true));
 		}
 		return jCheckBoxPhyDrugsYes;
 	}
@@ -1997,13 +1930,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyPeriodNormal == null) {
 			jCheckBoxPhyPeriodNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.period.normal.txt")); //$NON-NLS-1$
 			buttonGroupPeriod.add(jCheckBoxPhyPeriodNormal);
-			jCheckBoxPhyPeriodNormal.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyPeriodNormal(true);
-				}
-			});
+			jCheckBoxPhyPeriodNormal.addActionListener(e -> path.setPhyPeriodNormal(true));
 		}
 		return jCheckBoxPhyPeriodNormal;
 	}
@@ -2012,13 +1939,9 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyPeriodAbnormal == null) {
 			jCheckBoxPhyPeriodAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.period.other.txt")); //$NON-NLS-1$
 			buttonGroupPeriod.add(jCheckBoxPhyPeriodAbnormal);
-			jCheckBoxPhyPeriodAbnormal.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyPeriodNormal(false);
-					jTextFieldPhyPeriodAbnormalText.requestFocus();
-				}
+			jCheckBoxPhyPeriodAbnormal.addActionListener(e -> {
+				path.setPhyPeriodNormal(false);
+				jTextFieldPhyPeriodAbnormalText.requestFocus();
 			});
 		}
 		return jCheckBoxPhyPeriodAbnormal;
@@ -2048,13 +1971,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyMenopauseNo == null) {
 			jCheckBoxPhyMenopauseNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.menopause.no.txt")); //$NON-NLS-1$
 			buttonGroupMenopause.add(jCheckBoxPhyMenopauseNo);
-			jCheckBoxPhyMenopauseNo.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyMenopause(false);
-				}
-			});
+			jCheckBoxPhyMenopauseNo.addActionListener(e -> path.setPhyMenopause(false));
 		}
 		return jCheckBoxPhyMenopauseNo;
 	}
@@ -2063,13 +1980,9 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyMenopauseYes == null) {
 			jCheckBoxPhyMenopauseYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.menopause.yes.txt")); //$NON-NLS-1$
 			buttonGroupMenopause.add(jCheckBoxPhyMenopauseYes);
-			jCheckBoxPhyMenopauseYes.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyMenopause(true);
-					jTextFieldPhyMenopauseYesYears.requestFocus();
-				}
+			jCheckBoxPhyMenopauseYes.addActionListener(e -> {
+				path.setPhyMenopause(true);
+				jTextFieldPhyMenopauseYesYears.requestFocus();
 			});
 		}
 		return jCheckBoxPhyMenopauseYes;
@@ -2099,13 +2012,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyHRTNo == null) {
 			jCheckBoxPhyHRTNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.hrt.no.txt")); //$NON-NLS-1$
 			buttonGroupHRT.add(jCheckBoxPhyHRTNo);
-			jCheckBoxPhyHRTNo.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyHrtNormal(true);
-				}
-			});
+			jCheckBoxPhyHRTNo.addActionListener(e -> path.setPhyHrtNormal(true));
 		}
 		return jCheckBoxPhyHRTNo;
 	}
@@ -2114,13 +2021,9 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyHRTYes == null) {
 			jCheckBoxPhyHRTYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.hrt.yes.txt")); //$NON-NLS-1$
 			buttonGroupHRT.add(jCheckBoxPhyHRTYes);
-			jCheckBoxPhyHRTYes.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyHrtNormal(false);
-					jTextFieldPhyHRTYesText.requestFocus();
-				}
+			jCheckBoxPhyHRTYes.addActionListener(e -> {
+				path.setPhyHrtNormal(false);
+				jTextFieldPhyHRTYesText.requestFocus();
 			});
 		}
 		return jCheckBoxPhyHRTYes;
@@ -2164,13 +2067,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyPregnancyNo == null) {
 			jCheckBoxPhyPregnancyNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.pregnancies.no.txt")); //$NON-NLS-1$
 			buttonGroupPregnancy.add(jCheckBoxPhyPregnancyNo);
-			jCheckBoxPhyPregnancyNo.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyPregnancy(false);
-				}
-			});
+			jCheckBoxPhyPregnancyNo.addActionListener(e -> path.setPhyPregnancy(false));
 		}
 		return jCheckBoxPhyPregnancyNo;
 	}
@@ -2179,13 +2076,9 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPhyPregnancyYes == null) {
 			jCheckBoxPhyPregnancyYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.pregnancies.yes.txt")); //$NON-NLS-1$
 			buttonGroupPregnancy.add(jCheckBoxPhyPregnancyYes);
-			jCheckBoxPhyPregnancyYes.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					path.setPhyPregnancy(true);
-					jTextFieldPhyPregnancyNumber.requestFocus();
-				}
+			jCheckBoxPhyPregnancyYes.addActionListener(e -> {
+				path.setPhyPregnancy(true);
+				jTextFieldPhyPregnancyNumber.requestFocus();
 			});
 		}
 		return jCheckBoxPhyPregnancyYes;
@@ -2501,12 +2394,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.anamnesis.cancel.txt")); //$NON-NLS-1$
 			jButtonCancel.setMnemonic(KeyEvent.VK_C);
-			jButtonCancel.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					dispose();
-				}
-			});
+			jButtonCancel.addActionListener(e -> dispose());
 		}
 		return jButtonCancel;
 	}
