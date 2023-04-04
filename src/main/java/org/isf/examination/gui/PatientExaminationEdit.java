@@ -1416,7 +1416,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private final class MinMaxIntegerInputVerifier extends InputVerifier {
 
 		boolean bottom;
-		boolean ceiling = false;
+		boolean ceiling;
 		int min;
 		int max;
 
@@ -1952,7 +1952,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		private static final long serialVersionUID = 1L;
 
-		private List<PatientExamination> patexList = null;
+		private List<PatientExamination> patexList;
 
 		public JTableModelSummary() {
 			reloadData();
@@ -2067,7 +2067,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 	private final class CheckBoxFocus implements FocusListener {
 
-		private Color bgColor = null;
+		private Color bgColor;
 
 		@Override
 		public void focusLost(FocusEvent e) {

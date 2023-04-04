@@ -133,12 +133,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private JButton saveButton;
 //	private JButton reportButton; TODO to enable when a report will be designed
 
-	private boolean checked = false;
-	private boolean available = false;
-	private boolean therapyModified = false;
-	private boolean notifiable = false;
+	private boolean checked;
+	private boolean available;
+	private boolean therapyModified;
+	private boolean notifiable;
 	private boolean smsenable = GeneralData.SMSENABLED;
-	private boolean visitModified = false;
+	private boolean visitModified;
 	private Therapy selectedTherapy;
 	private Visit selectedVisit;
 	private Map<Integer, TherapyRow> hashTableThRow;

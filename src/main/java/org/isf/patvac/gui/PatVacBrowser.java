@@ -89,28 +89,28 @@ public class PatVacBrowser extends ModalJFrame {
 	private	VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 	private PatVacManager patVacManager = Context.getApplicationContext().getBean(PatVacManager.class);
 
-	private JPanel jContentPane = null;
-	private JPanel jButtonPanel = null;
-	private JButton buttonEdit = null;
-	private JButton buttonNew = null;
-	private JButton buttonDelete = null;
-	private JButton buttonClose = null;
-	private JButton filterButton = null;
-	private JPanel jSelectionPanel = null;
-	private JPanel jAgePanel = null ;
-	private VoLimitedTextField jAgeFromTextField = null;
-	private VoLimitedTextField jAgeToTextField = null;
+	private JPanel jContentPane;
+	private JPanel jButtonPanel;
+	private JButton buttonEdit;
+	private JButton buttonNew;
+	private JButton buttonDelete;
+	private JButton buttonClose;
+	private JButton filterButton;
+	private JPanel jSelectionPanel;
+	private JPanel jAgePanel;
+	private VoLimitedTextField jAgeFromTextField;
+	private VoLimitedTextField jAgeToTextField;
 	private Integer ageTo = 0;
 	private Integer ageFrom = 0;
-	private JPanel sexPanel = null;
+	private JPanel sexPanel;
 	private JRadioButton radiom;
 	private JRadioButton radiof;
-	private JLabel rowCounter = null;
+	private JLabel rowCounter;
 	private String rowCounterText = MessageBundle.getMessage("angal.patvac.count") + ": ";
 	
-	private JTable jTable = null;
-	private JComboBox vaccineComboBox = null;
-	private JComboBox vaccineTypeComboBox = null;
+	private JTable jTable;
+	private JComboBox vaccineComboBox;
+	private JComboBox vaccineTypeComboBox;
 	private int pfrmHeight;
 	private List<PatientVaccine> lPatVac;
 

@@ -83,17 +83,17 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 	private VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 
-	private JPanel jContentPane = null;
-	private JPanel jButtonPanel = null;
-	private JButton jEditButton = null;
-	private JButton jNewButton = null;
-	private JButton jDeleteButton = null;
-	private JButton jCloseButton = null;
-	private JComboBox<VaccineType> vaccineTypeFilter = null;
+	private JPanel jContentPane;
+	private JPanel jButtonPanel;
+	private JButton jEditButton;
+	private JButton jNewButton;
+	private JButton jDeleteButton;
+	private JButton jCloseButton;
+	private JComboBox<VaccineType> vaccineTypeFilter;
 	
-	private JScrollPane jScrollPane = null;
-	private JTable table = null;
-	private DefaultTableModel model = null;
+	private JScrollPane jScrollPane;
+	private JTable table;
+	private DefaultTableModel model;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),

@@ -106,20 +106,20 @@ public class DiseaseEdit extends JDialog {
 		}
 	}
 	
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private JTextField codeTextField = null;
-	private JComboBox<DiseaseType> diseaseTypeComboBox = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField codeTextField;
+	private JComboBox<DiseaseType> diseaseTypeComboBox;
 	private Disease disease;
 	private boolean insert;
-	private JPanel jNewPatientPanel = null;
-	private JCheckBox includeOpdCheckBox  = null;
-	private JCheckBox includeIpdInCheckBox  = null;
-	private JCheckBox includeIpdOutCheckBox  = null;
+	private JPanel jNewPatientPanel;
+	private JCheckBox includeOpdCheckBox;
+	private JCheckBox includeIpdInCheckBox;
+	private JCheckBox includeIpdOutCheckBox;
 
 	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);

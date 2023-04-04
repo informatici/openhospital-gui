@@ -88,7 +88,7 @@ public class WardPharmacyEdit extends JDialog {
 	private String sMed;
 	private String lastKey;
 	private MovementWard movSelected;
-	private Patient movSelectedPatient = null;
+	private Patient movSelectedPatient;
 	private Medical movSelectedMedical;
 	private Double maxQty;
 	private int movSelectedAge;

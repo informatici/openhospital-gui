@@ -76,7 +76,7 @@ class ShowPreLoadDialog extends JDialog {
 	private DicomType dicomType;
 	private String dicomDescription;
 	private List<Date> dates;
-	private boolean save = false;
+	private boolean save;
 
 	/*
 	 * Managers

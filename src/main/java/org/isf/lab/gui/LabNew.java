@@ -176,8 +176,8 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 	private int[] examColumnWidth = { 200, 150 };
 	private boolean[] examResizable = { true, false };
 	
-	private Patient patientSelected = null;
-	private Laboratory selectedLab = null;
+	private Patient patientSelected;
+	private Laboratory selectedLab;
 
 	//Admission
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);

@@ -147,7 +147,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private final JFrame me;
 
 	private String pSelection;
-	private JTextField searchString = null;
+	private JTextField searchString;
 	protected boolean altKeyReleased = true;
 	private String lastKey = "";
 	private JButton buttonAMC;

@@ -68,7 +68,7 @@ public class OperationList extends JPanel {
 	private JTable jTableData;
 	private JDialog dialogOpe;
 	private List<OperationRow> oprowData;
-	private Opd myOpd = null;
+	private Opd myOpd;
 	private Admission myAdmission;
 	private Patient myPatient;
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();

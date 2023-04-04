@@ -149,18 +149,18 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			MessageBundle.getMessage("angal.admission.notadmitted.txt") };
 	private JComboBox patientClassBox = new JComboBox(patientClassItems);
 	private GoodDateChooser[] dateChoosers = new GoodDateChooser[4];
-	private VoLimitedTextField patientAgeFromTextField = null;
-	private VoLimitedTextField patientAgeToTextField = null;
+	private VoLimitedTextField patientAgeFromTextField;
+	private VoLimitedTextField patientAgeToTextField;
 	private String[] patientSexItems = { MessageBundle.getMessage("angal.common.all.txt"), MessageBundle.getMessage("angal.common.male.txt"),
 			MessageBundle.getMessage("angal.common.female.txt") };
 	private JComboBox patientSexBox = new JComboBox(patientSexItems);
-	private JCheckBox[] wardCheck = null;
-	private JTextField searchString = null;
-	private JButton jSearchButton = null;
+	private JCheckBox[] wardCheck;
+	private JTextField searchString;
+	private JButton jSearchButton;
 	private JButton jButtonExamination;
 	private String lastKey = "";
-	private List<Ward> wardList = null;
-	private JLabel rowCounter = null;
+	private List<Ward> wardList;
+	private JLabel rowCounter;
 	private List<AdmittedPatient> pPatient = new ArrayList<>();
 	private String[] pColumns = { MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(), MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),

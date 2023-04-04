@@ -89,17 +89,17 @@ public class MedicalTypeBrowserEdit extends JDialog {
 		}
 	}
     
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
 	private String lastdescription;
 	private MedicalType medicalType;
 	private boolean insert;
-	private JPanel jDataPanel = null;
+	private JPanel jDataPanel;
 	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 
 	/**

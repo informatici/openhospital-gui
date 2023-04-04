@@ -127,7 +127,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	}; 
 	private int optionSelected = UNITS;
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
-	private JComboBox shareWith = null;
+	private JComboBox shareWith;
 	private List<Medical> pool = new ArrayList<>();
 	
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);

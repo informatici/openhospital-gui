@@ -65,16 +65,16 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 	};
 	private int[] pColumnWidth = {80, 200};
 
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private VaccineTypeBrowserModel model;
 	private int selectedrow;
-	private VaccineType vaccineType = null;
+	private VaccineType vaccineType;
 	
 	private final JFrame myFrame;
 	

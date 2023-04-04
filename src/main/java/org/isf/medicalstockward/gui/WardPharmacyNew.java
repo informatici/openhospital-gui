@@ -156,7 +156,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JButton jButtonRemoveMedical;
 	private static final Dimension PatientDimension = new Dimension(300, 20);
 
-	private Patient patientSelected = null;
+	private Patient patientSelected;
 	private float patientWeight;
 	private Ward wardSelected;
 	private Object[] medClasses = { Medical.class, Integer.class, String.class };

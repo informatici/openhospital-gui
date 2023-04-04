@@ -44,7 +44,7 @@ public class OhTableModel<T> implements TableModel {
 	List<T> dataList;
 	List<T> filteredList;
 	String searchQuery = "";
-	boolean allowSearchByCode = false;
+	boolean allowSearchByCode;
 
 	public OhTableModel(List<T> dataList) {
 		this.dataList = dataList;

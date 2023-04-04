@@ -90,18 +90,18 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 		}
 	}
     
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
-	private JComboBox<String> typeComboBox = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
+	private JComboBox<String> typeComboBox;
 	private String lastdescription;
 	private MovementType medicaldsrstockmovType;
 	private boolean insert;
-	private JPanel jDataPanel = null;
+	private JPanel jDataPanel;
 	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 
 	/**

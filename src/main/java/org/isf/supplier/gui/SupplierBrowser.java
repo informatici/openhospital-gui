@@ -78,15 +78,15 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	private int pfrmHeight = 6;
 	private int pfrmBordX;
 	private int pfrmBordY;
-	private JPanel jContentPane = null;
-	private JPanel jButtonPanel = null;
-	private JButton jEditButton = null;
-	private JButton jNewButton = null;
-	private JButton jDeleteButton = null;
-	private JButton jCloseButton = null;
-	private JScrollPane jScrollPane = null;
-	private JTable table = null;
-	private DefaultTableModel model = null;
+	private JPanel jContentPane;
+	private JPanel jButtonPanel;
+	private JButton jEditButton;
+	private JButton jNewButton;
+	private JButton jDeleteButton;
+	private JButton jCloseButton;
+	private JScrollPane jScrollPane;
+	private JTable table;
+	private DefaultTableModel model;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),

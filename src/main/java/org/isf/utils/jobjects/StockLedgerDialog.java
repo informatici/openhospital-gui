@@ -48,7 +48,7 @@ public class StockLedgerDialog extends JDialog {
 	private JPanel dateFromToPanel;
 	private GoodDateChooser dateFrom;
 	private GoodDateChooser dateTo;
-	private boolean cancel = false;
+	private boolean cancel;
 
 	public StockLedgerDialog(Frame owner, LocalDateTime from, LocalDateTime to) {
 		super(owner, true);

@@ -90,17 +90,17 @@ public class DeliveryResultTypeBrowserEdit extends JDialog {
 
 	private DeliveryResultTypeBrowserManager deliveryResultTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
 	private String lastdescription;
 	private DeliveryResultType deliveryresultType;
 	private boolean insert;
-	private JPanel jDataPanel = null;
+	private JPanel jDataPanel;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow

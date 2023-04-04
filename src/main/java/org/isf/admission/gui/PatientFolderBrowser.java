@@ -176,7 +176,7 @@ public class PatientFolderBrowser extends ModalJFrame
 		setVisible(true);
 	}
 
-	private JPanel jContentPane = null;
+	private JPanel jContentPane;
 
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
@@ -534,12 +534,12 @@ public class PatientFolderBrowser extends ModalJFrame
 		return buttonPanel;
 	}
 
-	private JButton opdReportButton = null;
-	private JButton admReportButton = null;
-	private JButton disReportButton = null;
-	private JButton launchReportButton = null;
-    private JButton dicomButton = null;
-	private JButton closeButton=null;
+	private JButton opdReportButton;
+	private JButton admReportButton;
+	private JButton disReportButton;
+	private JButton launchReportButton;
+    private JButton dicomButton;
+	private JButton closeButton;
 
 	private JButton getOpdReportButton() {
 		if (opdReportButton == null) {

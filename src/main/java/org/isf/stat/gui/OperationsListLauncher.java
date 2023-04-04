@@ -38,11 +38,11 @@ public class OperationsListLauncher extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JPanel jPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jCloseButton = null;
-	private JPanel jContentPanel = null;
-	private JButton jReport1Button = null;
+	private JPanel jPanel;
+	private JPanel jButtonPanel;
+	private JButton jCloseButton;
+	private JPanel jContentPanel;
+	private JButton jReport1Button;
 
 	/**
 	 * This is the default constructor

@@ -86,7 +86,7 @@ public class SmsBrowser extends ModalJFrame {
 	private int eight;
 
 	private SmsManager smsManager = Context.getApplicationContext().getBean(SmsManager.class);
-	private List<Sms> smsList = null;
+	private List<Sms> smsList;
 
 	private final LocalDateTime dateTimeAtStartOfToday = LocalDate.now().atStartOfDay();
 	private final LocalDateTime dateTimeAtEndOfToday = LocalDate.now().atStartOfDay().plusDays(1);

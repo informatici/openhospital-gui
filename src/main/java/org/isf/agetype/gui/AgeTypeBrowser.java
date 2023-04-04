@@ -58,12 +58,12 @@ public class AgeTypeBrowser extends ModalJFrame {
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {80, 80, 80, 200};
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jEditSaveButton = null;
-	private JButton jCloseButton = null;
-	private JTable jTable = null;
-	private boolean edit = false;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jEditSaveButton;
+	private JButton jCloseButton;
+	private JTable jTable;
+	private boolean edit;
 
 	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 

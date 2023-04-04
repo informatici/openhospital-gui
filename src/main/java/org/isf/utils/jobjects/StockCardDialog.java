@@ -52,7 +52,7 @@ public class StockCardDialog extends JDialog {
 	private GoodDateChooser dateTo;
 	private Medical medical;
 	private boolean excel;
-	private boolean cancel = false;
+	private boolean cancel;
 
 	public StockCardDialog(Frame owner, Medical medical, LocalDateTime from, LocalDateTime to) {
 		super(owner, true);

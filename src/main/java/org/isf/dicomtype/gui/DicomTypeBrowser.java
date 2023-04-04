@@ -59,17 +59,17 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {80, 200, 80};
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private DicomTypeBrowserModel model;
 	private int selectedrow;
 	private DicomTypeBrowserManager dicomTypeBrowserManager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
-	private DicomType dicomType = null;
+	private DicomType dicomType;
 	private final JFrame myFrame;
 	
 	

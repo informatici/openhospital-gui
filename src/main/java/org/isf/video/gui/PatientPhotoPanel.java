@@ -61,12 +61,12 @@ public class PatientPhotoPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
 	private static final String PROFILE_PICTURE_FORMAT = "png";
 	// Photo Components:
-	private JPanel jPhotoPanel = null;
-	private PhotoPanel externalPanel = null;
+	private JPanel jPhotoPanel;
+	private PhotoPanel externalPanel;
 	private PatientInsertExtended owner;
 	
-	private JButton jGetPhotoButton = null;
-	private JButton jAttachPhotoButton = null;
+	private JButton jGetPhotoButton;
+	private JButton jAttachPhotoButton;
 
 	private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
 
@@ -215,7 +215,7 @@ class CroppingDialog extends JDialog {
 	/*
 	 * Return Value
 	 */
-	private BufferedImage cropped = null;
+	private BufferedImage cropped;
 
 	private JButton saveButton;
 
