@@ -573,7 +573,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 			if (GeneralData.PATIENTEXTENDED) {
 				PatientInsertExtended newrecord = new PatientInsertExtended(SelectPatient.this, new Patient(), true);
-				newrecord.addPatientListener((PatientListener) SelectPatient.this);
+				newrecord.addPatientListener(SelectPatient.this);
 				newrecord.setVisible(true);
 			} else {
 				PatientInsert newrecord = new PatientInsert(SelectPatient.this, new Patient(), true);

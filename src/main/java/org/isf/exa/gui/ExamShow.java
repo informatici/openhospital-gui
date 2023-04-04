@@ -165,7 +165,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					ExamRow row = (ExamRow) (((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+					ExamRow row = (ExamRow) (model.getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.exa.deleteexamresult.fmt.msg", row.getDescription());
 					if ((answer == JOptionPane.YES_OPTION)) {
 						try {

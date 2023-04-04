@@ -531,7 +531,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private void addItem(MedicalWard ward, int quantity) {
 		if (ward != null) {
 		
-			MedicalWard item = new MedicalWard(ward.getMedical(), (double) quantity, ward.getId().getLot());
+			MedicalWard item = new MedicalWard(ward.getMedical(), quantity, ward.getId().getLot());
 			medItems.add(item);
 			
 //			medArray.add(med);

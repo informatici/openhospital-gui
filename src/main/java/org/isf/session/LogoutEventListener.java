@@ -38,7 +38,7 @@ public class LogoutEventListener implements DelayTimerCallback, AWTEventListener
 
 	@Override
 	public void eventDispatched(AWTEvent e) {
-		if (UserSession.isLoggedIn() && e instanceof KeyEvent && KeyEvent.KEY_PRESSED == ((KeyEvent) e).getID() && UserSession.getTimer() != null ) {
+		if (UserSession.isLoggedIn() && e instanceof KeyEvent && KeyEvent.KEY_PRESSED == e.getID() && UserSession.getTimer() != null ) {
 			UserSession.getTimer().startTimer();
 		}
 	}

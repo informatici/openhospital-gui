@@ -193,7 +193,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			printTableButton = new JButton(MessageBundle.getMessage("angal.lab.printtable.btn"));
 			printTableButton.setMnemonic(MessageBundle.getMnemonic("angal.lab.printtable.btn.key"));
 			printTableButton.addActionListener(actionEvent -> {
-				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
+				typeSelected = comboExams.getSelectedItem().toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
 				}
@@ -433,7 +433,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				}
 			}
 			comboExams.addActionListener(actionEvent -> {
-				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
+				typeSelected = comboExams.getSelectedItem().toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
 				}
@@ -468,7 +468,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
 			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
 			filterButton.addActionListener(actionEvent -> {
-				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
+				typeSelected = comboExams.getSelectedItem().toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
 				}
