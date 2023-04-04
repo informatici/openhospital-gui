@@ -43,6 +43,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -140,8 +141,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private boolean visitModified = false;
 	private Therapy selectedTherapy;
 	private Visit selectedVisit;
-	private Hashtable<Integer, TherapyRow> hashTableThRow;
-	private Hashtable<Integer, Visit> hashTableVisits;
+	private Map<Integer, TherapyRow> hashTableThRow;
+	private Map<Integer, Visit> hashTableVisits;
 
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);

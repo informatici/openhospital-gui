@@ -373,7 +373,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected JComboBox<Operation> getOperationsBox() {
 		JComboBox<Operation> comboOpe = new JComboBox<>();
-		ArrayList<Operation> opeList = new ArrayList<>();
+		List<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(getOperationCollection());
 		} catch (OHServiceException ex) {
@@ -401,7 +401,7 @@ abstract class OperationRowBase extends JPanel {
 	public void addToForm() {
 		org.isf.operation.model.OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
 		/* ** for combo operation **** */
-		ArrayList<Operation> opeList = new ArrayList<>();
+		List<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(getOperationCollection());
 		} catch (OHServiceException ex) {

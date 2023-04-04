@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -105,8 +106,8 @@ public class ReportLauncher extends ModalJFrame{
 	private JComboBox<String> jRptComboBox;
 
 	private List<File> jasperFilesInFolder;
-	private HashMap<String, File> reportNameFileMap;
-	private HashMap<String, List<String>> folderNameFileNameMap;
+	private Map<String, File> reportNameFileMap;
+	private Map<String, List<String>> folderNameFileNameMap;
 	private List<String> userInputParamNames;
 
 	private JComboBox<String> shareWith;
