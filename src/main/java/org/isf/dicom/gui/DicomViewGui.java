@@ -478,7 +478,7 @@ public class DicomViewGui extends JPanel {
 	private void getImageFromJPG(FileDicom dett) {
 		try {
 			tmpImg = null;
-			ImageInputStream imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
+			ImageInputStream imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getData().getBinaryStream());
 			try {
 				tmpImg = ImageIO.read(imageInputStream);
 			} catch (IOException ioException) {
@@ -506,7 +506,7 @@ public class DicomViewGui extends JPanel {
 			Iterator<?> iter = ImageIO.getImageReadersByFormatName("DICOM");
 			ImageReader reader = (ImageReader) iter.next();
 			DicomImageReadParam param = (DicomImageReadParam) reader.getDefaultReadParam();
-			imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
+			imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getData().getBinaryStream());
 			reader.setInput(imageInputStream, false);
 
 			try {
@@ -516,7 +516,7 @@ public class DicomViewGui extends JPanel {
 						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
 						OHSeverityLevel.ERROR));
 			}
-			dicomInputStream = new DicomInputStream(dett.getDicomData().getBinaryStream());
+			dicomInputStream = new DicomInputStream(dett.getDicomData().getData().getBinaryStream());
 			this.attributes = dicomInputStream.readDataset();
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
