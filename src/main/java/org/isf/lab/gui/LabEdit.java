@@ -473,9 +473,7 @@ public class LabEdit extends ModalJFrame {
 									lab.getExam(),
 									lab.getDate(),
 									lab.getResult()));
-					if (!labs.isEmpty()) {
-						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
-					}
+					printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
