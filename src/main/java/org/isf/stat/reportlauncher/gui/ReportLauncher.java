@@ -106,7 +106,7 @@ public class ReportLauncher extends ModalJFrame{
 	private JComboBox<String> jRptComboBox;
 
 	private List<File> jasperFilesInFolder;
-	private HashMap<String, File> reportNameFileMap;
+	private Map<String, File> reportNameFileMap;
 	private Map<String, List<String>> folderNameFileNameMap;
 	private List<String> userInputParamNames;
 
