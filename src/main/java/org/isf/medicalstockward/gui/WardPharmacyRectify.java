@@ -371,7 +371,7 @@ public class WardPharmacyRectify extends JDialog {
 			} catch (OHServiceException e2) {
 				OHServiceExceptionUtil.showMessages(e2);
 			}
-			double newQty = (Double) spinnerNewQtyModel.getNumber().doubleValue();
+			double newQty = spinnerNewQtyModel.getNumber().doubleValue();
 			double movQuantity = lotQty - newQty;
 
 			if (movQuantity == 0. || newQty < 0) {
@@ -654,7 +654,7 @@ public class WardPharmacyRectify extends JDialog {
 			jSpinnerNewQty.setFont(FONT_BOLD);
 			jSpinnerNewQty.addChangeListener(changeEvent -> {
 				Double stock = Double.parseDouble(jTextFieldStockQty.getText());
-				Double newQty = (Double) spinnerNewQtyModel.getNumber().doubleValue();
+				Double newQty = spinnerNewQtyModel.getNumber().doubleValue();
 				if (stock > 0) {
 					jButtonChooseLot.setEnabled(true);
 				}

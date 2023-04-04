@@ -640,7 +640,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			dicomButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.dicom.btn.key"));
 			dicomButton.addActionListener(actionEvent -> {
 				DicomGui dg = new DicomGui(patient, PatientFolderBrowser.this);
-				((ModalJFrame) dg).showAsModal(this);
+				dg.showAsModal(this);
 			});
 		}
 		return dicomButton;

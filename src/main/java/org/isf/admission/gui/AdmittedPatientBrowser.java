@@ -998,7 +998,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
 			DicomGui dg = new DicomGui(patient.getPatient(), AdmittedPatientBrowser.this);
-			((ModalJFrame) dg).showAsModal(this);
+			dg.showAsModal(this);
 		});
 		return dicomButton;
 	}

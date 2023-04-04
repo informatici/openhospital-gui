@@ -398,7 +398,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				medical = (Medical) (model.getValueAt(selectedrow, -1));
 				// Select Dates
 				GoodFromDateToDateChooser dataRange = new GoodFromDateToDateChooser(MedicalBrowser.this);
 				dataRange.setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
@@ -475,7 +475,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				medical = (Medical) (model.getValueAt(selectedrow, -1));
 				int answer = MessageDialog.yesNo(MedicalBrowser.this, "angal.medicals.deletemedical.fmt.msg", medical.getDescription());
 				if (answer == JOptionPane.YES_OPTION) {
 					boolean deleted;
@@ -504,7 +504,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				medical = (Medical) (model.getValueAt(selectedrow, -1));
 				MedicalEdit editrecord = new MedicalEdit(medical, false, me);
 				editrecord.addMedicalListener(MedicalBrowser.this);
 				editrecord.setVisible(true);
