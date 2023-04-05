@@ -111,12 +111,19 @@ EXT="tar.gz"
 MYSQL_CONF_FILE="my.cnf"
 
 # OH files
-SETTINGS_FILE="settings.properties"
-DATABASE_SETTINGS="database.properties"
 OH_GUI="OH-gui.jar"
+OH_SETTINGS="settings.properties"
+DATABASE_SETTINGS="database.properties"
+IMAGING_SETTINGS="dicom.properties"
+LOG4J_SETTINGS="log4j.properties"
 
 # help file
 HELP_FILE="OH-readme.txt"
+
+# set default database name
+DEFAULT_DATABASE_NAME="$DATABASE_NAME"
+# set default data base_dir
+DEFAULT_DATADIR="$DATA_DIR"
 
 ################ Architecture and external software ################
 
@@ -287,10 +294,10 @@ function read_settings {
 	fi
 	
 	# check for OH settings file and read values
-	if [ -f ./$OH_DIR/rsc/$SETTINGS_FILE ]; then
+	if [ -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
 		echo "Reading OH settings file..."
-		. ./$OH_DIR/rsc/$SETTINGS_FILE
-		###  read saved settings  ###
+		. ./$OH_DIR/rsc/$OH_SETTINGS
+		
 		OH_MODE=$MODE
 		OH_LANGUAGE=$LANGUAGE
 		OH_SINGLE_USER=$SINGLE_USER
@@ -302,7 +309,6 @@ function read_settings {
 	if [ -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ]; then
 		echo "Reading database settings file..."
 		# source "./$OH_DIR/rsc/$DATABASE_SETTINGS"
-
 		DATABASE_SERVER=$(cat $OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.url" | cut -d"/" -f3 | cut -d":" -f1)
 		DATABASE_PORT=$(cat $OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.url" | cut -d"/" -f3 | cut -d":" -f2)
 		DATABASE_NAME=$(cat $OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.url" | cut  -d"/" -f4)
@@ -351,68 +357,49 @@ function set_defaults {
 	if [ -z "$DEMO_DATA" ]; then
 		DEMO_DATA="off"
 	fi
-
-	# set original database name
-	ORIG_DATABASE_NAME="$DATABASE_NAME"
-	# set original data base_dir
-	ORIG_DATADIR="$DATA_DIR"
-	# set escaped values
+	# set escaped path (/ in place of \)
 	OH_PATH_ESCAPED=$(echo $OH_PATH | sed -e 's/\//\\\//g')
-	TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
-	LOG_DIR_ESCAPED=$(echo $LOG_DIR | sed -e 's/\//\\\//g')
 	DICOM_DIR_ESCAPED=$(echo $DICOM_DIR | sed -e 's/\//\\\//g')
+	PHOTO_DIR_ESCAPED=$(echo $PHOTO_DIR | sed -e 's/\//\\\//g')
+	LOG_DIR_ESCAPED=$(echo $LOG_DIR | sed -e 's/\//\\\//g')
+	TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
 }
 
 ###################################################################
-function set_values {
-	# set database name for demo data
-	case "$DEMO_DATA" in
-			*on*)
-				DATABASE_NAME=$DEMO_DATABASE
-			;;
-			*off*)
-				DATABASE_NAME="$ORIG_DATABASE_NAME"
-			;;
-	esac
-	
+function set_db_name {
 	# set DATA_DIR with db name
-	DATA_DIR=$ORIG_DATADIR/$DATABASE_NAME
-	#
+	DATA_DIR=$DEFAULT_DATADIR/$DATABASE_NAME
 	# set escaped values
 	DATA_DIR_ESCAPED=$(echo $DATA_DIR | sed -e 's/\//\\\//g')
 }
 
 ###################################################################
 function set_oh_mode {
-	# if $SETTINGS_FILE is present set OH mode
-	if [ -f ./$OH_DIR/rsc/$SETTINGS_FILE ]; then
+	# if $OH_SETTINGS is present set OH mode
+	if [ -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
 		echo "Configuring OH mode..."
-		######## $SETTINGS_FILE OH mode configuration
-		echo "Setting OH mode to $OH_MODE in OH configuration file -> $SETTINGS_FILE..."
-		sed -e "/^"MODE="/c"MODE=$OH_MODE"" -i ./$OH_DIR/rsc/$SETTINGS_FILE
+		######## $OH_SETTINGS OH mode configuration
+		echo "Setting OH mode to $OH_MODE in OH configuration file -> $OH_SETTINGS..."
+		sed -e "/^"MODE="/c"MODE=$OH_MODE"" -i ./$OH_DIR/rsc/$OH_SETTINGS
 	else 
 		echo ""
 		echo ""
-		echo "Warning: $SETTINGS_FILE file not found."
+		echo "Warning: $OH_SETTINGS file not found."
 	fi
 	echo "OH mode set to $OH_MODE"
 }
 
-
 ###################################################################
 function set_demo_data {
-	# if $SETTINGS_FILE is present set OH mode
-	if [ -f ./$OH_DIR/rsc/$SETTINGS_FILE ]; then
-		echo "Configuring DEMO data..."
-		######## $SETTINGS_FILE DEMO data configuration
-		echo "Setting DEMO data to $DEMO_DATA in OH configuration file -> $SETTINGS_FILE..."
-		sed -e "/^"DEMODATA="/c"DEMODATA=$DEMO_DATA"" -i ./$OH_DIR/rsc/$SETTINGS_FILE
-	else 
-		echo ""
-		echo ""
-		echo "Warning: $SETTINGS_FILE file not found."
-	fi
-	echo "DEMO data set to $DEMO_DATA"
+	# set database name for demo data
+	case "$DEMO_DATA" in
+			*on*)
+				DATABASE_NAME=$DEMO_DATABASE
+			;;
+			*off*)
+				DATABASE_NAME="$DEFAULT_DATABASE_NAME"
+			;;
+	esac
 }
 
 ###################################################################
@@ -429,31 +416,31 @@ function set_language {
 		;;
 	esac
 
-	# if $SETTINGS_FILE is present set language
-	if [ -f ./$OH_DIR/rsc/$SETTINGS_FILE ]; then
+	# if $OH_SETTINGS is present set language
+	if [ -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
 		echo "Configuring OH language..."
-		######## $SETTINGS_FILE language configuration
-		echo "Setting language to $OH_LANGUAGE in OH configuration file -> $SETTINGS_FILE..."
-		sed -e "/^"LANGUAGE="/c"LANGUAGE=$OH_LANGUAGE"" -i ./$OH_DIR/rsc/$SETTINGS_FILE
+		######## $OH_SETTINGS language configuration
+		echo "Setting language to $OH_LANGUAGE in OH configuration file -> $OH_SETTINGS..."
+		sed -e "/^"LANGUAGE="/c"LANGUAGE=$OH_LANGUAGE"" -i ./$OH_DIR/rsc/$OH_SETTINGS
 		echo "Language set to $OH_LANGUAGE."
 	else 
 		echo ""
-		echo "Warning: $SETTINGS_FILE file not found."
+		echo "Warning: $OH_SETTINGS file not found."
 	fi
 }
 
 ###################################################################
 function set_log_level {
-	if [ -f ./$OH_DIR/rsc/log4j.properties ]; then
+	if [ -f ./$OH_DIR/rsc/$LOG4J_SETTINGS ]; then
 		echo ""
-		######## log4j.properties log_level configuration
-		echo "Setting log level to $LOG_LEVEL in OH configuration file -> log4j.properties..."
+		######## $LOG4J_SETTINGS log_level configuration
+		echo "Setting log level to $LOG_LEVEL in OH configuration file -> $LOG4J_SETTINGS..."
 		case "$LOG_LEVEL" in
 			*INFO*)
-				sed -e "s/DEBUG/$LOG_LEVEL/g" -i ./$OH_DIR/rsc/log4j.properties 
+				sed -e "s/DEBUG/$LOG_LEVEL/g" -i ./$OH_DIR/rsc/$LOG4J_SETTINGS 
 			;;
 			*DEBUG*)
-				sed -e "s/INFO/$LOG_LEVEL/g" -i ./$OH_DIR/rsc/log4j.properties 
+				sed -e "s/INFO/$LOG_LEVEL/g" -i ./$OH_DIR/rsc/$LOG4J_SETTINGS 
 			;;
 			*)
 				echo "Invalid log level: $LOG_LEVEL. Exiting."
@@ -463,7 +450,7 @@ function set_log_level {
 		echo "Log level set to $LOG_LEVEL"
 	else 
 		echo ""
-		echo "Warning: log4j.properties file not found."
+		echo "Warning: $LOG4J_SETTINGS file not found."
 	fi
 }
 
@@ -479,6 +466,7 @@ function initialize_dir_structure {
 
 ###################################################################
 function create_desktop_shortcut {
+echo "Creating/updating OH shortcut on Desktop..."
 # Create Desktop application entry
 desktop_path=$(xdg-user-dir DESKTOP)
 echo "[Desktop Entry]
@@ -500,6 +488,7 @@ echo "[Desktop Entry]
 	# Describes the categories in which this entry should be shown
 	Categories=Utility;Application;
 	" > $desktop_path/OpenHospital.desktop
+echo "Done !"
 }
 
 ###################################################################
@@ -629,7 +618,7 @@ function config_database {
 		echo "Writing $MYSQL_NAME config file..."
 		sed -e "s/DATABASE_SERVER/$DATABASE_SERVER/g" -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
 		-e "s/TMP_DIR/$TMP_DIR_ESCAPED/g" -e "s/DATA_DIR/$DATA_DIR_ESCAPED/g" -e "s/LOG_DIR/$LOG_DIR_ESCAPED/g" \
-		-e "s/DATABASE_PORT/$DATABASE_PORT/g" -e "s/MYSQL_DISTRO/$MYSQL_DIR/g" ./$CONF_DIR/my.cnf.dist > ./$CONF_DIR/$MYSQL_CONF_FILE
+		-e "s/DATABASE_PORT/$DATABASE_PORT/g" -e "s/MYSQL_DISTRO/$MYSQL_DIR/g" ./$CONF_DIR/$MYSQL_CONF_FILE.dist > ./$CONF_DIR/$MYSQL_CONF_FILE
 	fi
 }
 
@@ -784,20 +773,20 @@ function write_config_files {
 	# set up configuration files
 	echo "Checking for OH configuration files..."
 	######## DICOM setup
-	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/dicom.properties ]; then
-		[ -f ./$OH_DIR/rsc/dicom.properties ] && mv -f ./$OH_DIR/rsc/dicom.properties ./$OH_DIR/rsc/dicom.properties.old
-		echo "Writing OH configuration file -> dicom.properties..."
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ]; then
+		[ -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ] && mv -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ./$OH_DIR/rsc/$IMAGING_SETTINGS.old
+		echo "Writing OH configuration file -> $IMAGING_SETTINGS..."
 		sed -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
-		-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/dicom.properties.dist > ./$OH_DIR/rsc/dicom.properties
+		-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/$IMAGING_SETTINGS.dist > ./$OH_DIR/rsc/$IMAGING_SETTINGS
 	fi
-	######## log4j.properties setup
-	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/log4j.properties ]; then
+	######## $LOG4J_SETTINGS setup
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$LOG4J_SETTINGS ]; then
 		OH_LOG_DEST="$OH_PATH_ESCAPED/$LOG_DIR/$OH_LOG_FILE"
-		[ -f ./$OH_DIR/rsc/log4j.properties ] && mv -f ./$OH_DIR/rsc/log4j.properties ./$OH_DIR/rsc/log4j.properties.old
-		echo "Writing OH configuration file -> log4j.properties..."
+		[ -f ./$OH_DIR/rsc/$LOG4J_SETTINGS ] && mv -f ./$OH_DIR/rsc/$LOG4J_SETTINGS ./$OH_DIR/rsc/$LOG4J_SETTINGS.old
+		echo "Writing OH configuration file -> $LOG4J_SETTINGS..."
 		sed -e "s/DBSERVER/$DATABASE_SERVER/g" -e "s/DBPORT/$DATABASE_PORT/" -e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
 		-e "s/DBNAME/$DATABASE_NAME/g" -e "s/LOG_LEVEL/$LOG_LEVEL/g" -e "s+LOG_DEST+$OH_LOG_DEST+g" \
-		./$OH_DIR/rsc/log4j.properties.dist > ./$OH_DIR/rsc/log4j.properties
+		./$OH_DIR/rsc/$LOG4J_SETTINGS.dist > ./$OH_DIR/rsc/$LOG4J_SETTINGS
 	fi
 	######## $DATABASE_SETTINGS setup 
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ]; then
@@ -807,13 +796,13 @@ function write_config_files {
 		-e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
 		./$OH_DIR/rsc/$DATABASE_SETTINGS.dist > ./$OH_DIR/rsc/$DATABASE_SETTINGS
 	fi
-	######## $SETTINGS_FILE setup
-	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$SETTINGS_FILE ]; then
-		[ -f ./$OH_DIR/rsc/$SETTINGS_FILE ] && mv -f ./$OH_DIR/rsc/$SETTINGS_FILE ./$OH_DIR/rsc/$SETTINGS_FILE.old
-		echo "Writing OH configuration file -> $SETTINGS_FILE..."
+	######## $OH_SETTINGS setup
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
+		[ -f ./$OH_DIR/rsc/$OH_SETTINGS ] && mv -f ./$OH_DIR/rsc/$OH_SETTINGS ./$OH_DIR/rsc/$OH_SETTINGS.old
+		echo "Writing OH configuration file -> $OH_SETTINGS..."
 		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" \
-		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" -e "s&PHOTO_DIR&$PHOTO_DIR&g" \
-		./$OH_DIR/rsc/$SETTINGS_FILE.dist > ./$OH_DIR/rsc/$SETTINGS_FILE
+		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" -e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" \
+		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS
 	fi
 }
 
@@ -835,14 +824,14 @@ function clean_conf_files {
 	# remove configuration files - leave only .dist files
 	echo "Removing configuration files..."
 	rm -f ./$CONF_DIR/$MYSQL_CONF_FILE
-	rm -f ./$OH_DIR/rsc/$SETTINGS_FILE
-	rm -f ./$OH_DIR/rsc/$SETTINGS_FILE.old
+	rm -f ./$OH_DIR/rsc/$OH_SETTINGS
+	rm -f ./$OH_DIR/rsc/$OH_SETTINGS.old
 	rm -f ./$OH_DIR/rsc/$DATABASE_SETTINGS
 	rm -f ./$OH_DIR/rsc/$DATABASE_SETTINGS.old
-	rm -f ./$OH_DIR/rsc/log4j.properties
-	rm -f ./$OH_DIR/rsc/log4j.properties.old
-	rm -f ./$OH_DIR/rsc/dicom.properties
-	rm -f ./$OH_DIR/rsc/dicom.properties.old
+	rm -f ./$OH_DIR/rsc/$LOG4J_SETTINGS
+	rm -f ./$OH_DIR/rsc/$LOG4J_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$IMAGING_SETTINGS
+	rm -f ./$OH_DIR/rsc/$IMAGING_SETTINGS.old
 }
 
 ###################################################################
@@ -928,8 +917,9 @@ function parse_user_input {
 				;;
 		esac
 
-		# update confuration settings
-		set_values;
+		# update configuration settings
+		set_demo_data;
+		set_db_name;
 
 		WRITE_CONFIG_FILES=on; write_config_files;
 
@@ -997,6 +987,7 @@ function parse_user_input {
 		;;
 	###################################################
 	m)	# configure OH database connection manually
+		DEMO_DATA="off"
 		echo ""
 		#read -p "Please select Single user configuration (yes/no): " OH_SINGLE_USER
 		###### OH_SINGLE_USER=${OH_SINGLE_USER:-Off} # set default # TBD
@@ -1011,7 +1002,7 @@ function parse_user_input {
 
 		echo "Do you want to save entered settings to OH configuration files?"
 		get_confirmation 1;
-		set_values;
+		set_db_name;
 		WRITE_CONFIG_FILES="on"; write_config_files;
 		echo "Done!"
 		echo ""
@@ -1060,7 +1051,7 @@ function parse_user_input {
 				# check if mysql utilities exist
 				mysql_check;
 				if [ "$OH_MODE" != "CLIENT" ]; then
-					set_values;
+					set_db_name;
 					config_database;
 					initialize_dir_structure;
 					initialize_database;
@@ -1129,8 +1120,8 @@ function parse_user_input {
 		echo "--- Database ---"
 		echo "DATABASE_SERVER=$DATABASE_SERVER"
 		echo "DATABASE_PORT=$DATABASE_PORT"
-		echo "DATABASE_USER=$DATABASE_USER"
 		echo "DATABASE_NAME=$DATABASE_NAME"
+		echo "DATABASE_USER=$DATABASE_USER"
 		echo ""
 		echo "--- Imaging / Dicom ---"
 		echo "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
@@ -1255,7 +1246,7 @@ fi
 set_path;
 read_settings;
 set_defaults;
-set_values;
+set_db_name;
 
 # set working dir to OH base dir
 cd "$OH_PATH"
@@ -1291,8 +1282,8 @@ if [ "$DEMO_DATA" = "on" ]; then
 		echo "Error - OH_MODE set to $OH_MODE mode. Cannot run with Demo data. Exiting."
 		exit 1;
 	fi
-	
-	# set database name
+
+	# set database name to demo
 	DATABASE_NAME=$DEMO_DATABASE
 
 	if [ -f ./$SQL_DIR/$DB_DEMO ]; then
@@ -1302,6 +1293,7 @@ if [ "$DEMO_DATA" = "on" ]; then
 		echo "Error: no $DB_DEMO found! Exiting."
 		exit 1
 	fi
+	set_db_name;
 fi
 
 # display running configuration
@@ -1380,9 +1372,6 @@ else
 
 	# generate config files if not existent
 	write_config_files;
-
-	# check / set demo data if enabled
-	#set_demo_data;
 
 	# start OH gui
 	start_gui;
