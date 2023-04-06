@@ -190,7 +190,8 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 	}
 
-	private PregnantTreatmentTypeBrowserManager pregnantTreatmentTypeBrowserManager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
+	private PregnantTreatmentTypeBrowserManager pregnantTreatmentTypeBrowserManager = Context.getApplicationContext()
+					.getBean(PregnantTreatmentTypeBrowserManager.class);
 	private DeliveryResultTypeBrowserManager deliveryResultTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 	private DeliveryTypeBrowserManager deliveryTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
@@ -199,7 +200,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
-	
+
 	private final OperationRowValidator operationRowValidator = new OperationRowValidator();
 	private final DiseaseFinder diseaseFinder = new DiseaseFinder();
 
@@ -345,7 +346,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JButton saveButton = null;
 
 	private JButton jButtonExamination = null;
-	
+
 	private JButton jAnamnesisButton = null;
 
 	private JPanel visitDatePanel;
@@ -381,7 +382,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	public AdmissionBrowser(JFrame parentFrame, AdmittedPatient admPatient, boolean editing) {
 		super();
 		setTitle(editing ? MessageBundle.getMessage("angal.admission.editadmissionrecord.title")
-				: MessageBundle.getMessage("angal.admission.newadmission.title"));
+						: MessageBundle.getMessage("angal.admission.newadmission.title"));
 		addAdmissionListener((AdmissionListener) parentFrame);
 		this.editing = editing;
 		patient = admPatient.getPatient();
@@ -393,7 +394,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		try {
 			diseaseOutList = diseaseBrowserManager.getDiseaseIpdOut();
 			Admission admiss = admissionBrowserManager.getCurrentAdmission(patient);
-			//TODO: remove this anti-pattern OperationRowAdm
+			// TODO: remove this anti-pattern OperationRowAdm
 			operationad = new OperationRowAdm(admiss);
 			addAdmissionListener(operationad);
 		} catch (OHServiceException e) {
@@ -448,7 +449,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			enablePregnancy = true;
 		}
 		ps = new PatientSummary(patient);
-		//TODO: remove this anti-pattern OperationRowAdm
+		// TODO: remove this anti-pattern OperationRowAdm
 		operationad = new OperationRowAdm(anAdmission);
 		addAdmissionListener(operationad);
 
@@ -477,7 +478,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				//to free memory
+				// to free memory
 				if (diseaseInList != null) {
 					diseaseInList.clear();
 				}
@@ -553,50 +554,40 @@ public class AdmissionBrowser extends ModalJFrame {
 			layout.setAutoCreateContainerGaps(true);
 
 			layout.setHorizontalGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(LEADING)
-							.addComponent(getDiseaseInPanel())
-							.addComponent(getDiseaseOutPanel())
-							.addGroup(layout.createSequentialGroup()
-									.addGroup(layout.createParallelGroup(LEADING)
-											.addComponent(getWardPanel())
-											.addComponent(getAdmissionDatePanel())
-											.addComponent(getDischargeDatePanel())
-									)
-									.addGroup(layout.createParallelGroup(LEADING)
-											.addComponent(getFHUPanel())
-											.addComponent(getAdmissionTypePanel())
-											.addComponent(getBedDaysPanel())
-									)
-									.addGroup(layout.createParallelGroup(LEADING)
-											.addComponent(getProgYearPanel())
-											.addComponent(getMalnutritionPanel())
-											.addComponent(getDischargeTypePanel())
-											.addComponent(getJLabelRequiredFields())
-									)
-							)
-					)
-			);
+							.addGroup(layout.createParallelGroup(LEADING)
+											.addComponent(getDiseaseInPanel())
+											.addComponent(getDiseaseOutPanel())
+											.addGroup(layout.createSequentialGroup()
+															.addGroup(layout.createParallelGroup(LEADING)
+																			.addComponent(getWardPanel())
+																			.addComponent(getAdmissionDatePanel())
+																			.addComponent(getDischargeDatePanel()))
+															.addGroup(layout.createParallelGroup(LEADING)
+																			.addComponent(getFHUPanel())
+																			.addComponent(getAdmissionTypePanel())
+																			.addComponent(getBedDaysPanel()))
+															.addGroup(layout.createParallelGroup(LEADING)
+																			.addComponent(getProgYearPanel())
+																			.addComponent(getMalnutritionPanel())
+																			.addComponent(getDischargeTypePanel())
+																			.addComponent(getJLabelRequiredFields())))));
 
 			layout.setVerticalGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getWardPanel())
-							.addComponent(getFHUPanel())
-							.addComponent(getProgYearPanel())
-					)
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getAdmissionDatePanel())
-							.addComponent(getAdmissionTypePanel())
-							.addComponent(getMalnutritionPanel())
-					)
-					.addComponent(getDiseaseInPanel())
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getDischargeDatePanel())
-							.addComponent(getBedDaysPanel())
-							.addComponent(getDischargeTypePanel())
-					)
-					.addComponent(getDiseaseOutPanel())
-					.addComponent(getJLabelRequiredFields())
-			);
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getWardPanel())
+											.addComponent(getFHUPanel())
+											.addComponent(getProgYearPanel()))
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getAdmissionDatePanel())
+											.addComponent(getAdmissionTypePanel())
+											.addComponent(getMalnutritionPanel()))
+							.addComponent(getDiseaseInPanel())
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getDischargeDatePanel())
+											.addComponent(getBedDaysPanel())
+											.addComponent(getDischargeTypePanel()))
+							.addComponent(getDiseaseOutPanel())
+							.addComponent(getJLabelRequiredFields()));
 		}
 		updateBedDays();
 		return jPanelAdmission;
@@ -622,44 +613,43 @@ public class AdmissionBrowser extends ModalJFrame {
 			layout.setAutoCreateContainerGaps(true);
 
 			layout.setHorizontalGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(LEADING)
-							.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup(LEADING)
-							.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getDeliveryTypePanel())
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-							.addComponent(getTreatmentPanel())
-							.addComponent(getDeliveryResultTypePanel())
-							.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-					)
-			);
+							.addGroup(layout.createParallelGroup(LEADING)
+											.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup(LEADING)
+											.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getDeliveryTypePanel()))
+							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+											.addComponent(getTreatmentPanel())
+											.addComponent(getDeliveryResultTypePanel())
+											.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)));
 
 			layout.setVerticalGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getTreatmentPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getDeliveryTypePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getDeliveryResultTypePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-			);
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE)
+											.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getTreatmentPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE)
+											.addComponent(getDeliveryTypePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE)
+											.addComponent(getDeliveryResultTypePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup()
+											.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup()
+											.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup()
+											.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE)));
 
 			layout.linkSize(SwingConstants.VERTICAL, getDeliveryDatePanel(), getDeliveryTypePanel(), getDeliveryResultTypePanel());
 		}
@@ -671,7 +661,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		JScrollPane scrollPane = new JScrollPane(getJTextAreaNote());
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 50, 0, 50), // external
-				new ShadowBorder(5, Color.LIGHT_GRAY))); // internal
+						new ShadowBorder(5, Color.LIGHT_GRAY))); // internal
 		scrollPane.addAncestorListener(new AncestorListener() {
 
 			@Override
@@ -922,13 +912,12 @@ public class AdmissionBrowser extends ModalJFrame {
 			wardBox = new JComboBox<>();
 
 			new WardComboBoxInitializer(
-					wardBox,
-					wardBrowserManager,
-					patient,
-					saveWard,
-					editing,
-					admission
-			).initialize();
+							wardBox,
+							wardBrowserManager,
+							patient,
+							saveWard,
+							editing,
+							admission).initialize();
 
 			wardBox.addActionListener(actionEvent -> {
 				// set yProg
@@ -1032,7 +1021,8 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (!found.isPresent()) {
 					// Still not found
 					diseaseInBox.addItem(
-							MessageBundle.formatMessage("angal.admission.notfoundasinpatientdisease.fmt.msg", admission.getDiseaseIn().getDescription()));
+									MessageBundle.formatMessage("angal.admission.notfoundasinpatientdisease.fmt.msg",
+													admission.getDiseaseIn().getDescription()));
 					diseaseInBox.setSelectedIndex(diseaseInBox.getItemCount() - 1);
 				}
 			}
@@ -1217,7 +1207,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (!found.isPresent()) {
 					// Still not found
 					diseaseOut1Box.addItem(MessageBundle.formatMessage("angal.admission.notfoundasoutpatientdisease.fmt.msg",
-							admission.getDiseaseOut1().getDescription(), 1));
+									admission.getDiseaseOut1().getDescription(), 1));
 					diseaseOut1Box.setSelectedIndex(diseaseOut1Box.getItemCount() - 1);
 				}
 			}
@@ -1305,7 +1295,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (!found.isPresent()) {
 					// Still not found
 					diseaseOut2Box.addItem(MessageBundle.formatMessage("angal.admission.notfoundasoutpatientdisease.fmt.msg",
-							admission.getDiseaseOut2().getDescription(), 2));
+									admission.getDiseaseOut2().getDescription(), 2));
 					diseaseOut2Box.setSelectedIndex(diseaseOut2Box.getItemCount() - 1);
 				}
 			}
@@ -1392,7 +1382,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (!found.isPresent()) {
 					// Still not found
 					diseaseOut3Box.addItem(MessageBundle.formatMessage("angal.admission.notfoundasoutpatientdisease.fmt.msg",
-							admission.getDiseaseOut2().getDescription(), 3));
+									admission.getDiseaseOut2().getDescription(), 3));
 					diseaseOut3Box.setSelectedIndex(diseaseOut3Box.getItemCount() - 1);
 				}
 			}
@@ -1553,27 +1543,26 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 		return buttonPanel;
 	}
-	
-	
+
 	private JButton getJAnamnesisButton() {
 		if (jAnamnesisButton == null) {
 			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
 			AdmissionBrowser self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
-			if (patient != null) {
-				PatientHistory ph = new PatientHistory();
-				ph.setPatientId(patient.getCode());
-				PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
-				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
-				PatientHistoryEdit dialog = new PatientHistoryEdit(AdmissionBrowser.this, pph, true);
-				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-				dialog.pack();
-				dialog.setLocationRelativeTo(null);
-				dialog.setModal(true);
-				dialog.setVisible(true);
-			}
-				});
+				if (patient != null) {
+					PatientHistory ph = new PatientHistory();
+					ph.setPatientId(patient.getCode());
+					PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
+					PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
+					PatientHistoryEdit dialog = new PatientHistoryEdit(AdmissionBrowser.this, pph, true);
+					dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+					dialog.pack();
+					dialog.setLocationRelativeTo(null);
+					dialog.setModal(true);
+					dialog.setVisible(true);
+				}
+			});
 		}
 		return jAnamnesisButton;
 	}
@@ -1638,8 +1627,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			saveButton.addActionListener(actionEvent -> {
 
 				/*
-				 * is it an admission update or a discharge? if we have a
-				 * valid discharge date isDischarge will be true
+				 * is it an admission update or a discharge? if we have a valid discharge date isDischarge will be true
 				 */
 				boolean isDischarge = false;
 
@@ -1659,7 +1647,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				}
 
 				// get disease in id ( it can be null)
-				if (diseaseInBox.getSelectedIndex() == 0) {
+				if (diseaseInBox.getSelectedIndex() == 0 || diseaseInBox.getSelectedItem() == null) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavaliddiseasein.msg");
 					return;
 				}
@@ -1668,8 +1656,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					admission.setDiseaseIn(diseaseIn);
 				} catch (IndexOutOfBoundsException e1) {
 					/*
-					 * Workaround in case a fake-disease is selected (ie
-					 * when previous disease has been deleted)
+					 * Workaround in case a fake-disease is selected (ie when previous disease has been deleted)
 					 */
 					admission.setDiseaseIn(null);
 				}
@@ -1885,7 +1872,7 @@ public class AdmissionBrowser extends ModalJFrame {
 								CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 								frame.sendMessage(MessageBundle.formatMessage("angal.admission.newpatientadmissionin.fmt.msg", patient.getName(),
 												((Ward) wardBox.getSelectedItem()).getDescription()),
-										(String) shareWith.getSelectedItem(), false);
+												(String) shareWith.getSelectedItem(), false);
 							}
 							dispose();
 						}
@@ -1929,7 +1916,7 @@ public class AdmissionBrowser extends ModalJFrame {
 								CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 								frame.sendMessage(MessageBundle.formatMessage("angal.admisssion.discharedpatientfor.fmt.msg",
 												patient.getName(), ((DischargeType) disTypeBox.getSelectedItem()).getDescription()),
-										(String) shareWith.getSelectedItem(), false);
+												(String) shareWith.getSelectedItem(), false);
 							}
 							dispose();
 						}
