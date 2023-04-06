@@ -262,6 +262,7 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 		});
 		return stockCardButton;
+
 	}
 
 	private JButton getStockLedgerButton() {
@@ -728,7 +729,9 @@ public class MovStockBrowser extends ModalJFrame {
 			jTableTotal.setCellSelectionEnabled(false);
 			jTableTotal.setColumnSelectionAllowed(false);
 
-			for (int i = 0; i < pColumns.length; i++) {
+			for (
+
+							int i = 0; i < pColumns.length; i++) {
 				jTableTotal.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
 				jTableTotal.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 				if (!pColumnVisible[i]) {
@@ -872,9 +875,12 @@ public class MovStockBrowser extends ModalJFrame {
 									lotDueTo.getDateStartOfDay());
 				}
 
-				if (moves != null) {
+				if (moves != null)
+
+				{
 					model.fireTableDataChanged();
 					movTable.updateUI();
+
 				}
 				updateTotals();
 			}
@@ -967,6 +973,7 @@ public class MovStockBrowser extends ModalJFrame {
 									JOptionPane.PLAIN_MESSAGE);
 					LOGGER.info("Export to excel error : {}", exc.getMessage());
 				}
+
 			}
 		});
 		return exportToExcel;
@@ -1049,6 +1056,7 @@ public class MovStockBrowser extends ModalJFrame {
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
+
 			updateTotals();
 		}
 
@@ -1130,6 +1138,7 @@ public class MovStockBrowser extends ModalJFrame {
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
 		}
+
 	}
 
 	private String formatDate(LocalDateTime time) {
