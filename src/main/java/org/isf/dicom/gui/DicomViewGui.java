@@ -65,7 +65,6 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
-import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.Converters;
 import org.slf4j.Logger;
@@ -482,9 +481,8 @@ public class DicomViewGui extends JPanel {
 			try {
 				tmpImg = ImageIO.read(imageInputStream);
 			} catch (IOException ioException) {
-				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
-						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
-						OHSeverityLevel.ERROR));
+				throw new OHDicomException(
+						new OHExceptionMessage(MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName())));
 			}
 			//imageInputStream.close();
 			this.attributes = null;
@@ -512,9 +510,8 @@ public class DicomViewGui extends JPanel {
 			try {
 				tmpImg = reader.read(0, param);
 			} catch (IOException ioException) {
-				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"),
-						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
-						OHSeverityLevel.ERROR));
+				throw new OHDicomException(
+						new OHExceptionMessage(MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName())));
 			}
 			dicomInputStream = new DicomInputStream(dett.getDicomData().getData().getBinaryStream());
 			this.attributes = dicomInputStream.readDataset();

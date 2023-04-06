@@ -38,7 +38,6 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.model.OHExceptionMessage;
-import org.isf.utils.exception.model.OHSeverityLevel;
 
 public class OperationRowValidator {
 
@@ -69,20 +68,15 @@ public class OperationRowValidator {
 	}
 
 	private List<OHExceptionMessage> validateAgainstBeginDate(Stream<LocalDate> operationDatesStream, LocalDate beginDate) {
-		return operationDatesStream
-				.filter(currentRowDate -> (currentRowDate.isBefore(beginDate)))
-				.map(currentRowDate -> new OHExceptionMessage(MessageBundle.getMessage("angal.messagedialog.error.title"),
-						MessageBundle.formatMessage("angal.admission.theoperationdatenewerthan.fmt.msg", currentDateFormat.format(beginDate)),
-						OHSeverityLevel.ERROR))
+		return operationDatesStream.filter(currentRowDate -> (currentRowDate.isBefore(beginDate))).map(currentRowDate -> new OHExceptionMessage(
+						MessageBundle.formatMessage("angal.admission.theoperationdatenewerthan.fmt.msg", currentDateFormat.format(beginDate))))
 				.collect(Collectors.toList());
 	}
 
 	private List<OHExceptionMessage> validateAgainstBeginAndEndDate(Stream<LocalDate> operationDatesStream, LocalDate beginDate, LocalDate endDate) {
-		return operationDatesStream
-				.filter(currentRowDate -> (currentRowDate.isBefore(beginDate) || currentRowDate.isAfter(endDate)))
-				.map(currentRowDate -> new OHExceptionMessage(MessageBundle.getMessage("angal.messagedialog.error.title"),
-						MessageBundle.formatMessage("angal.admission.invalidoperationdate.fmt.msg", currentDateFormat.format(beginDate),
-								currentDateFormat.format(endDate)), OHSeverityLevel.ERROR))
+		return operationDatesStream.filter(currentRowDate -> (currentRowDate.isBefore(beginDate) || currentRowDate.isAfter(endDate)))
+				.map(currentRowDate -> new OHExceptionMessage(
+						MessageBundle.formatMessage("angal.admission.invalidoperationdate.fmt.msg", currentDateFormat.format(beginDate))))
 				.collect(Collectors.toList());
 	}
 
