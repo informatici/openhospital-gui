@@ -217,10 +217,12 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			pwd.setText("");
 			pwd.grabFocus();
 			userBrowsingManager.increaseFailedAttempts(user);
-			user.setFailedAttempts(user.getFailedAttempts() + 1);
-			if (user.getFailedAttempts() >= GeneralData.PASSWORDTRIES) {
-				userBrowsingManager.lockUser(user);
-				MessageDialog.error(this, "angal.login.accountisnowlockedforminutes.fmt.msg", GeneralData.PASSWORDLOCKTIME);
+			if (GeneralData.PASSWORDTRIES != 0) {
+				user.setFailedAttempts(user.getFailedAttempts() + 1);
+				if (user.getFailedAttempts() >= GeneralData.PASSWORDTRIES) {
+					userBrowsingManager.lockUser(user);
+					MessageDialog.error(this, "angal.login.accountisnowlockedforminutes.fmt.msg", GeneralData.PASSWORDLOCKTIME);
+				}
 			}
 		} catch (OHServiceException e1) {
 			LOGGER.error("Error while logging in user: {}. Exiting.", userName);
