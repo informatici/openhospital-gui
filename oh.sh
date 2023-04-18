@@ -76,10 +76,6 @@ DATABASE_USER="isf"
 DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
-DICOM_MAX_SIZE="4M"
-DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
-DICOM_DIR="data/dicom_storage"
-
 # path and directories
 OH_DIR="."
 OH_DOC_DIR="../doc"
@@ -91,6 +87,11 @@ LOG_DIR="data/log"
 SQL_DIR="sql"
 SQL_EXTRA_DIR="sql/extra"
 TMP_DIR="tmp"
+
+# imaging / dicom
+DICOM_MAX_SIZE="4M"
+DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
+DICOM_DIR="data/dicom_storage"
 
 # logging
 LOG_FILE="startup.log"

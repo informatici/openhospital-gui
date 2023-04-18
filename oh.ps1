@@ -131,10 +131,6 @@ $script:DATABASE_USER="isf"
 $script:DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
-$script:DICOM_MAX_SIZE="4M"
-$script:DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
-$script:DICOM_DIR="data/dicom_storage"
-
 # path and directories
 $script:OH_DIR="."
 $script:OH_DOC_DIR="../doc"
@@ -146,6 +142,11 @@ $script:LOG_DIR="data/log"
 $script:SQL_DIR="sql"
 $script:SQL_EXTRA_DIR="sql/extra"
 $script:TMP_DIR="tmp"
+
+# imaging / dicom
+$script:DICOM_MAX_SIZE="4M"
+$script:DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
+$script:DICOM_DIR="data/dicom_storage"
 
 # logging
 $script:LOG_FILE="startup.log"

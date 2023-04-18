@@ -17,7 +17,7 @@ REM # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 REM # GNU General Public License for more details.
 REM #
 REM # You should have received a copy of the GNU General Public License
-REM # along with this program. If not, see <https://www.gnu.org/licenses/>.
+REM # along with this program. If not, see <http://www.gnu.org/licenses/>.
 REM #
 
 REM ################### Script configuration ###################
@@ -109,8 +109,7 @@ set OH_LANGUAGE=en
 REM # set log level to INFO | DEBUG - default set to INFO
 set LOG_LEVEL=INFO
 
-REM ### Software configuration - change at your own risk :-)
-REM # Database
+REM ##################### Database configuration #######################
 set DATABASE_SERVER=localhost
 set DATABASE_PORT=3306
 set DATABASE_ROOT_PW=tmp2021oh111
@@ -118,10 +117,8 @@ set DATABASE_NAME=oh
 set DATABASE_USER=isf
 set DATABASE_PASSWORD=isf123
 
-set DICOM_MAX_SIZE="4M"
-set DICOM_STORAGE="FileSystemDicomManager"
-set DICOM_DIR="data\dicom_storage"
-
+REM #######################  OH configuration  #########################
+REM # path and directories
 set OH_DIR="."
 set OH_DOC_DIR="..\doc"
 set OH_SINGLE_USER="no"
@@ -133,6 +130,12 @@ set SQL_DIR="sql"
 set SQL_EXTRA="sql\extra"
 set TMP_DIR="tmp"
 
+REM # imagingin / dicom
+set DICOM_MAX_SIZE="4M"
+set DICOM_STORAGE="FileSystemDicomManager"
+set DICOM_DIR="data\dicom_storage"
+
+REM # logging
 set LOG_FILE=startup.log
 set OH_LOG_FILE=openhospital.log
 
