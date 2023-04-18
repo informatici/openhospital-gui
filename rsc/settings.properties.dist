@@ -4,6 +4,8 @@
 # external settings
 MODE=OH_MODE
 DEMODATA=off
+# experimental settings
+APISERVER=off
 
 # internal settings, modules, directories
 LANGUAGE=OH_LANGUAGE

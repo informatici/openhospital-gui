@@ -19,7 +19,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
 <#
@@ -151,6 +151,8 @@ $script:TMP_DIR="tmp"
 $script:LOG_FILE="startup.log"
 $script:LOG_FILE_ERR="startup_error.log"
 $script:OH_LOG_FILE="openhospital.log"
+$script:API_LOG_FILE="api.log"
+$script:API_ERR_LOG_FILE="api_error.log"
 
 # SQL creation files
 #$script:DB_CREATE_SQL="create_all_en.sql" # default to en
@@ -169,12 +171,16 @@ $script:EXT="zip"
 # mysql configuration file
 $script:MYSQL_CONF_FILE="my.cnf"
 
-# OH files
-$script:OH_GUI="OH-gui.jar"
+# OH configuration files
 $script:OH_SETTINGS="settings.properties"
 $script:DATABASE_SETTINGS="database.properties"
 $script:IMAGING_SETTINGS="dicom.properties"
 $script:LOG4J_SETTINGS="log4j.properties"
+$script:API_SETTINGS="application.properties"
+
+# OH jar bin files
+$script:OH_GUI_JAR="OH-gui.jar"
+$script:OH_API_JAR="openhospital-api-0.0.2.jar"
 
 # help file
 $script:HELP_FILE="OH-readme.txt"
@@ -183,6 +189,10 @@ $script:HELP_FILE="OH-readme.txt"
 $script:DEFAULT_DATABASE_NAME="$DATABASE_NAME"
 # set default data base_dir
 $script:DEFAULT_DATADIR="$DATA_DIR"
+
+# activate expert mode - set to "on" to enable advanced functions - use at your own risk!
+$script:EXPERT_MODE="off"
+$script:OH_UI_ADDRESS="http://localhost:8080"
 
 ############## Architecture and external software ##############
 
@@ -239,33 +249,46 @@ $script:JAVA_DIR=$JAVA_DISTRO
 
 ######################## DO NOT EDIT BELOW THIS LINE ########################
 
-######################## Functions ########################
+###########################  Functions  ###########################
 
-######## User input / option parsing
-
+###################################################################
 function script_menu {
 	# show menu
 	# Clear-Host # clear console
 	Write-Host " -----------------------------------------------------------------"
 	Write-Host "|                                                                 |"
-	Write-Host "|                    Open Hospital - $OH_VERSION                       |"
+	Write-Host "|                  Open Hospital - $OH_VERSION                         |"
 	Write-Host "|                                                                 |"
 	Write-Host " -----------------------------------------------------------------"
 	Write-Host " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
 	Write-Host " -----------------------------------------------------------------"
+	if ( $EXPERT_MODE -eq "on" ) {
+		Write-Host " EXPERT MODE activated"
+		Write-Host " API server set to $API_SERVER"
+	Write-Host " -----------------------------------------------------------------"
+	}
 	Write-Host ""
 	Write-Host "   C    set OH in CLIENT mode"
 	Write-Host "   P    set OH in PORTABLE mode"
 	Write-Host "   S    set OH in SERVER mode (portable)"
-	Write-Host "   l    set language: $OH_LANGUAGE_LIST"
-	Write-Host "   s    save OH configuration"
-	Write-Host "   X    clean/reset OH installation"
-	Write-Host "   v    show configuration"
+	Write-Host "   l    $OH_LANGUAGE_LIST -> set language"
+	Write-Host "   E    toggle EXPERT MODE - show advanced options"
+	Write-Host "   h    show help"
 	Write-Host "   q    quit"
 	Write-Host ""
-	Write-Host "   --------------------- "
-	Write-Host "    advanced options"
+	if ( $EXPERT_MODE -eq "on" ) {
+		script_menu_advanced;
+	}
+}
+
+###################################################################
+function script_menu_advanced {
+	# show menu
+	# Clear-Host # clear console
+	Write-Host "   -------------------------------- "
+	Write-Host "    EXPERT MODE - advanced options"
 	Write-Host ""
+	Write-Host "   A    toggle API server - EXPERT_MODE"
 	Write-Host "   e    export/save OH database"
 	Write-Host "   r    restore OH database"
 	Write-Host "   d    toggle log level INFO/DEBUG"
@@ -273,10 +296,12 @@ function script_menu {
 	Write-Host "   G    setup GSM"
 	Write-Host "   i    initialize/install OH database"
 	Write-Host "   m    configure database connection manually"
+	Write-Host "   s    save OH configuration"
 	Write-Host "   t    test database connection (CLIENT mode only)"
 	Write-Host "   u    create Desktop shortcut with current params"
-	Write-Host ""
-	Write-Host "   h    show help"
+	Write-Host "   v    show configuration"
+	Write-Host "   V    check for latest OH version"
+	Write-Host "   X    clean/reset OH installation"
 	Write-Host ""
 }
 
@@ -345,6 +370,7 @@ function read_settings {
 		$script:OH_SINGLE_USER=$oh_settings.SINGLE_USER
 		$script:OH_DOC_DIR=$oh_settings.OH_DOC_DIR
 		$script:DEMO_DATA=$oh_settings.DEMODATA
+		$script:API_SERVER=$oh_settings.APISERVER
 	}
 		
 	# check for database settings file and read values
@@ -407,6 +433,21 @@ function set_defaults {
 		$script:DEMO_DATA="off"
 	}
 
+	# api server - set default to off
+	if ( [string]::IsNullOrEmpty($API_SERVER) ) {
+		$script:API_SERVER="off"
+	}
+
+	# UI interface - set default to off
+	if ( [string]::IsNullOrEmpty($UI_INTERFACE) ) {
+		$script:UI_INTERFACE="off"
+	}
+
+	# EXPERT_MODE features - set default to off
+	if ( [string]::IsNullOrEmpty($EXPERT_MODE) ) {
+		$script:EXPERT_MODE="off"
+	}
+
 	# set escaped path (/ in place of \)
 	$script:OH_PATH_SUBSTITUTE=$OH_PATH -replace "\\", "/"
 }
@@ -453,7 +494,7 @@ function set_language {
 	# check for valid language selection
 	if ($script:languagearray -contains "$OH_LANGUAGE") {
 		# set localized database creation script
-		$Script:DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
+		$script:DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
 	}
 	else {
 		Write-Host "Invalid language option: $OH_LANGUAGE. Exiting." -ForegroundColor Red
@@ -556,7 +597,7 @@ function java_lib_setup {
 
 	# CLASSPATH setup
 	# include OH jar file
-	$script:OH_CLASSPATH="$OH_PATH\$OH_DIR\bin\$OH_GUI"
+	$script:OH_CLASSPATH="$OH_PATH\$OH_DIR\bin\$OH_GUI_JAR"
 
 	# include all needed directories
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\bundle\"
@@ -805,6 +846,28 @@ function import_database {
 		cd "$CURRENT_DIR"
 		Read-Host; exit 2
 	}
+
+	# EXPERIMENTAL ONLY
+	# workaround for hard coded password limit - execute extra sql script 
+	if ( ($API_SERVER -eq "On") ){
+		Write-Host "Setting admin password..."
+		cd "$OH_PATH/$SQL_EXTRA_DIR/"
+
+    $SQLCOMMAND=@"
+   --local-infile=1 -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
+"@
+		try {
+			Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+	 	}
+		catch {
+			Write-Host "Error! Exiting." -ForeGroundColor Red
+			shutdown_database;
+			cd "$CURRENT_DIR"
+			Read-Host; exit 2
+		}
+	}
+
+	# end
 	Write-Host "Database imported!"
 	cd "$OH_PATH"
 }
@@ -862,6 +925,52 @@ function test_database_connection {
 	}
 	else {
 		Write-Host "Can't test database connection..." 
+	}
+}
+
+###################################################################
+function start_api_server {
+	# check for application configuration files
+	if ( !( Test-Path "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS" -PathType leaf )) {
+		Write-Host "Error: missing $API_SETTINGS settings file. Exiting" -ForeGround Red
+		exit 1;
+	}
+
+	Write-Host "------------------------"
+	Write-Host "---- EXPERIMENTAL ------"
+	Write-Host "------------------------"
+	Write-Host "Starting API server..."
+	Write-Host "Please wait, it might take some time..."
+	Write-Host ""
+	Write-Host "Connect to http://localhost:8080 for dashboard"
+	Write-Host ""
+
+        cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+
+	$JAVA_API_ARGS="-server -Xms64m -Xmx1024m -cp ./bin/$OH_API_JAR;./rsc;./static org.springframework.boot.loader.JarLauncher"
+
+	Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_API_ARGS -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+
+        # $JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher
+
+#        if [ $? -ne 0 ]; then
+#                echo "An error occurred while starting Open Hospital API. Exiting."
+#                shutdown_database;
+#                cd "$CURRENT_DIR"
+#                exit 4
+#        fi
+        cd "$OH_PATH"
+}
+
+###################################################################
+function write_api_config_file {
+	######## application.properties setup - OH API server
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS" -PathType leaf) ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$API_SETTINGS $OH_PATH/$OH_DIR/rsc/$API_SETTINGS.old }
+		# generate OH API token and save to settings file
+		$JWT_TOKEN_SECRET=( -join ($(for($i=0; $i -lt 64; $i++) { ((65..90)+(97..122)+(".")+("!")+("?")+("&") | Get-Random | % {[char]$_}) })) )
+		Write-Host "Writing OH API configuration file -> $API_SETTINGS..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS.dist").replace("JWT_TOKEN_SECRET","$JWT_TOKEN_SECRET") | Set-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"
 	}
 }
 
@@ -925,6 +1034,8 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("YES_OR_NO","$OH_SINGLE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set DEMO DATA
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		# set API_SERVER
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("APISERVER=off","APISERVER=$API_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 	}
 }
 
@@ -954,6 +1065,8 @@ function clean_conf_files {
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$API_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 }
 
 ###################################################################
@@ -981,6 +1094,38 @@ $JAVA_ARGS="-client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library
 }
 
 ###################################################################
+function start_ui {
+	Write-Host "Starting Open Hospital UI at $OH_UI_ADDRESS..."
+	# OH UI launch
+	Start-Process $OH_UI_ADDRESS
+}
+
+###################################################################
+function check_latest_oh_version {
+	Write-Host ""
+	Write-Host "Checking online for Open Hospital latest version..."
+#	$LATEST_OH_VERSION=((curl -s -L https://api.github.com/repos/informatici/openhospital/releases/latest | Select-String "tag_name" -Split ":")[1]) 
+#	$LATEST_OH_VERSION=(curl -s -L https://api.github.com/repos/informatici/openhospital/releases/latest | Select-String "tag_name") 
+#	LATEST_OH_VERSION=$LATEST_OH_VERSION.TrimStart("://").Split(":",2)[0]
+#	 $version = $realTagUrl.split('/')[-1].Trim('v')
+#	 curl -s "https://api.github.com/repos/facebook/create-react-app/releases?per_page=100" | jq -r '[.[] | select(.target_commitish == "master")][0]'
+#     $latestMasterBuild = $releases | Where { $_.name.StartsWith("master") } | Select -First 1
+#
+
+$releases_url = "https://api.github.com/repos/informatici/openhospital/releases/latest"
+#[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$ohreleases = Invoke-RestMethod -uri "$($releases_url)"
+#TrimStart("jdbc:mysql://").Split(":",2)[0]
+
+$ohreleases2 = $ohreleases | Select-Object tag_name
+#$ohreleases2 = $ohreleases | Select-String tag_name
+#$ohreleases3 = $ohreleases2.TrimStart("@{tag_name")
+
+	Write-Host "Latest OH version is" $ohreleases2
+	Write-Host ""
+}
+
+###################################################################
 function parse_user_input {
 # If INTERACTIVE_MODE is set to "off" don't show menu
 if ( $INTERACTIVE_MODE -eq "on" ) {
@@ -988,6 +1133,31 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		script_menu;
 		$option = Read-Host "Please select an option or press enter to start OH"
 		switch -CaseSensitive ( "$option" ) {
+		###################################################
+		"A"	{ # toggle API server
+			switch -CaseSensitive( $script:API_SERVER ) {
+			"on"	{ # 
+				$script:API_SERVER="off"
+				}
+			"off"	{ # 
+				$script:API_SERVER="on"
+				}
+			}
+			write_api_config_file;
+			#Read-Host "Press any key to continue";
+		}
+		###################################################
+		"E"	{ # toggle EXPERT_MODE features
+			switch -CaseSensitive( $script:EXPERT_MODE ) {
+			"on"	{ # 
+				$script:EXPERT_MODE="off"
+				}
+			"off"	{ # 
+				$script:EXPERT_MODE="on"
+				}
+			}
+			#Read-Host "Press any key to continue";
+		}
 		###################################################
 		"C"	{ # start in CLIENT mode
 			$script:OH_MODE="CLIENT"
@@ -1057,6 +1227,11 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Read-Host "Press any key to continue";
 		}
 		###################################################
+		"h"	{ # show help
+			Get-content $HELP_FILE | more
+			Read-Host "Press any key to continue";
+		}
+		###################################################
 		"i"	{ # initialize/install OH database
 			# set mode to CLIENT
 			$OH_MODE="CLIENT"
@@ -1080,11 +1255,6 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			import_database;
 			test_database_connection;
 			Write-Host "Done!"
-			Read-Host "Press any key to continue";
-		}
-		###################################################
-		"h"	{ # show help
-			Get-content $HELP_FILE | more
 			Read-Host "Press any key to continue";
 		}
 		###################################################
@@ -1220,6 +1390,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 	 		Write-Host "Config file generation is set to $WRITE_CONFIG_FILES"
 			Write-Host ""
 	 		Write-Host "--------- OH default configuration ---------"
+			Write-Host "OH mode is set to $OH_MODE"
 			Write-Host "Language is set to $OH_LANGUAGE"
 			Write-Host "Demo data is set to $DEMO_DATA"
 			Write-Host ""
@@ -1277,15 +1448,28 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				$choice = Read-Host -Prompt "Press [y] to confirm: "
 				if (( "$choice" -eq "y" )) {
 					clean_database;
-					Write-Host "Done!"
 				}
 			}
-			# unset variables
-			#Clear-Variable -name OH_MODE
-			#Clear-Variable -name OH_LANGUAGE
-			#Clear-Variable -name OH_SINGLE_USER
-			#Clear-Variable -name LOG_LEVEL
-			#Clear-Variable -name DEMO_DATA
+			Write-Host "Warning: do you want to reset all existing configuration variables?" -ForegroundColor Red
+			$choice = Read-Host -Prompt "Press [y] to confirm: "
+			if (( "$choice" -eq "y" )) {
+				# unset variables
+				$script:OH_MODE=""
+				$script:OH_LANGUAGE=""
+				$script:OH_SINGLE_USER=""
+				$script:LOG_LEVEL=""
+				$script:DEMO_DATA=""
+				$script:EXPERT_MODE=""
+				$script:API_SERVER=""
+				# set variables to defaults
+				set_defaults;
+			}
+			Write-Host "Done!"
+			Read-Host "Press any key to continue";
+		}
+		###################################################
+		"V" 	{ # Check for latest OH version
+			check_latest_oh_version;
 			Read-Host "Press any key to continue";
 		}
 		###################################################
@@ -1415,6 +1599,19 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 
 ######## OH startup
 
+# test if database connection is working
+test_database_connection;
+
+# check for API server
+if ( $API_SERVER -eq "on" ) {
+	start_api_server;
+}
+
+# check for UI interface
+if ( $UI_INTERFACE -eq "on" ) {
+	start_ui;
+}
+
 # if SERVER mode is selected, wait for CTRL-C input to exit
 if ( $OH_MODE -eq "SERVER" ) {
 
@@ -1457,9 +1654,6 @@ if ( $OH_MODE -eq "SERVER" ) {
 }
 else {
 	######## Open Hospital GUI startup - only for CLIENT or PORTABLE mode
-
-	# test if database connection is working
-	test_database_connection;
 
 	# generate config files if not existent
 	write_config_files;

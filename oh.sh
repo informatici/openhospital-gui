@@ -18,7 +18,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -95,6 +95,7 @@ TMP_DIR="tmp"
 # logging
 LOG_FILE="startup.log"
 OH_LOG_FILE="openhospital.log"
+API_LOG_FILE="api.log"
 
 # SQL creation files
 #DB_CREATE_SQL="create_all_en.sql" # default to en
@@ -110,12 +111,16 @@ EXT="tar.gz"
 # mysql configuration file
 MYSQL_CONF_FILE="my.cnf"
 
-# OH files
-OH_GUI="OH-gui.jar"
+# OH configuration files
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
 IMAGING_SETTINGS="dicom.properties"
 LOG4J_SETTINGS="log4j.properties"
+API_SETTINGS="application.properties"
+
+# OH jar bin files
+OH_GUI_JAR="OH-gui.jar"
+OH_API_JAR="openhospital-api-0.0.2.jar"
 
 # help file
 HELP_FILE="OH-readme.txt"
@@ -124,6 +129,10 @@ HELP_FILE="OH-readme.txt"
 DEFAULT_DATABASE_NAME="$DATABASE_NAME"
 # set default data base_dir
 DEFAULT_DATADIR="$DATA_DIR"
+
+# activate expert mode - set to "on" to enable advanced functions - use at your own risk!
+EXPERT_MODE="off"
+OH_UI_ADDRESS="http://localhost:8080"
 
 ################ Architecture and external software ################
 
@@ -176,32 +185,46 @@ JAVA_DIR=$JAVA_DISTRO
 
 ######################## DO NOT EDIT BELOW THIS LINE ########################
 
-######################## Functions ########################
+###########################  Functions  ###########################
 
+###################################################################
 function script_menu {
 	# show help / user options
 	echo " -----------------------------------------------------------------"
 	echo "|                                                                 |"
-	echo "|                    Open Hospital - $OH_VERSION                       |"
+	echo "|                  Open Hospital - $OH_VERSION                         |"
 	echo "|                                                                 |"
 	echo " -----------------------------------------------------------------"
 	echo " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
 	echo " -----------------------------------------------------------------"
+	if [ "$EXPERT_MODE" == "on" ]; then
+		echo " EXPERT MODE activated"
+		echo " API server set to $API_SERVER"
+		echo " -----------------------------------------------------------------"
+	fi
 	echo ""
-	echo " Usage: $SCRIPT_NAME [ -l $OH_LANGUAGE_LIST ] "
+	echo " Usage: $SCRIPT_NAME -[OPTION] "
 	echo ""
 	echo "   -C    set OH in CLIENT mode"
 	echo "   -P    set OH in PORTABLE mode"
 	echo "   -S    set OH in SERVER mode (portable)"
-	echo "   -l    set language: $OH_LANGUAGE_LIST"
-	echo "   -s    save OH configuration"
-	echo "   -X    clean/reset OH installation"
-	echo "   -v    show configuration"
+	echo "   -l    [ $OH_LANGUAGE_LIST ] -> set language"
+	echo "   -E    toggle EXPERT MODE - show advanced options"
+	echo "   -h    show help"
 	echo "   -q    quit"
 	echo ""
-	echo "   --------------------- "
-	echo "    advanced options"
+	if [ "$EXPERT_MODE" == "on" ]; then
+		script_menu_advanced;
+	fi
+}
+
+###################################################################
+function script_menu_advanced {
+	# show help / user options
+	echo "   -------------------------------- "
+	echo "    EXPERT MODE - advanced options"
 	echo ""
+	echo "   -A    toggle API server - EXPERIMENTAL"
 	echo "   -e    export/save OH database"
 	echo "   -r    restore OH database"
  	echo "   -d    toggle log level INFO/DEBUG"
@@ -209,10 +232,12 @@ function script_menu {
 	echo "   -D    initialize OH with Demo data"
 	echo "   -i    initialize/install OH database"
 	echo "   -m    configure database connection manually"
+	echo "   -s    save OH configuration"
 	echo "   -t    test database connection (CLIENT mode only)"
 	echo "   -u    create Desktop shortcut"
-	echo ""
-	echo "   -h    show help"
+	echo "   -v    show configuration"
+	echo "   -V    check for latest OH version"
+	echo "   -X    clean/reset OH installation"
 	echo ""
 }
 
@@ -223,16 +248,13 @@ function interactive_menu {
 		clear;
 		script_menu;
 		echo ""
-		IFS=
+		#IFS=
 		read -n 1 -p "Please select an option or press enter to start OH: " option
 		if [[ $option != "" ]]; then 
 			parse_user_input $option 1; # interactive
 		else
 			break # if enter pressed exit from loop and start OH
 		fi
-#		if [[ "$option" == "Z" ]]; then
-#			break; # start OH
-#		fi
 	done
 #	OPTIND=1 
 }
@@ -303,6 +325,7 @@ function read_settings {
 		OH_SINGLE_USER=$SINGLE_USER
 		OH_DOC_DIR=$OH_DOC_DIR
 		DEMO_DATA=$DEMODATA
+		API_SERVER=$APISERVER
 	fi
 
 	# check for database settings file and read values
@@ -357,6 +380,22 @@ function set_defaults {
 	if [ -z "$DEMO_DATA" ]; then
 		DEMO_DATA="off"
 	fi
+
+	# api server - set default to off
+	if [ -z "$API_SERVER" ]; then
+		API_SERVER="off"
+	fi
+	
+	# UI interface - set default to off
+	if [ -z "$UI_INTERFACE" ]; then
+		UI_INTERFACE="off"
+	fi
+
+	# EXPERT_MODE features - set default to off
+	if [ -z "$EXPERT_MODE" ]; then
+		EXPERT_MODE="off"
+	fi
+
 	# set escaped path (/ in place of \)
 	OH_PATH_ESCAPED=$(echo $OH_PATH | sed -e 's/\//\\\//g')
 	DICOM_DIR_ESCAPED=$(echo $DICOM_DIR | sed -e 's/\//\\\//g')
@@ -488,7 +527,7 @@ echo "[Desktop Entry]
 	# Describes the categories in which this entry should be shown
 	Categories=Utility;Application;
 	" > $desktop_path/OpenHospital.desktop
-echo "Done !"
+echo "Done!"
 }
 
 ###################################################################
@@ -505,7 +544,7 @@ function java_lib_setup {
 
 	# CLASSPATH setup
 	# include OH jar file
-	OH_CLASSPATH="$OH_PATH"/$OH_DIR/bin/$OH_GUI
+	OH_CLASSPATH="$OH_PATH"/$OH_DIR/bin/$OH_GUI_JAR
 	
 	# include all needed directories
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/bundle
@@ -710,6 +749,22 @@ function import_database {
 		cd "$CURRENT_DIR"
 		exit 2
 	fi
+	
+	# EXPERIMENTAL ONLY
+	# workaround for hard coded password limit - execute extra sql script 
+	if [ "$API_SERVER" = "on" ]; then
+		echo "Setting admin password..."
+		cd "$OH_PATH/$SQL_EXTRA_DIR/"
+		$OH_PATH/$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./reset_admin_password_strong.sql >> ../../$LOG_DIR/$LOG_FILE 2>&1
+		if [ $? -ne 0 ]; then
+		echo "Error! Exiting."
+			shutdown_database;
+			cd "$CURRENT_DIR"
+			exit 2
+		fi
+	fi
+
+	# end
 	echo "Database imported!"
 	cd "$OH_PATH"
 }
@@ -769,6 +824,51 @@ function test_database_connection {
 }
 
 ###################################################################
+function start_api_server {
+	# check for application configuration files
+	if [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
+		echo "Error: missing $API_SETTINGS settings file. Exiting"
+		exit 1;
+	fi
+
+	echo "------------------------"
+	echo "---- EXPERIMENTAL ------"
+	echo "------------------------"
+	echo "Starting API server..."
+	echo "Please wait, it might take some time..."
+	echo ""
+	echo "Connect to http://localhost:8080 for dashboard"
+	echo ""
+	
+	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
+	#$JAVA_BIN -client -Xms64m -Xmx1024m -cp "bin/openhospital-api-0.0.2.jar:rsc:static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$LOG_FILE 2>&1
+	
+	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &
+	
+	if [ $? -ne 0 ]; then
+		echo "An error occurred while starting Open Hospital API. Exiting."
+		shutdown_database;
+		cd "$CURRENT_DIR"
+		exit 4
+	fi
+	cd "$OH_PATH"
+}
+
+###################################################################
+function write_api_config_file {
+	######## application.properties setup - OH API server
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
+		[ -f ./$OH_DIR/rsc/$API_SETTINGS ] && mv -f ./$OH_DIR/rsc/$API_SETTINGS ./$OH_DIR/rsc/$API_SETTINGS.old
+		# generate OH API token and save to settings file
+		# JWT_TOKEN_SECRET=`openssl rand -base64 64 | xargs`
+		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
+		echo "Writing OH API configuration file -> $API_SETTINGS..."
+		sed -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" ./$OH_DIR/rsc/$API_SETTINGS.dist > ./$OH_DIR/rsc/$API_SETTINGS
+	fi
+}
+
+###################################################################
 function write_config_files {
 	# set up configuration files
 	echo "Checking for OH configuration files..."
@@ -801,7 +901,8 @@ function write_config_files {
 		[ -f ./$OH_DIR/rsc/$OH_SETTINGS ] && mv -f ./$OH_DIR/rsc/$OH_SETTINGS ./$OH_DIR/rsc/$OH_SETTINGS.old
 		echo "Writing OH configuration file -> $OH_SETTINGS..."
 		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" \
-		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" -e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" \
+		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
+		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
 		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS
 	fi
 }
@@ -832,6 +933,8 @@ function clean_conf_files {
 	rm -f ./$OH_DIR/rsc/$LOG4J_SETTINGS.old
 	rm -f ./$OH_DIR/rsc/$IMAGING_SETTINGS
 	rm -f ./$OH_DIR/rsc/$IMAGING_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$API_SETTINGS
+	rm -f ./$OH_DIR/rsc/$API_SETTINGS.old
 }
 
 ###################################################################
@@ -858,8 +961,60 @@ function start_gui {
 }
 
 ###################################################################
+function start_ui {
+	echo "Starting Open Hospital UI at $OH_UI_ADDRESS..."
+	# OH UI launch
+	if which gnome-open > /dev/null; then
+		gnome-open $OH_UI_ADDRESS
+	elif which xdg-open > /dev/null; then
+		xdg-open $OH_UI_ADDRESS
+	elif [ ! -n $BROWSER ]; then
+		$BROWSER $OH_UI_ADDRESS
+	else
+		echo "Could not detect the web browser to use."
+	fi
+}
+
+###################################################################
+function check_latest_oh_version {
+	echo "Checking online for Open Hospital latest version..."
+	LATEST_OH_VERSION=$(curl -s -L https://api.github.com/repos/informatici/openhospital/releases/latest | grep tag_name  | cut -b16-22)
+	echo "Latest OH version is" $LATEST_OH_VERSION
+	echo ""
+}
+
+###################################################################
 function parse_user_input {
 	case $1 in
+	###################################################
+	A)	# toggle API server
+		case "$API_SERVER" in
+			*on*)
+				API_SERVER="off";
+			;;
+			*off*)
+				API_SERVER="on";
+			;;
+		esac
+		#
+		write_api_config_file;
+		if (( $2==0 )); then API_SERVER="on"; fi
+		option="Z";
+		;;
+	###################################################
+	E)	# toggle EXPERT_MODE features
+		case "$EXPERT_MODE" in
+			*on*)
+				EXPERT_MODE="off";
+			;;
+			*off*)
+				EXPERT_MODE="on";
+			;;
+		esac
+		#
+		if (( $2==0 )); then EXPERT_MODE="on"; interactive_menu; fi
+		option="Z";
+		;;
 	###################################################
 	C)	# start in CLIENT mode
 		OH_MODE="CLIENT"
@@ -873,7 +1028,7 @@ function parse_user_input {
 		OH_MODE="PORTABLE"
 		set_oh_mode;
 		echo ""
-		if (( $2==0 )); then option="Z"; else read; fi
+		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	S)	# start in SERVER mode
@@ -942,7 +1097,6 @@ function parse_user_input {
 			exit 0;
 		fi
 		cat $HELP_FILE | less;
-		echo "Press any key to continue"; read;
 		;;
 	###################################################
 	i)	# initialize/install OH database
@@ -959,7 +1113,7 @@ function parse_user_input {
 		set_language;
 		mysql_check;
 		# ask user for database root password
-		read -p "Please insert the MariaDB / MySQL database root password (root@"$DATABASE_SERVER") -> " DATABASE_ROOT_PW
+		read -p "Please insert the MariaDB / MySQL database root password (root@"$DATABASE_SERVER") -> " -s DATABASE_ROOT_PW
 		echo ""
 		echo "Installing the database....."
 		echo ""
@@ -998,7 +1152,7 @@ function parse_user_input {
 		read -p "Enter database server TCP port [DATABASE_PORT]: " DATABASE_PORT
 		read -p "Enter database database name [DATABASE_NAME]: " DATABASE_NAME
 		read -p "Enter database user name [DATABASE_USER]: " DATABASE_USER
-		read -p "Enter database password [DATABASE_PASSWORD]: " DATABASE_PASSWORD
+		read -p "Enter database password [DATABASE_PASSWORD]: " -s DATABASE_PASSWORD
 
 		echo "Do you want to save entered settings to OH configuration files?"
 		get_confirmation 1;
@@ -1089,14 +1243,12 @@ function parse_user_input {
 			mysql_check;
 			test_database_connection;
 		fi
-		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	u)	# create Desktop shortcut
 		echo ""
-		echo "Creating/updating OH shortcut on Desktop..."
 		create_desktop_shortcut;
-		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -1114,6 +1266,7 @@ function parse_user_input {
 		echo "Config file generation is set to $WRITE_CONFIG_FILES"
 		echo ""
 		echo "--------- OH default configuration ---------"
+		echo "OH mode is set to $OH_MODE"
 		echo "Language is set to $OH_LANGUAGE"
 		echo "Demo data is set to $DEMO_DATA"
 		echo ""
@@ -1170,18 +1323,23 @@ function parse_user_input {
 			read -p "Press [y] to confirm: " choice
 			if [ "$choice" = "y" ]; then		
 				clean_database;
-        			echo "Done!"
 			fi
 		fi
-		# unset variables
-		#unset OH_MODE
-		#unset OH_LANGUAGE
-		#unset OH_SINGLE_USER
-		#unset LOG_LEVEL
-		#unset DEMO_DATA
-		# set defaults
-		#set_defaults;
-
+		echo "Warning: do you want to reset all existing configuration variables?"
+		read -p "Press [y] to confirm: " choice
+		if [ "$choice" = "y" ]; then
+			# unset variables
+			unset OH_MODE
+			unset OH_LANGUAGE
+			unset OH_SINGLE_USER
+			unset LOG_LEVEL
+			unset DEMO_DATA
+			unset EXPERT_MODE
+			unset API_SERVER
+			# set variables to defaults
+			set_defaults;
+		fi
+		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -1209,6 +1367,12 @@ function parse_user_input {
 	#	echo "Starting Open Hospital...";
 	#	fi
 	#	;;
+	###################################################
+	"V" )	# Check for latest OH version
+		echo "";
+		check_latest_oh_version;
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+		;;
 	###################################################
 	"Z" )	# Z key
 		option="Z";
@@ -1256,12 +1420,12 @@ cd "$OH_PATH"
 # reset in case getopts has been used previously in the shell
 OPTIND=1 
 # list of arguments expected in user input (- option)
-OPTSTRING=":CPSdDGhil:msrtvequQXZ?" 
+# E is excluded from command line option
+OPTSTRING=":AECPSdDGhil:msrtvequQXVZ?" 
 COMMAND_LINE_ARGS=$@
 
-# Parse arguments passed via command line
+# Parse arguments passed via command line / interactive input
 if [[ ${#COMMAND_LINE_ARGS} -ne 0 ]]; then
-	# function to parse input
 	while getopts ${OPTSTRING} option; do
 		parse_user_input $option 0; # non interactive
 	done
@@ -1341,6 +1505,19 @@ fi
 
 ######## OH startup
 
+# test if database connection is working
+test_database_connection;
+
+# check for API server
+if [ "$API_SERVER" = "on" ]; then
+	start_api_server;
+fi
+
+# check for UI interface
+if [ "$UI_INTERFACE" = "on" ]; then
+	start_ui;
+fi
+
 # if SERVER mode is selected, wait for CTRL-C input to exit
 if [ "$OH_MODE" = "SERVER" ]; then
 	echo "Open Hospital - SERVER mode started"
@@ -1366,9 +1543,6 @@ if [ "$OH_MODE" = "SERVER" ]; then
 	done
 else
 	######## Open Hospital GUI startup - only for CLIENT or PORTABLE mode
-
-	# test if database connection is working
-	test_database_connection;
 
 	# generate config files if not existent
 	write_config_files;
