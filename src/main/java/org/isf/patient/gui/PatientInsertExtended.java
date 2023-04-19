@@ -60,6 +60,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.isf.agetype.manager.AgeTypeBrowserManager;
 import org.isf.agetype.model.AgeType;
 import org.isf.anamnesis.gui.PatientHistoryEdit;
@@ -104,13 +105,13 @@ public class PatientInsertExtended extends JDialog {
 	private static final long serialVersionUID = -827831581202765055L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientInsertExtended.class);
-	
+
 
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 	private PatientConsensusBrowserManager patientConsensusManager = Context.getApplicationContext().getBean(PatientConsensusBrowserManager.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
-	
+
 	private PatientHistory patientHistory;
 
 	public interface PatientListener extends EventListener {
@@ -161,7 +162,7 @@ public class PatientInsertExtended extends JDialog {
 	private Patient patient;
 
 	private PatientConsensus consensus;
-	
+
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 
@@ -423,7 +424,7 @@ public class PatientInsertExtended extends JDialog {
 				dialog.setModal(insert);
 				dialog.setVisible(true);
 			});
-		  
+
 		}
 		return jAnamnesisButton;
 	}
@@ -470,12 +471,12 @@ public class PatientInsertExtended extends JDialog {
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
-					
+
 					if (!consensus.isConsensusFlag()) {
 						MessageDialog.error(null, "angal.patient.consensus.consensus.mandatory.msg");
 						ok = false;
 					}
-					
+
 					if (ok) {
 						patient.setFirstName(firstName);
 						patient.setSecondName(secondName);
@@ -2178,7 +2179,7 @@ public class PatientInsertExtended extends JDialog {
 			if (photoPanel != null) {
 				jRightPanel.add(photoPanel, BorderLayout.NORTH);
 			}
-			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);	
+			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);
 			jRightPanel.add(getConsensus(), BorderLayout.SOUTH);
 
 		}
@@ -2190,15 +2191,15 @@ public class PatientInsertExtended extends JDialog {
 			if (patient != null && patient.getCode() != null) {
 				consensus = this.patientConsensusManager.getPatientConsensusByUserId(patient.getCode()).get();
 			} else {
-				consensus = new PatientConsensus(); 
+				consensus = new PatientConsensus();
 			}
 		} catch (OHServiceException e) {
-			consensus = new PatientConsensus(); 
+			consensus = new PatientConsensus();
 			LOGGER.debug(e.getMessage());
 		}
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		
+
 		JCheckBox checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.consensus.txt"));
 		checkbox.addActionListener(e -> consensus.setConsensusFlag(!consensus.isConsensusFlag()));
 		checkbox.setSelected(consensus.isConsensusFlag());
@@ -2208,12 +2209,12 @@ public class PatientInsertExtended extends JDialog {
 		checkbox.addActionListener(e -> consensus.setServiceFlag(!consensus.isServiceFlag()));
 		checkbox.setSelected(consensus.isServiceFlag());
 		panel.add(checkbox);
-		
+
 		checkbox =  new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.administrative.txt"));
 		checkbox.addActionListener(e -> consensus.setAdministrativeFlag(!consensus.isAdministrativeFlag()));
 		checkbox.setSelected(consensus.isAdministrativeFlag());
 		panel.add(checkbox);
-		
+
 		panel.setBorder(BorderFactory.createCompoundBorder(
 								BorderFactory.createCompoundBorder(
 										BorderFactory.createTitledBorder(
@@ -2221,7 +2222,7 @@ public class PatientInsertExtended extends JDialog {
 												BorderFactory.createEmptyBorder(5, 5, 5, 5)), panel.getBorder()
 								)
 				);
-		
+
 		return panel;
 	}
 
@@ -2272,7 +2273,7 @@ public class PatientInsertExtended extends JDialog {
 	public void setPatientPhoto(final BufferedImage photo) {
 		if (photo != null) {
 			PatientProfilePhoto patientProfilePhoto = new PatientProfilePhoto();
-			patientProfilePhoto.setPhoto(ImageUtil.imageToByte(photo));
+			patientProfilePhoto.setPhoto(ArrayUtils.toObject(ImageUtil.imageToByte(photo)));
 			patient.setPatientProfilePhoto(patientProfilePhoto);
 		} else {
 			patient.setPatientProfilePhoto(null);
