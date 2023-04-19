@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.examination.gui;
 
@@ -1416,7 +1416,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private final class MinMaxIntegerInputVerifier extends InputVerifier {
 
 		boolean bottom;
-		boolean ceiling = false;
+		boolean ceiling;
 		int min;
 		int max;
 
@@ -1952,7 +1952,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		private static final long serialVersionUID = 1L;
 
-		private List<PatientExamination> patexList = null;
+		private List<PatientExamination> patexList;
 
 		public JTableModelSummary() {
 			reloadData();
@@ -2067,7 +2067,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 	private final class CheckBoxFocus implements FocusListener {
 
-		private Color bgColor = null;
+		private Color bgColor;
 
 		@Override
 		public void focusLost(FocusEvent e) {

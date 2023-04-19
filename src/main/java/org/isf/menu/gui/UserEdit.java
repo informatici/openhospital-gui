@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -93,16 +93,16 @@ public class UserEdit extends JDialog {
 		}
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private JTextField nameTextField = null;
-	private JPasswordField pwdTextField = null;
-	private JPasswordField pwd2TextField = null;
-	private JComboBox<UserGroup> userGroupComboBox = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField nameTextField;
+	private JPasswordField pwdTextField;
+	private JPasswordField pwd2TextField;
+	private JComboBox<UserGroup> userGroupComboBox;
 
 	private User user;
 	private boolean insert;

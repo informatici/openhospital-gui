@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.therapy.gui;
 
@@ -101,7 +101,7 @@ public class TherapyEntryForm extends JDialog {
 	 */
 	private List<Medical> medArray;
 	private Therapy therapy;
-	private TherapyRow thRow = null;
+	private TherapyRow thRow;
 	private JList medicalsList;
 	private JScrollPane medicalListscrollPane;
 	private JPanel dayWeeksMonthsPanel;

@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicals.gui;
 
@@ -147,7 +147,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private final JFrame me;
 
 	private String pSelection;
-	private JTextField searchString = null;
+	private JTextField searchString;
 	protected boolean altKeyReleased = true;
 	private String lastKey = "";
 	private JButton buttonAMC;
@@ -398,7 +398,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				medical = (Medical) (model.getValueAt(selectedrow, -1));
 				// Select Dates
 				GoodFromDateToDateChooser dataRange = new GoodFromDateToDateChooser(MedicalBrowser.this);
 				dataRange.setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
@@ -475,7 +475,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				medical = (Medical) (model.getValueAt(selectedrow, -1));
 				int answer = MessageDialog.yesNo(MedicalBrowser.this, "angal.medicals.deletemedical.fmt.msg", medical.getDescription());
 				if (answer == JOptionPane.YES_OPTION) {
 					boolean deleted;
@@ -504,7 +504,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				medical = (Medical) (model.getValueAt(selectedrow, -1));
 				MedicalEdit editrecord = new MedicalEdit(medical, false, me);
 				editrecord.addMedicalListener(MedicalBrowser.this);
 				editrecord.setVisible(true);

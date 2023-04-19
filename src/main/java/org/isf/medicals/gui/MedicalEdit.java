@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicals.gui;
 
@@ -107,17 +107,17 @@ public class MedicalEdit extends JDialog {
 		}
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private VoIntegerTextField pcsperpckField = null;
-	private VoLimitedTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
-	private VoDoubleTextField minQtiField = null;
-	private JComboBox<MedicalType> typeComboBox = null;
-	private Medical oldMedical = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private VoIntegerTextField pcsperpckField;
+	private VoLimitedTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
+	private VoDoubleTextField minQtiField;
+	private JComboBox<MedicalType> typeComboBox;
+	private Medical oldMedical;
 	private Medical medical;
 	private boolean insert;
 

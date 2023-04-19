@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.dicom.gui;
 
@@ -65,7 +65,6 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
-import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.Converters;
 import org.slf4j.Logger;
@@ -87,20 +86,20 @@ public class DicomViewGui extends JPanel {
 	private int patID;
 	private Patient ohPatient;
 	private String serieNumber;
-	private Long[] frames = null;
+	private Long[] frames;
 
 	// status of frame
 	private int frameIndex;
-	private BufferedImage tmpImg = null;
-	private Attributes attributes = null;
-	private FileDicom tmpDbFile = null;
+	private BufferedImage tmpImg;
+	private Attributes attributes;
+	private FileDicom tmpDbFile;
 
 	// GUI
-	private JPanel jPanelHeader = null;
-	private JPanel jPanelCenter = null;
-	private JPanel jPanelFooter = null;
-	private JSlider jSliderZoom = null;
-	private JSlider jSliderFrame = null;
+	private JPanel jPanelHeader;
+	private JPanel jPanelCenter;
+	private JPanel jPanelFooter;
+	private JSlider jSliderZoom;
+	private JSlider jSliderFrame;
 	
 	// GUI parameters
 	private int x = -1;
@@ -478,13 +477,12 @@ public class DicomViewGui extends JPanel {
 	private void getImageFromJPG(FileDicom dett) {
 		try {
 			tmpImg = null;
-			ImageInputStream imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
+			ImageInputStream imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getData().getBinaryStream());
 			try {
 				tmpImg = ImageIO.read(imageInputStream);
 			} catch (IOException ioException) {
-				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
-						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
-						OHSeverityLevel.ERROR));
+				throw new OHDicomException(
+						new OHExceptionMessage(MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName())));
 			}
 			//imageInputStream.close();
 			this.attributes = null;
@@ -506,17 +504,16 @@ public class DicomViewGui extends JPanel {
 			Iterator<?> iter = ImageIO.getImageReadersByFormatName("DICOM");
 			ImageReader reader = (ImageReader) iter.next();
 			DicomImageReadParam param = (DicomImageReadParam) reader.getDefaultReadParam();
-			imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
+			imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getData().getBinaryStream());
 			reader.setInput(imageInputStream, false);
 
 			try {
 				tmpImg = reader.read(0, param);
 			} catch (IOException ioException) {
-				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"),
-						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
-						OHSeverityLevel.ERROR));
+				throw new OHDicomException(
+						new OHExceptionMessage(MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName())));
 			}
-			dicomInputStream = new DicomInputStream(dett.getDicomData().getBinaryStream());
+			dicomInputStream = new DicomInputStream(dett.getDicomData().getData().getBinaryStream());
 			this.attributes = dicomInputStream.readDataset();
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
@@ -597,14 +594,14 @@ public class DicomViewGui extends JPanel {
 	/**
 	 * relative X in mouse motion
 	 */
-	int p1x = 0;
-	int p2x = 0;
+	int p1x;
+	int p2x;
 
 	/**
 	 * relative Y in mouse motion
 	 */
-	int p1y = 0;
-	int p2y = 0;
+	int p1y;
+	int p2y;
 	
 	/**
 	 * Mouse wheel listener for DicomViewGui

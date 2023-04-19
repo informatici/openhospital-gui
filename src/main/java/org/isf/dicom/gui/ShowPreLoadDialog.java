@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.dicom.gui;
 
@@ -76,7 +76,7 @@ class ShowPreLoadDialog extends JDialog {
 	private DicomType dicomType;
 	private String dicomDescription;
 	private List<Date> dates;
-	private boolean save = false;
+	private boolean save;
 
 	/*
 	 * Managers

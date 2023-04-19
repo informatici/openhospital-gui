@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicalstockward.gui;
 
@@ -156,7 +156,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JButton jButtonRemoveMedical;
 	private static final Dimension PatientDimension = new Dimension(300, 20);
 
-	private Patient patientSelected = null;
+	private Patient patientSelected;
 	private float patientWeight;
 	private Ward wardSelected;
 	private Object[] medClasses = { Medical.class, Integer.class, String.class };
@@ -531,7 +531,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private void addItem(MedicalWard ward, int quantity) {
 		if (ward != null) {
 		
-			MedicalWard item = new MedicalWard(ward.getMedical(), (double) quantity, ward.getId().getLot());
+			MedicalWard item = new MedicalWard(ward.getMedical(), quantity, ward.getId().getLot());
 			medItems.add(item);
 			
 //			medArray.add(med);

@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicalstockward.gui;
 
@@ -88,7 +88,7 @@ public class WardPharmacyEdit extends JDialog {
 	private String sMed;
 	private String lastKey;
 	private MovementWard movSelected;
-	private Patient movSelectedPatient = null;
+	private Patient movSelectedPatient;
 	private Medical movSelectedMedical;
 	private Double maxQty;
 	private int movSelectedAge;

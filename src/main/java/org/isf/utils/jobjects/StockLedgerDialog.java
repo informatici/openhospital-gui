@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -48,7 +48,7 @@ public class StockLedgerDialog extends JDialog {
 	private JPanel dateFromToPanel;
 	private GoodDateChooser dateFrom;
 	private GoodDateChooser dateTo;
-	private boolean cancel = false;
+	private boolean cancel;
 
 	public StockLedgerDialog(Frame owner, LocalDateTime from, LocalDateTime to) {
 		super(owner, true);

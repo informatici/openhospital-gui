@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.opd.gui;
 
@@ -127,31 +127,31 @@ public class OpdEdit extends JDialog {
 		}
 	}
 	
-	private JPanel insertPanel = null;
-	private JPanel principalPanel = null;
-	private JPanel jAgePanel = null;
-	private JPanel jSexPanel = null;
-	private JPanel jNewPatientPanel= null;
-	private JPanel jDatePanel= null;
-	private JPanel jDiseasePanel = null;
-	private JPanel jDiseasePanel2 = null;
-	private JPanel jDiseasePanel3 = null;
-	private JPanel jDiseaseTypePanel = null;
-	private JComboBox<DiseaseType> diseaseTypeBox = null;
-	private JComboBox diseaseBox = null;
-	private JComboBox diseaseBox2 = null;
-	private JComboBox diseaseBox3 = null;
-	private GoodDateTimeSpinnerChooser opdDateField = null;
-	private JPanel jPanel2 = null;
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JCheckBox newPatientCheckBox = null;
-	private JCheckBox referralToCheckBox = null;
-	private JCheckBox referralFromCheckBox = null;
-	private VoLimitedTextField ageField = null;
-	private JPanel sexPanel = null;
+	private JPanel insertPanel;
+	private JPanel principalPanel;
+	private JPanel jAgePanel;
+	private JPanel jSexPanel;
+	private JPanel jNewPatientPanel;
+	private JPanel jDatePanel;
+	private JPanel jDiseasePanel;
+	private JPanel jDiseasePanel2;
+	private JPanel jDiseasePanel3;
+	private JPanel jDiseaseTypePanel;
+	private JComboBox<DiseaseType> diseaseTypeBox;
+	private JComboBox diseaseBox;
+	private JComboBox diseaseBox2;
+	private JComboBox diseaseBox3;
+	private GoodDateTimeSpinnerChooser opdDateField;
+	private JPanel jPanel2;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JCheckBox newPatientCheckBox;
+	private JCheckBox referralToCheckBox;
+	private JCheckBox referralFromCheckBox;
+	private VoLimitedTextField ageField;
+	private JPanel sexPanel;
 	private JRadioButton radiof;
-	private Integer age = null;
+	private Integer age;
 	private Opd opd;
 	private boolean insert;
 	private char sex;
@@ -693,7 +693,7 @@ public class OpdEdit extends JDialog {
 			searchDiseaseButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			searchDiseaseButton.addActionListener(new ActionListener() {
 
-				List<Disease> diseasesOPD = null;
+				List<Disease> diseasesOPD;
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -757,7 +757,7 @@ public class OpdEdit extends JDialog {
 			searchDiseaseButton2.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			searchDiseaseButton2.addActionListener(new ActionListener() {
 
-				List<Disease> diseasesOPD = null;
+				List<Disease> diseasesOPD;
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -820,7 +820,7 @@ public class OpdEdit extends JDialog {
 			searchDiseaseButton3.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			searchDiseaseButton3.addActionListener(new ActionListener() {
 
-				List<Disease> diseasesOPD = null;
+				List<Disease> diseasesOPD;
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {

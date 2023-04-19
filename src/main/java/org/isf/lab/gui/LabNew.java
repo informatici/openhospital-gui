@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.lab.gui;
 
@@ -176,8 +176,8 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 	private int[] examColumnWidth = { 200, 150 };
 	private boolean[] examResizable = { true, false };
 	
-	private Patient patientSelected = null;
-	private Laboratory selectedLab = null;
+	private Patient patientSelected;
+	private Laboratory selectedLab;
 
 	//Admission
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);

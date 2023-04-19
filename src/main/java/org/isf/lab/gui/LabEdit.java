@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.lab.gui;
 
@@ -135,26 +135,26 @@ public class LabEdit extends ModalJFrame {
 	private boolean insert;
 
 	private Laboratory lab;
-	private JPanel jContentPane = null;
-	private JPanel buttonPanel = null;
-	private JPanel dataPanel = null;
-	private JPanel resultPanel = null;
-	private JCheckBox inPatientCheckBox = null;
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JButton printButton = null;
-	private JComboBox matComboBox = null;
-	private ExamComboBox examComboBox = null;
-	private JComboBox examRowComboBox = null;
-	private PatientComboBox patientComboBox = null;
-	private Exam examSelected = null;
-	private JScrollPane noteScrollPane = null;
+	private JPanel jContentPane;
+	private JPanel buttonPanel;
+	private JPanel dataPanel;
+	private JPanel resultPanel;
+	private JCheckBox inPatientCheckBox;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JButton printButton;
+	private JComboBox matComboBox;
+	private ExamComboBox examComboBox;
+	private JComboBox examRowComboBox;
+	private PatientComboBox patientComboBox;
+	private Exam examSelected;
+	private JScrollPane noteScrollPane;
 
-	private JTextArea noteTextArea = null;
+	private JTextArea noteTextArea;
 
-	private VoLimitedTextField patTextField = null;
-	private VoLimitedTextField ageTextField = null;
-	private VoLimitedTextField sexTextField = null;
+	private VoLimitedTextField patTextField;
+	private VoLimitedTextField ageTextField;
+	private VoLimitedTextField sexTextField;
 
 	private static final int PANEL_WIDTH = 550;
 	private static final int LABEL_WIDTH = 70;
@@ -162,7 +162,7 @@ public class LabEdit extends ModalJFrame {
 	private static final int RESULT_PANEL_HEIGHT = 350;
 	private static final int BUTTON_PANEL_HEIGHT = 45;
 
-	private List<ExamRow> eRows = null;
+	private List<ExamRow> eRows;
 	private Patient patSelected;
 
 	private JTextField examRowTextField;

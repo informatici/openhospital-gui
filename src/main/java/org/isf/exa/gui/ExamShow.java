@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.exa.gui;
 
@@ -62,13 +62,13 @@ public class ExamShow extends JDialog implements ExamRowListener {
 
 	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton closeButton = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton closeButton;
 	private Exam exam;
-	private JButton newButton = null;
-	private JButton deleteButton = null;
+	private JButton newButton;
+	private JButton deleteButton;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
@@ -76,7 +76,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private int[] pColumnWidth = { 50, 250 };
 	private DefaultTableModel model ;
 	private JTable table;
-	private ExamRow examRow = null;
+	private ExamRow examRow;
 	private List<ExamRow> pExamRow;
 	private JDialog myFrame;
 
@@ -165,7 +165,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					ExamRow row = (ExamRow) (((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+					ExamRow row = (ExamRow) (model.getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.exa.deleteexamresult.fmt.msg", row.getDescription());
 					if ((answer == JOptionPane.YES_OPTION)) {
 						try {

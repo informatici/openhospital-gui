@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.therapy.gui;
 
@@ -43,6 +43,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -132,16 +133,16 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private JButton saveButton;
 //	private JButton reportButton; TODO to enable when a report will be designed
 
-	private boolean checked = false;
-	private boolean available = false;
-	private boolean therapyModified = false;
-	private boolean notifiable = false;
+	private boolean checked;
+	private boolean available;
+	private boolean therapyModified;
+	private boolean notifiable;
 	private boolean smsenable = GeneralData.SMSENABLED;
-	private boolean visitModified = false;
+	private boolean visitModified;
 	private Therapy selectedTherapy;
 	private Visit selectedVisit;
-	private Hashtable<Integer, TherapyRow> hashTableThRow;
-	private Hashtable<Integer, Visit> hashTableVisits;
+	private Map<Integer, TherapyRow> hashTableThRow;
+	private Map<Integer, Visit> hashTableVisits;
 
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);

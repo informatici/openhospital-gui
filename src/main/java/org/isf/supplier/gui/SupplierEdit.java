@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.supplier.gui;
 
@@ -100,30 +100,30 @@ public class SupplierEdit extends JDialog {
 	private int pfrmHeight = 9;
 	private int pfrmBordX;
 	private int pfrmBordY;
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JLabel nameLabel = null;
-	private JLabel addressLabel = null;
-	private JLabel idLabel = null;
-	private JLabel taxcodeLabel = null;
-	private JLabel phoneLabel = null;
-	private JLabel faxLabel = null;
-	private JLabel emailLabel = null;
-	private JLabel noteLabel = null;
-	private JLabel isDeletedLabel = null;
-	private JLabel requiredLabel = null;
-	private JTextField nameTextField = null;
-	private JTextField idTextField = null;
-	private JTextField addressTexField = null;
-	private JTextField taxcodeTestField = null;
-	private JTextField phoneTextField = null;
-	private JTextField faxTextField = null;
-	private JTextField emailTextField = null;
-	private JTextField noteTextField = null;
-	private JCheckBox isDeletedCheck = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JLabel nameLabel;
+	private JLabel addressLabel;
+	private JLabel idLabel;
+	private JLabel taxcodeLabel;
+	private JLabel phoneLabel;
+	private JLabel faxLabel;
+	private JLabel emailLabel;
+	private JLabel noteLabel;
+	private JLabel isDeletedLabel;
+	private JLabel requiredLabel;
+	private JTextField nameTextField;
+	private JTextField idTextField;
+	private JTextField addressTexField;
+	private JTextField taxcodeTestField;
+	private JTextField phoneTextField;
+	private JTextField faxTextField;
+	private JTextField emailTextField;
+	private JTextField noteTextField;
+	private JCheckBox isDeletedCheck;
 	private Supplier supplier;
 	private boolean insert;
 

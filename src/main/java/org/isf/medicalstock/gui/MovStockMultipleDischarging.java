@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicalstock.gui;
 
@@ -127,7 +127,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	}; 
 	private int optionSelected = UNITS;
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
-	private JComboBox shareWith = null;
+	private JComboBox shareWith;
 	private List<Medical> pool = new ArrayList<>();
 	
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
@@ -952,7 +952,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			movStockInsertingManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
 
 			if (isXmpp()) {
-				if (shareWith.isEnabled() && (!(((String) shareWith.getSelectedItem())
+				if (shareWith.isEnabled() && (!(shareWith.getSelectedItem()
 						.equals(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody"))))) { //$NON-NLS-1$
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 					for (Medical med : pool) {
