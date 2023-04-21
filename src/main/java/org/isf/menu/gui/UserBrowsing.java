@@ -188,7 +188,12 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				});
 				String newPassword = "";
 				JPanel stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-				stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.fmt.msg", GeneralData.STRONGLENGTH)));
+				if (GeneralData.STRONGLENGTH != 0) {
+					stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.fmt.msg", GeneralData.STRONGLENGTH)));
+				} else {
+					stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.msg")));
+				}
+
 				stepPanel.add(pwd);
 
 				while (newPassword.isEmpty()) {
@@ -199,15 +204,21 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 						return;
 					}
 					newPassword = new String(pwd.getPassword());
-					if (newPassword.isEmpty() || newPassword.length() < GeneralData.STRONGLENGTH) {
-						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
+					if (newPassword.isEmpty()) {
+						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustnotbeblank.msg");
 						newPassword = "";
 						pwd.setText("");
 					} else {
-						if (!userBrowsingManager.isPasswordStrong(newPassword)) {
-							MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+						if (GeneralData.STRONGLENGTH != 0 && newPassword.length() < GeneralData.STRONGLENGTH) {
+							MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 							newPassword = "";
 							pwd.setText("");
+						} else {
+							if (!userBrowsingManager.isPasswordStrong(newPassword)) {
+								MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+								newPassword = "";
+								pwd.setText("");
+							}
 						}
 					}
 				}

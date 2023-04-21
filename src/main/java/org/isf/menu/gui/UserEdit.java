@@ -243,7 +243,7 @@ public class UserEdit extends JDialog {
 						Arrays.fill(repeatPassword, '0');
 						return;
 					}
-					if (password.length < GeneralData.STRONGLENGTH) {
+					if (GeneralData.STRONGLENGTH != 0 && password.length < GeneralData.STRONGLENGTH) {
 						MessageDialog.error(null, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 						Arrays.fill(password, '0');
 						Arrays.fill(repeatPassword, '0');
