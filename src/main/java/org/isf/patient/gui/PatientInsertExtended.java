@@ -76,8 +76,10 @@ import org.isf.patconsensus.model.PatientConsensus;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.patient.model.PatientProfilePhoto;
+import org.isf.utils.exception.OHDataValidationException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
@@ -86,26 +88,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * ------------------------------------------
- * PatientInsertExtended - model for the patient entry
- * -----------------------------------------
- * modification history
- * 11/08/2008 - alessandro - added mother and father names textfield
- * 11/08/2008 - alessandro - changed economicStatut -> hasInsurance
- * 19/08/2008 - mex        - changed educational level with blood type
- * 26/08/2008 - cla		   - added calendar for calculating age
- * 						   - modified age field from int to varchar
- * 28/08/2008 - cla		   - added tooltip for age field and checking name and age for patient editing
- * 05/09/2008 - alex       - added patient code
- * 01/01/2009 - Fabrizio   - modified assignment to age field to set an int value
- * ------------------------------------------
+ * ------------------------------------------ PatientInsertExtended - model for the patient entry ----------------------------------------- modification history
+ * 11/08/2008 - alessandro - added mother and father names textfield 11/08/2008 - alessandro - changed economicStatut -> hasInsurance 19/08/2008 - mex - changed
+ * educational level with blood type 26/08/2008 - cla - added calendar for calculating age - modified age field from int to varchar 28/08/2008 - cla - added
+ * tooltip for age field and checking name and age for patient editing 05/09/2008 - alex - added patient code 01/01/2009 - Fabrizio - modified assignment to age
+ * field to set an int value ------------------------------------------
  */
 public class PatientInsertExtended extends JDialog {
 
 	private static final long serialVersionUID = -827831581202765055L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientInsertExtended.class);
-
 
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 	private PatientConsensusBrowserManager patientConsensusManager = Context.getApplicationContext().getBean(PatientConsensusBrowserManager.class);
@@ -429,6 +422,16 @@ public class PatientInsertExtended extends JDialog {
 		return jAnamnesisButton;
 	}
 
+	private void validateConsensus(PatientConsensus patientConsensus) throws OHDataValidationException {
+		List<OHExceptionMessage> errors = new ArrayList<>();
+		if (patientConsensus == null || !patient.getPatientConsensus().isConsensusFlag()) {
+			errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.patient.consensus.consensus.mandatory.msg")));
+		}
+		if (!errors.isEmpty()) {
+			throw new OHDataValidationException(errors);
+		}
+	}
+
 	/**
 	 * This method initializes jOkButton
 	 *
@@ -538,8 +541,8 @@ public class PatientInsertExtended extends JDialog {
 						}
 
 						patient.setNote(jNoteTextArea.getText().trim());
-
 						try {
+							validateConsensus(consensus);
 							patient = patientBrowserManager.savePatient(patient);
 							consensus.setPatient(patient);
 							patientConsensusManager.updatePatientConsensus(consensus);
@@ -626,8 +629,8 @@ public class PatientInsertExtended extends JDialog {
 						}
 					}
 					patient.setNote(jNoteTextArea.getText().trim());
-
 					try {
+						validateConsensus(consensus);
 						patient = patientBrowserManager.savePatient(patient);
 						consensus.setPatient(patient);
 						patientConsensusManager.updatePatientConsensus(consensus);
@@ -2210,19 +2213,17 @@ public class PatientInsertExtended extends JDialog {
 		checkbox.setSelected(consensus.isServiceFlag());
 		panel.add(checkbox);
 
-
-		checkbox =  new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.administrative.txt"));
+		checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.administrative.txt"));
 		checkbox.addActionListener(e -> consensus.setAdministrativeFlag(!consensus.isAdministrativeFlag()));
 		checkbox.setSelected(consensus.isAdministrativeFlag());
 		panel.add(checkbox);
 
 		panel.setBorder(BorderFactory.createCompoundBorder(
-								BorderFactory.createCompoundBorder(
+						BorderFactory.createCompoundBorder(
 										BorderFactory.createTitledBorder(
-												MessageBundle.getMessage("angal.patient.consensus.border")),
-												BorderFactory.createEmptyBorder(5, 5, 5, 5)), panel.getBorder()
-								)
-				);
+														MessageBundle.getMessage("angal.patient.consensus.border")),
+										BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+						panel.getBorder()));
 
 		return panel;
 	}
