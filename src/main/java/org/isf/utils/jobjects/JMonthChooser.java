@@ -186,7 +186,6 @@ public class JMonthChooser extends JPanel implements ItemListener, ChangeListene
 	/**
 	 * Updates the UI.
 	 *
-	 * @see javax.swing.JPanel#updateUI()
 	 */
 	@Override
 	public void updateUI() {

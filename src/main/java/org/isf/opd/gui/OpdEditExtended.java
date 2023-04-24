@@ -324,8 +324,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 	/**
 	 * This method initializes
-	 *
-	 * @wbp.parser.constructor
 	 */
 	public OpdEditExtended(JFrame owner, Opd old, boolean inserting) {
 		super();
