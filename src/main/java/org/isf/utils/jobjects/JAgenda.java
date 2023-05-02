@@ -591,7 +591,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 	/**
 	 * JDayChooser is the ActionListener for all day buttons.
 	 *
-	 * @param e the ActionEvent
+	 * @param actionEvent the ActionEvent
 	 */
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
