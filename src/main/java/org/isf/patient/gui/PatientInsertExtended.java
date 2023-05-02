@@ -430,15 +430,6 @@ public class PatientInsertExtended extends JDialog {
 		return jAnamnesisButton;
 	}
 
-	private void validateConsensus(PatientConsensus patientConsensus) throws OHDataValidationException {
-		List<OHExceptionMessage> errors = new ArrayList<>();
-		if (patientConsensus == null || !patient.getPatientConsensus().isConsensusFlag()) {
-			errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.patient.consensus.consensus.mandatory.msg")));
-		}
-		if (!errors.isEmpty()) {
-			throw new OHDataValidationException(errors);
-		}
-	}
 
 	/**
 	 * This method initializes jOkButton
@@ -550,7 +541,6 @@ public class PatientInsertExtended extends JDialog {
 
 						patient.setNote(jNoteTextArea.getText().trim());
 						try {
-							validateConsensus(consensus);
 							patient = patientBrowserManager.savePatient(patient);
 							consensus.setPatient(patient);
 							patientConsensusManager.updatePatientConsensus(consensus);
@@ -638,7 +628,6 @@ public class PatientInsertExtended extends JDialog {
 					}
 					patient.setNote(jNoteTextArea.getText().trim());
 					try {
-						validateConsensus(consensus);
 						patient = patientBrowserManager.savePatient(patient);
 						consensus.setPatient(patient);
 						patientConsensusManager.updatePatientConsensus(consensus);
