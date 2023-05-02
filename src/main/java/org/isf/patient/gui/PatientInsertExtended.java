@@ -2271,7 +2271,7 @@ public class PatientInsertExtended extends JDialog {
 	public void setPatientPhoto(final BufferedImage photo) {
 		if (photo != null) {
 			PatientProfilePhoto patientProfilePhoto = new PatientProfilePhoto();
-			patientProfilePhoto.setPhoto(ArrayUtils.toObject(ImageUtil.imageToByte(photo)));
+			patientProfilePhoto.setPhoto(ImageUtil.imageToByte(photo));
 			patient.setPatientProfilePhoto(patientProfilePhoto);
 		} else {
 			patient.setPatientProfilePhoto(null);
