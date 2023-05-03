@@ -45,6 +45,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -59,6 +60,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.isf.agetype.manager.AgeTypeBrowserManager;
 import org.isf.agetype.model.AgeType;
 import org.isf.anamnesis.gui.PatientHistoryEdit;
@@ -69,11 +71,15 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
 import org.isf.menu.manager.Context;
+import org.isf.patconsensus.manager.PatientConsensusBrowserManager;
+import org.isf.patconsensus.model.PatientConsensus;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.patient.model.PatientProfilePhoto;
+import org.isf.utils.exception.OHDataValidationException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
@@ -101,12 +107,12 @@ public class PatientInsertExtended extends JDialog {
 	private static final long serialVersionUID = -827831581202765055L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientInsertExtended.class);
-	
 
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
+	private PatientConsensusBrowserManager patientConsensusManager = Context.getApplicationContext().getBean(PatientConsensusBrowserManager.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
-	
+
 	private PatientHistory patientHistory;
 
 	public interface PatientListener extends EventListener {
@@ -155,6 +161,8 @@ public class PatientInsertExtended extends JDialog {
 	private boolean insert;
 	private boolean justSave;
 	private Patient patient;
+
+	private PatientConsensus consensus;
 
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
@@ -417,10 +425,11 @@ public class PatientInsertExtended extends JDialog {
 				dialog.setModal(insert);
 				dialog.setVisible(true);
 			});
-		  
+
 		}
 		return jAnamnesisButton;
 	}
+
 
 	/**
 	 * This method initializes jOkButton
@@ -464,6 +473,12 @@ public class PatientInsertExtended extends JDialog {
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
+
+					if (!consensus.isConsensusFlag()) {
+						MessageDialog.error(null, "angal.patient.consensus.consensus.mandatory.msg");
+						ok = false;
+					}
+
 					if (ok) {
 						patient.setFirstName(firstName);
 						patient.setSecondName(secondName);
@@ -525,9 +540,10 @@ public class PatientInsertExtended extends JDialog {
 						}
 
 						patient.setNote(jNoteTextArea.getText().trim());
-
 						try {
 							patient = patientBrowserManager.savePatient(patient);
+							consensus.setPatient(patient);
+							patientConsensusManager.updatePatientConsensus(consensus);
 							if (patientHistory != null) {
 								patientHistory.setPatientId(patient.getCode());
 								patientHistoryManager.saveOrUpdate(patientHistory);
@@ -547,7 +563,10 @@ public class PatientInsertExtended extends JDialog {
 						}
 					}
 				} else {// Update
-
+					if (!consensus.isConsensusFlag()) {
+						MessageDialog.error(null, "angal.patient.consensus.consensus.mandatory.msg");
+						return;
+					}
 					patient.setFirstName(firstName);
 					patient.setSecondName(secondName);
 					if (radiof.isSelected()) {
@@ -608,9 +627,10 @@ public class PatientInsertExtended extends JDialog {
 						}
 					}
 					patient.setNote(jNoteTextArea.getText().trim());
-
 					try {
 						patient = patientBrowserManager.savePatient(patient);
+						consensus.setPatient(patient);
+						patientConsensusManager.updatePatientConsensus(consensus);
 						if (patientHistory != null) {
 							patientHistory.setPatientId(patient.getCode());
 							patientHistoryManager.saveOrUpdate(patientHistory);
@@ -2160,9 +2180,48 @@ public class PatientInsertExtended extends JDialog {
 				jRightPanel.add(photoPanel, BorderLayout.NORTH);
 			}
 			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);
+			jRightPanel.add(getConsensus(), BorderLayout.SOUTH);
 
 		}
 		return jRightPanel;
+	}
+
+	private JPanel getConsensus() {
+		try {
+			if (patient != null && patient.getCode() != null) {
+				consensus = this.patientConsensusManager.getPatientConsensusByUserId(patient.getCode()).get();
+			} else {
+				consensus = new PatientConsensus();
+			}
+		} catch (OHServiceException e) {
+			consensus = new PatientConsensus();
+			LOGGER.debug(e.getMessage());
+		}
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		JCheckBox checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.consensus.txt"));
+		checkbox.addActionListener(e -> consensus.setConsensusFlag(!consensus.isConsensusFlag()));
+		checkbox.setSelected(consensus.isConsensusFlag());
+		panel.add(checkbox);
+
+		checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.service.txt"));
+		checkbox.addActionListener(e -> consensus.setServiceFlag(!consensus.isServiceFlag()));
+		checkbox.setSelected(consensus.isServiceFlag());
+		panel.add(checkbox);
+
+		checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.administrative.txt"));
+		checkbox.addActionListener(e -> consensus.setAdministrativeFlag(!consensus.isAdministrativeFlag()));
+		checkbox.setSelected(consensus.isAdministrativeFlag());
+		panel.add(checkbox);
+
+		panel.setBorder(
+						BorderFactory.createCompoundBorder(
+										BorderFactory.createTitledBorder(
+														MessageBundle.getMessage("angal.patient.consensus.border")),
+										BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
+		return panel;
 	}
 
 	private JScrollPane getJNoteScrollPane() {
