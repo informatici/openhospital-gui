@@ -1042,9 +1042,6 @@ function write_config_files {
 
 ###################################################################
 function clean_database {
-	# kill mariadb/mysqld processes
-	Write-Host "Killing mariadb/mysql processes..."
-	Get-Process mysqld -ErrorAction SilentlyContinue | Stop-Process -PassThru
 	# remove socket and pid file
 	Write-Host "Removing socket and pid file..."
 	$filetodel="$OH_PATH/$TMP_DIR/*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
@@ -1428,7 +1425,17 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Read-Host "Press any key to continue";
 		}
 		###################################################
-		"X"	{ # clean
+		"X"	{ # kill processes / clean installation
+			# kill mariadb/mysqld processes
+			Write-Host "Stopping Open Hospital..."	
+			Write-Host "Warning: do you want to kill all java and mysql/mariadb processes ?"
+			$choice = Read-Host -Prompt "Press [y] to confirm: "
+			if (( "$choice" -eq "y" )) {
+				Write-Host "Killing mariadb/mysql..."	
+				Get-Process mysqld -ErrorAction SilentlyContinue | Stop-Process -PassThru
+				Write-Host "Killing java..."	
+				Get-Process java -ErrorAction SilentlyContinue | Stop-Process -PassThru
+			}
 			Write-Host "Cleaning Open Hospital installation..."
 			Write-Host "Warning: do you want to remove all existing log files?" -ForegroundColor Red
 			$choice = Read-Host -Prompt "Press [y] to confirm: "
