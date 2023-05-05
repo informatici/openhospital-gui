@@ -78,7 +78,7 @@ DATABASE_PASSWORD="isf123"
 #######################  OH configuration  #########################
 # path and directories
 OH_DIR="."
-OH_DOC_DIR="../doc"
+OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
 PHOTO_DIR="data/photo"
@@ -360,6 +360,11 @@ function set_defaults {
 	# OH language - set default to en
 	if [ -z "$OH_LANGUAGE" ]; then
 		OH_LANGUAGE="en"
+	fi
+	
+	# OH DOC DIR - set default to "doc" (../doc for oh)
+	if [ -z "$OH_DOC_DIR" ]; then
+		OH_DOC_DIR="doc"
 	fi
 
 	# set database creation script in chosen language
@@ -753,17 +758,18 @@ function import_database {
 	
 	# EXPERIMENTAL ONLY
 	# workaround for hard coded password limit - execute extra sql script 
-	if [ "$API_SERVER" = "on" ]; then
-		echo "Setting admin password..."
-		cd "$OH_PATH/$SQL_EXTRA_DIR/"
-		$OH_PATH/$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./reset_admin_password_strong.sql >> ../../$LOG_DIR/$LOG_FILE 2>&1
-		if [ $? -ne 0 ]; then
-		echo "Error! Exiting."
-			shutdown_database;
-			cd "$CURRENT_DIR"
-			exit 2
-		fi
-	fi
+	# not needed anymore - see OP-1078
+#	if [ "$API_SERVER" = "on" ]; then
+#		echo "Setting admin password..."
+#		cd "$OH_PATH/$SQL_EXTRA_DIR/"
+#		$OH_PATH/$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./reset_admin_password_strong.sql >> ../../$LOG_DIR/$LOG_FILE 2>&1
+#		if [ $? -ne 0 ]; then
+#		echo "Error! Exiting."
+#			shutdown_database;
+#			cd "$CURRENT_DIR"
+#			exit 2
+#		fi
+#	fi
 
 	# end
 	echo "Database imported!"
@@ -901,7 +907,7 @@ function write_config_files {
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
 		[ -f ./$OH_DIR/rsc/$OH_SETTINGS ] && mv -f ./$OH_DIR/rsc/$OH_SETTINGS ./$OH_DIR/rsc/$OH_SETTINGS.old
 		echo "Writing OH configuration file -> $OH_SETTINGS..."
-		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" \
+		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
 		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
 		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS

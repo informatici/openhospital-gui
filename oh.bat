@@ -102,6 +102,11 @@ REM #
 REM ###################
 set OH_PATH=%~dps0
 
+REM ##########  set mode  #########
+REM set OH_MODE = PORTABLE SERVER CLIENT
+set OH_MODE="PORTABLE"
+
+REM ##########  set language  #########
 REM # Language setting - default set to en
 REM set OH_LANGUAGE=en fr es it pt ar
 set OH_LANGUAGE=en
@@ -144,7 +149,7 @@ REM #-> DB_CREATE_SQL default is set to create_all_en.sql - set to "create_all_d
 
 REM ######## Architecture
 REM # ARCH can be set to 32 or x64
-REM force ARCH to 32
+REM set ARCH=x64
 set ARCH=32
 
 REM ######## MySQL Software
@@ -155,6 +160,7 @@ REM # MariaDB 32bit
 REM https://archive.mariadb.org/mariadb-10.6.5/win32-packages/mariadb-10.6.5-win32.zip
 
 set MYSQL_DIR=mariadb-10.6.5-win%ARCH%
+REM set MYSQL_DIR=mariadb-10.6.12-win%ARCH%
 
 REM ####### JAVA Software
 REM # JRE 11 64bit - x86_64 - openjdk

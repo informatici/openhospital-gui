@@ -133,7 +133,7 @@ $script:DATABASE_PASSWORD="isf123"
 #######################  OH configuration  #########################
 # path and directories
 $script:OH_DIR="."
-$script:OH_DOC_DIR="../doc"
+$script:OH_DOC_DIR="doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
 $script:PHOTO_DIR="data/photo"
@@ -407,6 +407,11 @@ function set_defaults {
 	# OH mode - set default to PORTABLE
 	if ( [string]::IsNullOrEmpty($OH_MODE) ) {
 		$script:OH_MODE="PORTABLE"
+	}
+	
+	# OH DOC DIR - set default to "doc" (../doc for oh)
+	if ( [string]::IsNullOrEmpty($OH_DOC_DIR) ) {
+		$script:OH_DOC_DIR="doc"
 	}
 	
 	# OH language - set default to en
@@ -850,23 +855,25 @@ function import_database {
 
 	# EXPERIMENTAL ONLY
 	# workaround for hard coded password limit - execute extra sql script 
-	if ( ($API_SERVER -eq "On") ){
-		Write-Host "Setting admin password..."
-		cd "$OH_PATH/$SQL_EXTRA_DIR/"
+	# not needed anymore - see OP-1078
 
-    $SQLCOMMAND=@"
-   --local-infile=1 -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
-"@
-		try {
-			Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-	 	}
-		catch {
-			Write-Host "Error! Exiting." -ForeGroundColor Red
-			shutdown_database;
-			cd "$CURRENT_DIR"
-			Read-Host; exit 2
-		}
-	}
+#	if ( ($API_SERVER -eq "On") ){
+#		Write-Host "Setting admin password..."
+#	cd "$OH_PATH/$SQL_EXTRA_DIR/"
+#
+#   $SQLCOMMAND=@"
+#   --local-infile=1 -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
+#"@
+#		try {
+#			Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+#	 	}
+#		catch {
+#			Write-Host "Error! Exiting." -ForeGroundColor Red
+#			shutdown_database;
+#			cd "$CURRENT_DIR"
+#			Read-Host; exit 2
+#		}
+#	}
 
 	# end
 	Write-Host "Database imported!"
@@ -1028,7 +1035,7 @@ function write_config_files {
 		# set LANGUAGE
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set DOC_DIR
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("OH_DOC_DIR","../$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set PHOTO_DIR
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("PHOTO_DIR","$PHOTO_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set singleuser = yes / no
