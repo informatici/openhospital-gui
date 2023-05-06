@@ -37,7 +37,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
-import org.isf.medstockmovtype.manager.MedicaldsrstockmovTypeBrowserManager;
+import org.isf.medstockmovtype.manager.MedicalStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
@@ -102,7 +102,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 	private MovementType medicaldsrstockmovType;
 	private boolean insert;
 	private JPanel jDataPanel;
-	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicalStockMovementTypeBrowserManager medicalStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalStockMovementTypeBrowserManager.class);
 
 	/**
 	 * This is the default constructor
@@ -205,7 +205,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 
 				if (insert) { // inserting
 					try {
-						MovementType insertedMovementType = medicaldsrstockmovTypeBrowserManager.newMedicaldsrstockmovType(medicaldsrstockmovType);
+						MovementType insertedMovementType = medicalStockMovementTypeBrowserManager.newMedicaldsrstockmovType(medicaldsrstockmovType);
 						if (insertedMovementType != null) {
 							fireMedicaldsrstockmovInserted(medicaldsrstockmovType);
 							dispose();
@@ -220,7 +220,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							MovementType updatedMovementType = medicaldsrstockmovTypeBrowserManager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
+							MovementType updatedMovementType = medicalStockMovementTypeBrowserManager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
 							if (updatedMovementType != null) {
 								fireMedicaldsrstockmovUpdated();
 								dispose();

@@ -35,7 +35,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.medstockmovtype.gui.MedicaldsrstockmovTypeBrowserEdit.MedicaldsrstockmovTypeListener;
-import org.isf.medstockmovtype.manager.MedicaldsrstockmovTypeBrowserManager;
+import org.isf.medstockmovtype.manager.MedicalStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
@@ -68,7 +68,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	private JTable jTable;
 	private MedicaldsrstockmovTypeBrowserModel model;
 	private int selectedrow;
-	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicalStockMovementTypeBrowserManager medicalStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalStockMovementTypeBrowserManager.class);
 	private MovementType medicaldsrstockmovType;
 	private final JFrame myFrame;
 	
@@ -183,7 +183,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 						boolean deleted;
 
 						try {
-							deleted = medicaldsrstockmovTypeBrowserManager.deleteMedicaldsrstockmovType(movType);
+							deleted = medicalStockMovementTypeBrowserManager.deleteMedicaldsrstockmovType(movType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -217,7 +217,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 
 		public MedicaldsrstockmovTypeBrowserModel() {
 			try {
-				pMedicaldsrstockmovType = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
+				pMedicaldsrstockmovType = medicalStockMovementTypeBrowserManager.getMedicaldsrstockmovType();
 			} catch (OHServiceException e) {
 				pMedicaldsrstockmovType = null;
 				OHServiceExceptionUtil.showMessages(e);
