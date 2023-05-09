@@ -495,7 +495,7 @@ public class PatientFolderBrowser extends ModalJFrame
 				labTable.clearSelection();
 				for (int i = 0; i < labList.size(); i++) {
 					Laboratory laboratory = (Laboratory) sorterLab.getValueAt(i, -1);
-					LocalDate labDate = laboratory.getDate().toLocalDate();
+					LocalDate labDate = laboratory.getLabDate().toLocalDate();
 
 					// Check that the lab date is included between admission date and discharge date.
 					// If the patient has not been discharged yet (and then discharge date doesn't exist)
@@ -921,7 +921,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			if (column == -1) {
 				return laboratory;
 			} else if (column == 0) {
-				return laboratory.getDate();
+				return laboratory.getLabDate();
 			} else if (column == 1) {
 				return laboratory.getExam().getDescription();
 			} else if (column == 2) {

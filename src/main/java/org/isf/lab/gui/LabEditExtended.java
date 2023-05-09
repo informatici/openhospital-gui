@@ -359,7 +359,7 @@ public class LabEditExtended extends ModalJFrame {
 				dateIn = TimeTools.getNow();
 			}
 		} else {
-			dateIn = lab.getDate();
+			dateIn = lab.getLabDate();
 		}
 		return new GoodDateTimeSpinnerChooser(dateIn);
 	}
@@ -568,7 +568,7 @@ public class LabEditExtended extends ModalJFrame {
 					labs.add(new LaboratoryForPrint(
 									lab.getCode(),
 									lab.getExam(),
-									lab.getDate(),
+									lab.getLabDate(),
 									lab.getResult()));
 					printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 				} catch (OHServiceException e) {
@@ -617,7 +617,7 @@ public class LabEditExtended extends ModalJFrame {
 					return;
 				}
 				List<String> labRow = new ArrayList<>();
-				lab.setDate(examDate);
+				lab.setLabDate(examDate);
 				RememberDates.setLastLabExamDate(examDate);
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);

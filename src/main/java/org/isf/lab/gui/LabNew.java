@@ -302,7 +302,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 
 				int row = 0;
 				for (Laboratory lab : examItems) {
-					lab.setDate(newDate);
+					lab.setLabDate(newDate);
 					lab.setInOutPatient(inOut);
 					lab.setPatient(patientSelected);
 					int procedure = lab.getExam().getProcedure();
