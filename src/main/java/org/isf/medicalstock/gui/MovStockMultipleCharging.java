@@ -71,7 +71,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
-import org.isf.medstockmovtype.manager.MedicaldsrstockmovTypeBrowserManager;
+import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.supplier.manager.SupplierBrowserManager;
@@ -137,7 +137,7 @@ public class MovStockMultipleCharging extends JDialog {
 	
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
-	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 
 	private boolean isAutomaticLot() {
@@ -474,7 +474,7 @@ public class MovStockMultipleCharging extends JDialog {
 			jComboBoxChargeType = new JComboBox<>();
 			List<MovementType> movTypes;
 			try {
-				movTypes = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
+				movTypes = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
 			} catch (OHServiceException e) {
 				movTypes = null;
 				OHServiceExceptionUtil.showMessages(e);

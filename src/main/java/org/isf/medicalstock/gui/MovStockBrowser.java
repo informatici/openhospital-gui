@@ -76,7 +76,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovBrowserManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
-import org.isf.medstockmovtype.manager.MedicaldsrstockmovTypeBrowserManager;
+import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.medtype.manager.MedicalTypeBrowserManager;
 import org.isf.medtype.model.MedicalType;
@@ -178,8 +178,8 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
-	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext()
-					.getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext()
+					.getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private MovBrowserManager movBrowserManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
 	private HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
@@ -642,7 +642,7 @@ public class MovStockBrowser extends ModalJFrame {
 		typeBox.setPreferredSize(new Dimension(200, 25));
 		List<MovementType> type;
 		try {
-			type = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
+			type = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
 		} catch (OHServiceException e1) {
 			type = null;
 			OHServiceExceptionUtil.showMessages(e1);
