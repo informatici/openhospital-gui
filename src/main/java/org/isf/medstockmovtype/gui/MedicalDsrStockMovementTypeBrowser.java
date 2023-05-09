@@ -34,8 +34,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
-import org.isf.medstockmovtype.gui.MedicaldsrstockmovTypeBrowserEdit.MedicaldsrstockmovTypeListener;
-import org.isf.medstockmovtype.manager.MedicalStockMovementTypeBrowserManager;
+import org.isf.medstockmovtype.gui.MedicalDsrStockMovementTypeBrowserEdit.MedicalDsrStockMovementTypeListener;
+import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
@@ -48,10 +48,10 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements MedicaldsrstockmovTypeListener {
+public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements MedicalDsrStockMovementTypeListener {
 
 	private static final long serialVersionUID = 1L;
-	private List<MovementType> pMedicaldsrstockmovType;
+	private List<MovementType> pMedicalDsrStockMovementType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
@@ -66,16 +66,16 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	private JButton jCloseButton;
 	private JButton jDeleteButton;
 	private JTable jTable;
-	private MedicaldsrstockmovTypeBrowserModel model;
+	private MedicalDsrStockMovementTypeBrowserModel model;
 	private int selectedrow;
-	private MedicalStockMovementTypeBrowserManager medicalStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalStockMovementTypeBrowserManager.class);
-	private MovementType medicaldsrstockmovType;
+	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
+	private MovementType medicalDsrStockMovementType;
 	private final JFrame myFrame;
 	
 	/**
 	 * This method initializes
 	 */
-	public MedicaldsrstockmovTypeBrowser() {
+	public MedicalDsrStockMovementTypeBrowser() {
 		super();
 		myFrame = this;
 		initialize();
@@ -117,8 +117,8 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
 				MovementType mdsr = new MovementType("", "", "");
-				MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame, mdsr, true);
-				newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
+				MedicalDsrStockMovementTypeBrowserEdit newrecord = new MedicalDsrStockMovementTypeBrowserEdit(myFrame, mdsr, true);
+				newrecord.addMedicalDsrStockMovementTypeListener(MedicalDsrStockMovementTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -139,9 +139,9 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					medicaldsrstockmovType = (MovementType) (model.getValueAt(selectedrow, -1));
-					MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame, medicaldsrstockmovType, false);
-					newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
+					medicalDsrStockMovementType = (MovementType) (model.getValueAt(selectedrow, -1));
+					MedicalDsrStockMovementTypeBrowserEdit newrecord = new MedicalDsrStockMovementTypeBrowserEdit(myFrame, medicalDsrStockMovementType, false);
+					newrecord.addMedicalDsrStockMovementTypeListener(MedicalDsrStockMovementTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
 			});
@@ -183,14 +183,14 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 						boolean deleted;
 
 						try {
-							deleted = medicalStockMovementTypeBrowserManager.deleteMedicaldsrstockmovType(movType);
+							deleted = medicalDsrStockMovementTypeBrowserManager.deleteMedicalDsrStockMovementType(movType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
 						}
 
 						if (deleted) {
-							pMedicaldsrstockmovType.remove(jTable.getSelectedRow());
+							pMedicalDsrStockMovementType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
 						}
@@ -203,7 +203,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 
 	private JTable getJTable() {
 		if (jTable == null) {
-			model = new MedicaldsrstockmovTypeBrowserModel();
+			model = new MedicalDsrStockMovementTypeBrowserModel();
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
@@ -211,25 +211,25 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 		return jTable;
 	}
 	
-	class MedicaldsrstockmovTypeBrowserModel extends DefaultTableModel {
+	class MedicalDsrStockMovementTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
 
-		public MedicaldsrstockmovTypeBrowserModel() {
+		public MedicalDsrStockMovementTypeBrowserModel() {
 			try {
-				pMedicaldsrstockmovType = medicalStockMovementTypeBrowserManager.getMedicaldsrstockmovType();
+				pMedicalDsrStockMovementType = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
 			} catch (OHServiceException e) {
-				pMedicaldsrstockmovType = null;
+				pMedicalDsrStockMovementType = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 
 		@Override
 		public int getRowCount() {
-			if (pMedicaldsrstockmovType == null) {
+			if (pMedicalDsrStockMovementType == null) {
 				return 0;
 			}
-			return pMedicaldsrstockmovType.size();
+			return pMedicalDsrStockMovementType.size();
 		}
 
 		@Override
@@ -244,7 +244,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 
 		@Override
 		public Object getValueAt(int r, int c) {
-			MovementType movType = pMedicaldsrstockmovType.get(r);
+			MovementType movType = pMedicalDsrStockMovementType.get(r);
 			if (c == 0) {
 				return movType.getCode();
 			} else if (c == -1) {
@@ -265,9 +265,9 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 
 
 	@Override
-	public void medicaldsrstockmovTypeUpdated(AWTEvent e) {
-		pMedicaldsrstockmovType.set(selectedrow, medicaldsrstockmovType);
-		((MedicaldsrstockmovTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+	public void medicalDsrStockMovementTypeUpdated(AWTEvent e) {
+		pMedicalDsrStockMovementType.set(selectedrow, medicalDsrStockMovementType);
+		((MedicalDsrStockMovementTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
 		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
@@ -276,10 +276,10 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	
 	
 	@Override
-	public void medicaldsrstockmovTypeInserted(AWTEvent e) {
-		medicaldsrstockmovType = (MovementType)e.getSource();
-		pMedicaldsrstockmovType.add(0, medicaldsrstockmovType);
-		((MedicaldsrstockmovTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+	public void medicalDsrStockMovementTypeInserted(AWTEvent e) {
+		medicalDsrStockMovementType = (MovementType)e.getSource();
+		pMedicalDsrStockMovementType.add(0, medicalDsrStockMovementType);
+		((MedicalDsrStockMovementTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		if (jTable.getRowCount() > 0) {
 			jTable.setRowSelectionInterval(0, 0);
 		}
