@@ -308,7 +308,7 @@ public class LabEdit extends ModalJFrame {
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDate();
 		} else {
-			dateIn = lab.getDate();
+			dateIn = lab.getLabDate();
 		}
 		if (dateIn == null) {
 			dateIn = TimeTools.getNow();
@@ -471,7 +471,7 @@ public class LabEdit extends ModalJFrame {
 					labs.add(new LaboratoryForPrint(
 									lab.getCode(),
 									lab.getExam(),
-									lab.getDate(),
+									lab.getLabDate(),
 									lab.getResult()));
 					printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 				} catch (OHServiceException e) {
@@ -522,7 +522,7 @@ public class LabEdit extends ModalJFrame {
 				List<String> labRow = new ArrayList<>();
 				RememberDates.setLastLabExamDate(examDate);
 
-				lab.setDate(examDate);
+				lab.setLabDate(examDate);
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
 				lab.setNote(noteTextArea.getText());
