@@ -133,7 +133,7 @@ DEFAULT_DATADIR="$DATA_DIR"
 
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 EXPERT_MODE="off"
-OH_UI_ADDRESS="http://localhost:8080"
+OH_UI_URL="http://localhost:8080"
 
 ################ Architecture and external software ################
 
@@ -712,7 +712,7 @@ function start_database {
 function set_database_root_pw {
 	# if using MySQL/MariaDB root password need to be set
 	echo "Setting $MYSQL_NAME root password..."
-	./$MYSQL_DIR/bin/mysql -u root --skip-password --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DATABASE_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
+	./$MYSQL_DIR/bin/mysql -u root --skip-password --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER 'root'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
 	if [ $? -ne 0 ]; then
 		echo "Error: $MYSQL_NAME root password not set! Try resetting installation with option [X]. Exiting."
@@ -726,8 +726,8 @@ function import_database {
 	echo "Creating OH Database..."
 	# create OH database and user
 	./$MYSQL_DIR/bin/mysql -u root -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
-	-e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; CREATE USER '$DATABASE_USER'@'localhost' IDENTIFIED BY '$DATABASE_PASSWORD'; \
-	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'localhost'; \
+	-e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; \
+	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; \
 	GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%' ; " >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
 	if [ $? -ne 0 ]; then
@@ -844,7 +844,7 @@ function start_api_server {
 	echo "Starting API server..."
 	echo "Please wait, it might take some time..."
 	echo ""
-	echo "Connect to http://localhost:8080 for dashboard"
+	echo "Connect to http://$OH_UI_URL:8080 for dashboard"
 	echo ""
 	
 	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
@@ -921,7 +921,8 @@ function clean_database {
 	rm -rf ./$TMP_DIR/*
 	# remove database files
 	echo "Removing databases..."
-	rm -rf ./"$DATA_DIR"
+	# removing all databases under default data dir (prod / demo)
+	rm -rf ./$DEFAULT_DATADIR/*
 }
 
 ###################################################################
@@ -966,14 +967,14 @@ function start_gui {
 
 ###################################################################
 function start_ui {
-	echo "Starting Open Hospital UI at $OH_UI_ADDRESS..."
+	echo "Starting Open Hospital UI at $OH_UI_URL..."
 	# OH UI launch
 	if which gnome-open > /dev/null; then
-		gnome-open $OH_UI_ADDRESS
+		gnome-open $OH_UI_URL
 	elif which xdg-open > /dev/null; then
-		xdg-open $OH_UI_ADDRESS
+		xdg-open $OH_UI_URL
 	elif [ ! -n $BROWSER ]; then
-		$BROWSER $OH_UI_ADDRESS
+		$BROWSER $OH_UI_URL
 	else
 		echo "Could not detect the web browser to use."
 	fi
