@@ -380,9 +380,10 @@ function read_settings {
 		$db_settings = [pscustomobject](Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS" -Raw | ConvertFrom-StringData)
 
 		$DATABASE_URL=$db_settings."jdbc.url"
-		$script:DATABASE_SERVER=$DATABASE_URL.TrimStart("jdbc:mysql://").Split(":",2)[0]
-		$script:DATABASE_PORT=$DATABASE_URL.TrimStart("jdbc:mysql://").Split(":",2)[1].Split("/",2)[0]
-		$script:DATABASE_NAME=$DATABASE_URL.TrimStart("jdbc:mysql://").Split(":",2)[1].Split("/",2)[1]
+		$DATABASE_URL=$DATABASE_URL.TrimStart("jdbc:mysql")
+		$script:DATABASE_SERVER=$DATABASE_URL.Split('/')[2].Split(':')[0]
+		$script:DATABASE_PORT=$DATABASE_URL.Split(":",2)[1].Split("/",2)[0]
+		$script:DATABASE_NAME=$DATABASE_URL.Split(":",2)[1].Split("/",2)[1]
 		$script:DATABASE_USER=$db_settings."jdbc.username"
 		$script:DATABASE_PASSWORD=$db_settings."jdbc.password"
 	}
@@ -887,7 +888,7 @@ function dump_database {
 		[System.IO.Directory]::CreateDirectory("$OH_PATH/$BACKUP_DIR") > $null
 		Write-Host "Dumping $MYSQL_NAME database..."	
         $SQLCOMMAND=@"
-    --skip-extended-insert -u root --password=$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME
+    --skip-extended-insert -u $DATABASE_USER --password=$DATABASE_PASSWORD -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME
 "@
 	Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqldump.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$OH_PATH\$BACKUP_DIR\mysqldump_$DATE.sql" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"	
 	}
@@ -1324,12 +1325,12 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			else {
 				Write-Host "Restoring Open Hospital database...."
 				# ask user for database to restore
-				$DB_CREATE_SQL = Read-Host -Prompt "Enter SQL dump/backup file that you want to restore - (in $script:SQL_DIR subdirectory) -> "
+				$DB_CREATE_SQL = Read-Host -Prompt "Enter SQL dump/backup file that you want to restore - (in $SQL_DIR subdirectory) -> "
 				if ( !(Test-Path "$OH_PATH/$SQL_DIR/$DB_CREATE_SQL" -PathType leaf)) {
 					Write-Host "Error: No SQL file found!" -ForegroundColor Red
 				}
 				else {
-					Write-Host "Found $SQL_DIR/$DB_CREATE_SQL, restoring it..."
+					Write-Host "Found $DB_CREATE_SQL, restoring it..."
 					# check if mysql utilities exist
 					mysql_check;
 					if ( !($OH_MODE -eq "CLIENT" )) {

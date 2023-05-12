@@ -782,7 +782,7 @@ function dump_database {
 	if [ -x ./$MYSQL_DIR/bin/mysqldump ]; then
 		mkdir -p "$OH_PATH/$BACKUP_DIR"
 		echo "Dumping $MYSQL_NAME database..."
-		./$MYSQL_DIR/bin/mysqldump --skip-extended-insert -u root --password=$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME > ./$BACKUP_DIR/mysqldump_$DATE.sql
+		./$MYSQL_DIR/bin/mysqldump --skip-extended-insert -u $DATABASE_USER --password=$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME > ./$BACKUP_DIR/mysqldump_$DATE.sql
 		if [ $? -ne 0 ]; then
 			echo "Error: Database not dumped! Exiting."
 			cd "$CURRENT_DIR"
@@ -844,7 +844,7 @@ function start_api_server {
 	echo "Starting API server..."
 	echo "Please wait, it might take some time..."
 	echo ""
-	echo "Connect to http://$OH_UI_URL:8080 for dashboard"
+	echo "Connect to http://$OH_UI_URL for dashboard"
 	echo ""
 	
 	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
@@ -1203,10 +1203,10 @@ function parse_user_input {
 			echo "Restoring Open Hospital database...."
 			# ask user for database/sql script to restore
 			read -p "Enter SQL dump/backup file that you want to restore - (in $SQL_DIR subdirectory) -> " DB_CREATE_SQL
-			if [ ! -f ./$SQL_DIR/$DB_CREATE_SQL ]; then
+			if [ ! -f $OH_PATH/$SQL_DIR/$DB_CREATE_SQL ]; then
 				echo "Error: No SQL file found! Exiting."
 			else
-				echo "Found $SQL_DIR/$DB_CREATE_SQL, restoring it..."
+				echo "Found $DB_CREATE_SQL, restoring it..."
 				# check if mysql utilities exist
 				mysql_check;
 				if [ "$OH_MODE" != "CLIENT" ]; then
