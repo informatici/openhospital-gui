@@ -1476,7 +1476,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				$script:OH_SINGLE_USER=""
 				$script:LOG_LEVEL=""
 				$script:DEMO_DATA=""
-				$script:DB_CREATE_SQL="
+				$script:DB_CREATE_SQL=""
 				$script:EXPERT_MODE=""
 				$script:API_SERVER=""
 				# set variables to defaults
