@@ -1351,6 +1351,7 @@ function parse_user_input {
 			unset OH_SINGLE_USER
 			unset LOG_LEVEL
 			unset DEMO_DATA
+			unset DB_CREATE_SQL
 			unset EXPERT_MODE
 			unset API_SERVER
 			# set variables to defaults
