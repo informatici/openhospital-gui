@@ -148,6 +148,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
 		
 		this.parent = parent;
+		this.setAlwaysOnTop(true);
 
 		addLoginListener(parent);
 
