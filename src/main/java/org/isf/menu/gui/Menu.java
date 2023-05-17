@@ -41,7 +41,7 @@ public class Menu {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Menu.class);
 
 	private static final Pattern DELIMITER = Pattern.compile("[._\\-+]");
-	private static final String MIN_JAVA_VERSION = "1.8";
+	private static final String MIN_JAVA_VERSION = "11";
 
 	/**
 	 * Create the GUI and show it.
