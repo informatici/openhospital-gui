@@ -29,6 +29,7 @@ import java.util.EventListener;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -103,6 +104,7 @@ public class UserEdit extends JDialog {
 	private JPasswordField pwdTextField;
 	private JPasswordField pwd2TextField;
 	private JComboBox<UserGroup> userGroupComboBox;
+	private JCheckBox accountLocked;
 
 	private User user;
 	private boolean insert;
@@ -173,8 +175,14 @@ public class UserEdit extends JDialog {
 			}
 			dataPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.description.label")));
 			dataPanel.add(getDescriptionTextField());
+			if (!insert) {
+				dataPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.locked.label")));
+				accountLocked = new JCheckBox();
+				accountLocked.setSelected(user.isAccountLocked());
+				dataPanel.add(accountLocked);
+			}
 			SpringUtilities.makeCompactGrid(dataPanel,
-					insert ? 5 : 3, 2,
+					insert ? 5 : 4, 2,
 					5, 5,
 					5, 5);
 		}
@@ -287,6 +295,11 @@ public class UserEdit extends JDialog {
 				} else {
 					user.setUserGroupName((UserGroup) userGroupComboBox.getSelectedItem());
 					try {
+						if (user.isAccountLocked() && !accountLocked.isSelected()) {
+							userBrowsingManager.unlockUser(user);
+						} else if (!user.isAccountLocked() && accountLocked.isSelected()) {
+							userBrowsingManager.lockUser(user);
+						}
 						result = userBrowsingManager.updateUser(user);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
