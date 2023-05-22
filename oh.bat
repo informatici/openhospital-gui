@@ -291,12 +291,12 @@ if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
 
 	echo Creating database...
 
-	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe -u root -p%DATABASE_ROOT_PW% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% -e "CREATE DATABASE %DATABASE_NAME% CHARACTER SET utf8; CREATE USER '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%'; GRANT ALL PRIVILEGES ON %DATABASE_NAME%.* TO '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%';" >> %OH_PATH%\%LOG_DIR%\%LOG_FILE% 2>&1
+	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe -u root -p%DATABASE_ROOT_PW% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% -e "CREATE USER '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%'; REATE DATABASE %DATABASE_NAME% CHARACTER SET utf8; GRANT ALL PRIVILEGES ON %DATABASE_NAME%.* TO '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%';" >> %OH_PATH%\%LOG_DIR%\%LOG_FILE% 2>&1
  	if ERRORLEVEL 1 (goto error)
 
-	echo Importing database schema %DB_CREATE_SQL%...
+	echo Importing database %DATABASE_NAME% with user %DATABASE_USER%@%DATABASE_SERVER%...
 	cd /d %OH_PATH%\%SQL_DIR%
-	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe --local-infile=1 -u root -p%DATABASE_ROOT_PW% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% %DATABASE_NAME% < "%OH_PATH%\sql\%DB_CREATE_SQL%"  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe --local-infile=1 -u %DATABASE_USER% -p%DATABASE_PASSWORD% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% %DATABASE_NAME% < "%OH_PATH%\sql\%DB_CREATE_SQL%"  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 	if ERRORLEVEL 1 (goto error)
 	cd /d %OH_PATH%
 	echo Database imported!

@@ -722,12 +722,12 @@ function set_database_root_pw {
 }
 
 ###################################################################
-function import_database {
-	echo "Creating OH Database..."
-	# create OH database and user
+function create_database {
+	echo "Creating $DATABASE_NAME database..."
+	# create database user and OH database
 	./$MYSQL_DIR/bin/mysql -u root -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
-	-e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; \
-	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; \
+	-e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; \
+	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; \
 	GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%' ; " >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
 	if [ $? -ne 0 ]; then
@@ -735,7 +735,11 @@ function import_database {
 		shutdown_database;
 		exit 2
 	fi
+}
 
+###################################################################
+function import_database {
+	echo "Checking for SQL creation script..."
 	# check for database creation script
 	if [ -f ./$SQL_DIR/$DB_CREATE_SQL ]; then
 		echo "Using SQL file $SQL_DIR/$DB_CREATE_SQL..."
@@ -746,9 +750,10 @@ function import_database {
 	fi
 
 	# create OH database structure
-	echo "Importing database schema..."
+	echo "Importing database [$DATABASE_NAME] with user [$DATABASE_USER@$DATABASE_SERVER]..."
 	cd "./$SQL_DIR"
-	../$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
+#	../$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
+	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
 	if [ $? -ne 0 ]; then
 		echo "Error: Database not imported! Exiting."
 		shutdown_database;
@@ -772,7 +777,6 @@ function import_database {
 #	fi
 
 	# end
-	echo "Database imported!"
 	cd "$OH_PATH"
 }
 
@@ -1108,7 +1112,7 @@ function parse_user_input {
 		# set mode to CLIENT
 		OH_MODE="CLIENT"
 		echo ""
-		echo "Do you want to initialize/install the OH database on:"
+		echo "Do you want to initialize/install the [$DATABASE_NAME] database on:"
 		echo ""
 		echo " Database Server -> $DATABASE_SERVER"
 		echo " TCP port -> $DATABASE_PORT" 
@@ -1117,17 +1121,22 @@ function parse_user_input {
 		initialize_dir_structure;
 		set_language;
 		mysql_check;
-		# ask user for database root password
-		read -p "Please insert the MariaDB / MySQL database root password (root@"$DATABASE_SERVER") -> " -s DATABASE_ROOT_PW
+		# ask user for database password
+		#read -p "Please insert the MariaDB / MySQL database root password (root@"$DATABASE_SERVER") -> " -s DATABASE_ROOT_PW
+		read -p "Please insert the MariaDB / MySQL database password for user [$DATABASE_USER@$DATABASE_SERVER] -> " -s DATABASE_PASSWORD
 		echo ""
-		echo "Installing the database....."
+		echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER] ?"
+		get_confirmation 1;
+		echo "Installing the Open Hospital database with following settings:"
 		echo ""
+		echo " Database server -> $DATABASE_SERVER"
 		echo " Database name -> $DATABASE_NAME"
 		echo " Database user -> $DATABASE_USER"
 		echo " Database password -> $DATABASE_PASSWORD"
 		echo ""
-		import_database;
+	#	create_database;
 		test_database_connection;
+		import_database;
 		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
@@ -1195,18 +1204,19 @@ function parse_user_input {
 		;;
 	###################################################
 	r)	# restore database
-		# check if database exists
-		echo ""
-		if [ -d ./"$DATA_DIR" ]; then
-			echo "Error: Database already present. Remove existing database before restoring. Exiting."
+		# check if local portable database exists
+		if [ "$OH_MODE" != "CLIENT" ] && [ -d ./"$DATA_DIR" ]; then
+			echo ""
+			echo "Error: Portable database already present. Remove existing data before restoring.."
 		else
-			echo "Restoring Open Hospital database...."
+			echo ""
 			# ask user for database/sql script to restore
 			read -p "Enter SQL dump/backup file that you want to restore - (in $SQL_DIR subdirectory) -> " DB_CREATE_SQL
 			if [ ! -f $OH_PATH/$SQL_DIR/$DB_CREATE_SQL ]; then
 				echo "Error: No SQL file found! Exiting."
 			else
-				echo "Found $DB_CREATE_SQL, restoring it..."
+				echo "Found $DB_CREATE_SQL - are you sure you want to restore it on [$DATABASE_NAME@$DATABASE_SERVER] ?"
+				get_confirmation 1;
 				# check if mysql utilities exist
 				mysql_check;
 				if [ "$OH_MODE" != "CLIENT" ]; then
@@ -1216,7 +1226,9 @@ function parse_user_input {
 					initialize_database;
 					start_database;
 					set_database_root_pw;
+					create_database;
 				fi
+				test_database_connection;
 				import_database;
 				if [ $OH_MODE != "CLIENT" ]; then
 					shutdown_database;
@@ -1512,7 +1524,9 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 		start_database;	
 		# set database root password
 		set_database_root_pw;
-		# create database and load data
+		# create database and user
+		create_database;
+		# load data
 		import_database;
 	else
 	        echo "OH database found!"

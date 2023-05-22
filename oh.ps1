@@ -811,12 +811,12 @@ function set_database_root_pw {
 }
 
 ###################################################################
-function import_database {
-	Write-Host "Creating OH Database..."
-	# create OH database and user
+function create_database {
+	Write-Host "Creating $DATABASE_NAME database..."
+	# create database user and OH database
 	
     $SQLCOMMAND=@"
-    -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
+    -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
 "@
 	try {
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
@@ -826,6 +826,11 @@ function import_database {
 		shutdown_database;
 		Read-Host; exit 2
 	}
+}
+
+###################################################################
+function import_database {
+	Write-Host "Checking for SQL creation script..."
 	# check for database creation script
 	if (Test-Path "$OH_PATH/$SQL_DIR/$DB_CREATE_SQL" -PathType leaf) {
  		Write-Host "Using SQL file $SQL_DIR\$DB_CREATE_SQL..."
@@ -837,12 +842,12 @@ function import_database {
 	}
 
 	# create OH database structure
-	Write-Host "Importing database schema..."
+	Write-Host "Importing database [$DATABASE_NAME] with user [$DATABASE_USER@$DATABASE_SERVER]..."
 
 	cd "./$SQL_DIR"
 
     $SQLCOMMAND=@"
-   --local-infile=1 -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./$DB_CREATE_SQL"
+   --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./$DB_CREATE_SQL"
 "@
 	try {
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
@@ -877,7 +882,6 @@ function import_database {
 #	}
 
 	# end
-	Write-Host "Database imported!"
 	cd "$OH_PATH"
 }
 
@@ -1242,7 +1246,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		"i"	{ # initialize/install OH database
 			# set mode to CLIENT
 			$OH_MODE="CLIENT"
-			Write-Host "Do you want to initialize/install the OH database on:"
+			Write-Host "Do you want to initialize/install the [$DATABASE_NAME] database on:"
 			Write-Host ""
 			Write-Host " Database Server -> $DATABASE_SERVER"
 			Write-Host " TCP port -> $DATABASE_PORT"
@@ -1251,16 +1255,22 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			initialize_dir_structure;
 			set_language;
 			mysql_check;
-			# ask user for database root password
-			$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password (root@$DATABASE_SERVER) -> "
-			Write-Host "Installing the database....."
+			# ask user for database password
+			#$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password (root@$DATABASE_SERVER) -> "
+			$script:DATABASE_PASSWORD = Read-Host "Please insert the MariaDB / MySQL database password for user [$DATABASE_USER@$DATABASE_SERVER] -> "
 			Write-Host ""
+			Write-Host "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER] ?"
+			get_confirmation 1;
+			Write-Host "Installing the Open Hospital database with the following settings:"
+			Write-Host ""
+			Write-Host " Database server -> $DATABASE_SERVER"
 			Write-Host " Database name -> $DATABASE_NAME"
 			Write-Host " Database user -> $DATABASE_USER"
 			Write-Host " Database password -> $DATABASE_PASSWORD"
 			Write-Host ""
-			import_database;
+			#create_database;
 			test_database_connection;
+			import_database;
 			Write-Host "Done!"
 			Read-Host "Press any key to continue";
 		}
@@ -1318,19 +1328,20 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		}
 		###################################################
 		"r"	{ # restore database
-			# check if database exists
-			if ( (Test-Path "$OH_PATH/$DATA_DIR" )) {
-				Write-Host "Error: Database already present. Remove existing database before restoring. Exiting." -ForegroundColor Red
+			# check if local portable database exists
+			if ( ($OH_MODE -ne "CLIENT") -And (Test-Path "$OH_PATH/$DATA_DIR") ){
+				Write-Host "Error: Portable database already present. Remove existing data before restoring." -ForegroundColor Red
 			}
 			else {
-				Write-Host "Restoring Open Hospital database...."
+				Write-Host ""
 				# ask user for database to restore
 				$DB_CREATE_SQL = Read-Host -Prompt "Enter SQL dump/backup file that you want to restore - (in $SQL_DIR subdirectory) -> "
 				if ( !(Test-Path "$OH_PATH/$SQL_DIR/$DB_CREATE_SQL" -PathType leaf)) {
 					Write-Host "Error: No SQL file found!" -ForegroundColor Red
 				}
 				else {
-					Write-Host "Found $DB_CREATE_SQL, restoring it..."
+					Write-Host "Found $DB_CREATE_SQL - are you sure you want to restore it on [$DATABASE_NAME@$DATABASE_SERVER] ?"
+					get_confirmation 1;
 					# check if mysql utilities exist
 					mysql_check;
 					if ( !($OH_MODE -eq "CLIENT" )) {
@@ -1340,7 +1351,9 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 						initialize_database;
 						start_database;	
 						set_database_root_pw;
+						create_database;
 					}
+					test_database_connection;
 					import_database;
 					if ( !($OH_MODE -eq "CLIENT" )) {
 						shutdown_database;
@@ -1349,7 +1362,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				}
 			}
 			Read-Host "Press any key to continue";
-			}
+		}
 		###################################################
 		"s"	{ # save / write config files
 			Write-Host "Do you want to save current settings to OH configuration files?"
@@ -1605,7 +1618,9 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 		start_database;	
 		# set database root password
 		set_database_root_pw;
-		# create database and load data
+		# create database and user
+		create_database;
+		# load data
 		import_database;
 	}
 	else {
