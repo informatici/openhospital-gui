@@ -1255,8 +1255,14 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			initialize_dir_structure;
 			set_language;
 			mysql_check;
+			Write-Host "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server ?"
+			$choice = Read-Host -Prompt "Press [y] to confirm: "
+			if (( "$choice" -eq "y" )) {
+				# ask user for root database password
+				$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password (root@$DATABASE_SERVER) -> "
+				create_database;
+			}
 			# ask user for database password
-			#$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password (root@$DATABASE_SERVER) -> "
 			$script:DATABASE_PASSWORD = Read-Host "Please insert the MariaDB / MySQL database password for user [$DATABASE_USER@$DATABASE_SERVER] -> "
 			Write-Host ""
 			Write-Host "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER] ?"
@@ -1268,7 +1274,6 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host " Database user -> $DATABASE_USER"
 			Write-Host " Database password -> $DATABASE_PASSWORD"
 			Write-Host ""
-			#create_database;
 			test_database_connection;
 			import_database;
 			Write-Host "Done!"
@@ -1470,14 +1475,17 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			if (( "$choice" -eq "y" )) {
 				clean_conf_files;
 			}
-			Write-Host "Warning: do you want to remove all existing data and databases?" -ForegroundColor Red
-			$choice = Read-Host -Prompt "Press [y] to confirm: "
-			if (( "$choice" -eq "y" )) {
-				Write-Host "--->>> This operation cannot be undone" -ForegroundColor Red
-				Write-Host "--->>> Are you sure?" -ForegroundColor Red
+			# remove local portable database
+			if ( ($OH_MODE -ne "CLIENT") ){
+				Write-Host "Warning: do you want to remove all existing data and databases?" -ForegroundColor Red
 				$choice = Read-Host -Prompt "Press [y] to confirm: "
 				if (( "$choice" -eq "y" )) {
-					clean_database;
+					Write-Host "--->>> This operation cannot be undone" -ForegroundColor Red
+					Write-Host "--->>> Are you sure?" -ForegroundColor Red
+					$choice = Read-Host -Prompt "Press [y] to confirm: "
+					if (( "$choice" -eq "y" )) {
+						clean_database;
+					}
 				}
 			}
 			Write-Host "Warning: do you want to reset all existing configuration variables?" -ForegroundColor Red
