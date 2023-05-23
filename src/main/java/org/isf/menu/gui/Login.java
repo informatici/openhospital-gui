@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -136,14 +135,13 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		add(panel);
 		pack();
 
-		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
 	}
-	
-	public Login(MainMenu parent) {
-		super(parent, MessageBundle.getMessage("angal.login.title"), true);
+
+	public Login(JFrame hiddenFrame, MainMenu parent) {
+		super(hiddenFrame, MessageBundle.getMessage("angal.login.title"), true);
 
 		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
 		
@@ -156,14 +154,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		add(panel);
 		pack();
 
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-
-		Dimension mySize = getSize();
-
-		setLocation((screensize.width - mySize.width) / 2,
-				(screensize.height - mySize.height) / 2);
-
+		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
 	}

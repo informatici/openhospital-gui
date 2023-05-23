@@ -169,7 +169,14 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			LOGGER.info("Logging: Multi User mode.");
 
 			if (null == myUser) {
-				new Login(this);
+				JFrame hiddenOwner = new JFrame(MessageBundle.getMessage("angal.login.title"));
+				ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
+				hiddenOwner.setIconImage(img.getImage());
+				hiddenOwner.setLocation(-10000, -1000);
+				hiddenOwner.setSize(new Dimension(1, 1));
+				hiddenOwner.show();
+				new Login(hiddenOwner, this);
+				hiddenOwner.dispose();
 			}
 
 			if (null == myUser) {
