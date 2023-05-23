@@ -77,7 +77,7 @@ DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-OH_DIR="oh"
+OH_DIR="."
 OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
@@ -1116,6 +1116,11 @@ function parse_user_input {
 		echo ""
 		echo " Database Server -> $DATABASE_SERVER"
 		echo " TCP port -> $DATABASE_PORT" 
+		echo " Database name -> $DATABASE_NAME"
+		echo " Database user -> $DATABASE_USER"
+		echo " Database password -> $DATABASE_PASSWORD"
+		echo ""
+		echo "-> To change this values select [m] option from main menu <-"
 		echo ""
 		get_confirmation 1;
 		initialize_dir_structure;
@@ -1134,13 +1139,6 @@ function parse_user_input {
 		echo ""
 		echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER] ?"
 		get_confirmation 1;
-		echo "Installing the Open Hospital database with following settings:"
-		echo ""
-		echo " Database server -> $DATABASE_SERVER"
-		echo " Database name -> $DATABASE_NAME"
-		echo " Database user -> $DATABASE_USER"
-		echo " Database password -> $DATABASE_PASSWORD"
-		echo ""
 		test_database_connection;
 		import_database;
 		echo "Done!"

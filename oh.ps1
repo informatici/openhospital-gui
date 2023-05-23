@@ -132,7 +132,7 @@ $script:DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-$script:OH_DIR="oh"
+$script:OH_DIR="."
 $script:OH_DOC_DIR="doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
@@ -1250,7 +1250,11 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host ""
 			Write-Host " Database Server -> $DATABASE_SERVER"
 			Write-Host " TCP port -> $DATABASE_PORT"
+			Write-Host " Database name -> $DATABASE_NAME"
+			Write-Host " Database user -> $DATABASE_USER"
+			Write-Host " Database password -> $DATABASE_PASSWORD"
 			Write-Host ""
+			Write-Host "-> To change this values select [m] option from main menu <-"
 			get_confirmation 1;
 			initialize_dir_structure;
 			set_language;
@@ -1267,13 +1271,6 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host ""
 			Write-Host "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER] ?"
 			get_confirmation 1;
-			Write-Host "Installing the Open Hospital database with the following settings:"
-			Write-Host ""
-			Write-Host " Database server -> $DATABASE_SERVER"
-			Write-Host " Database name -> $DATABASE_NAME"
-			Write-Host " Database user -> $DATABASE_USER"
-			Write-Host " Database password -> $DATABASE_PASSWORD"
-			Write-Host ""
 			test_database_connection;
 			import_database;
 			Write-Host "Done!"
