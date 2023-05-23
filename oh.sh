@@ -77,7 +77,7 @@ DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-OH_DIR="."
+OH_DIR="oh"
 OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
@@ -1125,7 +1125,7 @@ function parse_user_input {
 		read -p "Press [y] to confirm: " choice
 		if [ "$choice" = "y" ]; then
 			# ask user for root database password
-			read -p "Please insert the MariaDB / MySQL database root password (root@"$DATABASE_SERVER") -> " -s DATABASE_ROOT_PW
+			read -p "Please insert the MariaDB / MySQL database root password [root@$DATABASE_SERVER] -> " -s DATABASE_ROOT_PW
 			echo ""
 			create_database;
 		fi

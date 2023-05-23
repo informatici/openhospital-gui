@@ -132,7 +132,7 @@ $script:DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-$script:OH_DIR="."
+$script:OH_DIR="oh"
 $script:OH_DOC_DIR="doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
@@ -1259,7 +1259,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			$choice = Read-Host -Prompt "Press [y] to confirm: "
 			if (( "$choice" -eq "y" )) {
 				# ask user for root database password
-				$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password (root@$DATABASE_SERVER) -> "
+				$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password [root@$DATABASE_SERVER] -> "
 				create_database;
 			}
 			# ask user for database password
