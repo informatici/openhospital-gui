@@ -149,18 +149,18 @@ REM #-> DB_CREATE_SQL default is set to create_all_en.sql - set to "create_all_d
 
 REM ######## Architecture
 REM # ARCH can be set to 32 or x64
-REM set ARCH=x64
-set ARCH=32
+REM set ARCH=32
+set ARCH=x64
 
 REM ######## MySQL Software
-REM # MariaDB 64bit
+REM # MariaDB 64bit download URL
 REM https://archive.mariadb.org/mariadb-10.6.12/winx64-packages/mariadb-10.6.12-winx64.zip
 
-REM # MariaDB 32bit
+REM # MariaDB 32bit download  URL
 REM https://archive.mariadb.org/mariadb-10.6.5/win32-packages/mariadb-10.6.5-win32.zip
 
-set MYSQL_DIR=mariadb-10.6.5-win%ARCH%
-REM set MYSQL_DIR=mariadb-10.6.12-win%ARCH%
+REM set MYSQL_DIR=mariadb-10.6.5-win%ARCH%
+set MYSQL_DIR=mariadb-10.6.12-win%ARCH%
 
 REM ####### JAVA Software
 REM # JRE 11 64bit - x86_64 - openjdk
@@ -291,7 +291,7 @@ if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
 
 	echo Creating database...
 
-	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe -u root -p%DATABASE_ROOT_PW% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% -e "CREATE USER '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%'; REATE DATABASE %DATABASE_NAME% CHARACTER SET utf8; GRANT ALL PRIVILEGES ON %DATABASE_NAME%.* TO '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%';" >> %OH_PATH%\%LOG_DIR%\%LOG_FILE% 2>&1
+	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe -u root -p%DATABASE_ROOT_PW% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% -e "CREATE USER '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%'; CREATE DATABASE %DATABASE_NAME% CHARACTER SET utf8; GRANT ALL PRIVILEGES ON %DATABASE_NAME%.* TO '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%';" >> %OH_PATH%\%LOG_DIR%\%LOG_FILE% 2>&1
  	if ERRORLEVEL 1 (goto error)
 
 	echo Importing database %DATABASE_NAME% with user %DATABASE_USER%@%DATABASE_SERVER%...
