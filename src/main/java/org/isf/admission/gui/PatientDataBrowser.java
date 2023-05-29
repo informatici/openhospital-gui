@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.admission.gui;
 
@@ -73,7 +73,7 @@ import org.isf.ward.model.Ward;
 
 /**
  * This class shows and allows to modify all patient data and all patient admissions.
- *
+ * <p>
  * last release  oct-23-06
  * @author flavio
  * ----------------------------------------------------
@@ -151,8 +151,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	private Patient patient;
 	private JFrame admittedPatientWindow;
 	
-	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-	
+
 	public PatientDataBrowser(AdmittedPatientBrowser parentWindow,  Patient myPatient) {
 		super();
 		patient = myPatient;
@@ -170,7 +169,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 		setVisible(true);
 	}
 
-	private JPanel jContentPane = null;
+	private JPanel jContentPane;
 
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
@@ -183,8 +182,8 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 	
 	
-	private JPanel patientData = null;
-	private boolean isMalnutrition = false;
+	private JPanel patientData;
+	private boolean isMalnutrition;
 	
 	private JPanel getPatientDataPanel() {
 		patientData = new JPanel();
@@ -203,6 +202,11 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 		return patientData;
 	}
+
+	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 	private List<Admission> admList;
 	private List<Disease> disease;
@@ -225,7 +229,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	
 	private JScrollPane scrollPane;
 	
-	private JPanel tablesPanel=null;
+	private JPanel tablesPanel;
 	
 	private JPanel getTablesPanel() {
 		tablesPanel = new JPanel(new BorderLayout());
@@ -267,10 +271,10 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 
 	
-	private JButton closeButton=null;
-	private JButton editButton=null;
-	private JButton deleteButton=null;
-	private JButton malnutritionButton=null;
+	private JButton closeButton;
+	private JButton editButton;
+	private JButton deleteButton;
+	private JButton malnutritionButton;
 	
 	private JButton getCloseButton() {
 		if (closeButton == null) {
@@ -334,7 +338,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 						Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 
 						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedadmission.msg");
-						if ((n == JOptionPane.YES_OPTION) && admissionManager.setDeleted(adm.getId())) {
+						if ((n == JOptionPane.YES_OPTION) && admissionBrowserManager.setDeleted(adm.getId())) {
 							admList.remove(adm);
 							admModel.fireTableDataChanged();
 							admTable.updateUI();
@@ -346,10 +350,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 						}
 					} else {
 						Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
-						OpdBrowserManager delOpd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 
 						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedopd.msg");
-						if ((n == JOptionPane.YES_OPTION) && (delOpd.deleteOpd(opd))) {
+						if ((n == JOptionPane.YES_OPTION) && (opdBrowserManager.deleteOpd(opd))) {
 							opdList.remove(opd);
 							admModel.fireTableDataChanged();
 							admTable.updateUI();
@@ -395,14 +398,10 @@ public class PatientDataBrowser extends ModalJFrame implements
 class AdmissionBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = -453243229156512947L;
-		private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-		private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 		public AdmissionBrowserModel() {
-			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
-			OpdBrowserManager opd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
-				opdList = opd.getOpdList(patient.getCode());
+				opdList = opdBrowserManager.getOpdList(patient.getCode());
 			} catch(OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -412,7 +411,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				ward = wbm.getWards();
+				ward = wardBrowserManager.getWards();
 			} catch(OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
 			}
@@ -470,16 +469,12 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					return myDate.format(DATE_FORMATTER);
 				}
 				
-			} else if (column == 1) {				
+			} else if (column == 1) {
 				if (row < admList.size()) {
-					String id = admList.get(row).getWard().getCode();
-					for (Ward elem : ward) {
-						if (elem.getCode().equalsIgnoreCase(id)) {
-							return elem.getDescription();
-						}
-					}
+					return admList.get(row).getWard().getDescription();
 				} else {
-					return "OPD";
+					int z = row - admList.size();
+					return opdList.get(z).getWard().getDescription();
 				}
 			}
 			else if (column == 2) {
@@ -537,7 +532,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					}
 				} else {
 					int z = row - admList.size();
-					String status = "" + opdList.get(z).getNewPatient();
+					String status = String.valueOf(opdList.get(z).getNewPatient());
 					return (status.compareTo("R") == 0
 							? MessageBundle.getMessage("angal.opd.reattendance.txt")
 							: MessageBundle.getMessage("angal.opd.newattendance.txt"));

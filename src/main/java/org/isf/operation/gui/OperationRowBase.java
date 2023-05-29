@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.operation.gui;
 
@@ -35,7 +35,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +62,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
+import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,12 +84,13 @@ abstract class OperationRowBase extends JPanel {
 	protected List<Operation> operationsOPD;
 	protected List<Operation> operationsAll;
 
-	protected OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-	protected OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
+	protected OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	protected OperationRowBrowserManager operationRowBrowserManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
+
 	protected OhTableOperationModel<org.isf.operation.model.OperationRow> modelOhOpeRow;
 	protected List<org.isf.operation.model.OperationRow> oprowData = new ArrayList<>();
 
-	protected List<String> operationResults = opeManager.getResultDescriptionList();
+	protected List<String> operationResults = operationBrowserManager.getResultDescriptionList();
 	protected OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 	protected JTable tableData;
 
@@ -153,12 +154,12 @@ abstract class OperationRowBase extends JPanel {
 		searchOperationButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 		searchOperationButton.addActionListener(new ActionListener() {
 
-			List<Operation> operationsOPD = null;
+			List<Operation> operationsOPD;
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					operationsOPD = opeManager.getOperation();
+					operationsOPD = operationBrowserManager.getOperation();
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 				}
@@ -339,7 +340,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected GoodDateTimeSpinnerChooser getDateTimeChooser() {
 		if (textDate == null) {
-			textDate = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
+			textDate = new GoodDateTimeSpinnerChooser(TimeTools.getNow());
 		}
 		return textDate;
 	}
@@ -372,7 +373,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected JComboBox<Operation> getOperationsBox() {
 		JComboBox<Operation> comboOpe = new JComboBox<>();
-		ArrayList<Operation> opeList = new ArrayList<>();
+		List<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(getOperationCollection());
 		} catch (OHServiceException ex) {
@@ -400,7 +401,7 @@ abstract class OperationRowBase extends JPanel {
 	public void addToForm() {
 		org.isf.operation.model.OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
 		/* ** for combo operation **** */
-		ArrayList<Operation> opeList = new ArrayList<>();
+		List<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(getOperationCollection());
 		} catch (OHServiceException ex) {
@@ -425,13 +426,13 @@ abstract class OperationRowBase extends JPanel {
 			textDate.setDateTime(opeRow.getOpDate());
 
 			textAreaRemark.setText(opeRow.getRemarks());
-			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
+			textFieldUnit.setText(String.valueOf(opeRow.getTransUnit()));
 		}
 
 		/* ***** resultat **** */
 		int index = 0;
 		for (int i = 0; i < operationResults.size(); i++) {
-			if (opeRow.getOpResult() != null && (opeManager.getResultDescriptionKey(operationResults.get(i) + "")).equals(opeRow.getOpResult())) { //$NON-NLS-1$
+			if (opeRow.getOpResult() != null && (operationBrowserManager.getResultDescriptionKey(operationResults.get(i))).equals(opeRow.getOpResult())) {
 				index = i;
 			}
 		}
@@ -451,7 +452,7 @@ abstract class OperationRowBase extends JPanel {
 				if (idOpe > 0) {
 					boolean result;
 					try {
-						result = opeRowManager.deleteOperationRow(operationRow);
+						result = operationRowBrowserManager.deleteOperationRow(operationRow);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 						return;

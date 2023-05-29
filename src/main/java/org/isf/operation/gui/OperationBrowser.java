@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.operation.gui;
 
@@ -93,7 +93,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private int pfrmBordY;
 	private int selectedrow;
 	private JLabel selectlabel;
-	private JComboBox pbox;
+	private JComboBox<OperationType> diseaseTypeFilter;
 	private List<Operation> pOperation;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
@@ -108,8 +108,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private JFrame myFrame;
 	private String pSelection;
 	
-	private OperationBrowserManager operationManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-	private OperationTypeBrowserManager operationTypeManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+	private OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 	
 	public OperationBrowser() {
 
@@ -137,21 +137,21 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		selectlabel = new JLabel(MessageBundle.getMessage("angal.operation.selecttype")); //$NON-NLS-1$
 		buttonPanel.add(selectlabel);
 
-		pbox = new JComboBox();
-		pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
+		diseaseTypeFilter = new JComboBox<>();
+		diseaseTypeFilter.addItem(new OperationType("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
 		List<OperationType> type;
 		try {
-			type = operationTypeManager.getOperationType();
+			type = operationTypeBrowserManager.getOperationType();
 			for (OperationType elem : type) {
-				pbox.addItem(elem);
+				diseaseTypeFilter.addItem(elem);
 			}
 		} catch (OHServiceException e1) {
 			type = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 
-		pbox.addActionListener(actionEvent -> {
-			pSelection = pbox.getSelectedItem().toString();
+		diseaseTypeFilter.addActionListener(actionEvent -> {
+			pSelection = diseaseTypeFilter.getSelectedItem().toString();
 			if (pSelection.compareTo(STR_ALL) == 0) {
 				model = new OperationBrowserModel();
 			} else {
@@ -160,7 +160,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			model.fireTableDataChanged();
 			table.updateUI();
 		});
-		buttonPanel.add(pbox);
+		buttonPanel.add(diseaseTypeFilter);
 
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
@@ -196,7 +196,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				Operation operation = (Operation) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg", operation.getDescription());
 				try {
-					if ((answer == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(operation))) {
+					if ((answer == JOptionPane.YES_OPTION) && (operationBrowserManager.deleteOperation(operation))) {
 						pOperation.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
@@ -223,7 +223,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		public OperationBrowserModel(String s) {
 			try {
-				pOperation = operationManager.getOperationByTypeDescription(s);
+				pOperation = operationBrowserManager.getOperationByTypeDescription(s);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -231,7 +231,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		public OperationBrowserModel() {
 			try {
-				pOperation = operationManager.getOperation();
+				pOperation = operationBrowserManager.getOperation();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

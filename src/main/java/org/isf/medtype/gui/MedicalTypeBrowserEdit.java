@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medtype.gui;
 
@@ -89,18 +89,18 @@ public class MedicalTypeBrowserEdit extends JDialog {
 		}
 	}
     
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
 	private String lastdescription;
 	private MedicalType medicalType;
 	private boolean insert;
-	private JPanel jDataPanel = null;
-	private MedicalTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
+	private JPanel jDataPanel;
+	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 
 	/**
 	 * This is the default constructor
@@ -201,8 +201,8 @@ public class MedicalTypeBrowserEdit extends JDialog {
 				boolean result;
 				if (insert) { // inserting
 					try {
-						result = manager.newMedicalType(medicalType);
-						if (result) {
+						MedicalType insertedMedicalType = medicalTypeBrowserManager.newMedicalType(medicalType);
+						if (insertedMedicalType != null) {
 							fireMedicalInserted();
 							dispose();
 						} else {
@@ -216,8 +216,8 @@ public class MedicalTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = manager.updateMedicalType(medicalType);
-							if (result) {
+							MedicalType updatedMedicalType = medicalTypeBrowserManager.updateMedicalType(medicalType);
+							if (updatedMedicalType != null) {
 								fireMedicalUpdated();
 								dispose();
 							} else {

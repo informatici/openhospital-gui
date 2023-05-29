@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -25,17 +25,18 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.Duration;
 import java.util.EventListener;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -48,11 +49,13 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
+import org.isf.session.UserSession;
 import org.isf.utils.db.BCrypt;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.layout.SpringUtilities;
+import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +69,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 	private EventListenerList loginListeners = new EventListenerList();
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public interface LoginListener extends EventListener {
 
@@ -119,11 +122,26 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	protected JTextField login;
 	private JPasswordField pwd;
 	private MainMenu parent;
-	private User returnUser;
 	private boolean usersListLogin;
 
-	public Login(MainMenu parent) {
+	
+	public Login(JFrame parent) {
 		super(parent, MessageBundle.getMessage("angal.login.title"), true);
+
+		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
+		
+		// add panel to frame
+		LoginPanel panel = new LoginPanel(this);
+		add(panel);
+		pack();
+
+		setLocationRelativeTo(null);
+		setResizable(false);
+		setVisible(true);
+	}
+
+	public Login(JFrame hiddenFrame, MainMenu parent) {
+		super(hiddenFrame, MessageBundle.getMessage("angal.login.title"), true);
 
 		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
 		
@@ -136,14 +154,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		add(panel);
 		pack();
 
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-
-		Dimension mySize = getSize();
-
-		setLocation((screensize.width - mySize.width) / 2,
-				(screensize.height - mySize.height) / 2);
-
+		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
 	}
@@ -156,21 +167,58 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		String userName = usersListLogin ? (String) usersList.getSelectedItem() : login.getText();
 		String passwd = new String(pwd.getPassword());
 		boolean found = false;
-		for (User u : users) {
-			if (u.getUserName().equals(userName) && BCrypt.checkpw(passwd, u.getPasswd())) {
-				returnUser = u;
-				found = true;
+		User user = null;
+		try {
+			for (User u : users) {
+				if (u.getUserName().equals(userName)) {
+					user = userBrowsingManager.getUserByName(u.getUserName());
+					if (user.isAccountLocked()) {
+						boolean isUnlocked = userBrowsingManager.unlockWhenTimeExpired(user);
+						if (!isUnlocked) {
+							Duration duration = Duration.between(TimeTools.getNow(), user.getLockedTime().plusMinutes(GeneralData.PASSWORDLOCKTIME));
+							MessageDialog.error(this, "angal.login.accountisstilllockedformoreminutes.fmt.msg", duration.toMinutes());
+							pwd.setText("");
+							pwd.grabFocus();
+							return;
+						}
+					}
+					if (BCrypt.checkpw(passwd, u.getPasswd())) {
+						found = true;
+					}
+					break;
+				}
 			}
-		}
-		if (!found) {
+			if (found) {
+				// good PW, so reset failed attempts if there are any
+				if (user.getFailedAttempts() > 0) {
+					userBrowsingManager.resetFailedAttempts(user);
+				}
+				fireLoginInserted(user);
+				removeLoginListener(parent);
+				UserSession.setUser(user);
+				dispose();
+				return;
+			}
+			if (user.isAccountLocked()) {
+				MessageDialog.error(this, "angal.login.accountislocked.msg");
+				return;
+			}
 			LOGGER.warn("Login failed: {}", MessageBundle.getMessage("angal.login.passwordisincorrectpleaseretry.msg"));
 			MessageDialog.error(this, "angal.login.passwordisincorrectpleaseretry.msg");
 			pwd.setText("");
 			pwd.grabFocus();
-		} else {
-			fireLoginInserted(returnUser);
-			removeLoginListener(parent);
-			dispose();
+			userBrowsingManager.increaseFailedAttempts(user);
+			if (GeneralData.PASSWORDTRIES != 0) {
+				user.setFailedAttempts(user.getFailedAttempts() + 1);
+				if (user.getFailedAttempts() >= GeneralData.PASSWORDTRIES) {
+					userBrowsingManager.lockUser(user);
+					MessageDialog.error(this, "angal.login.accountisnowlockedforminutes.fmt.msg", GeneralData.PASSWORDLOCKTIME);
+				}
+			}
+		} catch (OHServiceException e1) {
+			LOGGER.error("Error while logging in user: {}. Exiting.", userName);
+			OHServiceExceptionUtil.showMessages(e1);
+			System.exit(1);
 		}
 	}
 
@@ -192,7 +240,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		public LoginPanel(Login myFrame) {
 
 			try {
-				users = manager.getUser();
+				users = userBrowsingManager.getUser();
 			} catch (OHServiceException e1) {
 				LOGGER.error("Exiting.");
 				OHServiceExceptionUtil.showMessages(e1);

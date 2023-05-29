@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicalstockward.gui;
 
@@ -127,11 +127,10 @@ public class WardPharmacyRectify extends JDialog {
 	private JSpinner jSpinnerNewQty;
 	private SpinnerNumberModel spinnerNewQtyModel;
 
-	private MedicalBrowsingManager medManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
-	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
-	
+
 	private List<Medical> medicals; //list of all medicals available in the application
 	private Map<Integer, Double> wardMap; //map quantities by their medical_id
 	private JTextField jTextFieldLotNumber;
@@ -148,7 +147,7 @@ public class WardPharmacyRectify extends JDialog {
 	
 	private void initMedicals() {
 		try {
-			this.medicals = medManager.getMedicals();
+			this.medicals = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e) {
 			this.medicals = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -162,7 +161,7 @@ public class WardPharmacyRectify extends JDialog {
 		super(owner, true);
 		selectedWard = ward;
 		try {
-			wardDrugs= wardManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
+			wardDrugs= movWardBrowserManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -184,7 +183,7 @@ public class WardPharmacyRectify extends JDialog {
 		super(owner, true);
 		selectedWard = ward;
 		try {
-			wardDrugs = wardManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
+			wardDrugs = movWardBrowserManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -372,7 +371,7 @@ public class WardPharmacyRectify extends JDialog {
 			} catch (OHServiceException e2) {
 				OHServiceExceptionUtil.showMessages(e2);
 			}
-			double newQty = (Double) spinnerNewQtyModel.getNumber().doubleValue();
+			double newQty = spinnerNewQtyModel.getNumber().doubleValue();
 			double movQuantity = lotQty - newQty;
 
 			if (movQuantity == 0. || newQty < 0) {
@@ -388,7 +387,7 @@ public class WardPharmacyRectify extends JDialog {
 
 			try {
 				movStockInsertingManager.storeLot(selectedLot.getCode(), selectedLot, med);
-				movWardBrowserManager.newMovementWard(new MovementWard(selectedWard, LocalDateTime.now(), false, null, 0, 0, reason, med, movQuantity,
+				movWardBrowserManager.newMovementWard(new MovementWard(selectedWard, TimeTools.getNow(), false, null, 0, 0, reason, med, movQuantity,
 						MessageBundle.getMessage("angal.medicalstockward.rectify.pieces"), selectedLot));
 				fireMovementWardInserted();
 				dispose();
@@ -535,8 +534,8 @@ public class WardPharmacyRectify extends JDialog {
 	}
 
 	protected Lot askLot() {
-		LocalDateTime preparationDate = LocalDateTime.now();
-		LocalDateTime expiringDate = LocalDateTime.now();
+		LocalDateTime preparationDate = TimeTools.getNow();
+		LocalDateTime expiringDate = TimeTools.getNow();
 		Lot lot = null;
 		JTextField lotNameTextField = new JTextField(15);
 
@@ -655,7 +654,7 @@ public class WardPharmacyRectify extends JDialog {
 			jSpinnerNewQty.setFont(FONT_BOLD);
 			jSpinnerNewQty.addChangeListener(changeEvent -> {
 				Double stock = Double.parseDouble(jTextFieldStockQty.getText());
-				Double newQty = (Double) spinnerNewQtyModel.getNumber().doubleValue();
+				Double newQty = spinnerNewQtyModel.getNumber().doubleValue();
 				if (stock > 0) {
 					jButtonChooseLot.setEnabled(true);
 				}

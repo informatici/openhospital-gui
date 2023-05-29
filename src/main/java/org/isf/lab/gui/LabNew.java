@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.lab.gui;
 
@@ -81,6 +81,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.OhTableModelExam;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -175,22 +176,22 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 	private int[] examColumnWidth = { 200, 150 };
 	private boolean[] examResizable = { true, false };
 	
-	private Patient patientSelected = null;
-	private Laboratory selectedLab = null;
+	private Patient patientSelected;
+	private Laboratory selectedLab;
 
 	//Admission
-	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	
 	//Materials
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
 	private List<String> matList = labManager.getMaterialList();
 	
 	//Exams (ALL)
-	private ExamBrowsingManager exaManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 	private List<Exam> exaArray;
 	
 	//Results (ALL)
-	private ExamRowBrowsingManager examRowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 
 	//Arrays for this Patient
 	private List<List<LaboratoryRow>> examResults = new ArrayList<>();
@@ -200,7 +201,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
                 
 	public LabNew(JFrame owner) {
 		try {
-			exaArray = exaManager.getExams();
+			exaArray = examBrowsingManager.getExams();
 		} catch (OHServiceException e) {
 			exaArray = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -217,7 +218,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
         patientSelected = patient;
         
 		try {
-			exaArray = exaManager.getExams();
+			exaArray = examBrowsingManager.getExams();
 		} catch (OHServiceException e) {
 			exaArray = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -299,17 +300,19 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 				RememberDates.setLastLabExamDate(newDate);
 				String inOut = jRadioButtonOPD.isSelected() ? "O" : "I";
 
+				int row = 0;
 				for (Laboratory lab : examItems) {
-					lab.setDate(newDate);
-					lab.setExamDate(newDate.toLocalDate());
+					lab.setLabDate(newDate);
 					lab.setInOutPatient(inOut);
 					lab.setPatient(patientSelected);
-					if (lab.getExam().getProcedure() == 3 && lab.getResult().isEmpty()) {
+					int procedure = lab.getExam().getProcedure();
+					if ((procedure == 1 || procedure == 3) && lab.getResult().isEmpty()) {
 						MessageDialog.error(LabNew.this, "angal.labnew.pleaseinsertavalidvalue");
 						//select the first exam with the missing value
-						jTableExams.setRowSelectionInterval(examItems.indexOf(lab), examItems.indexOf(lab));
+						jTableExams.setRowSelectionInterval(row, row);
 						return;
 					}
+					row++;
 				}
 
 				try {
@@ -325,13 +328,8 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 	}
 	
 	private String getIsAdmitted() {
-		Admission adm = new Admission();
-		try {
-			adm = admissionManager.getCurrentAdmission(patientSelected);
-		} catch(OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-		}
-		return (adm==null?"O":"I");					
+		Admission adm = admissionBrowserManager.getCurrentAdmission(patientSelected);
+		return (adm == null ? "O" : "I");				
 	}
 
 	private JPanel getJPanelButtons() {
@@ -376,10 +374,14 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 				txtResultValue.setPreferredSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 				List<ExamRow> exaRowArray;
 				try {
-					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
+					exaRowArray = examRowBrowsingManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
 					LOGGER.error(ex.getMessage(), ex);
+				}
+				// no default result
+				if (selectedExam.getDefaultResult().isEmpty()) {
+					jComboBoxExamResults.addItem(" ");
 				}
 				if (exaRowArray != null) {
 					for (ExamRow exaRow : exaRowArray) {
@@ -416,7 +418,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 				jPanelResults.add(resultsContainerScroll);
 				List<ExamRow> exaRowArray;
 				try {
-					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
+					exaRowArray = examRowBrowsingManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
 					LOGGER.error(ex.getMessage(), ex);
@@ -626,7 +628,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 		if (jCalendarDate == null) {
 			LocalDateTime labDate = RememberDates.getLastLabExamDate();
 			if (labDate == null) {
-				labDate = LocalDateTime.now();
+				labDate = TimeTools.getNow();
 			}
 			jCalendarDate = new GoodDateTimeSpinnerChooser(labDate);
 		}
@@ -768,6 +770,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 					}
 
 					if (exa.getProcedure() == 1 || exa.getProcedure() == 3) {
+						// The exam may not have a default value
 						lab.setResult(exa.getDefaultResult());
 					} else { // exa.getProcedure() == 2
 						lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));

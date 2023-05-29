@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.sms.gui;
 
@@ -57,6 +57,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateTimeToggleChooser;
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.time.TimeTools;
 
 /**
  * @author Mwithi
@@ -173,7 +174,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	
 	private GoodDateTimeToggleChooser getJSchedDateChooser() {
 		if (jSchedDateChooser == null) {
-			jSchedDateChooser = new GoodDateTimeToggleChooser(LocalDateTime.now());
+			jSchedDateChooser = new GoodDateTimeToggleChooser(TimeTools.getNow());
 		}
 		return jSchedDateChooser;
 	}

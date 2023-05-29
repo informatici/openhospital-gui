@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -62,7 +62,7 @@ public class JTextFieldSearchModel extends JPanel {
 	private HashMap<String, Medical> medicalMap;
 	private JDialog owner;
 
-	private MedicalBrowsingManager medMan = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 
 	/**
 	 * Creates a Dialog containing a JTextField
@@ -89,7 +89,7 @@ public class JTextFieldSearchModel extends JPanel {
 		List<Medical> medicals = null;
 		medicalMap = new HashMap<>();
 		try {
-			medicals = medMan.getMedicalsSortedByCode();
+			medicals = medicalBrowsingManager.getMedicalsSortedByCode();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

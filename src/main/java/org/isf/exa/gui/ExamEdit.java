@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.exa.gui;
 
@@ -103,25 +103,25 @@ public class ExamEdit extends JDialog {
 		}
 	}
     
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JLabel descLabel = null;
-	private JLabel codeLabel= null;
-	private JLabel procLabel = null;
-	private JLabel defLabel = null;
-	private VoLimitedTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField=null;
-	private JComboBox<String> procComboBox = null;
-	private VoLimitedTextField defTextField = null;
-	private JLabel typeLabel = null;
-	private JComboBox typeComboBox = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JLabel descLabel;
+	private JLabel codeLabel;
+	private JLabel procLabel;
+	private JLabel defLabel;
+	private VoLimitedTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
+	private JComboBox<String> procComboBox;
+	private VoLimitedTextField defTextField;
+	private JLabel typeLabel;
+	private JComboBox<ExamType> examTypeComboBox;
 	private Exam exam;
 	private boolean insert;
 	
-	private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
     
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -184,7 +184,7 @@ public class ExamEdit extends JDialog {
 			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default") + ':');
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(typeLabel);
-			dataPanel.add(getTypeComboBox());
+			dataPanel.add(getExamTypeComboBox());
 			dataPanel.add(codeLabel);
 			dataPanel.add(getCodeTextField());
 			dataPanel.add(descLabel);
@@ -241,7 +241,7 @@ public class ExamEdit extends JDialog {
 				} else {
 					int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
 
-					exam.setExamtype((ExamType) typeComboBox.getSelectedItem());
+					exam.setExamtype((ExamType) examTypeComboBox.getSelectedItem());
 					exam.setDescription(descriptionTextField.getText());
 
 					exam.setCode(codeTextField.getText().toUpperCase());
@@ -251,7 +251,7 @@ public class ExamEdit extends JDialog {
 					boolean result = false;
 					if (insert) {
 						try {
-							if (manager.isKeyPresent(exam)) {
+							if (examBrowsingManager.isKeyPresent(exam)) {
 								MessageDialog.error(ExamEdit.this, "angal.exa.changethecodebecauseisalreadyinuse");
 								return;
 							}
@@ -259,7 +259,7 @@ public class ExamEdit extends JDialog {
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 						try {
-							result = manager.newExam(exam);
+							result = examBrowsingManager.newExam(exam);
 							if (result) {
 								fireExamInserted();
 							}
@@ -268,7 +268,10 @@ public class ExamEdit extends JDialog {
 						}
 					} else {
 						try {
-							result = manager.updateExam(exam);
+							Exam updatedExam = examBrowsingManager.updateExam(exam);
+							if (updatedExam != null) {
+								result = true;
+							}
 							if (result) {
 								fireExamUpdated();
 							}
@@ -340,33 +343,40 @@ public class ExamEdit extends JDialog {
 	}
 	
 	/**
-	 * This method initializes typeComboBox	
+	 * This method initializes examTypeComboBox
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	private JComboBox getTypeComboBox() {
-		if (typeComboBox == null) {
-			typeComboBox = new JComboBox();
-			if (insert) {
-				List<ExamType> types;
-				try {
-					types = manager.getExamType();
-				} catch (OHServiceException e) {
-					types = null;
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				if (null != types) {
-					for (ExamType elem : types) {
-						typeComboBox.addItem(elem);
+	private JComboBox<ExamType> getExamTypeComboBox() {
+		if (examTypeComboBox == null) {
+			examTypeComboBox = new JComboBox<>();
+			try {
+				List<ExamType> types = examBrowsingManager.getExamType();
+				if (insert) {
+					if (null != types) {
+						for (ExamType elem : types) {
+							examTypeComboBox.addItem(elem);
+						}
+					}
+				} else {
+					ExamType selectExamType = null;
+					if (null != types) {
+						for (ExamType elem : types) {
+							examTypeComboBox.addItem(elem);
+							if (exam.getExamtype().equals(elem)) {
+								selectExamType = elem;
+							}
+						}
+					}
+					if (selectExamType != null) {
+						examTypeComboBox.setSelectedItem(selectExamType);
 					}
 				}
-			} else {
-				typeComboBox.addItem(exam.getExamtype());
-				typeComboBox.setEnabled(false);
+			} catch (OHServiceException ohServiceException) {
+				OHServiceExceptionUtil.showMessages(ohServiceException);
 			}
-			
 		}
-		return typeComboBox;
+		return examTypeComboBox;
 	}
 
 }

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medtype.gui;
 
@@ -57,17 +57,17 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {80, 200};
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private MedicalTypeBrowserModel model;
 	private int selectedrow;
-	private MedicalTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
-	private MedicalType medicalType = null;
+	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
+	private MedicalType medicalType;
 	private final JFrame myFrame;
 	
 	/**
@@ -177,7 +177,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 					MedicalType medType = (MedicalType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.medtype.deletemedicaltype.fmt.msg", medType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteMedicalType(medType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (medicalTypeBrowserManager.deleteMedicalType(medType))) {
 							pMedicalType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -208,7 +208,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 
 		public MedicalTypeBrowserModel() {
 			try {
-				pMedicalType = manager.getMedicalType();
+				pMedicalType = medicalTypeBrowserManager.getMedicalType();
 			} catch (OHServiceException e) {
 				pMedicalType = null;
 				OHServiceExceptionUtil.showMessages(e);

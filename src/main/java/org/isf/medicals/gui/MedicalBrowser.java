@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicals.gui;
 
@@ -33,7 +33,6 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -148,7 +147,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private final JFrame me;
 
 	private String pSelection;
-	private JTextField searchString = null;
+	private JTextField searchString;
 	protected boolean altKeyReleased = true;
 	private String lastKey = "";
 	private JButton buttonAMC;
@@ -250,7 +249,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				public void keyTyped(KeyEvent e) {
 					if (altKeyReleased) {
 						lastKey = "";
-						String s = "" + e.getKeyChar();
+						String s = String.valueOf(e.getKeyChar());
 						if (Character.isLetterOrDigit(e.getKeyChar())) {
 							lastKey = s;
 						}
@@ -399,7 +398,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				medical = (Medical) (model.getValueAt(selectedrow, -1));
 				// Select Dates
 				GoodFromDateToDateChooser dataRange = new GoodFromDateToDateChooser(MedicalBrowser.this);
 				dataRange.setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
@@ -476,7 +475,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				medical = (Medical) (model.getValueAt(selectedrow, -1));
 				int answer = MessageDialog.yesNo(MedicalBrowser.this, "angal.medicals.deletemedical.fmt.msg", medical.getDescription());
 				if (answer == JOptionPane.YES_OPTION) {
 					boolean deleted;
@@ -505,7 +504,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				medical = (Medical) (model.getValueAt(selectedrow, -1));
 				MedicalEdit editrecord = new MedicalEdit(medical, false, me);
 				editrecord.addMedicalListener(MedicalBrowser.this);
 				editrecord.setVisible(true);
@@ -582,7 +581,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		int i = 0;
 
 		if (options.indexOf(option) == i) {
-			from = TimeTools.formatDateTime(LocalDateTime.now(), DATE_FORMAT_DD_MM_YYYY);
+			from = TimeTools.formatDateTime(TimeTools.getNow(), DATE_FORMAT_DD_MM_YYYY);
 			to = from;
 		}
 		if (options.indexOf(option) == ++i) {
@@ -635,6 +634,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		new GenericReportFromDateToDate(
 				from,
 				to,
+				"rpt_base", 
 				"PharmaceuticalExpiration",
 				MessageBundle.getMessage("angal.medicals.expiringreport"),
 				false);

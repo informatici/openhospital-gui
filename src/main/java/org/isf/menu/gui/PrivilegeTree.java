@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -67,7 +67,7 @@ class PrivilegeTree extends JDialog {
 
 	private UserGroup aGroup;
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public PrivilegeTree(UserGroupBrowsing parent, UserGroup aGroup) {
 		super(parent, MessageBundle.getMessage("angal.groupsbrowser.menuitembrowser.title"), true);
@@ -78,13 +78,13 @@ class PrivilegeTree extends JDialog {
 
 		List<UserMenuItem> myMenu = null;
 		try {
-			myMenu = manager.getGroupMenu(aGroup);
+			myMenu = userBrowsingManager.getGroupMenu(aGroup);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		List<UserMenuItem> rootMenu = null;
 		try {
-			rootMenu = manager.getGroupMenu(new UserGroup("admin", ""));
+			rootMenu = userBrowsingManager.getGroupMenu(new UserGroup("admin", ""));
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -185,7 +185,7 @@ class PrivilegeTree extends JDialog {
 				}
 			}
 			try {
-				manager.setGroupMenu(aGroup, newUserMenu);
+				userBrowsingManager.setGroupMenu(aGroup, newUserMenu);
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
@@ -320,6 +320,6 @@ class UserItemNameTreeCellRenderer extends DefaultTreeCellRenderer {
 		return this;
 	}
 
-	private Font plainFont = null;
+	private Font plainFont;
 
 }

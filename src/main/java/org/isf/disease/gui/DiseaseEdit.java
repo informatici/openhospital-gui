@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.disease.gui;
 
@@ -106,22 +106,23 @@ public class DiseaseEdit extends JDialog {
 		}
 	}
 	
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private JTextField codeTextField = null;
-	private JComboBox<DiseaseType> typeComboBox = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField codeTextField;
+	private JComboBox<DiseaseType> diseaseTypeComboBox;
 	private Disease disease;
 	private boolean insert;
-	private JPanel jNewPatientPanel = null;
-	private JCheckBox includeOpdCheckBox  = null;
-	private JCheckBox includeIpdInCheckBox  = null;
-	private JCheckBox includeIpdOutCheckBox  = null;
+	private JPanel jNewPatientPanel;
+	private JCheckBox includeOpdCheckBox;
+	private JCheckBox includeIpdInCheckBox;
+	private JCheckBox includeIpdOutCheckBox;
 
-	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -190,7 +191,7 @@ public class DiseaseEdit extends JDialog {
 			gbctypeComboBox.insets = new Insets(5, 5, 5, 5);
 			gbctypeComboBox.gridx = 1;
 			gbctypeComboBox.gridy = 0;
-			dataPanel.add(getTypeComboBox(), gbctypeComboBox);
+			dataPanel.add(getDiseaseTypeComboBox(), gbctypeComboBox);
 			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
 			GridBagConstraints gbcCodeLabel = new GridBagConstraints();
 			gbcCodeLabel.insets = new Insets(5, 5, 5, 5);
@@ -269,9 +270,8 @@ public class DiseaseEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
-				disease.setType((DiseaseType) typeComboBox.getSelectedItem());
+				disease.setType((DiseaseType) diseaseTypeComboBox.getSelectedItem());
 				disease.setDescription(descriptionTextField.getText());
 				disease.setCode(codeTextField.getText().trim().toUpperCase());
 				disease.setOpdInclude(includeOpdCheckBox.isSelected());
@@ -282,7 +282,7 @@ public class DiseaseEdit extends JDialog {
 				Disease savedDisease;
 				try {
 					if (insert) { // inserting
-						savedDisease = manager.newDisease(disease);
+						savedDisease = diseaseBrowserManager.newDisease(disease);
 						if (savedDisease != null) {
 							disease.setLock(savedDisease.getLock());
 							result = true;
@@ -292,7 +292,7 @@ public class DiseaseEdit extends JDialog {
 							fireDiseaseInserted();
 						}
 					} else { // updating
-						savedDisease = manager.updateDisease(disease);
+						savedDisease = diseaseBrowserManager.updateDisease(disease);
 						if (savedDisease != null) {
 							disease.setLock(savedDisease.getLock());
 							result = true;
@@ -372,39 +372,41 @@ public class DiseaseEdit extends JDialog {
 	}
 	
 	/**
-	 * This method initializes typeComboBox	
+	 * This method initializes diseaseTypeComboBox
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	private JComboBox<DiseaseType> getTypeComboBox() {
-		if (typeComboBox == null) {
-			typeComboBox = new JComboBox<>();
-			typeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
+	private JComboBox<DiseaseType> getDiseaseTypeComboBox() {
+		if (diseaseTypeComboBox == null) {
+			diseaseTypeComboBox = new JComboBox<>();
+			diseaseTypeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
 			try {
+				List<DiseaseType> types = diseaseTypeBrowserManager.getDiseaseType();
 				if (insert) {
-					List<DiseaseType> types = manager.getDiseaseType();
-					for (DiseaseType elem : types) {
-						typeComboBox.addItem(elem);
+					if (types != null) {
+						for (DiseaseType elem : types) {
+							diseaseTypeComboBox.addItem(elem);
+						}
 					}
 				} else {
 					DiseaseType selectedDiseaseType = null;
-					List<DiseaseType> types = manager.getDiseaseType();
-					for (DiseaseType elem : types) {
-						typeComboBox.addItem(elem);
-						if (disease.getType().equals(elem)) {
-							selectedDiseaseType = elem;
+					if (types != null) {
+						for (DiseaseType elem : types) {
+							diseaseTypeComboBox.addItem(elem);
+							if (disease.getType().equals(elem)) {
+								selectedDiseaseType = elem;
+							}
 						}
 					}
 					if (selectedDiseaseType != null) {
-						typeComboBox.setSelectedItem(selectedDiseaseType);
+						diseaseTypeComboBox.setSelectedItem(selectedDiseaseType);
 					}
 				}
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
-
 		}
-		return typeComboBox;
+		return diseaseTypeComboBox;
 	}
 	
 }

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.dlvrtype.gui;
 
@@ -88,18 +88,20 @@ public class DeliveryTypeBrowserEdit extends JDialog {
         }
     }
 
-    private JPanel jContentPane = null;
-    private JPanel dataPanel = null;
-    private JPanel buttonPanel = null;
-    private JButton cancelButton = null;
-    private JButton okButton = null;
-    private JTextField descriptionTextField = null;
-    private VoLimitedTextField codeTextField = null;
+    private DeliveryTypeBrowserManager deliveryTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
+
+    private JPanel jContentPane;
+    private JPanel dataPanel;
+    private JPanel buttonPanel;
+    private JButton cancelButton;
+    private JButton okButton;
+    private JTextField descriptionTextField;
+    private VoLimitedTextField codeTextField;
     private String lastdescription;
     private DeliveryType deliveryType;
     private boolean insert;
-    private JPanel jDataPanel = null;
-    private JLabel jCodeLabel = null;
+    private JPanel jDataPanel;
+    private JLabel jCodeLabel;
 
     /**
      * This is the default constructor; we pass the arraylist and the selectedrow
@@ -195,7 +197,6 @@ public class DeliveryTypeBrowserEdit extends JDialog {
             okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
             okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
             okButton.addActionListener(actionEvent -> {
-                DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
                 try {
                     if (descriptionTextField.getText().equals(lastdescription)) {
@@ -205,7 +206,7 @@ public class DeliveryTypeBrowserEdit extends JDialog {
                     deliveryType.setCode(codeTextField.getText());
                     boolean result;
                     if (insert) {      // inserting
-                        result = manager.newDeliveryType(deliveryType);
+                        result = deliveryTypeBrowserManager.newDeliveryType(deliveryType);
                         if (result) {
                             fireDeliveryInserted();
                         }
@@ -218,7 +219,7 @@ public class DeliveryTypeBrowserEdit extends JDialog {
                         if (descriptionTextField.getText().equals(lastdescription)) {
                             dispose();
                         } else {
-                            result = manager.updateDeliveryType(deliveryType);
+                            result = deliveryTypeBrowserManager.updateDeliveryType(deliveryType);
                             if (result) {
                                 fireDeliveryUpdated();
                             }

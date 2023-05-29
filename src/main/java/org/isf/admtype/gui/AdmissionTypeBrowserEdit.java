@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.admtype.gui;
 
@@ -86,18 +86,20 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 			((LaboratoryTypeListener) listener).admissionTypeUpdated(event);
 		}
 	}
-    
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
+
+	private AdmissionTypeBrowserManager admissionTypeBrowserManager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
+
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
 	private String lastdescription;
 	private AdmissionType admissionType;
 	private boolean insert;
-	private JPanel jDataPanel = null;
+	private JPanel jDataPanel;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -192,7 +194,6 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
 				if (descriptionTextField.getText().equals(lastdescription)) {
 					dispose();
@@ -203,7 +204,7 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 				boolean result;
 				if (insert) {      // inserting
 					try {
-						result = manager.newAdmissionType(admissionType);
+						result = admissionTypeBrowserManager.newAdmissionType(admissionType);
 						if (result) {
 							fireAdmissionInserted(admissionType);
 						}
@@ -220,7 +221,7 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = manager.updateAdmissionType(admissionType);
+							result = admissionTypeBrowserManager.updateAdmissionType(admissionType);
 							if (result) {
 								fireAdmissionUpdated();
 							}

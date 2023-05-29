@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.ward.gui;
 
@@ -76,15 +76,17 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		}
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel jButtonPanel = null;
-	private JButton jEditButton = null;
-	private JButton jNewButton = null;
-	private JButton jDeleteButton = null;
-	private JButton jCloseButton = null;
-	private JScrollPane jScrollPane = null;
-	private JTable table = null;
-	private DefaultTableModel model = null;
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+
+	private JPanel jContentPane;
+	private JPanel jButtonPanel;
+	private JButton jEditButton;
+	private JButton jNewButton;
+	private JButton jDeleteButton;
+	private JButton jCloseButton;
+	private JScrollPane jScrollPane;
+	private JTable table;
+	private DefaultTableModel model;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
@@ -94,13 +96,14 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			MessageBundle.getMessage("angal.ward.beds.col").toUpperCase(),
 			MessageBundle.getMessage("angal.ward.nurses.col").toUpperCase(),
 			MessageBundle.getMessage("angal.ward.doctors.col").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.hasopd.col").toUpperCase(),
 			MessageBundle.getMessage("angal.ward.haspharmacy.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.male.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.female.txt").toUpperCase(),
-			"DURRATION"
+			MessageBundle.getMessage("angal.ward.duration.col").toUpperCase()
 	};
-	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30, 30};
-	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class, int.class};
+	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30, 30, 30};
+	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, int.class};
 	private int selectedrow;
 	private List<Ward> pWard;
 	private Ward ward;
@@ -112,10 +115,11 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	public WardBrowser() {
 		super();
 		myFrame = this;
-		//check if in the db maternity ward exists
-		WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+		//check if in the db maternity and OPD wards exist
+		WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 		try {
-			manager.maternityControl(true);
+			wardBrowserManager.maternityControl(true);
+			wardBrowserManager.opdControl(true);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -214,11 +218,10 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
-					WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 					Ward ward = (Ward) (model.getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))) {
+						if ((answer == JOptionPane.YES_OPTION) && (wardBrowserManager.deleteWard(ward))) {
 							pWard.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();
@@ -278,6 +281,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			columnModel.getColumn(6).setPreferredWidth(pColumnWidth[6]);
 			columnModel.getColumn(7).setPreferredWidth(pColumnWidth[7]);
 			columnModel.getColumn(8).setPreferredWidth(pColumnWidth[8]);
+			columnModel.getColumn(8).setPreferredWidth(pColumnWidth[8]);
 			columnModel.getColumn(9).setPreferredWidth(pColumnWidth[9]);
 			columnModel.getColumn(10).setPreferredWidth(pColumnWidth[10]);
 			columnModel.getColumn(11).setPreferredWidth(pColumnWidth[11]);
@@ -290,9 +294,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		private static final long serialVersionUID = 1L;
 
 		public WardBrowserModel() {
-			WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			try {
-				pWard = manager.getWards();
+				pWard = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				pWard = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
@@ -320,31 +323,34 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		@Override
 		public Object getValueAt(int r, int c) {
 			Ward ward = pWard.get(r);
+			int i = 0;
 			if (c == 0) {
 				return ward.getCode();
 			} else if (c == -1) {
 				return ward;
-			} else if (c == 1) {
+			} else if (c == ++i) {
 				return ward.getDescription();
-			} else if (c == 2) {
+			} else if (c == ++i) {
 				return ward.getTelephone();
-			} else if (c == 3) {
+			} else if (c == ++i) {
 				return ward.getFax();
-			} else if (c == 4) {
+			} else if (c == ++i) {
 				return ward.getEmail();
-			} else if (c == 5) {
+			} else if (c == ++i) {
 				return ward.getBeds();
-			} else if (c == 6) {
+			} else if (c == ++i) {
 				return ward.getNurs();
-			} else if (c == 7) {
+			} else if (c == ++i) {
 				return ward.getDocs();
-			} else if (c == 8) {
+			} else if (c == ++i) {
+				return ward.isOpd();
+			} else if (c == ++i) {
 				return ward.isPharmacy();
-			} else if (c == 9) {
+			} else if (c == ++i) {
 				return ward.isMale();
-			} else if (c == 10) {
+			} else if (c == ++i) {
 				return ward.isFemale();
-			} else if (c == 11) {
+			} else if (c == ++i) {
 				return ward.getVisitDuration();
 			}
 			return null;

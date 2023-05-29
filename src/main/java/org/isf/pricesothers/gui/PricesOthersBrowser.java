@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.pricesothers.gui;
 
@@ -80,7 +80,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	protected static Class<?>[] cTypes = {String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class};
 	
 	private PricesOthers pOthers;
-	PricesOthersManager pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
+	private PricesOthersManager pricesOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 	private List<PricesOthers> pOthersArray;
 	private JFrame myFrame;
 	
@@ -127,7 +127,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 						boolean result = false;
 						try {
-							result = pOthersManager.deleteOther(pOthers);
+							result = pricesOthersManager.deleteOther(pOthers);
 						} catch (OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e);
 						}
@@ -227,9 +227,8 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		private static final long serialVersionUID = 1L;
 
 		public PricesOthersBrowserModel() {
-			pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 			try {
-				pOthersArray = pOthersManager.getOthers();
+				pOthersArray = pricesOthersManager.getOthers();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

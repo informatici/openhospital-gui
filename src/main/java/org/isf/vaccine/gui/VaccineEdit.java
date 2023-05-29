@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.vaccine.gui;
 
@@ -100,14 +100,17 @@ public class VaccineEdit extends JDialog {
 		}
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private JTextField codeTextField = null;
-	private JComboBox<VaccineType> vaccineTypeComboBox = null;
+	private VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField codeTextField;
+	private JComboBox<VaccineType> vaccineTypeComboBox;
 	private Vaccine vaccine;
 	private boolean insert;
 
@@ -168,7 +171,7 @@ public class VaccineEdit extends JDialog {
 			dataPanel = new JPanel();
 			dataPanel.setLayout(new SpringLayout());
 			dataPanel.add(vaccineTypeDescLabel);
-			dataPanel.add(getvaccineTypeComboBox());
+			dataPanel.add(getVaccineTypeComboBox());
 			dataPanel.add(codeLabel);
 			dataPanel.add(getCodeTextField());
 			dataPanel.add(descLabel);
@@ -224,10 +227,9 @@ public class VaccineEdit extends JDialog {
 
 				boolean result = false;
 				Vaccine savedVaccine;
-				VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 				if (insert) {
 					try {
-						savedVaccine = manager.newVaccine(vaccine);
+						savedVaccine = vaccineBrowserManager.newVaccine(vaccine);
 						if (savedVaccine != null) {
 							vaccine.setLock(savedVaccine.getLock());
 							result = true;
@@ -244,7 +246,7 @@ public class VaccineEdit extends JDialog {
 					}
 				} else {
 					try {
-						savedVaccine = manager.updateVaccine(vaccine);
+						savedVaccine = vaccineBrowserManager.updateVaccine(vaccine);
 						if (savedVaccine != null) {
 							vaccine.setLock(savedVaccine.getLock());
 							result = true;
@@ -301,24 +303,33 @@ public class VaccineEdit extends JDialog {
 	 *
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox<VaccineType> getvaccineTypeComboBox() {
+	private JComboBox<VaccineType> getVaccineTypeComboBox() {
 		if (vaccineTypeComboBox == null) {
 			vaccineTypeComboBox = new JComboBox<>();
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-			List<VaccineType> types = null;
 			try {
-				types = manager.getVaccineType();
+				List<VaccineType> types = vaccineTypeBrowserManager.getVaccineType();
+				if (insert) {
+					if (types != null) {
+						for (VaccineType elem : types) {
+							vaccineTypeComboBox.addItem(elem);
+						}
+					}
+				} else {
+					VaccineType selectedVaccineType = null;
+					if (types != null) {
+						for (VaccineType elem : types) {
+							vaccineTypeComboBox.addItem(elem);
+							if (vaccine.getVaccineType().equals(elem)) {
+								selectedVaccineType = elem;
+							}
+						}
+						if (selectedVaccineType != null) {
+							vaccineTypeComboBox.setSelectedItem(vaccine.getVaccineType());
+						}
+					}
+				}
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-			}
-			if (types != null) {
-				for (VaccineType elem : types) {
-					vaccineTypeComboBox.addItem(elem);
-				}
-			}
-			if (!insert) {
-				vaccineTypeComboBox.setSelectedItem(vaccine.getVaccineType());
-				vaccineTypeComboBox.setEnabled(false);				
 			}
 		}
 		return vaccineTypeComboBox;

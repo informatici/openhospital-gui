@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.dlvrtype.gui;
 
@@ -57,17 +57,17 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	};
 	private int[] pColumnWidth = { 80, 200 };
 
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private DeliveryTypeBrowserModel model;
 	private int selectedrow;
-	private DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
-	private DeliveryType deliveryType = null;
+	private DeliveryTypeBrowserManager deliveryTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
+	private DeliveryType deliveryType;
 	private final JFrame myFrame;
 	
 	/**
@@ -177,7 +177,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 					DeliveryType delType = (DeliveryType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.dlvrtype.deletedeliverytype.fmt.msg", delType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryType(delType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (deliveryTypeBrowserManager.deleteDeliveryType(delType))) {
 							pDeliveryType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -204,11 +204,10 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	class DeliveryTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
 		public DeliveryTypeBrowserModel() {
 			try {
-				pDeliveryType = manager.getDeliveryType();
+				pDeliveryType = deliveryTypeBrowserManager.getDeliveryType();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

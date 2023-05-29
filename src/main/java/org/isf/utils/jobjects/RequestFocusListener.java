@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -27,15 +27,15 @@ import javax.swing.event.AncestorListener;
 
 /**
  * Convenience class to request focus on a component.
- *
+ * <p>
  * When the component is added to a realized Window then component will
  * request focus immediately, since the ancestorAdded event is fired
  * immediately.
- *
+ * <p>
  * When the component is added to a non realized Window, then the focus
  * request will be made once the window is realized, since the
  * ancestorAdded event will not be fired until then.
- *
+ * <p>
  * Using the default constructor will cause the listener to be removed
  * from the component once the AncestorEvent is generated. A second constructor
  * allows you to specify a boolean value of false to prevent the

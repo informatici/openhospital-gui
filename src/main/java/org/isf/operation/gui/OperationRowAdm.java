@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.operation.gui;
 
@@ -53,7 +53,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 		myAdmission = adm;
 		if (myAdmission != null) {
 			try {
-				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
+				List<OperationRow> res = operationRowBrowserManager.getOperationRowByAdmission(myAdmission);
 				oprowData.addAll(res);
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
@@ -77,7 +77,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 		OperationRow operationRow = new OperationRow();
 		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		if (this.comboResult.getSelectedItem() != null) {
-			operationRow.setOpResult(opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
+			operationRow.setOpResult(operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
 		} else {
 			operationRow.setOpResult("");
 		}
@@ -99,7 +99,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 		} else {
 			OperationRow opeInter = oprowData.get(index);
 			opeInter.setOpDate(this.textDate.getLocalDateTime());
-			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
@@ -116,13 +116,13 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 	// used by addToForm()
 	@Override
 	public List<Operation> getOperationCollection() throws OHServiceException {
-		return opeManager.getOperationAdm();
+		return operationBrowserManager.getOperationAdm();
 	}
 
 	@Override
 	public void admissionUpdated(AWTEvent e) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, e);
+			saveAllOpeRow(oprowData, operationRowBrowserManager, e);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
@@ -131,14 +131,14 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 	@Override
 	public void admissionInserted(AWTEvent e) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, e);
+			saveAllOpeRow(oprowData, operationRowBrowserManager, e);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 	}
 
 	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager rowManager, AWTEvent e) throws OHServiceException {
-		for (org.isf.operation.model.OperationRow opRow : listOpe) {
+		for (OperationRow opRow : listOpe) {
 			if ((opRow.getId() > 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
 				try {
 					rowManager.updateOperationRow(opRow);

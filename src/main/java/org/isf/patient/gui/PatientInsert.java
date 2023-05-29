@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.patient.gui;
 
@@ -100,67 +100,67 @@ public class PatientInsert extends JDialog implements ActionListener {
 		}
 	}
 
-	private JPanel jContainPanel = null;
-	private JPanel jDataPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jOkButton = null;
-	private JButton jCancelButton = null;
-	private JTextField ageField = null;
+	private JPanel jContainPanel;
+	private JPanel jDataPanel;
+	private JPanel jButtonPanel;
+	private JButton jOkButton;
+	private JButton jCancelButton;
+	private JTextField ageField;
 	private Integer age = 0;
-	private JPanel jAgePanel = null;
-	private JTextField jFirstNameTextField = null;
-	private JPanel jSecondNamePanel = null;
-	private JTextField jSecondNameTextField = null;
-	private JPanel sexPanel = null;
-	private ButtonGroup sexGroup = null;
+	private JPanel jAgePanel;
+	private JTextField jFirstNameTextField;
+	private JPanel jSecondNamePanel;
+	private JTextField jSecondNameTextField;
+	private JPanel sexPanel;
+	private ButtonGroup sexGroup;
 	private String sexSelect = " ";
 	private char sex = 'M';
 	private boolean insert;
 	private Patient patient;
-	private JPanel jAddressPanel = null;
-	private JLabel jAddressLabel = null;
-	private JTextField jAddressTextField = null;
-	private JPanel jCityPanel = null;
-	private JLabel jCityLabel = null;
-	private JTextField jCityTextField = null;
-	private JPanel jTelPanel = null;
-	private JLabel jTelLabel = null;
-	private JTextField jTelephoneTextField = null;
-	private JPanel jNextKinPanel = null;
-	private JLabel jNextKinLabel = null;
-	private JTextField jNextKinTextField = null;
+	private JPanel jAddressPanel;
+	private JLabel jAddressLabel;
+	private JTextField jAddressTextField;
+	private JPanel jCityPanel;
+	private JLabel jCityLabel;
+	private JTextField jCityTextField;
+	private JPanel jTelPanel;
+	private JLabel jTelLabel;
+	private JTextField jTelephoneTextField;
+	private JPanel jNextKinPanel;
+	private JLabel jNextKinLabel;
+	private JTextField jNextKinTextField;
 	//	private int oldAge;
-	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	private JLabel jLabel1 = null;
-	private JLabel jLabel = null;
-	private JLabel jAgeLabel = null;
-	private JPanel jFirstNamePanel = null;
-	private JPanel jLabelPanel = null;
-	private JPanel jSexLabelPanel = null;
-	private JLabel jLabel2 = null;
-	private JPanel jSecondNamePanel1 = null;
-	private JPanel jAgePanel1 = null;
-	private JPanel jFirstName = null;
-	private JPanel jPanel1 = null;
-	private JPanel jSecondName = null;
-	private JPanel jAge = null;
-	private JPanel jPanel = null;
-	private JPanel jPanel2 = null;
-	private JPanel jPanel3 = null;
-	private JPanel jPanel5 = null;
-	private JPanel jAddress = null;
-	private JPanel jCity = null;
-	private JPanel jNextKin = null;
-	private JPanel jTelephone = null;
-	private JPanel jDataContainPanel = null;
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private JLabel jLabel1;
+	private JLabel jLabel;
+	private JLabel jAgeLabel;
+	private JPanel jFirstNamePanel;
+	private JPanel jLabelPanel;
+	private JPanel jSexLabelPanel;
+	private JLabel jLabel2;
+	private JPanel jSecondNamePanel1;
+	private JPanel jAgePanel1;
+	private JPanel jFirstName;
+	private JPanel jPanel1;
+	private JPanel jSecondName;
+	private JPanel jAge;
+	private JPanel jPanel;
+	private JPanel jPanel2;
+	private JPanel jPanel3;
+	private JPanel jPanel5;
+	private JPanel jAddress;
+	private JPanel jCity;
+	private JPanel jNextKin;
+	private JPanel jTelephone;
+	private JPanel jDataContainPanel;
 	private int pfrmBase = 2;
 	private int pfrmWidth = 1;
 	private int pfrmHeight = 1;
 	private int pfrmBordX;
 	private int pfrmBordY;
-	private JTextArea jNoteTextArea = null;
-	private JPanel jNotePanel = null;
-	private JScrollPane jNoteScrollPane = null;
+	private JTextArea jNoteTextArea;
+	private JPanel jNotePanel;
+	private JScrollPane jNoteScrollPane;
 
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
@@ -243,6 +243,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 		return jButtonPanel;
 	}
 	
+
+	
 	/**
 	 * This method initializes jOkButton	
 	 * 	
@@ -269,7 +271,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 								bdate = bdate.minusYears(age);
 								String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
 								try {
-									if (manager.isNamePresent(name)) {
+									if (patientBrowserManager.isNamePresent(name)) {
 										switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
 											case JOptionPane.OK_OPTION:
 												ok = true;
@@ -311,7 +313,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 									patient.setParentTogether('U');
 
 									try {
-										patient = manager.savePatient(patient);
+										patient = patientBrowserManager.savePatient(patient);
 										firePatientInserted(patient);
 										dispose();
 									} catch (OHServiceException ex) {
@@ -326,7 +328,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 					String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
 					if (!(patient.getName().equals(name))) {
 						try {
-							if (manager.isNamePresent(name)) {
+							if (patientBrowserManager.isNamePresent(name)) {
 								switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
 									case JOptionPane.OK_OPTION:
 										ok = true;
@@ -362,7 +364,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 						patient.setNote(jNoteTextArea.getText());
 
 						try {
-							patient = manager.savePatient(patient);
+							patient = patientBrowserManager.savePatient(patient);
 							firePatientUpdated(patient);
 							dispose();
 						} catch (OHServiceException ex) {
@@ -415,7 +417,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			public void focusLost(FocusEvent e) {
 				try {				
 					age = Integer.parseInt(ageField.getText());
-					if ((age < 0)||(age > 200)) {
+					if ((age < 0)||(age > 120)) {
 						ageField.setText("0");
 						MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 					}

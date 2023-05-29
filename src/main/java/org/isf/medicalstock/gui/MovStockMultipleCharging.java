@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicalstock.gui;
 
@@ -71,7 +71,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
-import org.isf.medstockmovtype.manager.MedicaldsrstockmovTypeBrowserManager;
+import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.supplier.manager.SupplierBrowserManager;
@@ -102,7 +102,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
 	private JComboBox<MovementType> jComboBoxChargeType;
-	private GoodDateChooser jDateChooser;
+	private GoodDateTimeSpinnerChooser jDateChooser;
 	private JComboBox jComboBoxSupplier;
 	private JTable jTableMovements;
 	private final String[] columnNames = {
@@ -135,9 +135,9 @@ public class MovStockMultipleCharging extends JDialog {
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
 	private int optionSelected = UNITS;
 	
-	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
+	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
-	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 
 	private boolean isAutomaticLot() {
@@ -408,7 +408,7 @@ public class MovStockMultipleCharging extends JDialog {
 					Lot lot;
 					boolean isNewLot = false;
 					if (isAutomaticLot()) {
-						LocalDateTime preparationDate = LocalDateTime.now();
+						LocalDateTime preparationDate = TimeTools.getNow();
 						LocalDateTime expiringDate = askExpiringDate();
 						lot = new Lot("", preparationDate, expiringDate); //$NON-NLS-1$
 						// Cost
@@ -444,7 +444,7 @@ public class MovStockMultipleCharging extends JDialog {
 					}
 
 					// Date
-					LocalDateTime date = jDateChooser.getDateStartOfDay();
+					LocalDateTime date = jDateChooser.getLocalDateTime();
 
 					// RefNo
 					String refNo = jTextFieldReference.getText().trim();
@@ -462,9 +462,9 @@ public class MovStockMultipleCharging extends JDialog {
 		return jTextFieldSearch;
 	}
 
-	private GoodDateChooser getJDateChooser() {
+	private GoodDateTimeSpinnerChooser getJDateChooser() {
 		if (jDateChooser == null) {
-			jDateChooser = new GoodDateChooser(LocalDate.now());
+			jDateChooser = new GoodDateTimeSpinnerChooser(TimeTools.getNow());
 		}
 		return jDateChooser;
 	}
@@ -474,7 +474,7 @@ public class MovStockMultipleCharging extends JDialog {
 			jComboBoxChargeType = new JComboBox<>();
 			List<MovementType> movTypes;
 			try {
-				movTypes = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
+				movTypes = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
 			} catch (OHServiceException e) {
 				movTypes = null;
 				OHServiceExceptionUtil.showMessages(e);
@@ -575,7 +575,7 @@ public class MovStockMultipleCharging extends JDialog {
 				if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
 					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expirydatebeforepreparationdate");
 				} 
-				else if (expireDateChooser.getDate().isBefore(jDateChooser.getDate())) {
+				else if (expireDateChooser.getDate().isBefore(jDateChooser.getLocalDateTime().toLocalDate())) {
 					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expiringdateinthepastnotallowed");
 				} else {
 					expiringDate = expireDateChooser.getDateEndOfDay();
@@ -625,7 +625,7 @@ public class MovStockMultipleCharging extends JDialog {
 	protected Lot chooseLot(Medical med) {
 		List<Lot> lots;
 		try {
-			lots = movManager.getLotByMedical(med);
+			lots = movStockInsertingManager.getLotByMedical(med);
 		} catch (OHServiceException e) {
 			lots = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
@@ -669,7 +669,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 
 	protected LocalDateTime askExpiringDate() {
-		LocalDateTime date = LocalDateTime.now();
+		LocalDateTime date = TimeTools.getNow();
 		GoodDateTimeSpinnerChooser expireDateChooser = new GoodDateTimeSpinnerChooser(date);
 		JPanel panel = new JPanel(new GridLayout(1, 2));
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate"))); //$NON-NLS-1$
@@ -898,13 +898,11 @@ public class MovStockMultipleCharging extends JDialog {
 			return false;
 		}
 
-		LocalDate thisDate = jDateChooser.getDate();
-		
 		// Check and set all movements
 		for (int i = 0; i < movements.size(); i++) {
 			Movement mov = movements.get(i);
 			int option = units.get(i);
-			mov.setDate(thisDate.atStartOfDay());
+			mov.setDate(jDateChooser.getLocalDateTime());
 			mov.setRefNo(jTextFieldReference.getText());
 			mov.setQuantity(calcTotal(mov, option));
 			mov.setType((MovementType) jComboBoxChargeType.getSelectedItem());
@@ -924,7 +922,7 @@ public class MovStockMultipleCharging extends JDialog {
 		boolean ok = true;
 		List<Movement> movements = model.getMovements();
 		try {
-			movManager.newMultipleChargingMovements(movements, movements.get(0).getRefNo());
+			movStockInsertingManager.newMultipleChargingMovements(movements, movements.get(0).getRefNo());
 		} catch (OHServiceException e) {
 			ok = false;
 			OHServiceExceptionUtil.showMessages(e);

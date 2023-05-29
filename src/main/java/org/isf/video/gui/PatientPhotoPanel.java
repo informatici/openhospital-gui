@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.video.gui;
 
@@ -59,14 +59,14 @@ public class PatientPhotoPanel extends JPanel {
 	private static final long serialVersionUID = 9129641275344016618L;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
-
+	private static final String PROFILE_PICTURE_FORMAT = "png";
 	// Photo Components:
-	private JPanel jPhotoPanel = null;
-	private PhotoPanel externalPanel = null;
+	private JPanel jPhotoPanel;
+	private PhotoPanel externalPanel;
 	private PatientInsertExtended owner;
 	
-	private JButton jGetPhotoButton = null;
-	private JButton jAttachPhotoButton = null;
+	private JButton jGetPhotoButton;
+	private JButton jAttachPhotoButton;
 
 	private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
 
@@ -110,10 +110,15 @@ public class PatientPhotoPanel extends JPanel {
 
 			externalPanel.add(box, BorderLayout.NORTH);
 			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
-				final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
-				if (newImage != null) {
-					externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
-					patientFrame.setPatientPhoto(newImage);
+				
+				try {
+					BufferedImage bi = (BufferedImage) propertyChangeEvent.getNewValue();
+					if (bi != null) {
+						externalPanel.updatePhoto(ImageUtil.scaleImage(bi, 160, 160));
+						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, GeneralData.MAX_PROFILE_IMAGE_FILE_SIZE_BYTES, PROFILE_PICTURE_FORMAT));
+					} 
+				} catch (IOException e1) {
+					LOGGER.error("Oooops! Can't resize profile picture.", e1);
 				}
 			});
 
@@ -210,7 +215,7 @@ class CroppingDialog extends JDialog {
 	/*
 	 * Return Value
 	 */
-	private BufferedImage cropped = null;
+	private BufferedImage cropped;
 
 	private JButton saveButton;
 

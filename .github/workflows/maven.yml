@@ -16,9 +16,9 @@ jobs:
       run: git clone --depth=50 --branch=develop https://github.com/informatici/openhospital-core.git openhospital-core
     - name: Install core
       run: cd openhospital-core && mvn install -DskipTests=true && cd ..
-    - name: Set up JDK 1.8
+    - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
-        java-version: 1.8
+        java-version: 11
     - name: Build with Maven
       run: mvn -B package --file pom.xml

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.hospital.gui;
 
@@ -55,9 +55,9 @@ public class HospitalBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JPanel jDataPanel = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JPanel jDataPanel;
 	private GoodTimeChooser visitStartField;
 	private GoodTimeChooser visitEndField;
 	private VoIntegerTextField durationField;
@@ -68,16 +68,15 @@ public class HospitalBrowser extends ModalJFrame {
 	private JTextField faxJTextField;
 	private JTextField emailJTextField;
 	private JTextField currencyCodeJTextField;
-	private HospitalBrowsingManager manager;
+	private HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 	private Hospital hospital;
 	private JButton editButton;
 	private JButton updateButton;
 
 	public HospitalBrowser() {
 		super();
-		manager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 		try {
-			hospital = manager.getHospital();
+			hospital = hospitalBrowsingManager.getHospital();
 		} catch (OHServiceException e) {
 			this.hospital = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -273,10 +272,6 @@ public class HospitalBrowser extends ModalJFrame {
 			MessageDialog.error(null, "angal.hospital.thestartofvisitinghoursislaterthantheendhour.msg");
 			inError = true;
 		}
-		if (startTime.getHour() < 0 || endTime.getHour() > 24) {
-			MessageDialog.error(null, "angal.hospital.thevisitinghourvaluesmustbeintherange0to24.msg");
-			inError = true;
-		}
 		if (durationField.getText().isEmpty()) {
 			MessageDialog.error(null, "angal.hospital.thevisitdurationcannotbeblank.msg");
 			inError = true;
@@ -304,7 +299,7 @@ public class HospitalBrowser extends ModalJFrame {
 		hospital.setVisitDuration(durationField.getValue());
 
 		try {
-			this.hospital = manager.updateHospital(hospital);
+			this.hospital = hospitalBrowsingManager.updateHospital(hospital);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -49,10 +49,10 @@ public class GoodDateTimeVisitChooser extends GoodDateTimeChooserBase {
 
 		setBaseSettings();
 
-		HospitalBrowsingManager manager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
+		HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 		Hospital hospital = null;
 		try {
-			hospital = manager.getHospital();
+			hospital = hospitalBrowsingManager.getHospital();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

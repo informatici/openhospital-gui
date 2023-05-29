@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.vactype.gui;
 
@@ -97,18 +97,20 @@ public class VaccineTypeEdit extends JDialog {
 			((VaccineTypeListener) listener).vaccineTypeUpdated(event);
 		}
 	}
-    
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
+
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
 	private String lastdescription;
 	private VaccineType vaccineType;
 	private boolean insert;
-	private JPanel jDataPanel = null;
+	private JPanel jDataPanel;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -208,12 +210,10 @@ public class VaccineTypeEdit extends JDialog {
 				vaccineType.setDescription(descriptionTextField.getText());
 				vaccineType.setCode(codeTextField.getText());
 
-				boolean result;
-				VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-				if (insert) {// inserting
+				if (insert) {	// inserting
 					try {
-						result = manager.newVaccineType(vaccineType);
-						if (result) {
+						VaccineType insertedVaccineType = vaccineTypeBrowserManager.newVaccineType(vaccineType);
+						if (insertedVaccineType != null) {
 							fireVaccineInserted();
 							dispose();
 						} else {
@@ -222,13 +222,13 @@ public class VaccineTypeEdit extends JDialog {
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-				} else { // updating
+				} else {	// updating
 					if (descriptionTextField.getText().equals(lastdescription)) {
 						dispose();
 					} else {
 						try {
-							result = manager.updateVaccineType(vaccineType);
-							if (result) {
+							VaccineType updatedVaccineType = vaccineTypeBrowserManager.updateVaccineType(vaccineType);
+							if (updatedVaccineType != null) {
 								fireVaccineUpdated();
 								dispose();
 							} else {

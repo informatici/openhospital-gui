@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.xmpp.gui;
 
@@ -67,8 +67,8 @@ public class ChatTab extends JTabbedPane {
 
 		private static final long serialVersionUID = 1L;
 		int tab_number;
-		ImageIcon reg = null;
-		ImageIcon over = null;
+		ImageIcon reg;
+		ImageIcon over;
 		ChatTab tabReference;
 		JLabel user;
 

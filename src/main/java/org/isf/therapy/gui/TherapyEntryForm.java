@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.therapy.gui;
 
@@ -81,7 +81,7 @@ public class TherapyEntryForm extends JDialog {
 	/*
 	 * Managers
 	 */
-	private MedicalBrowsingManager medBrowser = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private TherapyManager therapyManager = Context.getApplicationContext().getBean(TherapyManager.class);
 
 	/*
@@ -101,7 +101,7 @@ public class TherapyEntryForm extends JDialog {
 	 */
 	private List<Medical> medArray;
 	private Therapy therapy;
-	private TherapyRow thRow = null;
+	private TherapyRow thRow;
 	private JList medicalsList;
 	private JScrollPane medicalListscrollPane;
 	private JPanel dayWeeksMonthsPanel;
@@ -156,7 +156,7 @@ public class TherapyEntryForm extends JDialog {
 		setIconImage(new ImageIcon("./rsc/icons/oh.png").getImage());
 		inserting = th == null;
 		try {
-			this.medArray = medBrowser.getMedicals();
+			this.medArray = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e) {
 			this.medArray = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
@@ -171,7 +171,7 @@ public class TherapyEntryForm extends JDialog {
 		} else {
 			therapy = new Therapy();
 			radioButtonSet.get(0).setSelected(true);
-			endDateLabel.setText(dateFormat.format(LocalDateTime.now()));
+			endDateLabel.setText(dateFormat.format(TimeTools.getNow()));
 		}
 		this.pack();
 	}

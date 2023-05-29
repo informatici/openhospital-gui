@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.dicom.gui;
 
@@ -76,12 +76,12 @@ class ShowPreLoadDialog extends JDialog {
 	private DicomType dicomType;
 	private String dicomDescription;
 	private List<Date> dates;
-	private boolean save = false;
+	private boolean save;
 
 	/*
 	 * Managers
 	 */
-	private DicomTypeBrowserManager dicomTypeMan = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
+	private DicomTypeBrowserManager dicomTypeBrowserManager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 
 	public ShowPreLoadDialog(JFrame owner, int numfiles, FileDicom fileDicom, List<Date> dates) {
 		super(owner, true);
@@ -125,7 +125,7 @@ class ShowPreLoadDialog extends JDialog {
 		if (dicomDate != null) {
 			dateChooser = new GoodDateChooser(this.dicomDate.toLocalDate());
 		} else {
-			dateChooser = new GoodDateChooser(null);
+			dateChooser = new GoodDateChooser();
 		}
 		centerPanel.add(dateChooser, gbcDateChooser);
 
@@ -185,7 +185,7 @@ class ShowPreLoadDialog extends JDialog {
 			dicomTypeComboBox = new JComboBox();
 			dicomTypeComboBox.addItem("");
 			try {
-				List<DicomType> dicomTypeList = dicomTypeMan.getDicomType();
+				List<DicomType> dicomTypeList = dicomTypeBrowserManager.getDicomType();
 				for (DicomType dicomType : dicomTypeList) {
 					dicomTypeComboBox.addItem(dicomType);
 				}

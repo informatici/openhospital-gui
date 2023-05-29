@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.disctype.gui;
 
@@ -57,17 +57,17 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {80, 200, 80};
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private DischargeTypeBrowserModel model;
 	private int selectedrow;
-	private DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
-	private DischargeType dischargeType = null;
+	private DischargeTypeBrowserManager dischargeTypeBrowserManager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
+	private DischargeType dischargeType;
 	private final JFrame myFrame;
 
 	/**
@@ -181,7 +181,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 
 						boolean deleted;
 						try {
-							deleted = manager.deleteDischargeType(disType);
+							deleted = dischargeTypeBrowserManager.deleteDischargeType(disType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -212,11 +212,10 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 	class DischargeTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 
 		public DischargeTypeBrowserModel() {
 			try {
-				pDischargeType = manager.getDischargeType();
+				pDischargeType = dischargeTypeBrowserManager.getDischargeType();
 			} catch (OHServiceException e) {
 				pDischargeType = null;
 				OHServiceExceptionUtil.showMessages(e);

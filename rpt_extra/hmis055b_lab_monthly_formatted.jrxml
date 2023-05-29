@@ -1,0 +1,994 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hmis055b_lab_monthly_formatted" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoPages" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="hmis055b_lab_monthly_formatted" whenResourceMissingType="Key" uuid="3fb521ab-e0c4-4345-aaff-28adfdcb2999">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="year" class="java.lang.String"/>
+	<parameter name="month" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select   
+        nullif(blood_done,0) blood_done,
+        nullif(blood_negative,0) blood_negative,
+        nullif(urine_done,0) urine_done,
+        nullif(urine_negative,0) urine_negative,
+        nullif(stool_done,0) stool_done,
+        nullif(stool_negative,0) stool_negative,
+        nullif(sputum_done,0) sputum_done,
+        nullif(sputum_negative,0) sputum_negative,
+        nullif(csf_done,0) csf_done,
+        nullif(csf_negative,0) csf_negative,
+        nullif(swabs_done,0) swabs_done,
+        nullif(swabs_negative,0) swabs_negative,
+        nullif(tissues_done,0) tissues_done,
+        nullif(tissues_negative,0) tissues_negative,
+        nullif(row_total,0) row_total,
+        nullif(other_total,0) other_total,
+        EXC_DESC, 
+        EXA_DESC
+from (
+        select et.EXC_DESC, ex.EXA_DESC,
+           (select 
+               count(*) 
+            from 
+               OH_LABORATORY l
+            where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
+               and l.LAB_MATERIAL = 'Blood'
+            ) blood_done,
+        
+           (select 
+               count(*) 
+           from 
+               OH_LABORATORY l
+           where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
+               and l.LAB_RES=ex.EXA_DEFAULT
+               and l.LAB_MATERIAL = 'Blood'
+           ) blood_negative, 
+        
+           (select 
+               count(*) 
+            from 
+               OH_LABORATORY l
+            where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
+               and l.LAB_MATERIAL = 'Urine'
+           ) urine_done,
+        
+           ( select 
+               count(*) 
+           from 
+               OH_LABORATORY l
+           where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
+               and l.LAB_RES=ex.EXA_DEFAULT
+               and l.LAB_MATERIAL = 'Urine'
+           ) urine_negative, 
+        
+           (select 
+               count(*) 
+            from 
+               OH_LABORATORY l
+            where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
+               and l.LAB_MATERIAL = 'Stool'   
+            ) stool_done,
+        
+           ( select 
+               count(*) 
+           from 
+               OH_LABORATORY l
+           where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
+               and l.LAB_RES=ex.EXA_DEFAULT
+               and l.LAB_MATERIAL = 'Stool'
+           ) stool_negative, 
+        
+           (select 
+               count(*) 
+            from 
+               OH_LABORATORY l
+            where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
+               and l.LAB_MATERIAL = 'Sputum'
+            ) sputum_done,
+        
+           ( select 
+               count(*) 
+           from 
+               OH_LABORATORY l
+           where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
+               and l.LAB_RES=ex.EXA_DEFAULT
+               and l.LAB_MATERIAL = 'Sputum'   
+           ) sputum_negative, 
+        
+          (select 
+               count(*) 
+           from 
+               OH_LABORATORY l
+           where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
+               and l.LAB_MATERIAL = 'CSF'
+           ) csf_done, 
+        
+           ( select 
+               count(*) 
+           from 
+               OH_LABORATORY l
+           where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
+               and l.LAB_RES=ex.EXA_DEFAULT
+               and l.LAB_MATERIAL = 'CSF'
+           ) csf_negative, 
+        
+           (select 
+               count(*) 
+            from 
+               OH_LABORATORY l
+            where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
+               and l.LAB_MATERIAL = 'Swabs'
+           ) swabs_done,
+        
+           ( select 
+               count(*) 
+           from 
+               OH_LABORATORY l
+           where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
+               and l.LAB_RES=ex.EXA_DEFAULT
+               and l.LAB_MATERIAL = 'Swabs'   
+           ) swabs_negative, 
+        
+           (select 
+               count(*) 
+            from 
+               OH_LABORATORY l
+             where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
+               and l.LAB_MATERIAL = 'Tissues'
+           ) tissues_done,
+        
+           ( select 
+               count(*) 
+             from 
+               OH_LABORATORY l
+             where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
+               and l.LAB_RES=ex.EXA_DEFAULT
+               and l.LAB_MATERIAL = 'Tissues'
+           ) tissues_negative, 
+        
+           (select 
+               count(*)  
+           from 
+               OH_LABORATORY l
+           where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(LAB_DATE)=$P{month} 
+               and year(LAB_DATE)=$P{year}
+           group by 
+               EXA_DESC
+           ) row_total, 
+          
+          (select 
+               count(*)  
+           from 
+               OH_LABORATORY l
+           where 
+               l.LAB_EXA_ID_A = ex.EXA_ID_A
+               and month(l.LAB_DATE)=$P{month} 
+               and year(l.LAB_DATE)=$P{year}
+               and (l.LAB_MATERIAL not in ('Blood' , 'Urine' , 'Stool' , 'Sputum' , 'CSF' , 'Swabs' , 'Tissues')
+               or l.LAB_MATERIAL is null)     
+           group by 
+               EXA_DESC
+           ) other_total       
+
+        
+        
+        from OH_EXAM ex, OH_EXAMTYPE et
+        where et.EXC_ID_A = ex.EXA_EXC_ID_A
+        order by 1,2
+) final]]>
+	</queryString>
+	<field name="blood_done" class="java.lang.Long"/>
+	<field name="blood_negative" class="java.lang.Long"/>
+	<field name="urine_done" class="java.lang.Long"/>
+	<field name="urine_negative" class="java.lang.Long"/>
+	<field name="stool_done" class="java.lang.Long"/>
+	<field name="stool_negative" class="java.lang.Long"/>
+	<field name="sputum_done" class="java.lang.Long"/>
+	<field name="sputum_negative" class="java.lang.Long"/>
+	<field name="csf_done" class="java.lang.Long"/>
+	<field name="csf_negative" class="java.lang.Long"/>
+	<field name="swabs_done" class="java.lang.Long"/>
+	<field name="swabs_negative" class="java.lang.Long"/>
+	<field name="tissues_done" class="java.lang.Long"/>
+	<field name="tissues_negative" class="java.lang.Long"/>
+	<field name="row_total" class="java.lang.Long"/>
+	<field name="other_total" class="java.lang.Long"/>
+	<field name="EXC_DESC" class="java.lang.String"/>
+	<field name="EXA_DESC" class="java.lang.String"/>
+	<variable name="total_tests" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{row_total}]]></variableExpression>
+	</variable>
+	<variable name="blood_positive" class="java.lang.Long">
+		<variableExpression><![CDATA[new Long($F{blood_done}.longValue() -$F{blood_negative}.longValue())]]></variableExpression>
+	</variable>
+	<variable name="urine_positve" class="java.lang.Long">
+		<variableExpression><![CDATA[new Long($F{urine_done}.longValue() - $F{urine_negative}.longValue())]]></variableExpression>
+	</variable>
+	<variable name="stool_positive" class="java.lang.Long">
+		<variableExpression><![CDATA[new Long($F{stool_done}.longValue() - $F{stool_negative}.longValue())]]></variableExpression>
+	</variable>
+	<variable name="sputum_positive" class="java.lang.Long">
+		<variableExpression><![CDATA[new Long($F{sputum_done}.longValue() - $F{sputum_negative}.longValue())]]></variableExpression>
+	</variable>
+	<variable name="swabs_positive" class="java.lang.Long">
+		<variableExpression><![CDATA[new Long($F{swabs_done}.longValue() - $F{swabs_negative}.longValue())]]></variableExpression>
+	</variable>
+	<variable name="tissues_positive" class="java.lang.Long">
+		<variableExpression><![CDATA[new Long($F{tissues_done}.longValue() - $F{tissues_negative}.longValue())]]></variableExpression>
+	</variable>
+	<variable name="csf_positive" class="java.lang.Long">
+		<variableExpression><![CDATA[new Long($F{csf_done}.longValue() - $F{csf_negative}.longValue())]]></variableExpression>
+	</variable>
+	<group name="categories">
+		<groupExpression><![CDATA[$F{EXC_DESC}]]></groupExpression>
+		<groupHeader>
+			<band height="15" splitType="Stretch">
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement key="textField-1" mode="Opaque" x="0" y="0" width="782" height="15" forecolor="#000000" backcolor="#CCCCCC" uuid="a4c1fc57-48e3-4c8a-82c9-855428edcb9a"/>
+					<box leftPadding="5">
+						<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{EXC_DESC}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="63" splitType="Stretch">
+			<textField>
+				<reportElement key="staticText-1" mode="Opaque" x="0" y="0" width="782" height="37" forecolor="#FFFFFF" backcolor="#000000" uuid="fad64fe9-b96d-4d2a-b5f5-10bbad012a19"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="24" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Hmis.Form.055b.Health.Unit.Laboratory.Tests.Monthly.Summary}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-27" mode="Transparent" x="568" y="39" width="35" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="0f20e874-28ee-4d2b-9a31-3b599b5f52f6"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-28" mode="Transparent" x="664" y="39" width="35" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="98e59687-39bb-47a7-868b-6f863eeee58c"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Year}+":"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="702" y="39" width="76" height="15" uuid="035da4b6-e6ca-47fa-bffb-57066a61f7ce"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="607" y="39" width="53" height="15" uuid="7751a543-c1f2-4ea1-a3a3-696bf6adbb62"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{month}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement key="staticText-2" mode="Transparent" x="0" y="0" width="65" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="6bb36cc2-0e17-48ba-99d3-5ec5e8b0ff57"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Category}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-3" mode="Transparent" x="65" y="0" width="106" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="78a6feba-f7cd-482b-9b2f-36dd3cfe0cbf"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Test}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-4" mode="Transparent" x="171" y="0" width="78" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="3d778983-5535-4ad3-851f-ef61ed74eb01"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Blood}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-5" mode="Transparent" x="171" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="44b8c6dc-6f2c-4c0e-ac1a-7d6dac9befe6"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Done}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-6" mode="Transparent" x="210" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="d108c94f-e476-4fb2-845c-5a6d0500e3d5"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Positive}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-7" mode="Transparent" x="249" y="0" width="78" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="52fc47c1-7031-4038-88dd-01192a6b0c83"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Urine}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-8" mode="Transparent" x="249" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="84b33e0a-cf2f-4bbe-b790-bf00437aadd0"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Done}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-9" mode="Transparent" x="288" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="f996073f-dbfa-4cab-9f70-c838953b0827"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Positive}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-10" mode="Transparent" x="327" y="0" width="78" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="efb3bd6f-d1eb-47ba-8f51-bb63548d01f1"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Stool}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-11" mode="Transparent" x="327" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="991e1a24-a4e7-473d-9a9b-52396582c1fd"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Done}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-12" mode="Transparent" x="366" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="760aec52-bad8-4e40-b4bd-84f72f09a0e9"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Positive}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-13" mode="Transparent" x="405" y="0" width="78" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="c47858fb-14ef-4130-a40f-347f0f0b15fa"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Sputum}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-14" mode="Transparent" x="405" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="c6d21c29-07e3-4b6d-b8d5-9f7d6dbc39a9"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Done}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-15" mode="Transparent" x="444" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="ad305e17-d424-46c8-9905-1091c5cd4a21"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Positive}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-16" mode="Transparent" x="483" y="0" width="78" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="0538ad79-affb-4f60-b5ed-d444106034a4"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Csf}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-17" mode="Transparent" x="483" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="f551fcf9-24d7-4191-9309-ce0271592257"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Done}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-18" mode="Transparent" x="522" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="0858ae27-bfe7-480f-be96-faa90a904d37"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Positive}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-19" mode="Transparent" x="561" y="0" width="78" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="d29b17a9-914a-4d4f-89ba-24ebb450b93c"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Swabs}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-20" mode="Transparent" x="561" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="9e612d94-2729-495f-a45d-6a2e0583faff"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Done}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-21" mode="Transparent" x="600" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="062cecbe-77c6-4b56-a401-615e765fb790"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Positive}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-22" mode="Transparent" x="639" y="0" width="78" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="1418a6f5-773e-42c1-8ddb-fc54654ce6c4"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tissues}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-23" mode="Transparent" x="639" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="f0494d03-0ab7-4c8e-8e84-94d47ce6eb29"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Done}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-24" mode="Transparent" x="678" y="17" width="39" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="871d2b96-0ec4-4fd9-b5fd-f86890a85d04"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{No.Positive}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-25" mode="Transparent" x="717" y="0" width="34" height="42" forecolor="#000000" backcolor="#FFFFFF" uuid="31181971-5a1e-4482-82c7-3311a5ef6d38"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Total.Tests.Done}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-26" mode="Transparent" x="751" y="0" width="31" height="42" forecolor="#000000" backcolor="#FFFFFF" uuid="bacb3940-55ba-4afc-9be3-14e86886067a"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Other}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-2" mode="Transparent" x="171" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="4ee92cb0-eee0-4817-8903-1af655606491"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{blood_done}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-3" mode="Transparent" x="249" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="197a2a88-2493-4237-af5a-252f89278101"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{urine_done}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-4" mode="Transparent" x="327" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="467b4a16-8dee-4e3c-aedb-9b19f2ebb0f3"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stool_done}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-5" mode="Transparent" x="405" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="885222da-163e-401e-806d-9cc8a7eeaa3a"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sputum_done}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-6" mode="Transparent" x="483" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="4ab17425-b356-453c-84fe-091e5d695a3d"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{csf_done}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-7" mode="Transparent" x="561" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="4ae816b3-d08d-4151-8658-2708423ffde9"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{swabs_done}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-8" mode="Transparent" x="639" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="d87a9ed5-adad-42aa-a7be-554dc9d531f9"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tissues_done}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="210" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="b214a0c3-7fd8-4f41-8270-cfd7d5f67acf"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{blood_positive}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-10" mode="Transparent" x="288" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="0661b780-1c22-4876-832a-ffa30825bf36"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{urine_positve}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-11" mode="Transparent" x="366" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="d3cb052c-fa8e-48ba-80a1-a9ece320e2f7"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{stool_positive}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-12" mode="Transparent" x="444" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="842b5cfe-9ccc-4be3-ad92-e08177a0e54c"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sputum_positive}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-13" mode="Transparent" x="522" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="8993f134-9e60-41bb-8ab2-b49a39d47263"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{csf_positive}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-14" mode="Transparent" x="600" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="7cc3e03e-45f2-4fe3-bb6c-7e72874a92a7"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{swabs_positive}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement key="textField-15" mode="Transparent" x="678" y="0" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="0f4f8d23-77aa-4493-b0a3-288d8e4da931"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tissues_positive}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-16" mode="Transparent" x="65" y="0" width="106" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="f075030d-e8c4-4521-8649-ee346ed687c1"/>
+				<box leftPadding="3" rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXA_DESC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-17" mode="Transparent" x="717" y="0" width="34" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="af6ea15f-36a5-4550-9720-f05ca10d7f6b"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{row_total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-18" mode="Transparent" x="751" y="0" width="31" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="db8247df-d7a7-483d-a8a3-b00da3f6156c"/>
+				<box rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{other_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="32" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-19" mode="Transparent" x="631" y="10" width="100" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="f66121c4-4f08-4a1b-886c-585134abec56"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-20" mode="Transparent" x="734" y="10" width="40" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="0ff7bff5-98b9-4472-b2ea-ff1673cdfbe4"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="14" splitType="Stretch"/>
+	</lastPageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.admission.gui;
 
@@ -66,7 +66,6 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
-import org.isf.lab.service.LabIoOperations;
 import org.isf.medstockmovtype.gui.MedicalsrMovPatList;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
@@ -87,6 +86,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.table.TableSorter;
 import org.isf.utils.time.Converters;
+import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
@@ -94,7 +94,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class shows patient data and the list of admissions and lab exams.
- *
+ * <p>
  * last release  jun-14-08
  * @author chiara
  *
@@ -102,7 +102,7 @@ import org.slf4j.LoggerFactory;
  * modification history
  * ====================
  * 14/06/08 - chiara - first version
- *                     
+ * <p>
  * 30/06/08 - fabrizio - implemented automatic selection of exams within the admission period
  * 05/09/08 - alessandro - second version:
  * 						 - same PatientSummary than PatientDataBrowser
@@ -176,7 +176,7 @@ public class PatientFolderBrowser extends ModalJFrame
 		setVisible(true);
 	}
 
-	private JPanel jContentPane = null;
+	private JPanel jContentPane;
 
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
@@ -199,6 +199,8 @@ public class PatientFolderBrowser extends ModalJFrame
 
 		return patientData;
 	}
+
+	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
 
 	private List<Admission> admList;
 	private List<Laboratory> labList;
@@ -287,11 +289,11 @@ public class PatientFolderBrowser extends ModalJFrame
 							if (dateObject instanceof LocalDateTime) {
 								toDate = (LocalDateTime) dateObject;
 								if (toDate == null) {
-									toDate = LocalDateTime.now();
+									toDate = TimeTools.getNow();
 								}
 							} else if (dateObject instanceof String) {
 								if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
-									toDate = LocalDateTime.now();
+									toDate = TimeTools.getNow();
 								} else {
 									toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YYYY).atTime(LocalTime.MAX);
 								}
@@ -306,7 +308,7 @@ public class PatientFolderBrowser extends ModalJFrame
 							toDate = fromDate;
 							reportType = "EXAMINATION";
 						} else {
-							fromDate = LocalDateTime.now();
+							fromDate = TimeTools.getNow();
 							toDate = fromDate;
 							reportType = "ALL";
 						}
@@ -493,7 +495,7 @@ public class PatientFolderBrowser extends ModalJFrame
 				labTable.clearSelection();
 				for (int i = 0; i < labList.size(); i++) {
 					Laboratory laboratory = (Laboratory) sorterLab.getValueAt(i, -1);
-					LocalDate labDate = laboratory.getDate().toLocalDate();
+					LocalDate labDate = laboratory.getLabDate().toLocalDate();
 
 					// Check that the lab date is included between admission date and discharge date.
 					// If the patient has not been discharged yet (and then discharge date doesn't exist)
@@ -532,12 +534,12 @@ public class PatientFolderBrowser extends ModalJFrame
 		return buttonPanel;
 	}
 
-	private JButton opdReportButton = null;
-	private JButton admReportButton = null;
-	private JButton disReportButton = null;
-	private JButton launchReportButton = null;
-    private JButton dicomButton = null;
-	private JButton closeButton=null;
+	private JButton opdReportButton;
+	private JButton admReportButton;
+	private JButton disReportButton;
+	private JButton launchReportButton;
+    private JButton dicomButton;
+	private JButton closeButton;
 
 	private JButton getOpdReportButton() {
 		if (opdReportButton == null) {
@@ -638,7 +640,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			dicomButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.dicom.btn.key"));
 			dicomButton.addActionListener(actionEvent -> {
 				DicomGui dg = new DicomGui(patient, PatientFolderBrowser.this);
-				((ModalJFrame) dg).showAsModal(this);
+				dg.showAsModal(this);
 			});
 		}
 		return dicomButton;
@@ -771,14 +773,10 @@ public class PatientFolderBrowser extends ModalJFrame
 				}
 			} else if (column == 1) {
 				if (row < admList.size()) {
-					String id = admList.get(row).getWard().getCode();
-					for (Ward elem : ward) {
-						if (elem.getCode().equalsIgnoreCase(id)) {
-							return elem.getDescription();
-						}
-					}
+					return admList.get(row).getWard().getDescription();
 				} else if (row < opdList.size() + admList.size()) {
-					return MessageBundle.getMessage("angal.admission.patientfolder.opd.txt");
+					int z = row - admList.size();
+					return opdList.get(z).getWard().getDescription();
 				} else {
 					return MessageBundle.getMessage("angal.admission.patientfolder.examination.txt");
 				}
@@ -866,7 +864,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					}
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
-					String status = "" + opdList.get(z).getNewPatient();
+					String status = String.valueOf(opdList.get(z).getNewPatient());
 					return (status.compareTo("R") == 0
 							? MessageBundle.getMessage("angal.opd.reattendance.txt")
 							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
@@ -889,10 +887,10 @@ public class PatientFolderBrowser extends ModalJFrame
 		private static final long serialVersionUID = -8245833681073162426L;
 
 		public LabBrowserModel() {
-			LabManager lbm = Context.getApplicationContext().getBean(LabManager.class, Context.getApplicationContext().getBean(LabIoOperations.class));
+
 			try {
-				labList = lbm.getLaboratory(patient);
-				getOlderDate(labList, "examDate");
+				labList = labManager.getLaboratory(patient);
+				getOlderDate(labList, "labDate");
 			} catch (OHServiceException e) {
 				labList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
@@ -923,7 +921,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			if (column == -1) {
 				return laboratory;
 			} else if (column == 0) {
-				return laboratory.getDate();
+				return laboratory.getLabDate();
 			} else if (column == 1) {
 				return laboratory.getExam().getDescription();
 			} else if (column == 2) {

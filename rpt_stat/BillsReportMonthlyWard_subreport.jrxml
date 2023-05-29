@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BillsReportMonthly" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoPages" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" resourceBundle="BillsReportMonthly" whenResourceMissingType="Key" uuid="7f85e4fa-219a-4405-9a51-3004ff09e965">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="fromdate" class="java.util.Date"/>
+	<parameter name="todate" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT DATE_FORMAT(DATE,'%Y-%m') AS DATE, 
+		SUM(BILLED) AS BILLED, 
+        SUM(INCOME) AS INCOME,
+		SUM(RECEIVABLE) AS RECEIVABLE
+FROM
+(
+SELECT BLL_DATE AS DATE, 
+		SUM(BILLED) AS BILLED, 
+        SUM(INCOME) AS INCOME, 
+        SUM(BALANCE) AS RECEIVABLE
+FROM
+(
+SELECT 	BLL_ID,
+		BLL_DATE,
+		"" AS X,
+		BLL_AMOUNT AS BILLED,
+		0 AS INCOME,
+		BLL_BALANCE AS BALANCE
+FROM OH_BILLS
+WHERE BLL_STATUS <> 'D' AND BLL_STATUS <> 'X'
+AND DATE(BLL_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
+
+UNION
+
+SELECT 	BLL_ID,
+		BLP_DATE AS BLL_DATE,
+		BLL_DATE AS X,
+		0 AS BILLED,
+        BLP_AMOUNT AS INCOME,
+		0 AS BALANCE
+FROM OH_BILLPAYMENTS JOIN OH_BILLS ON BLL_ID = BLP_ID_BILL
+WHERE BLL_STATUS <> 'D' AND BLL_STATUS <> 'X'
+AND DATE(BLP_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
+
+ORDER BY BLL_DATE
+) AS BILLS
+GROUP BY YEAR(DATE), MONTH(DATE), BLL_ID
+) AS BILLS2
+GROUP BY YEAR(DATE), MONTH(DATE)]]>
+	</queryString>
+	<field name="DATE" class="java.lang.String"/>
+	<field name="BILLED" class="java.lang.Double"/>
+	<field name="INCOME" class="java.lang.Double"/>
+	<field name="RECEIVABLE" class="java.lang.Double"/>
+	<variable name="TOTAL_BILLED" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{BILLED}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_INCOME" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{INCOME}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_RECEIVABLE" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{RECEIVABLE}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<textField>
+				<reportElement key="staticText-8" x="0" y="0" width="74" height="32" uuid="ccfae075-8cdb-4b67-86ab-9832ad6cf69e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-9" x="73" y="0" width="144" height="32" uuid="064088fb-6313-496b-968e-ac0c6fa98586"/>
+				<box rightPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Billed.Income}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-11" x="565" y="0" width="144" height="32" uuid="a4ad8f8e-a368-48ad-9543-ca4f9951fc06"/>
+				<box rightPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Receivable}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-14" x="319" y="0" width="144" height="32" uuid="73e00f10-b463-4f65-b7bd-a71d12175649"/>
+				<box rightPadding="5">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Cash.Collections}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="MMMMM-yy" isBlankWhenNull="false">
+				<reportElement key="textField-24" x="0" y="0" width="73" height="20" uuid="8f00e69e-6dfc-4ab1-bbc5-0239f626eef9"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-38" x="73" y="0" width="144" height="20" uuid="8706a44a-8755-4248-a06e-7fbc452ed7a1"/>
+				<box rightPadding="5">
+					<leftPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BILLED}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-39" x="319" y="0" width="144" height="20" uuid="a12bc004-26ef-42ce-89a0-515644b09caa"/>
+				<box rightPadding="5">
+					<leftPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INCOME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-40" x="565" y="0" width="144" height="20" uuid="5e5224e7-4223-4ca6-ad33-b26481c2dbb0"/>
+				<box rightPadding="5">
+					<leftPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RECEIVABLE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="62" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-50" x="73" y="0" width="144" height="20" uuid="b71e5e92-710a-4f20-bb6e-59acf31a2724"/>
+				<box rightPadding="5">
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_BILLED}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-51" x="319" y="0" width="144" height="20" uuid="0631ea68-ceec-4765-a70b-d540ccf9691f"/>
+				<box rightPadding="5">
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_INCOME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-52" x="565" y="0" width="144" height="20" uuid="aa91225d-379a-4e9d-9f4a-914ab244f3e7"/>
+				<box rightPadding="5">
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_RECEIVABLE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

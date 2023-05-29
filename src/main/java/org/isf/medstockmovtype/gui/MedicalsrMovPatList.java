@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medstockmovtype.gui;
 
@@ -50,7 +50,7 @@ public class MedicalsrMovPatList extends JPanel {
 	private JTable jTableData;
 	private OhTableDrugsModel<MovementWard> modelMedWard;
 	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	private MovWardBrowserManager movManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
+	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 
 	public MedicalsrMovPatList(Object object) {
 
@@ -68,7 +68,7 @@ public class MedicalsrMovPatList extends JPanel {
 		
 		if (myPatient != null) {
 			try {
-				List<MovementWard> movPat = movManager.getMovementToPatient(myPatient);
+				List<MovementWard> movPat = movWardBrowserManager.getMovementToPatient(myPatient);
 				drugsData = new ArrayList<>();
 				drugsData.addAll(movPat);
 			} catch (OHServiceException ohServiceException) {

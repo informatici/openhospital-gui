@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.priceslist.gui;
 
@@ -84,7 +84,9 @@ public class ListEdit extends JDialog {
 			((ListListener) listener).listUpdated(event);
 		}
 	}
-	
+
+	private PriceListManager priceListManager = Context.getApplicationContext().getBean(PriceListManager.class);
+
 	private static final long serialVersionUID = 1L;
 	private JPanel jPanelData;
 	private JPanel jPanelButtons;
@@ -132,19 +134,20 @@ public class ListEdit extends JDialog {
 				list.setDescription(jTextFieldDescription.getText());
 				list.setCurrency(jTextFieldCurrency.getText());
 
-				PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 				boolean result = false;
 				try {
-					if (insert) {      // inserting
-						result = listManager.newList(list);
-						if (result) {
+					if (insert) {	// inserting
+						PriceList insertedPriceList = priceListManager.newList(list);
+						if (insertedPriceList != null) {
 							fireListInserted();
+							result = true;
 						}
 					}
-					else {             // updating
-						result = listManager.updateList(list);
-						if (result) {
+					else {	// updating
+						PriceList updatedPriceList = priceListManager.updateList(list);
+						if (updatedPriceList != null) {
 							fireListUpdated();
+							result = true;
 						}
 					}
 				} catch (OHServiceException e) {

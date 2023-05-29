@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.time.TimeTools;
 
 /**
  * @author Mwithi
@@ -47,7 +48,7 @@ public class StockLedgerDialog extends JDialog {
 	private JPanel dateFromToPanel;
 	private GoodDateChooser dateFrom;
 	private GoodDateChooser dateTo;
-	private boolean cancel = false;
+	private boolean cancel;
 
 	public StockLedgerDialog(Frame owner, LocalDateTime from, LocalDateTime to) {
 		super(owner, true);
@@ -68,9 +69,9 @@ public class StockLedgerDialog extends JDialog {
 			FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
 			layout.setHgap(5);
 			dateFromToPanel.setLayout(layout);
-			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ':'));
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
 			dateFromToPanel.add(dateFrom);
-			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ':'));
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
 			dateFromToPanel.add(dateTo);
 		}
 		return dateFromToPanel;
@@ -115,11 +116,11 @@ public class StockLedgerDialog extends JDialog {
 	}
 
 	public LocalDateTime getLocalDateTimeFrom() {
-		return dateFrom.getDateStartOfDay();
+		return TimeTools.truncateToSeconds(dateFrom.getDateStartOfDay());
 	}
 
 	public LocalDateTime getLocalDateTimeTo() {
-		return dateTo.getDateStartOfDay();
+		return TimeTools.truncateToSeconds(dateTo.getDateStartOfDay());
 	}
 
 	/**

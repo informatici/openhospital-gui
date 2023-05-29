@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicalstockward.gui;
 
@@ -88,12 +88,12 @@ public class WardPharmacyEdit extends JDialog {
 	private String sMed;
 	private String lastKey;
 	private MovementWard movSelected;
-	private Patient movSelectedPatient = null;
+	private Patient movSelectedPatient;
 	private Medical movSelectedMedical;
 	private Double maxQty;
 	private int movSelectedAge;
 	private float movSelectedWeight;
-	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private List<Patient> pat = new ArrayList<>();
 	private List<MedicalWard> medList;
@@ -180,7 +180,7 @@ public class WardPharmacyEdit extends JDialog {
 			jSearchButton.addActionListener(actionEvent -> {
 				jComboBoxPatients.removeAllItems();
 				try {
-					pat = patBrowser.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
+					pat = patientBrowserManager.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 					pat = new ArrayList<>();
@@ -198,17 +198,15 @@ public class WardPharmacyEdit extends JDialog {
 			jButtonTrashPatient.setBorderPainted(false);
 			jButtonTrashPatient.setPreferredSize(new Dimension(20, 20));
 			jButtonTrashPatient.addActionListener(actionEvent -> {
-				if (true) {
-					jTextFieldSearchPatient.setText(""); //$NON-NLS-1$
-					jComboBoxPatients.removeAllItems();
-					getJComboBoxPatients(""); //$NON-NLS-1$
-					jTextFieldSearchPatient.requestFocus();
-					movSelectedPatient = null;
-					movSelectedAge = 0;
-					movSelectedWeight = 0;
-					jAgeTextField.setText("0");
-					jWeightTextField.setText("0");
-				}
+				jTextFieldSearchPatient.setText(""); //$NON-NLS-1$
+				jComboBoxPatients.removeAllItems();
+				getJComboBoxPatients(""); //$NON-NLS-1$
+				jTextFieldSearchPatient.requestFocus();
+				movSelectedPatient = null;
+				movSelectedAge = 0;
+				movSelectedWeight = 0;
+				jAgeTextField.setText("0");
+				jWeightTextField.setText("0");
 			});
 		}	
 		
@@ -225,7 +223,7 @@ public class WardPharmacyEdit extends JDialog {
 				@Override
 				public void keyTyped(KeyEvent e) {
 					lastKey = ""; //$NON-NLS-1$
-					String s = "" + e.getKeyChar(); //$NON-NLS-1$
+					String s = String.valueOf(e.getKeyChar());
 					if (Character.isLetterOrDigit(e.getKeyChar())) {
 						lastKey = s;
 					}
@@ -256,13 +254,11 @@ public class WardPharmacyEdit extends JDialog {
 			jButtonTrashMedical.setBorderPainted(false);
 			jButtonTrashMedical.setPreferredSize(new Dimension(20, 20));
 			jButtonTrashMedical.addActionListener(actionEvent -> {
-				if (true) {
-					jTextFieldSearchMedical.setText(""); //$NON-NLS-1$
-					jComboBoxDrugs.removeAllItems();
-					getJComboBoxDrugs(""); //$NON-NLS-1$
-					jTextFieldSearchMedical.requestFocus();
-					movSelectedMedical = null;
-				}
+				jTextFieldSearchMedical.setText(""); //$NON-NLS-1$
+				jComboBoxDrugs.removeAllItems();
+				getJComboBoxDrugs(""); //$NON-NLS-1$
+				jTextFieldSearchMedical.requestFocus();
+				movSelectedMedical = null;
 			});
 		}
 		return jButtonTrashMedical;

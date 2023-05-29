@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.sms.gui;
 
@@ -86,7 +86,7 @@ public class SmsBrowser extends ModalJFrame {
 	private int eight;
 
 	private SmsManager smsManager = Context.getApplicationContext().getBean(SmsManager.class);
-	private List<Sms> smsList = null;
+	private List<Sms> smsList;
 
 	private final LocalDateTime dateTimeAtStartOfToday = LocalDate.now().atStartOfDay();
 	private final LocalDateTime dateTimeAtEndOfToday = LocalDate.now().atStartOfDay().plusDays(1);
@@ -144,14 +144,14 @@ public class SmsBrowser extends ModalJFrame {
 	
 	private JLabel getJDateFromLabel() {
 		if (jDateFromLabel == null) {
-			jDateFromLabel = new JLabel(MessageBundle.getMessage("angal.common.from.txt"));
+			jDateFromLabel = new JLabel(MessageBundle.getMessage("angal.common.datefrom.label"));
 		}
 		return jDateFromLabel;
 	}
 	
 	private JLabel getJDateToLabel() {
 		if (jDateToLabel == null) {
-			jDateToLabel = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
+			jDateToLabel = new JLabel(MessageBundle.getMessage("angal.common.dateto.label"));
 		}
 		return jDateToLabel;
 	}

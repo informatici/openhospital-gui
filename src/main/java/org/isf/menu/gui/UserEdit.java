@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -29,6 +29,7 @@ import java.util.EventListener;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -93,21 +94,22 @@ public class UserEdit extends JDialog {
 		}
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private JTextField nameTextField = null;
-	private JPasswordField pwdTextField = null;
-	private JPasswordField pwd2TextField = null;
-	private JComboBox typeComboBox = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField nameTextField;
+	private JPasswordField pwdTextField;
+	private JPasswordField pwd2TextField;
+	private JComboBox<UserGroup> userGroupComboBox;
+	private JCheckBox accountLocked;
 
 	private User user;
 	private boolean insert;
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -162,7 +164,7 @@ public class UserEdit extends JDialog {
 		if (dataPanel == null) {
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.group.label")));
-			dataPanel.add(getTypeComboBox());
+			dataPanel.add(getUserGroupComboBox());
 			dataPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.name.label")));
 			dataPanel.add(getNameTextField());
 			if (insert) {
@@ -173,8 +175,14 @@ public class UserEdit extends JDialog {
 			}
 			dataPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.description.label")));
 			dataPanel.add(getDescriptionTextField());
+			if (!insert) {
+				dataPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.locked.label")));
+				accountLocked = new JCheckBox();
+				accountLocked.setSelected(user.isAccountLocked());
+				dataPanel.add(accountLocked);
+			}
 			SpringUtilities.makeCompactGrid(dataPanel,
-					insert ? 5 : 3, 2,
+					insert ? 5 : 4, 2,
 					5, 5,
 					5, 5);
 		}
@@ -243,7 +251,7 @@ public class UserEdit extends JDialog {
 						Arrays.fill(repeatPassword, '0');
 						return;
 					}
-					if (password.length < GeneralData.STRONGLENGTH) {
+					if (GeneralData.STRONGLENGTH != 0 && password.length < GeneralData.STRONGLENGTH) {
 						MessageDialog.error(null, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 						Arrays.fill(password, '0');
 						Arrays.fill(repeatPassword, '0');
@@ -256,7 +264,7 @@ public class UserEdit extends JDialog {
 						return;
 					}
 					String passwordStr = new String(password);
-					if (!manager.isPasswordStrong(passwordStr)) {
+					if (!userBrowsingManager.isPasswordStrong(passwordStr)) {
 						MessageDialog.error(null, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
 						Arrays.fill(password, '0');
 						Arrays.fill(repeatPassword, '0');
@@ -273,9 +281,9 @@ public class UserEdit extends JDialog {
 					}
 					String hashed = BCrypt.hashpw(new String(password), BCrypt.gensalt());
 					user.setPasswd(hashed);
-					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());
+					user.setUserGroupName((UserGroup) userGroupComboBox.getSelectedItem());
 					try {
-						result = manager.newUser(user);
+						result = userBrowsingManager.newUser(user);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
@@ -285,9 +293,14 @@ public class UserEdit extends JDialog {
 					Arrays.fill(password, '0');
 					Arrays.fill(repeatPassword, '0');
 				} else {
-					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());
+					user.setUserGroupName((UserGroup) userGroupComboBox.getSelectedItem());
 					try {
-						result = manager.updateUser(user);
+						if (user.isAccountLocked() && !accountLocked.isSelected()) {
+							userBrowsingManager.unlockUser(user);
+						} else if (!user.isAccountLocked() && accountLocked.isSelected()) {
+							userBrowsingManager.lockUser(user);
+						}
+						result = userBrowsingManager.updateUser(user);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
@@ -352,34 +365,47 @@ public class UserEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes typeComboBox
+	 * This method initializes userGroupComboBox
 	 *
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox getTypeComboBox() {
-		if (typeComboBox == null) {
-			typeComboBox = new JComboBox();
-			if (insert) {
+	private JComboBox<UserGroup> getUserGroupComboBox() {
+		if (userGroupComboBox == null) {
+			userGroupComboBox = new JComboBox<>();
+			try {
 				List<UserGroup> group = null;
-				try {
-					group = manager.getUserGroup();
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				if (group != null) {
-					for (UserGroup elem : group) {
-						typeComboBox.addItem(elem);
+				group = userBrowsingManager.getUserGroup();
+				if (insert) {
+					if (group != null) {
+						for (UserGroup elem : group) {
+							userGroupComboBox.addItem(elem);
+						}
+					}
+				} else {
+					UserGroup selectedUserGroup = null;
+					if (group != null) {
+						for (UserGroup elem : group) {
+							userGroupComboBox.addItem(elem);
+							if (user.getUserGroupName().equals(elem)) {
+								selectedUserGroup = elem;
+							}
+						}
+					}
+					if (selectedUserGroup != null) {
+						userGroupComboBox.setSelectedItem(selectedUserGroup);
+					}
+					// user is not allowed to change their own group
+					if (user.getUserName().equals(UserBrowsingManager.getCurrentUser())) {
+						userGroupComboBox.setEnabled(false);
 					}
 				}
-			} else {
-				typeComboBox.addItem(user.getUserGroupName());
-				typeComboBox.setEnabled(false);
+				Dimension d = userGroupComboBox.getPreferredSize();
+				userGroupComboBox.setPreferredSize(new Dimension(150, d.height));
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
-			Dimension d = typeComboBox.getPreferredSize();
-			typeComboBox.setPreferredSize(new Dimension(150, d.height));
-
 		}
-		return typeComboBox;
+		return userGroupComboBox;
 	}
 
 }

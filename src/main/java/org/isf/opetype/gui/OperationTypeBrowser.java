@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.opetype.gui;
 
@@ -57,17 +57,19 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {80, 200};
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private OperationTypeBrowserModel model;
 	private int selectedrow;
-	private OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
-	private OperationType operationType = null;
+
+	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
+	private OperationType operationType;
 	private final JFrame myFrame;
 
 	/**
@@ -180,7 +182,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 
 						boolean deleted;
 						try {
-							deleted = manager.deleteOperationType(opType);
+							deleted = operationTypeBrowserManager.deleteOperationType(opType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -213,9 +215,8 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		private static final long serialVersionUID = 1L;
 
 		public OperationTypeBrowserModel() {
-			OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 			try {
-				pOperationType = manager.getOperationType();
+				pOperationType = operationTypeBrowserManager.getOperationType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 				pOperationType = null;

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicalstockward.gui;
 
@@ -60,7 +60,6 @@ import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
-import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
@@ -120,10 +119,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.changethepatientassociatedwiththismovement")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
 		
-		ExaminationBrowserManager exm = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-		
 		try {
-			Optional.ofNullable(exm.getLastByPatID(patientSelected.getCode()))
+			Optional.ofNullable(examinationBrowserManager.getLastByPatID(patientSelected.getCode()))
 			.map(lastExam -> lastExam.getPex_weight())
 			.map(weight -> weight.floatValue())
 			.ifPresent(w -> patientWeight = w);
@@ -135,6 +132,11 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	}
 	
 	private static final long serialVersionUID = 1L;
+
+	private	ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
+	
 	private JLabel jLabelPatient;
 	private JTextField jTextFieldPatient;
 	private JButton jButtonPickPatient;
@@ -154,7 +156,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JButton jButtonRemoveMedical;
 	private static final Dimension PatientDimension = new Dimension(300, 20);
 
-	private Patient patientSelected = null;
+	private Patient patientSelected;
 	private float patientWeight;
 	private Ward wardSelected;
 	private Object[] medClasses = { Medical.class, Integer.class, String.class };
@@ -183,8 +185,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JTextField searchTextField;
 	private JButton searchButton;
 	private JComboBox jComboBoxMedicals;
-
-	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 
 	public WardPharmacyNew(JFrame owner, Ward ward, List<MedicalWard> drugs) {
 		super(owner, true);
@@ -216,7 +216,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jPanelNorth.setLayout(new BoxLayout(jPanelNorth, BoxLayout.Y_AXIS));
 			jPanelNorth.add(getJPanelPatient());
 			jPanelNorth.add(getJPanelUse());
-                        jPanelNorth.add(getPanelWard());
+			jPanelNorth.add(getPanelWard());
 			ButtonGroup group = new ButtonGroup();
 			group.add(jRadioPatient);
 			group.add(jRadioUse);
@@ -265,8 +265,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return jRadioUse;
 	}
 
-	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
-	
 	class StockMovModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
@@ -533,7 +531,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private void addItem(MedicalWard ward, int quantity) {
 		if (ward != null) {
 		
-			MedicalWard item = new MedicalWard(ward.getMedical(), (double) quantity, ward.getId().getLot());
+			MedicalWard item = new MedicalWard(ward.getMedical(), quantity, ward.getId().getLot());
 			medItems.add(item);
 			
 //			medArray.add(med);
@@ -590,7 +588,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				boolean isPatient;
 				String description;
 				int age = 0;
-				LocalDateTime newDate = LocalDateTime.now();
+				LocalDateTime newDate = TimeTools.getNow();
 				Ward wardTo = null; //
 				if (jRadioPatient.isSelected()) {
 					isPatient = true;
@@ -624,7 +622,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 								MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null, medItem.getLot()));
 					}
 
-					wardManager.newMovementWard(manyMovementWard);
+					movWardBrowserManager.newMovementWard(manyMovementWard);
 					fireMovementWardInserted();
 					dispose();
 				} catch (OHServiceException ex) {
@@ -704,7 +702,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				patientSelected = null;
 				jTextFieldPatient.setText(""); //$NON-NLS-1$
 				jTextFieldPatient.setEditable(true);
-				jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.pickpatient"));
+				jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.selectpatient"));
 				jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
 				jButtonTrashPatient.setEnabled(false);
 			});
@@ -715,8 +713,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
-			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.pickpatient.btn"));
-			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.pickpatient.btn.key"));
+			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.selectpatient.btn"));
+			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.selectpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
 			jButtonPickPatient.addActionListener(actionEvent -> {
@@ -841,10 +839,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (wardBox == null) {
 			wardBox = new JComboBox();
 			wardBox.setPreferredSize(new Dimension(300, 30));
-			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			List<Ward> wardList = null;
 			try {
-				wardList = wbm.getWards();
+				wardList = wardBrowserManager.getWards();
 			} catch (OHServiceException ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}

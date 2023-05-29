@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.patvac.gui;
 
@@ -59,6 +59,7 @@ import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
@@ -80,39 +81,39 @@ public class PatVacEdit extends JDialog {
 	private boolean insert;
 
 	private PatientVaccine patVac;
-	private JPanel jContentPane = null;
-	private JPanel buttonPanel = null;
-	private JPanel dataPanel = null;
-	private JPanel dataPatient = null;
+	private JPanel jContentPane;
+	private JPanel buttonPanel;
+	private JPanel dataPanel;
+	private JPanel dataPatient;
 
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JButton jSearchButton = null;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JButton jSearchButton;
 
-	private JComboBox<Vaccine> vaccineComboBox = null;
-	private JComboBox<Object> patientComboBox = null;
-	private JComboBox<VaccineType> vaccineTypeComboBox = null;
+	private JComboBox<Vaccine> vaccineComboBox;
+	private JComboBox<Object> patientComboBox;
+	private JComboBox<VaccineType> vaccineTypeComboBox;
 
-	private VoLimitedTextField patTextField = null;
-	private VoLimitedTextField ageTextField = null;
-	private VoLimitedTextField sexTextField = null;
-	private VoLimitedTextField progrTextField = null;
+	private VoLimitedTextField patTextField;
+	private VoLimitedTextField ageTextField;
+	private VoLimitedTextField sexTextField;
+	private VoLimitedTextField progrTextField;
 
 	private JTextField jTextPatientSrc;
 	private Patient selectedPatient;
 	private String lastKey;
 	private String s;
-	private List<Patient> patientList = null;
-	private GoodDateChooser vaccineDateFieldCal = null;
-	private LocalDateTime dateIn = null;
+	private List<Patient> patientList;
+	private GoodDateChooser vaccineDateFieldCal;
+	private LocalDateTime dateIn;
 	private int patNextYProg;
 
 	private JPanel centerPanel;
 
-	private VaccineBrowserManager vaccineManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
-	private PatVacManager patientVaccineManager = Context.getApplicationContext().getBean(PatVacManager.class);
-	private VaccineTypeBrowserManager vaccineTypeManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+	private PatVacManager patVacManager = Context.getApplicationContext().getBean(PatVacManager.class);
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	public PatVacEdit(JFrame myFrameIn, PatientVaccine patientVaccineIn, boolean action) {
 		super(myFrameIn, true);
@@ -126,7 +127,7 @@ public class PatVacEdit extends JDialog {
 	private int getPatientVaccineYMaxProg() {
 		
 		try {
-			return patientVaccineManager.getProgYear(0);
+			return patVacManager.getProgYear(0);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 			return 0;
@@ -313,7 +314,7 @@ public class PatVacEdit extends JDialog {
 				@Override
 				public void keyTyped(KeyEvent e) {
 					lastKey = "";
-					String s = "" + e.getKeyChar();
+					String s = String.valueOf(e.getKeyChar());
 					if (Character.isLetterOrDigit(e.getKeyChar())) {
 						lastKey = s;
 					}
@@ -368,7 +369,7 @@ public class PatVacEdit extends JDialog {
 			dateIn = patVac.getVaccineDate();
 		}
 		if (dateIn == null) {
-			dateIn = LocalDateTime.now();
+			dateIn = TimeTools.getNow();
 		}
 		return new GoodDateChooser(dateIn.toLocalDate());
 	}
@@ -404,7 +405,7 @@ public class PatVacEdit extends JDialog {
 
 			List<VaccineType> types = null;
 			try {
-				types = vaccineTypeManager.getVaccineType();
+				types = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
@@ -446,9 +447,9 @@ public class PatVacEdit extends JDialog {
 		List<Vaccine> allVac = null;
 		try {
 			if (((VaccineType) vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))) {
-				allVac = vaccineManager.getVaccine();
+				allVac = vaccineBrowserManager.getVaccine();
 			} else {
-				allVac = vaccineManager.getVaccine(((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode());
+				allVac = vaccineBrowserManager.getVaccine(((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode());
 			}
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
@@ -485,8 +486,8 @@ public class PatVacEdit extends JDialog {
 			if (key != null) {
 				// Search key extended to name and code
 				StringBuilder sbName = new StringBuilder();
-				sbName.append(elem.getSecondName().toUpperCase());
-				sbName.append(elem.getFirstName().toUpperCase());
+				sbName.append(elem.getSecondName());
+				sbName.append(elem.getFirstName());
 				sbName.append(elem.getCode());
 				String name = sbName.toString();
 
@@ -532,8 +533,8 @@ public class PatVacEdit extends JDialog {
 	 */
 	private void setPatient(Patient selectedPatient) {
 		patTextField.setText(selectedPatient.getName());
-		ageTextField.setText(selectedPatient.getAge() + "");
-		sexTextField.setText(selectedPatient.getSex() + "");
+		ageTextField.setText(String.valueOf(selectedPatient.getAge()));
+		sexTextField.setText(String.valueOf(selectedPatient.getSex()));
 		dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), 
 						MessageBundle.formatMessage("angal.patvac.patientcode.fmt.msg", selectedPatient.getCode())));
 	}
@@ -553,14 +554,14 @@ public class PatVacEdit extends JDialog {
 
 		if (GeneralData.ENHANCEDSEARCH) {
 			try {
-				patientList = patientManager.getPatientsByOneOfFieldsLike(regExp);
+				patientList = patientBrowserManager.getPatientsByOneOfFieldsLike(regExp);
 			} catch (OHServiceException ex) {
 				OHServiceExceptionUtil.showMessages(ex);
 				patientList = new ArrayList<>();
 			}
 		} else {
 			try {
-				patientList = patientManager.getPatient();
+				patientList = patientBrowserManager.getPatient();
 			} catch (OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
 			}
@@ -680,7 +681,7 @@ public class PatVacEdit extends JDialog {
 		if (sexTextField == null) {
 			sexTextField = new VoLimitedTextField(1, 1);
 			if (!insert) {
-				sexTextField.setText("" + patVac.getPatSex());
+				sexTextField.setText(String.valueOf(patVac.getPatSex()));
 			}
 		}
 		return sexTextField;
@@ -725,18 +726,24 @@ public class PatVacEdit extends JDialog {
 				patVac.setPatient(selectedPatient);
 				patVac.setLock(0);
 
-				boolean result;
+				boolean result = false;
 				// handling db insert/update
 				if (insert) {
 					try {
-						result = patientVaccineManager.newPatientVaccine(patVac);
+						PatientVaccine insertedPatientVaccine = patVacManager.newPatientVaccine(patVac);
+						if (insertedPatientVaccine != null) {
+							result = true;
+						}
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 						return;
 					}
 				} else {
 					try {
-						result = patientVaccineManager.updatePatientVaccine(patVac);
+						PatientVaccine updatedPatientVaccine = patVacManager.updatePatientVaccine(patVac);
+						if (updatedPatientVaccine != null) {
+							result = true;
+						}
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 						return;

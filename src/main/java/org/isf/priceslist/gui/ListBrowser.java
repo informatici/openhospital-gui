@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.priceslist.gui;
 
@@ -50,7 +50,7 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 	@Override
 	public void listInserted(AWTEvent e) {
 		try {
-			listArray = listManager.getLists();
+			listArray = priceListManager.getLists();
 		} catch (OHServiceException ex) {
 			OHServiceExceptionUtil.showMessages(ex);
 		}
@@ -82,7 +82,9 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 	private boolean[] columnResizable = {false, false, true, false};
 	
 	private PriceList list;
-	PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
+	
+	private PriceListManager priceListManager = Context.getApplicationContext().getBean(PriceListManager.class);
+
 	private List<PriceList> listArray;
 	private JFrame myFrame;
 			
@@ -128,10 +130,10 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 						if (answer == JOptionPane.OK_OPTION) {
 
 							boolean result;
-							result = listManager.deleteList(list);
+							result = priceListManager.deleteList(list);
 
 							if (result) {
-								listArray = listManager.getLists();
+								listArray = priceListManager.getLists();
 								jTablePriceLists.setModel(new ListBrowserModel());
 							} else {
 								MessageDialog.error(null, "angal.priceslist.thedatacouldnotbedeleted");
@@ -226,12 +228,12 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 
 						boolean result;
 						try {
-							result = listManager.copyList(copiedList, qty, step);
+							result = priceListManager.copyList(copiedList, qty, step);
 
 							if (result) {
 								MessageDialog.info(null, "angal.priceslist.listcopiedremembertoeditinformations");
 
-								listArray = listManager.getLists();
+								listArray = priceListManager.getLists();
 								jTablePriceLists.setModel(new ListBrowserModel());
 
 							} else {
@@ -326,9 +328,8 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 		private static final long serialVersionUID = 1L;
 
 		public ListBrowserModel() {
-			listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 			try {
-				listArray = listManager.getLists();
+				listArray = priceListManager.getLists();
 			} catch(OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

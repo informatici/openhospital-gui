@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,13 +17,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.admission.gui.ward;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.LocalDateTime;
 
 import javax.swing.JComboBox;
 
@@ -32,6 +30,7 @@ import org.isf.admission.gui.TestWard;
 import org.isf.admission.model.Admission;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +62,7 @@ public class WardComboBoxInitializerTest {
 				patient,
 				null,
 				false,
-				TestAdmission.withAdmAndDisDate(LocalDateTime.now(), LocalDateTime.now())
+				TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())
 		).initialize();
 
 		// then:
@@ -88,7 +87,7 @@ public class WardComboBoxInitializerTest {
 				patient,
 				null,
 				false,
-				TestAdmission.withAdmAndDisDate(LocalDateTime.now(), LocalDateTime.now())
+				TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())
 		).initialize();
 
 		// then:
@@ -112,7 +111,7 @@ public class WardComboBoxInitializerTest {
 				patient,
 				null,
 				false,
-				TestAdmission.withAdmAndDisDate(LocalDateTime.now(), LocalDateTime.now())
+				TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())
 		).initialize();
 
 		// then:
@@ -137,7 +136,7 @@ public class WardComboBoxInitializerTest {
 				patient,
 				recentlySavedWard,
 				false,
-				TestAdmission.withAdmAndDisDate(LocalDateTime.now(), LocalDateTime.now())
+				TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())
 		).initialize();
 
 		// then:
@@ -152,8 +151,8 @@ public class WardComboBoxInitializerTest {
 		Ward editedWard = TestWard.maleWardWithBeds("1");
 		wardBrowserManager.newWard(editedWard);
 		wardBrowserManager.newWard(TestWard.femaleWardWithBeds("2"));
-		Admission admission = TestAdmission.withAdmAndDisDateAndWard(LocalDateTime.now(),
-				LocalDateTime.now(),
+		Admission admission = TestAdmission.withAdmAndDisDateAndWard(TimeTools.getNow(),
+				TimeTools.getNow(),
 				editedWard);
 
 		// when:

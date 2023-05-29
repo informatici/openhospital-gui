@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -44,7 +44,7 @@ import org.isf.generaldata.GeneralData;
 public class JMonthChooser extends JPanel implements ItemListener, ChangeListener {
 
 	private int month;
-	private int oldSpinnerValue = 0;
+	private int oldSpinnerValue;
 	private JComboBox<String> comboBox;
 	private JSpinner spinner;
 	private boolean initialized;
@@ -186,7 +186,6 @@ public class JMonthChooser extends JPanel implements ItemListener, ChangeListene
 	/**
 	 * Updates the UI.
 	 *
-	 * @see javax.swing.JPanel#updateUI()
 	 */
 	@Override
 	public void updateUI() {

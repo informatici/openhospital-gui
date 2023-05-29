@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.pregtreattype.gui;
 
@@ -51,23 +51,25 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener {
 
 	private static final long serialVersionUID = 1L;
+
+	private PregnantTreatmentTypeBrowserManager pregnantTreatmentTypeBrowserManager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
+
 	private List<PregnantTreatmentType> pPregnantTreatmentType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {80, 200};
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private PregnantTreatmentTypeBrowserModel model;
 	private int selectedrow;
-	private PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
-	private PregnantTreatmentType pregnantTreatmentType = null;
+	private PregnantTreatmentType pregnantTreatmentType;
 	private final JFrame myFrame;
 
 	/**
@@ -177,7 +179,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 					PregnantTreatmentType preTreatmentType = (PregnantTreatmentType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.preagtreattype.deletetreatmenttype.fmt.msg", preTreatmentType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deletePregnantTreatmentType(preTreatmentType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (pregnantTreatmentTypeBrowserManager.deletePregnantTreatmentType(preTreatmentType))) {
 							pPregnantTreatmentType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -206,9 +208,8 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		private static final long serialVersionUID = 1L;
 
 		public PregnantTreatmentTypeBrowserModel() {
-			PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 			try {
-				pPregnantTreatmentType = manager.getPregnantTreatmentType();
+				pPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.getPregnantTreatmentType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

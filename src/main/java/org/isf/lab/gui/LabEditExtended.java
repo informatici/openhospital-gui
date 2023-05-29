@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.lab.gui;
 
@@ -44,6 +44,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.EventListenerList;
@@ -65,6 +66,7 @@ import org.isf.lab.manager.LabRowManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryForPrint;
 import org.isf.lab.model.LaboratoryRow;
+import org.isf.lab.model.LaboratoryStatus;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
@@ -75,7 +77,9 @@ import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 
 /** ------------------------------------------
  * LabEditExtended - Add/edit a laboratory exam
@@ -86,14 +90,15 @@ import org.isf.utils.time.RememberDates;
 public class LabEditExtended extends ModalJFrame {
 
 	private static final long serialVersionUID = -6576310684918676344L;
-	
-	//LISTENER INTERFACE --------------------------------------------------------
+
+	// LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList labEditExtendedListener = new EventListenerList();
-	
+
 	public interface LabEditExtendedListener extends EventListener {
+
 		void labUpdated();
 	}
-	
+
 	public void addLabEditExtendedListener(LabEditExtendedListener l) {
 		labEditExtendedListener.add(LabEditExtendedListener.class, l);
 	}
@@ -110,60 +115,62 @@ public class LabEditExtended extends ModalJFrame {
 		}
 	}
 
-	//---------------------------------------------------------------------------
-	
+	// ---------------------------------------------------------------------------
+
 	private boolean insert;
 
 	private Laboratory lab;
-	private JPanel jContentPane = null;
-	private JPanel buttonPanel = null;
-	private JPanel dataPanel = null;
-	private JPanel resultPanel = null;
-	private JCheckBox inPatientCheckBox = null;
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JButton printButton = null;
-	private JComboBox matComboBox = null;
-	private ExamComboBox examComboBox = null;
-	private ExamRowComboBox examRowComboBox = null;
-	private PatientComboBox patientComboBox = null;
-	private Exam examSelected = null;
-	private JScrollPane noteScrollPane = null;
+	private JPanel jContentPane;
+	private JPanel buttonPanel;
+	private JPanel dataPanel;
+	private JPanel resultPanel;
+	private JCheckBox inPatientCheckBox;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JButton printButton;
+	private JComboBox matComboBox;
+	private ExamComboBox examComboBox;
+	private ExamRowComboBox examRowComboBox;
+	private PatientComboBox patientComboBox;
+	private Exam examSelected;
+	private JScrollPane noteScrollPane;
 
-	private JTextArea noteTextArea = null;
+	private JTextArea noteTextArea;
 
-	private VoLimitedTextField patTextField = null;
-	private VoLimitedTextField ageTextField = null;
-	private VoLimitedTextField sexTextField = null;
+	private VoLimitedTextField patTextField;
+	private VoLimitedTextField ageTextField;
+	private VoLimitedTextField sexTextField;
 
-	private JPanel dataPatient = null;
+	private JPanel dataPatient;
 	private VoLimitedTextField jTextPatientSrc;
-	private Patient labPat = null;
+	private Patient labPat;
 	private String lastKey;
 	private String s;
-	private List<Patient> pat = null;
+	private List<Patient> pat;
 
-	private GoodDateTimeSpinnerChooser examDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser examDateFieldCal;
 
 	private static final int PANEL_WIDTH = 550;
 	private static final int LABEL_WIDTH = 70;
 	private static final int DATA_PANEL_HEIGHT = 90;
 	private static final int DATA_PATIENT_HEIGHT = 100;
 	private static final int RESULT_PANEL_HEIGHT = 350;
-	private static final int BUTTON_PANEL_HEIGHT = 40;
+	private static final int BUTTON_PANEL_HEIGHT = 45;
 
-	private List<ExamRow> eRows = null;
-	
+	private List<ExamRow> eRows;
+
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
 	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
-	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
-	private AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+	private LabRowManager labRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 
 	private JTextField examTextField;
 
 	private boolean examChanged;
-	
+
 	public LabEditExtended(JFrame owner, Laboratory laboratory, boolean inserting) {
 		insert = inserting;
 		lab = laboratory;
@@ -204,7 +211,7 @@ public class LabEditExtended extends ModalJFrame {
 				}
 			}
 			resultPanel.setBorder(BorderFactory.createTitledBorder(
-					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.common.result.txt")));
+							BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.common.result.txt")));
 			jContentPane.add(resultPanel);
 			jContentPane.add(getButtonPanel());
 		}
@@ -213,28 +220,28 @@ public class LabEditExtended extends ModalJFrame {
 
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			//initialize data panel
+			// initialize data panel
 			dataPanel = new JPanel();
 			dataPanel.setLayout(null);
 			dataPanel.setBounds(0, 0, PANEL_WIDTH, DATA_PANEL_HEIGHT);
-			//exam date
+			// exam date
 			JLabel examDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
 			examDateLabel.setBounds(5, 10, LABEL_WIDTH, 25);
 			examDateFieldCal = getExamDateFieldCal();
 			examDateFieldCal.setBounds(LABEL_WIDTH + 5, 10, 200, 25);
-			//material
+			// material
 			JLabel materialLabel = new JLabel(MessageBundle.getMessage("angal.lab.material"));
 			materialLabel.setBounds(290, 10, 140, 20);
 			matComboBox = getMatComboBox();
 			matComboBox.setBounds(360, 10, 185, 20);
 
-			//exam combo
+			// exam combo
 			JLabel examLabel = new JLabel(MessageBundle.getMessage("angal.lab.exam"));
 			examLabel.setBounds(5, 40, LABEL_WIDTH, 20);
 			examComboBox = getExamComboBox();
 			examComboBox.setBounds(LABEL_WIDTH + 5, 40, 470, 20);
 
-			//patient (in or out) data
+			// patient (in or out) data
 			JLabel patientLabel = new JLabel(MessageBundle.getMessage("angal.lab.patientcode"));
 			patientLabel.setBounds(LABEL_WIDTH + 5, 65, 120, 20);
 			inPatientCheckBox = getInPatientCheckBox();
@@ -247,7 +254,7 @@ public class LabEditExtended extends ModalJFrame {
 				@Override
 				public void keyTyped(KeyEvent e) {
 					lastKey = "";
-					String keyChar = "" + e.getKeyChar();
+					String keyChar = String.valueOf(e.getKeyChar());
 					if (Character.isLetterOrDigit(e.getKeyChar())) {
 						lastKey = keyChar;
 					}
@@ -268,7 +275,7 @@ public class LabEditExtended extends ModalJFrame {
 			patientComboBox = getPatientComboBox(s);
 			patientComboBox.setBounds(LABEL_WIDTH + 170, 65, 305, 20);
 
-			//add all to the data panel
+			// add all to the data panel
 			dataPanel.add(examDateLabel, null);
 			dataPanel.add(examDateFieldCal, null);
 			dataPanel.add(materialLabel, null);
@@ -277,7 +284,7 @@ public class LabEditExtended extends ModalJFrame {
 			dataPanel.add(examComboBox, null);
 			dataPanel.add(patientLabel, null);
 			dataPanel.add(inPatientCheckBox, null);
-			//ADDED: Alex
+			// ADDED: Alex
 			dataPanel.add(jTextPatientSrc, null);
 			dataPanel.add(patientComboBox, null);
 
@@ -292,12 +299,12 @@ public class LabEditExtended extends ModalJFrame {
 			dataPatient.setLayout(null);
 			dataPatient.setBounds(0, DATA_PANEL_HEIGHT, PANEL_WIDTH, DATA_PATIENT_HEIGHT);
 			dataPatient.setBorder(BorderFactory.createTitledBorder(
-					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.lab.datapatient")));
+							BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.lab.datapatient")));
 
 			JLabel nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
 			nameLabel.setBounds(10, 20, LABEL_WIDTH, 20);
 			patTextField = getPatientTextField();
-			patTextField.setBounds(LABEL_WIDTH +5, 20, 200, 20);
+			patTextField.setBounds(LABEL_WIDTH + 5, 20, 200, 20);
 			JLabel ageLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
 			ageLabel.setBounds(300, 20, 35, 20);
 			ageTextField = getAgeTextField();
@@ -306,27 +313,27 @@ public class LabEditExtended extends ModalJFrame {
 			sexLabel.setBounds(405, 20, 80, 20);
 			sexTextField = getSexTextField();
 			sexTextField.setBounds(480, 20, 50, 20);
-			//note			
+			// note
 			JLabel noteLabel = new JLabel(MessageBundle.getMessage("angal.lab.note"));
 			noteLabel.setBounds(10, 50, LABEL_WIDTH, 20);
 			noteTextArea = getNoteTextArea();
 			noteTextArea.setEditable(true);
 			noteTextArea.setWrapStyleWord(true);
 			noteTextArea.setAutoscrolls(true);
-			
+
 			/*
 			 * Teo : Adding scroll capabilities at note textArea
 			 */
 			if (noteScrollPane == null) {
 				noteScrollPane = new JScrollPane(noteTextArea);
-				noteScrollPane.setBounds(LABEL_WIDTH +5, 50, 460, 35);
+				noteScrollPane.setBounds(LABEL_WIDTH + 5, 50, 460, 35);
 				noteScrollPane.createVerticalScrollBar();
 				noteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 				noteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				noteScrollPane.setAutoscrolls(true);
 				dataPatient.add(noteScrollPane);
 			}
-			
+
 			dataPatient.add(nameLabel, null);
 			dataPatient.add(patTextField);
 			dataPatient.add(ageLabel, null);
@@ -334,12 +341,12 @@ public class LabEditExtended extends ModalJFrame {
 			dataPatient.add(sexLabel, null);
 			dataPatient.add(sexTextField);
 			dataPatient.add(noteLabel, null);
-			
+
 			patTextField.setEditable(false);
 			ageTextField.setEditable(false);
 			sexTextField.setEditable(false);
 			noteTextArea.setEditable(true);
-			
+
 		}
 		return dataPatient;
 	}
@@ -349,21 +356,21 @@ public class LabEditExtended extends ModalJFrame {
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDate();
 			if (dateIn == null) {
-				dateIn = LocalDateTime.now();
+				dateIn = TimeTools.getNow();
 			}
 		} else {
-			dateIn = lab.getDate();
+			dateIn = lab.getLabDate();
 		}
 		return new GoodDateTimeSpinnerChooser(dateIn);
 	}
-	
+
 	private JCheckBox getInPatientCheckBox() {
 		if (inPatientCheckBox == null) {
 			inPatientCheckBox = new JCheckBox(MessageBundle.getMessage("angal.lab.in"));
 			if (!insert) {
 				inPatientCheckBox.setSelected(lab.getInOutPatient().equalsIgnoreCase("I"));
 			}
-			lab.setInOutPatient((inPatientCheckBox.isSelected()?"I":"R"));
+			lab.setInOutPatient((inPatientCheckBox.isSelected() ? "I" : "R"));
 		}
 		return inPatientCheckBox;
 	}
@@ -372,12 +379,11 @@ public class LabEditExtended extends ModalJFrame {
 	 * TODO: Patient Selection like in LabNew
 	 */
 	private PatientComboBox getPatientComboBox(String s) {
-		
-		PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+
 		try {
 			if (insert) {
 				// TODO: Investigate whether this should be deprecated in favor of getPatient(int page, int size)
-				pat = patBrowser.getPatient();
+				pat = patientBrowserManager.getPatient();
 			}
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
@@ -388,7 +394,7 @@ public class LabEditExtended extends ModalJFrame {
 
 			if (!insert && lab.getPatient() != null) {
 				try {
-					labPat = patBrowser.getPatientAll(lab.getPatient().getCode());
+					labPat = patientBrowserManager.getPatientAll(lab.getPatient().getCode());
 					patientComboBox.addItem(labPat);
 					patientComboBox.setSelectedItem(labPat);
 					patientComboBox.setEnabled(false);
@@ -401,18 +407,13 @@ public class LabEditExtended extends ModalJFrame {
 			}
 
 			Optional.ofNullable(pat)
-					.ifPresent(patients -> patients.stream().forEach(patientComboBox::addItem));
+							.ifPresent(patients -> patients.stream().forEach(patientComboBox::addItem));
 
 			patientComboBox.addActionListener(actionEvent -> {
 				if (patientComboBox.getSelectedIndex() > 0) {
 					labPat = (Patient) patientComboBox.getSelectedItem();
 					setPatient(labPat);
-					Admission admission = null;
-					try {
-						admission = admMan.getCurrentAdmission(labPat);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-					}
+					Admission admission = admissionBrowserManager.getCurrentAdmission(labPat);
 					inPatientCheckBox.setSelected(admission != null);
 				}
 			});
@@ -448,9 +449,9 @@ public class LabEditExtended extends ModalJFrame {
 
 	private void setPatient(Patient labPat) {
 		patTextField.setText(labPat.getName());
-		ageTextField.setText(labPat.getAge()+"");
-		sexTextField.setText(labPat.getSex()+"");
-		noteTextArea.setText(labPat.getNote());		
+		ageTextField.setText(String.valueOf(labPat.getAge()));
+		sexTextField.setText(String.valueOf(labPat.getSex()));
+		noteTextArea.setText(labPat.getNote());
 	}
 
 	private JPanel getButtonPanel() {
@@ -467,10 +468,9 @@ public class LabEditExtended extends ModalJFrame {
 	private ExamComboBox getExamComboBox() {
 		if (examComboBox == null) {
 
-			ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 			List<Exam> exams;
 			try {
-				exams = manager.getExams();
+				exams = examBrowsingManager.getExams();
 			} catch (OHServiceException e) {
 				exams = null;
 				OHServiceExceptionUtil.showMessages(e);
@@ -501,11 +501,10 @@ public class LabEditExtended extends ModalJFrame {
 
 	private JComboBox getMatComboBox() {
 		return Optional.ofNullable(matComboBox)
-				.orElseGet(() -> {
-					LabManager labMan = Context.getApplicationContext().getBean(LabManager.class);
-					List<String> materialList = labMan.getMaterialList();
-					return MatComboBox.withMaterialsAndMaterialFromLabSelected(materialList, lab, insert, labManager::getMaterialTranslated);
-				});
+						.orElseGet(() -> {
+							List<String> materialList = labManager.getMaterialList();
+							return MatComboBox.withMaterialsAndMaterialFromLabSelected(materialList, lab, insert, labManager::getMaterialTranslated);
+						});
 	}
 
 	private JTextArea getNoteTextArea() {
@@ -531,26 +530,23 @@ public class LabEditExtended extends ModalJFrame {
 		return patTextField;
 	}
 
-	
 	private VoLimitedTextField getAgeTextField() {
 		if (ageTextField == null) {
 			ageTextField = new VoLimitedTextField(3);
 			if (insert) {
 				ageTextField.setText("");
-				}
-			else {
-				try {	
-					Integer intAge=lab.getAge();
+			} else {
+				try {
+					Integer intAge = lab.getAge();
 					ageTextField.setText(intAge.toString());
-					}
-				catch (Exception e) {
+				} catch (Exception e) {
 					ageTextField.setText("");
-					}
 				}
 			}
+		}
 		return ageTextField;
 	}
-	
+
 	private VoLimitedTextField getSexTextField() {
 		if (sexTextField == null) {
 			sexTextField = new VoLimitedTextField(1);
@@ -572,13 +568,9 @@ public class LabEditExtended extends ModalJFrame {
 					labs.add(new LaboratoryForPrint(
 									lab.getCode(),
 									lab.getExam(),
-									lab.getDate(),
-									lab.getResult()
-							)
-					);
-					if (!labs.isEmpty()) {
-						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
-					}
+									lab.getLabDate(),
+									lab.getResult()));
+					printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
@@ -613,7 +605,7 @@ public class LabEditExtended extends ModalJFrame {
 					MessageDialog.error(LabEditExtended.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
-				LocalDateTime examDate = LocalDateTime.now();
+				LocalDateTime examDate = TimeTools.getNow();
 				try {
 					examDate = examDateFieldCal.getLocalDateTime();
 				} catch (Exception e1) {
@@ -625,8 +617,7 @@ public class LabEditExtended extends ModalJFrame {
 					return;
 				}
 				List<String> labRow = new ArrayList<>();
-				lab.setDate(LocalDateTime.now());
-				lab.setExamDate(examDate.toLocalDate());
+				lab.setLabDate(examDate);
 				RememberDates.setLastLabExamDate(examDate);
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
@@ -634,7 +625,8 @@ public class LabEditExtended extends ModalJFrame {
 				lab.setInOutPatient((inPatientCheckBox.isSelected() ? "I" : "O"));
 				lab.setPatient(labPat);
 				lab.setPatName(labPat.getName());
-				lab.setSex(labPat.getSex() + "");
+				lab.setSex(String.valueOf(labPat.getSex()));
+				lab.setStatus(LaboratoryStatus.DONE.toString());
 
 				if (examSelected.getProcedure() == 1) {
 					lab.setResult(examRowComboBox.getSelectedItem().toString());
@@ -694,7 +686,7 @@ public class LabEditExtended extends ModalJFrame {
 
 		List<ExamRow> rows;
 		try {
-			rows = rowManager.getExamRowByExamCode(examSelected.getCode());
+			rows = examRowBrowsingManager.getExamRowByExamCode(examSelected.getCode());
 		} catch (OHServiceException e) {
 			rows = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -710,28 +702,33 @@ public class LabEditExtended extends ModalJFrame {
 	private JPanel getSecondPanel() {
 		resultPanel.removeAll();
 		resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
+		JPanel innerPanel = new JPanel(new SpringLayout());
 		String examId = examSelected.getCode();
 		eRows = null;
-
 		try {
-			eRows = rowManager.getExamRowByExamCode(examId);
+			eRows = examRowBrowsingManager.getExamRowByExamCode(examId);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 		if (insert) {
 			Optional.ofNullable(eRows)
-					.ifPresent(examRows -> eRows.forEach(ExamRowSubPanel::forExamRow));
+							.ifPresent(examRows -> eRows.forEach(ExamRowSubPanel::forExamRow));
 		} else {
 			List<LaboratoryRow> lRows;
 			try {
-				lRows = lRowManager.getLabRowByLabId(lab.getCode());
+				lRows = labRowManager.getLabRowByLabId(lab.getCode());
 			} catch (OHServiceException e) {
 				lRows = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			List<LaboratoryRow> finalLRows = lRows;
-			Optional.ofNullable(eRows).ifPresent(examRows ->
-					examRows.forEach(r -> resultPanel.add(ExamRowSubPanel.forExamRowAndLaboratoryRows(r, finalLRows))));
+			Optional.ofNullable(eRows).ifPresent(examRows -> examRows.forEach(r -> innerPanel.add(ExamRowSubPanel.forExamRowAndLaboratoryRows(r, finalLRows))));
+		}
+		if (eRows != null) {
+			SpringUtilities.makeCompactGrid(innerPanel, eRows.size(), 1, 0, 0, 0, 0);
+			JScrollPane scrollPane = new JScrollPane(innerPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+							ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			resultPanel.add(scrollPane);
 		}
 		return resultPanel;
 	}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.dicomtype.gui;
 
@@ -59,17 +59,17 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {80, 200, 80};
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private DicomTypeBrowserModel model;
 	private int selectedrow;
-	private DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
-	private DicomType dicomType = null;
+	private DicomTypeBrowserManager dicomTypeBrowserManager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
+	private DicomType dicomType;
 	private final JFrame myFrame;
 	
 	
@@ -193,7 +193,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 						boolean deleted;
 
 						try {
-							deleted = manager.deleteDicomType(dicomType);
+							deleted = dicomTypeBrowserManager.deleteDicomType(dicomType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -224,11 +224,10 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 	class DicomTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 
 		public DicomTypeBrowserModel() {
 			try {
-				pDicomType = manager.getDicomType();
+				pDicomType = dicomTypeBrowserManager.getDicomType();
 			} catch (OHServiceException e) {
 				pDicomType = null;
 				OHServiceExceptionUtil.showMessages(e);

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -47,7 +47,7 @@ public class GroupEdit extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private EventListenerList groupListeners = new EventListenerList();
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
     public interface GroupListener extends EventListener {
         void groupUpdated(AWTEvent e);
@@ -209,7 +209,7 @@ public class GroupEdit extends JDialog {
 				boolean result = false;
 				if (insert) {      // inserting
 					try {
-						result = manager.newUserGroup(group);
+						result = userBrowsingManager.newUserGroup(group);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
@@ -218,7 +218,7 @@ public class GroupEdit extends JDialog {
 					}
 				} else {         // updating
 					try {
-						result = manager.updateUserGroup(group);
+						result = userBrowsingManager.updateUserGroup(group);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.operation.gui;
 
@@ -68,13 +68,16 @@ public class OperationList extends JPanel {
 	private JTable jTableData;
 	private JDialog dialogOpe;
 	private List<OperationRow> oprowData;
-	private Opd myOpd = null;
+	private Opd myOpd;
 	private Admission myAdmission;
 	private Patient myPatient;
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 
 	OhTableOperationModel<OperationRow> modelOhOpeRow;
-	OperationRowBrowserManager opeRowManager;
+
+	OperationRowBrowserManager operationRowBrowserManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
+	AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 
 	public OperationList(Object object) {
 		if (object instanceof Opd) {
@@ -86,7 +89,6 @@ public class OperationList extends JPanel {
 		if (object instanceof Patient) {
 			myPatient = (Patient) object;
 		}
-		opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
 		setLayout(new BorderLayout(0, 0));
 
 		JPanel panelData = new JPanel();
@@ -99,30 +101,28 @@ public class OperationList extends JPanel {
 		/* *** getting data *** */
 		if (myOpd != null) {
 			try {
-				oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+				oprowData = operationRowBrowserManager.getOperationRowByOpd(myOpd);
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
 		}
 		if (myAdmission != null) {
 			try {
-				oprowData = opeRowManager.getOperationRowByAdmission(myAdmission);
+				oprowData = operationRowBrowserManager.getOperationRowByAdmission(myAdmission);
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
 		}
 		if (myPatient != null) {
-			AdmissionBrowserManager admManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-			OpdBrowserManager opdManager= Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
-				List<Admission> admissions = admManager.getAdmissions(myPatient);
+				List<Admission> admissions = admissionBrowserManager.getAdmissions(myPatient);
 				oprowData = new ArrayList<>();
 				for (Admission adm : admissions) {
-					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
+					oprowData.addAll(operationRowBrowserManager.getOperationRowByAdmission(adm));
 				}
-				List<Opd> opds =  opdManager.getOpdList(myPatient.getCode());
+				List<Opd> opds =  opdBrowserManager.getOpdList(myPatient.getCode());
 				for (Opd op : opds) {
-					oprowData.addAll(opeRowManager.getOperationRowByOpd(op));
+					oprowData.addAll(operationRowBrowserManager.getOperationRowByOpd(op));
 				}
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
@@ -196,7 +196,7 @@ public class OperationList extends JPanel {
 
 	private void refreshJtable() {
 		try {
-			oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+			oprowData = operationRowBrowserManager.getOperationRowByOpd(myOpd);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

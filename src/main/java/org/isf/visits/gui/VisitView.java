@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.visits.gui;
 
@@ -147,8 +147,8 @@ public class VisitView extends ModalJFrame {
 	/*
 	 * Managers
 	 */
-	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
-	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 	private List<Visit> visits = new ArrayList<>();
 	private List<Visit> visitfirst = new ArrayList<>();
@@ -159,15 +159,15 @@ public class VisitView extends ModalJFrame {
 
 
 	private void initialize() {
-		setDateFirstThenSecond(LocalDateTime.now());
+		setDateFirstThenSecond(TimeTools.getNow());
 	}
 
 	private void loadDataForWard(Ward ward) {
 		try {
 			if (ward != null) {
-				visits = vstManager.getVisitsWard(ward.getCode());
+				visits = visitManager.getVisitsWard(ward.getCode());
 			} else {
-				visits = vstManager.getVisitsWard(null);
+				visits = visitManager.getVisitsWard(null);
 			}
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
@@ -342,9 +342,13 @@ public class VisitView extends ModalJFrame {
 				Visit visit = (Visit) jTableFirst.getModel().getValueAt(row, -1);
 				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
-					vstManager.deleteVisit(visit);
-					loadDataForWard(ward);
-					updatePanels();
+					try {
+						visitManager.deleteVisit(visit);
+						loadDataForWard(ward);
+						updatePanels();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
 				}
 			});
 		}
@@ -387,9 +391,13 @@ public class VisitView extends ModalJFrame {
 				Visit visit = (Visit) jTableSecond.getModel().getValueAt(row, -1);
 				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
-					vstManager.deleteVisit(visit);
-					loadDataForWard(ward);
-					updatePanels();
+					try {
+						visitManager.deleteVisit(visit);
+						loadDataForWard(ward);
+						updatePanels();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
 				}
 			});
 		}
@@ -767,7 +775,7 @@ public class VisitView extends ModalJFrame {
 			JButton todayBtn = new JButton(MessageBundle.getMessage("angal.visit.today.btn"));
 			todayBtn.setMnemonic(MessageBundle.getMnemonic("angal.visit.today.btn.key"));
 			todayBtn.addActionListener(actionEvent -> {
-				setDateFirstThenSecond(LocalDateTime.now());
+				setDateFirstThenSecond(TimeTools.getNow());
 				updatePanels();
 			});
 			todayPanel.add(todayBtn);
@@ -783,7 +791,7 @@ public class VisitView extends ModalJFrame {
 			wardBox.addItem(null);
 			List<Ward> wardList;
 			try {
-				wardList = wbm.getWards();
+				wardList = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				wardList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);

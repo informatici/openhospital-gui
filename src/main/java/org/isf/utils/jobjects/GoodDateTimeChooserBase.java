@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -33,6 +33,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.isf.generaldata.GeneralData;
+import org.isf.utils.time.TimeTools;
 
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DateTimePicker;
@@ -89,7 +90,12 @@ public abstract class GoodDateTimeChooserBase extends Panel {
 		}
 
 	public LocalDateTime getLocalDateTime() {
-		return dateTimePicker.getDateTimeStrict();
+		return TimeTools.truncateToSeconds(dateTimePicker.getDateTimeStrict());
+	}
+
+	// time can be blank/empty
+	public LocalDateTime getLocalDateTimePermissive() {
+		return TimeTools.truncateToSeconds(dateTimePicker.getDateTimePermissive());
 	}
 
 	public void setDateTime(LocalDateTime dateTime) {

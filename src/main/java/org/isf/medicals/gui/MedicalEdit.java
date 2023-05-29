@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicals.gui;
 
@@ -107,17 +107,17 @@ public class MedicalEdit extends JDialog {
 		}
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private VoIntegerTextField pcsperpckField = null;
-	private VoLimitedTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
-	private VoDoubleTextField minQtiField = null;
-	private JComboBox<MedicalType> typeComboBox = null;
-	private Medical oldMedical = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private VoIntegerTextField pcsperpckField;
+	private VoLimitedTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
+	private VoDoubleTextField minQtiField;
+	private JComboBox<MedicalType> typeComboBox;
+	private Medical oldMedical;
 	private Medical medical;
 	private boolean insert;
 
@@ -240,9 +240,9 @@ public class MedicalEdit extends JDialog {
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					Medical newMedical = null;
 					boolean result = false;
 					if (insert) { // inserting
+						Medical newMedical = null;
 						try {
 							newMedical = (Medical) medical.clone();
 							newMedical.setType((MedicalType) typeComboBox.getSelectedItem());
@@ -254,7 +254,10 @@ public class MedicalEdit extends JDialog {
 							LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
 						}
 						try {
-							result = medicalBrowsingManager.newMedical(newMedical);
+							Medical insertedMedical = medicalBrowsingManager.newMedical(newMedical);
+							if (insertedMedical != null) {
+								result = true;
+							}
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1, MedicalEdit.this);
 							List<OHExceptionMessage> errors = e1.getMessages();
@@ -266,7 +269,10 @@ public class MedicalEdit extends JDialog {
 
 										if (ok == JOptionPane.OK_OPTION) {
 											try {
-												result = medicalBrowsingManager.newMedical(newMedical, true);
+												Medical insertedMedical = medicalBrowsingManager.newMedical(newMedical, true);
+												if (insertedMedical != null) {
+													result = true;
+												}
 											} catch (OHServiceException e2) {
 												OHServiceExceptionUtil.showMessages(e2);
 											}
@@ -286,7 +292,10 @@ public class MedicalEdit extends JDialog {
 						oldMedical.setPcsperpck(pcsperpckField.getValue());
 						oldMedical.setMinqty(minQtiField.getValue());
 						try {
-							result = medicalBrowsingManager.updateMedical(oldMedical);
+							Medical updatedMedical = medicalBrowsingManager.updateMedical(oldMedical);
+							if (updatedMedical != null) {
+								result = true;
+							}
 						} catch (OHServiceException e1) {
 							List<OHExceptionMessage> errors = e1.getMessages();
 
@@ -298,7 +307,10 @@ public class MedicalEdit extends JDialog {
 
 										if (ok == JOptionPane.OK_OPTION) {
 											try {
-												result = medicalBrowsingManager.updateMedical(newMedical, true);
+												Medical updatedMedical = medicalBrowsingManager.updateMedical(oldMedical, true);
+												if (updatedMedical != null) {
+													result = true;
+												}
 											} catch (OHServiceException e2) {
 												OHServiceExceptionUtil.showMessages(e2);
 											}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.distype.gui;
 
@@ -85,18 +85,20 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 			((DiseaseTypeListener) listener).diseaseTypeUpdated(event);
 		}
 	}
-    
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
+
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
 	private String lastdescription;
 	private DiseaseType diseaseType;
 	private boolean insert;
-	private JPanel jDataPanel = null;
+	private JPanel jDataPanel;
 
 	/**
      * This is the default constructor; we pass the arraylist and the selectedrow
@@ -192,7 +194,6 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 				try {
 					if (descriptionTextField.getText().equals(lastdescription)) {
@@ -202,7 +203,7 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 					diseaseType.setCode(codeTextField.getText());
 					boolean result;
 					if (insert) {      // inserting
-						result = manager.newDiseaseType(diseaseType);
+						result = diseaseTypeBrowserManager.newDiseaseType(diseaseType);
 						if (result) {
 							fireDiseaseInserted();
 						}
@@ -215,7 +216,7 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							result = manager.updateDiseaseType(diseaseType);
+							result = diseaseTypeBrowserManager.updateDiseaseType(diseaseType);
 							if (result) {
 								fireDiseaseUpdated();
 							}

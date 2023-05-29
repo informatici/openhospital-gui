@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicalstock.gui;
 
@@ -69,7 +69,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
-import org.isf.medstockmovtype.manager.MedicaldsrstockmovTypeBrowserManager;
+import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.db.NormalizeString;
@@ -127,12 +127,13 @@ public class MovStockMultipleDischarging extends JDialog {
 	}; 
 	private int optionSelected = UNITS;
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
-	private JComboBox shareWith = null;
+	private JComboBox shareWith;
 	private List<Medical> pool = new ArrayList<>();
 	
-	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
+	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
-	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 	private boolean isAutomaticLot() {
 		return GeneralData.AUTOMATICLOT_OUT;
@@ -291,7 +292,7 @@ public class MovStockMultipleDischarging extends JDialog {
 					// Lot (PreparationDate && ExpiringDate)
 					List<Lot> lots;
 					try {
-						lots = movManager.getLotByMedical(med);
+						lots = movStockInsertingManager.getLotByMedical(med);
 					} catch (OHServiceException e1) {
 						lots = null;
 						OHServiceExceptionUtil.showMessages(e1);
@@ -493,7 +494,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	
 	private GoodDateTimeSpinnerChooser getJDateChooser() {
 		if (jDateChooser == null) {
-			jDateChooser = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
+			jDateChooser = new GoodDateTimeSpinnerChooser(TimeTools.getNow());
 		}
 		return jDateChooser;
 	}
@@ -503,7 +504,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			jComboBoxDischargeType = new JComboBox<>();
 			List<MovementType> movTypes;
 			try {
-				movTypes = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
+				movTypes = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
 			} catch (OHServiceException e) {
 				movTypes = null;
 				OHServiceExceptionUtil.showMessages(e);
@@ -737,22 +738,15 @@ public class MovStockMultipleDischarging extends JDialog {
 		if (jComboBoxDestination == null) {
 			jComboBoxDestination = new JComboBox();
 			jComboBoxDestination.addItem(""); //$NON-NLS-1$
-			WardBrowserManager wardMan = Context.getApplicationContext().getBean(WardBrowserManager.class);
-			List<Ward> wards;
+			List<Ward> wardsList;
 			try {
-				wards = wardMan.getWards();
+				wardsList = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
-				wards = new ArrayList<>();
+				wardsList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			for (Ward ward : wards) {
-				if (GeneralData.INTERNALPHARMACIES) {
-					if (ward.isPharmacy()) {
-						jComboBoxDestination.addItem(ward);
-					}
-				} else {
-					jComboBoxDestination.addItem(ward);
-				}
+			for (Ward elem : wardsList) {
+				jComboBoxDestination.addItem(elem);
 			}
 		}
 		return jComboBoxDestination;
@@ -955,10 +949,10 @@ public class MovStockMultipleDischarging extends JDialog {
 		boolean ok = true;
 		List<Movement> movements = model.getMovements();
 		try {
-			movManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
+			movStockInsertingManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
 
 			if (isXmpp()) {
-				if (shareWith.isEnabled() && (!(((String) shareWith.getSelectedItem())
+				if (shareWith.isEnabled() && (!(shareWith.getSelectedItem()
 						.equals(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody"))))) { //$NON-NLS-1$
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 					for (Medical med : pool) {

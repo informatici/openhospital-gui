@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.vactype.gui;
 
@@ -55,6 +55,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 
 	private static final long serialVersionUID = 1L;
 
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+
 	private List<VaccineType> pVaccineType;
 	
 	private String[] pColumns = {
@@ -63,17 +65,16 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 	};
 	private int[] pColumnWidth = {80, 200};
 
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private VaccineTypeBrowserModel model;
 	private int selectedrow;
-	private VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-	private VaccineType vaccineType = null;
+	private VaccineType vaccineType;
 	
 	private final JFrame myFrame;
 	
@@ -184,7 +185,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 					VaccineType vacType = (VaccineType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.vactype.deletevaccinetype.fmt.msg", vacType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteVaccineType(vacType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (vaccineTypeBrowserManager.deleteVaccineType(vacType))) {
 							pVaccineType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -213,9 +214,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		private static final long serialVersionUID = 1L;
 
 		public VaccineTypeBrowserModel() {
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			try {
-				pVaccineType = manager.getVaccineType();
+				pVaccineType = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

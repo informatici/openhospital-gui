@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.admission.gui;
 
@@ -72,6 +72,10 @@ import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.admission.model.AdmittedPatient;
 import org.isf.admtype.model.AdmissionType;
+import org.isf.anamnesis.gui.PatientHistoryEdit;
+import org.isf.anamnesis.manager.PatientHistoryManager;
+import org.isf.anamnesis.model.PatientHistory;
+import org.isf.anamnesis.model.PatientPatientHistory;
 import org.isf.disctype.model.DischargeType;
 import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
@@ -90,6 +94,7 @@ import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.operation.gui.OperationRowAdm;
 import org.isf.patient.gui.PatientSummary;
+import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.pregtreattype.manager.PregnantTreatmentTypeBrowserManager;
 import org.isf.pregtreattype.model.PregnantTreatmentType;
@@ -114,7 +119,7 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 /**
  * This class shows essential patient data and allows to create an admission
  * record or modify an existing one.
- *
+ * <p>
  * release 2.5 nov-10-06
  *
  * @author flavio
@@ -123,7 +128,7 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
  * ====================
  * 23/10/06 - flavio - borders set to not resizable
  *                     changed Disease IN (/OUT) into Dignosis IN (/OUT)
- *
+ * <p>
  * 10/11/06 - ross - added RememberDate for admission Date
  * 				   - only diseses with flag In Patient (IPD) are displayed
  *                 - on Insert. in edit all are displayed
@@ -185,6 +190,17 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 	}
 
+	private PregnantTreatmentTypeBrowserManager pregnantTreatmentTypeBrowserManager = Context.getApplicationContext()
+					.getBean(PregnantTreatmentTypeBrowserManager.class);
+	private DeliveryResultTypeBrowserManager deliveryResultTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
+	private DeliveryTypeBrowserManager deliveryTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
+
 	private final OperationRowValidator operationRowValidator = new OperationRowValidator();
 	private final DiseaseFinder diseaseFinder = new DiseaseFinder();
 
@@ -192,11 +208,11 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private boolean editing;
 
-	private Admission admission = null;
+	private Admission admission;
 
 	private PatientSummary ps;
 
-	private JTextArea textArea = null;
+	private JTextArea textArea;
 
 	private JTabbedPane jTabbedPaneAdmission;
 
@@ -208,58 +224,58 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private int pregnancyTabIndex;
 
-	private JPanel jContentPane = null;
+	private JPanel jContentPane;
 
 	// enable is if patient is female
-	private boolean enablePregnancy = false;
+	private boolean enablePregnancy;
 
 	// viewing is if you set ward to pregnancy
-	private boolean viewingPregnancy = false;
+	private boolean viewingPregnancy;
 
-	private LocalDateTime visitDate = null;
+	private LocalDateTime visitDate;
 
-	private VoLimitedTextField weightField = null;
+	private VoLimitedTextField weightField;
 
-	private GoodDateTimeSpinnerChooser visitDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser visitDateFieldCal;
 
-	private JComboBox treatmTypeBox = null;
+	private JComboBox treatmTypeBox;
 
-	private LocalDateTime deliveryDate = LocalDateTime.now();
+	private LocalDateTime deliveryDate = TimeTools.getNow();
 
-	private GoodDateTimeSpinnerChooser deliveryDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser deliveryDateFieldCal;
 
-	private JComboBox deliveryTypeBox = null;
+	private JComboBox deliveryTypeBox;
 
-	private JComboBox deliveryResultTypeBox = null;
+	private JComboBox deliveryResultTypeBox;
 
-	private List<PregnantTreatmentType> treatmTypeList = null;
+	private List<PregnantTreatmentType> treatmTypeList;
 
-	private List<DeliveryType> deliveryTypeList = null;
+	private List<DeliveryType> deliveryTypeList;
 
-	private List<DeliveryResultType> deliveryResultTypeList = null;
+	private List<DeliveryResultType> deliveryResultTypeList;
 
-	private LocalDateTime ctrl1Date = null;
+	private LocalDateTime ctrl1Date;
 
-	private LocalDateTime ctrl2Date = null;
+	private LocalDateTime ctrl2Date;
 
-	private LocalDateTime abortDate = null;
+	private LocalDateTime abortDate;
 
-	private GoodDateTimeSpinnerChooser ctrl1DateFieldCal = null;
+	private GoodDateTimeSpinnerChooser ctrl1DateFieldCal;
 
-	private GoodDateTimeSpinnerChooser ctrl2DateFieldCal = null;
+	private GoodDateTimeSpinnerChooser ctrl2DateFieldCal;
 
-	private GoodDateTimeSpinnerChooser abortDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser abortDateFieldCal;
 
 	private JComboBox<Ward> wardBox;
 
 	// save value during a switch
-	private Ward saveWard = null;
+	private Ward saveWard;
 
-	private String saveYProg = null;
+	private String saveYProg;
 
-	private JTextField yProgTextField = null;
+	private JTextField yProgTextField;
 
-	private JTextField FHUTextField = null;
+	private JTextField FHUTextField;
 
 	private JPanel wardPanel;
 
@@ -269,13 +285,11 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JComboBox diseaseInBox;
 
-	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private List<Disease> diseaseInList;
 
-	private List<Disease> diseaseInList = null;
+	private List<Disease> diseaseOutList;
 
-	private List<Disease> diseaseOutList = null;
-
-	private List<Disease> diseaseAllList = null;
+	private List<Disease> diseaseAllList;
 
 	private JCheckBox malnuCheck;
 
@@ -285,21 +299,21 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private LocalDateTime dateIn;
 
-	private GoodDateTimeSpinnerChooser dateInFieldCal = null;
+	private GoodDateTimeSpinnerChooser dateInFieldCal;
 
-	private JComboBox admTypeBox = null;
+	private JComboBox admTypeBox;
 
-	private List<AdmissionType> admTypeList = null;
+	private List<AdmissionType> admTypeList;
 
 	private JPanel admissionDatePanel;
 
 	private JPanel admissionTypePanel;
 
-	private JComboBox diseaseOut1Box = null;
+	private JComboBox diseaseOut1Box;
 
-	private JComboBox diseaseOut2Box = null;
+	private JComboBox diseaseOut2Box;
 
-	private JComboBox diseaseOut3Box = null;
+	private JComboBox diseaseOut3Box;
 
 	private JPanel diseaseOutPanel;
 
@@ -309,13 +323,13 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JPanel diseaseOut3Panel;
 
-	private LocalDateTime dateOut = null;
+	private LocalDateTime dateOut;
 
-	private GoodDateTimeSpinnerChooser dateOutFieldCal = null;
+	private GoodDateTimeSpinnerChooser dateOutFieldCal;
 
-	private JComboBox disTypeBox = null;
+	private JComboBox disTypeBox;
 
-	private List<DischargeType> disTypeList = null;
+	private List<DischargeType> disTypeList;
 
 	private JPanel dischargeDatePanel;
 
@@ -323,15 +337,17 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JPanel bedDaysPanel;
 
-	private JPanel buttonPanel = null;
+	private JPanel buttonPanel;
 
 	private JLabel labelRequiredFields;
 
-	private JButton closeButton = null;
+	private JButton closeButton;
 
-	private JButton saveButton = null;
+	private JButton saveButton;
 
-	private JButton jButtonExamination = null;
+	private JButton jButtonExamination;
+
+	private JButton jAnamnesisButton;
 
 	private JPanel visitDatePanel;
 
@@ -355,8 +371,6 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private OperationRowAdm operationad;
 
-	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-
 	private JButton searchButton;
 	private JButton searchDiseaseOut1Button;
 	private JButton searchDiseaseOut2Button;
@@ -368,7 +382,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	public AdmissionBrowser(JFrame parentFrame, AdmittedPatient admPatient, boolean editing) {
 		super();
 		setTitle(editing ? MessageBundle.getMessage("angal.admission.editadmissionrecord.title")
-				: MessageBundle.getMessage("angal.admission.newadmission.title"));
+						: MessageBundle.getMessage("angal.admission.newadmission.title"));
 		addAdmissionListener((AdmissionListener) parentFrame);
 		this.editing = editing;
 		patient = admPatient.getPatient();
@@ -379,8 +393,8 @@ public class AdmissionBrowser extends ModalJFrame {
 
 		try {
 			diseaseOutList = diseaseBrowserManager.getDiseaseIpdOut();
-			Admission admiss = admissionManager.getCurrentAdmission(patient);
-			//TODO: remove this anti-pattern OperationRowAdm
+			Admission admiss = admissionBrowserManager.getCurrentAdmission(patient);
+			// TODO: remove this anti-pattern OperationRowAdm
 			operationad = new OperationRowAdm(admiss);
 			addAdmissionListener(operationad);
 		} catch (OHServiceException e) {
@@ -392,12 +406,8 @@ public class AdmissionBrowser extends ModalJFrame {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		if (editing) {
-			try {
-				admission = admissionManager.getCurrentAdmission(patient);
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			}
-			if (admission.getWard().getCode().equalsIgnoreCase("M")) {
+			admission = admissionBrowserManager.getCurrentAdmission(patient);
+			if (admission != null && admission.getWard().getCode().equalsIgnoreCase("M")) {
 				viewingPregnancy = true;
 			}
 		} else {
@@ -439,7 +449,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			enablePregnancy = true;
 		}
 		ps = new PatientSummary(patient);
-		//TODO: remove this anti-pattern OperationRowAdm
+		// TODO: remove this anti-pattern OperationRowAdm
 		operationad = new OperationRowAdm(anAdmission);
 		addAdmissionListener(operationad);
 
@@ -454,7 +464,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		try {
-			admission = admissionManager.getAdmission(anAdmission.getId());
+			admission = admissionBrowserManager.getAdmission(anAdmission.getId());
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -468,7 +478,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				//to free memory
+				// to free memory
 				if (diseaseInList != null) {
 					diseaseInList.clear();
 				}
@@ -544,50 +554,40 @@ public class AdmissionBrowser extends ModalJFrame {
 			layout.setAutoCreateContainerGaps(true);
 
 			layout.setHorizontalGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(LEADING)
-							.addComponent(getDiseaseInPanel())
-							.addComponent(getDiseaseOutPanel())
-							.addGroup(layout.createSequentialGroup()
-									.addGroup(layout.createParallelGroup(LEADING)
-											.addComponent(getWardPanel())
-											.addComponent(getAdmissionDatePanel())
-											.addComponent(getDischargeDatePanel())
-									)
-									.addGroup(layout.createParallelGroup(LEADING)
-											.addComponent(getFHUPanel())
-											.addComponent(getAdmissionTypePanel())
-											.addComponent(getBedDaysPanel())
-									)
-									.addGroup(layout.createParallelGroup(LEADING)
-											.addComponent(getProgYearPanel())
-											.addComponent(getMalnutritionPanel())
-											.addComponent(getDischargeTypePanel())
-											.addComponent(getJLabelRequiredFields())
-									)
-							)
-					)
-			);
+							.addGroup(layout.createParallelGroup(LEADING)
+											.addComponent(getDiseaseInPanel())
+											.addComponent(getDiseaseOutPanel())
+											.addGroup(layout.createSequentialGroup()
+															.addGroup(layout.createParallelGroup(LEADING)
+																			.addComponent(getWardPanel())
+																			.addComponent(getAdmissionDatePanel())
+																			.addComponent(getDischargeDatePanel()))
+															.addGroup(layout.createParallelGroup(LEADING)
+																			.addComponent(getFHUPanel())
+																			.addComponent(getAdmissionTypePanel())
+																			.addComponent(getBedDaysPanel()))
+															.addGroup(layout.createParallelGroup(LEADING)
+																			.addComponent(getProgYearPanel())
+																			.addComponent(getMalnutritionPanel())
+																			.addComponent(getDischargeTypePanel())
+																			.addComponent(getJLabelRequiredFields())))));
 
 			layout.setVerticalGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getWardPanel())
-							.addComponent(getFHUPanel())
-							.addComponent(getProgYearPanel())
-					)
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getAdmissionDatePanel())
-							.addComponent(getAdmissionTypePanel())
-							.addComponent(getMalnutritionPanel())
-					)
-					.addComponent(getDiseaseInPanel())
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getDischargeDatePanel())
-							.addComponent(getBedDaysPanel())
-							.addComponent(getDischargeTypePanel())
-					)
-					.addComponent(getDiseaseOutPanel())
-					.addComponent(getJLabelRequiredFields())
-			);
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getWardPanel())
+											.addComponent(getFHUPanel())
+											.addComponent(getProgYearPanel()))
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getAdmissionDatePanel())
+											.addComponent(getAdmissionTypePanel())
+											.addComponent(getMalnutritionPanel()))
+							.addComponent(getDiseaseInPanel())
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getDischargeDatePanel())
+											.addComponent(getBedDaysPanel())
+											.addComponent(getDischargeTypePanel()))
+							.addComponent(getDiseaseOutPanel())
+							.addComponent(getJLabelRequiredFields()));
 		}
 		updateBedDays();
 		return jPanelAdmission;
@@ -613,44 +613,43 @@ public class AdmissionBrowser extends ModalJFrame {
 			layout.setAutoCreateContainerGaps(true);
 
 			layout.setHorizontalGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(LEADING)
-							.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup(LEADING)
-							.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getDeliveryTypePanel())
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-							.addComponent(getTreatmentPanel())
-							.addComponent(getDeliveryResultTypePanel())
-							.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
-					)
-			);
+							.addGroup(layout.createParallelGroup(LEADING)
+											.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup(LEADING)
+											.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getDeliveryTypePanel()))
+							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+											.addComponent(getTreatmentPanel())
+											.addComponent(getDeliveryResultTypePanel())
+											.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)));
 
 			layout.setVerticalGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getTreatmentPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup(BASELINE)
-							.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getDeliveryTypePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getDeliveryResultTypePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					)
-			);
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE)
+											.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(getTreatmentPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup(BASELINE)
+											.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE)
+											.addComponent(getDeliveryTypePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE)
+											.addComponent(getDeliveryResultTypePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup()
+											.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup()
+											.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE))
+							.addGroup(layout.createParallelGroup()
+											.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
+															GroupLayout.PREFERRED_SIZE)));
 
 			layout.linkSize(SwingConstants.VERTICAL, getDeliveryDatePanel(), getDeliveryTypePanel(), getDeliveryResultTypePanel());
 		}
@@ -662,7 +661,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		JScrollPane scrollPane = new JScrollPane(getJTextAreaNote());
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 50, 0, 50), // external
-				new ShadowBorder(5, Color.LIGHT_GRAY))); // internal
+						new ShadowBorder(5, Color.LIGHT_GRAY))); // internal
 		scrollPane.addAncestorListener(new AncestorListener() {
 
 			@Override
@@ -701,11 +700,10 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (treatmentPanel == null) {
 			treatmentPanel = new JPanel();
 
-			PregnantTreatmentTypeBrowserManager abm = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 			treatmTypeBox = new JComboBox();
 			treatmTypeBox.addItem("");
 			try {
-				treatmTypeList = abm.getPregnantTreatmentType();
+				treatmTypeList = pregnantTreatmentTypeBrowserManager.getPregnantTreatmentType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -749,7 +747,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getVisitDate() != null) {
 				visitDate = admission.getVisitDate();
 			} else {
-				visitDate = LocalDateTime.now();
+				visitDate = TimeTools.getNow();
 			}
 			visitDateFieldCal = new GoodDateTimeSpinnerChooser(visitDate);
 
@@ -763,11 +761,10 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (deliveryResultTypePanel == null) {
 			deliveryResultTypePanel = new JPanel();
 
-			DeliveryResultTypeBrowserManager drtbm = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 			deliveryResultTypeBox = new JComboBox();
 			deliveryResultTypeBox.addItem("");
 			try {
-				deliveryResultTypeList = drtbm.getDeliveryResultType();
+				deliveryResultTypeList = deliveryResultTypeBrowserManager.getDeliveryResultType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -791,11 +788,10 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (deliveryTypePanel == null) {
 			deliveryTypePanel = new JPanel();
 
-			DeliveryTypeBrowserManager dtbm = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 			deliveryTypeBox = new JComboBox();
 			deliveryTypeBox.addItem("");
 			try {
-				deliveryTypeList = dtbm.getDeliveryType();
+				deliveryTypeList = deliveryTypeBrowserManager.getDeliveryType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -878,7 +874,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (saveYProg != null) {
 				yProgTextField = new JTextField(saveYProg);
 			} else if (editing) {
-				yProgTextField = new JTextField("" + admission.getYProg());
+				yProgTextField = new JTextField(String.valueOf(admission.getYProg()));
 			} else {
 				yProgTextField = new JTextField("");
 			}
@@ -913,17 +909,15 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
 
-			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			wardBox = new JComboBox<>();
 
 			new WardComboBoxInitializer(
-					wardBox,
-					wbm,
-					patient,
-					saveWard,
-					editing,
-					admission
-			).initialize();
+							wardBox,
+							wardBrowserManager,
+							patient,
+							saveWard,
+							editing,
+							admission).initialize();
 
 			wardBox.addActionListener(actionEvent -> {
 				// set yProg
@@ -938,21 +932,21 @@ public class AdmissionBrowser extends ModalJFrame {
 				} else {
 					String wardId = ((Ward) wardBox.getSelectedItem()).getCode();
 					if (editing && wardId.equalsIgnoreCase(admission.getWard().getCode())) {
-						yProgTextField.setText("" + admission.getYProg());
+						yProgTextField.setText(String.valueOf(admission.getYProg()));
 					} else {
 						int nextProg = 1;
 						try {
-							nextProg = admissionManager.getNextYProg(wardId);
+							nextProg = admissionBrowserManager.getNextYProg(wardId);
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
-						yProgTextField.setText("" + nextProg);
+						yProgTextField.setText(String.valueOf(nextProg));
 
 						// get default selected warn default beds number
 						int nBeds = ((Ward) wardBox.getSelectedItem()).getBeds();
 						int usedBeds = 0;
 						try {
-							usedBeds = admissionManager.getUsedWardBed(wardId);
+							usedBeds = admissionBrowserManager.getUsedWardBed(wardId);
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -1027,7 +1021,8 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (!found.isPresent()) {
 					// Still not found
 					diseaseInBox.addItem(
-							MessageBundle.formatMessage("angal.admission.notfoundasinpatientdisease.fmt.msg", admission.getDiseaseIn().getDescription()));
+									MessageBundle.formatMessage("angal.admission.notfoundasinpatientdisease.fmt.msg",
+													admission.getDiseaseIn().getDescription()));
 					diseaseInBox.setSelectedIndex(diseaseInBox.getItemCount() - 1);
 				}
 			}
@@ -1104,7 +1099,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			admTypeBox.setPreferredSize(new Dimension(PREFERRED_WIDTH_TYPES, PREFERRED_HEIGHT_LINE));
 			admTypeBox.addItem("");
 			try {
-				admTypeList = admissionManager.getAdmissionType();
+				admTypeList = admissionBrowserManager.getAdmissionType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -1137,7 +1132,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				dateIn = RememberDates.getLastAdmInDate();
 			}
 			if (dateIn == null) {
-				dateIn = LocalDateTime.now();
+				dateIn = TimeTools.getNow();
 			}
 			dateInFieldCal = new GoodDateTimeSpinnerChooser(dateIn, false);
 
@@ -1212,7 +1207,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (!found.isPresent()) {
 					// Still not found
 					diseaseOut1Box.addItem(MessageBundle.formatMessage("angal.admission.notfoundasoutpatientdisease.fmt.msg",
-							admission.getDiseaseOut1().getDescription(), 1));
+									admission.getDiseaseOut1().getDescription(), 1));
 					diseaseOut1Box.setSelectedIndex(diseaseOut1Box.getItemCount() - 1);
 				}
 			}
@@ -1300,7 +1295,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (!found.isPresent()) {
 					// Still not found
 					diseaseOut2Box.addItem(MessageBundle.formatMessage("angal.admission.notfoundasoutpatientdisease.fmt.msg",
-							admission.getDiseaseOut2().getDescription(), 2));
+									admission.getDiseaseOut2().getDescription(), 2));
 					diseaseOut2Box.setSelectedIndex(diseaseOut2Box.getItemCount() - 1);
 				}
 			}
@@ -1387,7 +1382,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (!found.isPresent()) {
 					// Still not found
 					diseaseOut3Box.addItem(MessageBundle.formatMessage("angal.admission.notfoundasoutpatientdisease.fmt.msg",
-							admission.getDiseaseOut2().getDescription(), 3));
+									admission.getDiseaseOut2().getDescription(), 3));
 					diseaseOut3Box.setSelectedIndex(diseaseOut3Box.getItemCount() - 1);
 				}
 			}
@@ -1449,7 +1444,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			disTypeBox.setPreferredSize(new Dimension(PREFERRED_WIDTH_TYPES, PREFERRED_HEIGHT_LINE));
 			disTypeBox.addItem("");
 			try {
-				disTypeList = admissionManager.getDischargeType();
+				disTypeList = admissionBrowserManager.getDischargeType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -1524,7 +1519,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		return dischargeDatePanel;
 	}
 
-	private JComboBox shareWith = null;
+	private JComboBox shareWith;
 
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
@@ -1532,6 +1527,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			buttonPanel.add(getSaveButton());
 			if (MainMenu.checkUserGrants("btnadmadmexamination")) {
 				buttonPanel.add(getJButtonExamination());
+				buttonPanel.add(getJAnamnesisButton());
 			}
 			buttonPanel.add(getCloseButton());
 
@@ -1548,6 +1544,29 @@ public class AdmissionBrowser extends ModalJFrame {
 		return buttonPanel;
 	}
 
+	private JButton getJAnamnesisButton() {
+		if (jAnamnesisButton == null) {
+			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
+			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
+			AdmissionBrowser self = this;
+			jAnamnesisButton.addActionListener(actionEvent -> {
+				if (patient != null) {
+					PatientHistory ph = new PatientHistory();
+					ph.setPatientId(patient.getCode());
+					PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
+					PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
+					PatientHistoryEdit dialog = new PatientHistoryEdit(AdmissionBrowser.this, pph, true);
+					dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+					dialog.pack();
+					dialog.setLocationRelativeTo(null);
+					dialog.setModal(true);
+					dialog.setVisible(true);
+				}
+			});
+		}
+		return jAnamnesisButton;
+	}
+
 	private JButton getJButtonExamination() {
 		if (jButtonExamination == null) {
 			jButtonExamination = new JButton(MessageBundle.getMessage("angal.admission.examination.btn"));
@@ -1556,18 +1575,17 @@ public class AdmissionBrowser extends ModalJFrame {
 			jButtonExamination.addActionListener(actionEvent -> {
 
 				PatientExamination patex;
-				ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 
 				PatientExamination lastPatex = null;
 				try {
-					lastPatex = examManager.getLastByPatID(patient.getCode());
+					lastPatex = examinationBrowserManager.getLastByPatID(patient.getCode());
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 				}
 				if (lastPatex != null) {
-					patex = examManager.getFromLastPatientExamination(lastPatex);
+					patex = examinationBrowserManager.getFromLastPatientExamination(lastPatex);
 				} else {
-					patex = examManager.getDefaultPatientExamination(patient);
+					patex = examinationBrowserManager.getDefaultPatientExamination(patient);
 				}
 
 				GenderPatientExamination gpatex = new GenderPatientExamination(patex, patient.getSex() == 'M');
@@ -1609,8 +1627,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			saveButton.addActionListener(actionEvent -> {
 
 				/*
-				 * is it an admission update or a discharge? if we have a
-				 * valid discharge date isDischarge will be true
+				 * is it an admission update or a discharge? if we have a valid discharge date isDischarge will be true
 				 */
 				boolean isDischarge = false;
 
@@ -1630,7 +1647,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				}
 
 				// get disease in id ( it can be null)
-				if (diseaseInBox.getSelectedIndex() == 0) {
+				if (diseaseInBox.getSelectedIndex() == 0 || diseaseInBox.getSelectedItem() == null) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavaliddiseasein.msg");
 					return;
 				}
@@ -1639,8 +1656,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					admission.setDiseaseIn(diseaseIn);
 				} catch (IndexOutOfBoundsException e1) {
 					/*
-					 * Workaround in case a fake-disease is selected (ie
-					 * when previous disease has been deleted)
+					 * Workaround in case a fake-disease is selected (ie when previous disease has been deleted)
 					 */
 					admission.setDiseaseIn(null);
 				}
@@ -1831,7 +1847,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					admission.setType("N");
 				}
 
-				admission.setDeleted("N");
+				admission.setDeleted('N');
 
 				// IOoperation result
 				boolean result = false;
@@ -1844,7 +1860,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					} else {
 						int newKey = -1;
 						try {
-							newKey = admissionManager.newAdmissionReturnKey(admission);
+							newKey = admissionBrowserManager.newAdmissionReturnKey(admission);
 						} catch (OHServiceException exc) {
 							OHServiceExceptionUtil.showMessages(exc);
 						}
@@ -1856,7 +1872,7 @@ public class AdmissionBrowser extends ModalJFrame {
 								CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 								frame.sendMessage(MessageBundle.formatMessage("angal.admission.newpatientadmissionin.fmt.msg", patient.getName(),
 												((Ward) wardBox.getSelectedItem()).getDescription()),
-										(String) shareWith.getSelectedItem(), false);
+												(String) shareWith.getSelectedItem(), false);
 							}
 							dispose();
 						}
@@ -1868,7 +1884,10 @@ public class AdmissionBrowser extends ModalJFrame {
 						OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 					} else {
 						try {
-							result = admissionManager.newAdmission(admission);
+							Admission insertedAdmission = admissionBrowserManager.newAdmission(admission);
+							if (insertedAdmission != null) {
+								result = true;
+							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -1884,7 +1903,10 @@ public class AdmissionBrowser extends ModalJFrame {
 						OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 					} else {
 						try {
-							result = admissionManager.updateAdmission(admission);
+							Admission updatedAdmission = admissionBrowserManager.updateAdmission(admission);
+							if (updatedAdmission != null) {
+								result = true;
+							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -1894,7 +1916,7 @@ public class AdmissionBrowser extends ModalJFrame {
 								CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 								frame.sendMessage(MessageBundle.formatMessage("angal.admisssion.discharedpatientfor.fmt.msg",
 												patient.getName(), ((DischargeType) disTypeBox.getSelectedItem()).getDescription()),
-										(String) shareWith.getSelectedItem(), false);
+												(String) shareWith.getSelectedItem(), false);
 							}
 							dispose();
 						}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.operation.gui;
 
@@ -49,7 +49,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 		if (myOpd != null) {
 			List<OperationRow> res = new ArrayList<>();
 			try {
-				res = opeRowManager.getOperationRowByOpd(myOpd);
+				res = operationRowBrowserManager.getOperationRowByOpd(myOpd);
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
@@ -69,7 +69,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 		OperationRow operationRow = new OperationRow();
 		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		if (this.comboResult.getSelectedItem() != null) {
-			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			operationRow.setOpResult(opResult);
 		} else {
 			operationRow.setOpResult(""); //$NON-NLS-1$
@@ -93,7 +93,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 			OperationRow opeInter = oprowData.get(index);
 			opeInter.setOpDate(this.textDate.getLocalDateTime());
 			opeInter.setOpResult(this.comboResult.getSelectedItem().toString());
-			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
@@ -110,13 +110,13 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 	// used by addToForm()
 	@Override
 	public List<Operation> getOperationCollection() throws OHServiceException {
-		return opeManager.getOperationOpd();
+		return operationBrowserManager.getOperationOpd();
 	}
 
 	@Override
 	public void surgeryUpdated(AWTEvent e, Opd opd) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, opd);
+			saveAllOpeRow(oprowData, operationRowBrowserManager, opd);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
@@ -125,14 +125,14 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 	@Override
 	public void surgeryInserted(AWTEvent e, Opd opd) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, opd);
+			saveAllOpeRow(oprowData, operationRowBrowserManager, opd);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 	}
 
 	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager rowManager, Opd opd) throws OHServiceException {
-		for (org.isf.operation.model.OperationRow opRow : listOpe) {
+		for (OperationRow opRow : listOpe) {
 			if ((opRow.getId() > 0) && (opRow.getOpd().getCode() > 0)) {
 				rowManager.updateOperationRow(opRow);
 			}

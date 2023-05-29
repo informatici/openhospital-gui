@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.exatype.gui;
 
@@ -63,17 +63,17 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 	};
 	private int[] pColumnWidth = {80, 200};
 
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private ExamTypeBrowserModel model;
 	private int selectedrow;
-	private ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
-	private ExamType examType = null;
+	private ExamTypeBrowserManager examTypeBrowserManager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
+	private ExamType examType;
 	private final JFrame myFrame;
 	
 	/**
@@ -187,7 +187,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 
 						boolean deleted;
 						try {
-							deleted = manager.deleteExamType(examType);
+							deleted = examTypeBrowserManager.deleteExamType(examType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -220,9 +220,8 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 		private static final long serialVersionUID = 1L;
 
 		public ExamTypeBrowserModel() {
-			ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
 			try {
-				pExamType = manager.getExamType();
+				pExamType = examTypeBrowserManager.getExamType();
 			} catch (OHServiceException e) {
 				pExamType = null;
 				OHServiceExceptionUtil.showMessages(e);

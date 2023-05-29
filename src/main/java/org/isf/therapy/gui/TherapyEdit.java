@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.therapy.gui;
 
@@ -43,6 +43,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -82,6 +83,7 @@ import org.isf.utils.jobjects.JMonthChooser;
 import org.isf.utils.jobjects.JYearChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.time.TimeTools;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.visits.gui.VisitView;
 import org.isf.visits.gui.VisitView.VisitListener;
@@ -131,22 +133,23 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private JButton saveButton;
 //	private JButton reportButton; TODO to enable when a report will be designed
 
-	private boolean checked = false;
-	private boolean available = false;
-	private boolean therapyModified = false;
-	private boolean notifiable = false;
+	private boolean checked;
+	private boolean available;
+	private boolean therapyModified;
+	private boolean notifiable;
 	private boolean smsenable = GeneralData.SMSENABLED;
-	private boolean visitModified = false;
+	private boolean visitModified;
 	private Therapy selectedTherapy;
 	private Visit selectedVisit;
-	private Hashtable<Integer, TherapyRow> hashTableThRow;
-	private Hashtable<Integer, Visit> hashTableVisits;
+	private Map<Integer, TherapyRow> hashTableThRow;
+	private Map<Integer, Visit> hashTableVisits;
 
-	private AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-	private MedicalBrowsingManager medBrowser = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
-	private TherapyManager thManager = Context.getApplicationContext().getBean(TherapyManager.class);
-	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private TherapyManager therapyManager = Context.getApplicationContext().getBean(TherapyManager.class);
+	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+
 	private List<Medical> medArray;
 	private List<Therapy> therapies = new ArrayList<>();
 	private List<TherapyRow> thRows = new ArrayList<>();
@@ -158,18 +161,14 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		super();
 		setIconImage(new ImageIcon("./rsc/icons/oh.png").getImage());
 		try {
-			this.medArray = medBrowser.getMedicals();
+			this.medArray = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e1) {
 			this.medArray = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 		this.patient = patient;
 		if (admitted) {
-			try {
-				this.ward = admMan.getCurrentAdmission(patient).getWard();
-			} catch (OHServiceException e1) {
-				OHServiceExceptionUtil.showMessages(e1);
-			}
+			this.ward = admissionBrowserManager.getCurrentAdmission(patient).getWard();
 		}
 		initComponents();
 		addWindowListener(new WindowAdapter() {
@@ -229,7 +228,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		 * Rows in the therapies table
 		 */
 		try {
-			thRows = thManager.getTherapyRows(patient.getCode());
+			thRows = therapyManager.getTherapyRows(patient.getCode());
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -248,7 +247,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		 * Therapy(s) related to the rows in the therapies table
 		 */
 		try {
-			therapies = thManager.getTherapies(thRows);
+			therapies = therapyManager.getTherapies(thRows);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -256,7 +255,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		 * Visit(s) in the visits table
 		 */
 		try {
-			visits = vstManager.getVisits(patient.getCode());
+			visits = visitManager.getVisits(patient.getCode());
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -299,7 +298,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private String getDate() {
-		return DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD).format(LocalDateTime.now());
+		return DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD).format(TimeTools.getNow());
 	}
 
 	private void showTherapies() {
@@ -666,7 +665,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
 						if (ok == JOptionPane.YES_OPTION) {
 							try {
-								thManager.deleteAllTherapies(patient.getCode());
+								therapyManager.deleteAllTherapies(patient.getCode());
 							} catch (OHServiceException ex) {
 								OHServiceExceptionUtil.showMessages(ex);
 							}
@@ -716,7 +715,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
 						if (ok == JOptionPane.YES_OPTION) {
 							try {
-								vstManager.deleteAllVisits(patient.getCode());
+								visitManager.deleteAllVisits(patient.getCode());
 							} catch (OHServiceException ex) {
 								OHServiceExceptionUtil.showMessages(ex);
 							}
@@ -726,7 +725,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					} else {
 						boolean result;
 						try {
-							result = vstManager.newVisits(visits, removedVisits);
+							result = visitManager.newVisits(visits, removedVisits);
 
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex, TherapyEdit.this);
@@ -756,8 +755,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				if (saveTherapies) {
 					boolean result = false;
 					try {
-						result = thManager.deleteAllTherapies(patient.getCode());
-						result = result && thManager.newTherapies(thRows);
+						result = therapyManager.deleteAllTherapies(patient.getCode());
+						result = result && therapyManager.newTherapies(thRows);
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -860,7 +859,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				available = true;
 				List<Medical> medOutStock = null;
 				try {
-					medOutStock = thManager.getMedicalsOutOfStock(therapies);
+					medOutStock = therapyManager.getMedicalsOutOfStock(therapies);
 				} catch (OHServiceException ex) {
 					available = false;
 					OHServiceExceptionUtil.showMessages(ex);
@@ -956,7 +955,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		thRows.add(thRow); // FOR DB;
 		Therapy thisTherapy = null;
 		try {
-			thisTherapy = thManager.createTherapy(thRow);
+			thisTherapy = therapyManager.createTherapy(thRow);
 		} catch (OHServiceException ex) {
 			OHServiceExceptionUtil.showMessages(ex);
 		}

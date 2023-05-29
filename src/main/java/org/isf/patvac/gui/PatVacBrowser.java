@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.patvac.gui;
 
@@ -62,6 +62,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
+import org.isf.utils.time.TimeTools;
 import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
@@ -84,28 +85,32 @@ public class PatVacBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JPanel jContentPane = null;
-	private JPanel jButtonPanel = null;
-	private JButton buttonEdit = null;
-	private JButton buttonNew = null;
-	private JButton buttonDelete = null;
-	private JButton buttonClose = null;
-	private JButton filterButton = null;
-	private JPanel jSelectionPanel = null;
-	private JPanel jAgePanel = null ;
-	private VoLimitedTextField jAgeFromTextField = null;
-	private VoLimitedTextField jAgeToTextField = null;
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+	private	VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+	private PatVacManager patVacManager = Context.getApplicationContext().getBean(PatVacManager.class);
+
+	private JPanel jContentPane;
+	private JPanel jButtonPanel;
+	private JButton buttonEdit;
+	private JButton buttonNew;
+	private JButton buttonDelete;
+	private JButton buttonClose;
+	private JButton filterButton;
+	private JPanel jSelectionPanel;
+	private JPanel jAgePanel;
+	private VoLimitedTextField jAgeFromTextField;
+	private VoLimitedTextField jAgeToTextField;
 	private Integer ageTo = 0;
 	private Integer ageFrom = 0;
-	private JPanel sexPanel = null;
+	private JPanel sexPanel;
 	private JRadioButton radiom;
 	private JRadioButton radiof;
-	private JLabel rowCounter = null;
+	private JLabel rowCounter;
 	private String rowCounterText = MessageBundle.getMessage("angal.patvac.count") + ": ";
 	
-	private JTable jTable = null;
-	private JComboBox vaccineComboBox = null;
-	private JComboBox vaccineTypeComboBox = null;
+	private JTable jTable;
+	private JComboBox vaccineComboBox;
+	private JComboBox vaccineTypeComboBox;
 	private int pfrmHeight;
 	private List<PatientVaccine> lPatVac;
 
@@ -119,7 +124,6 @@ public class PatVacBrowser extends ModalJFrame {
 	};
 	private int[] pColumnWidth = {100, 150, 50, 50, 150, 150};
 	private boolean[] columnsVisible = {true, GeneralData.PATIENTVACCINEEXTENDED, true, true, true, true};
-	private PatVacManager manager;
 	private PatVacBrowsingModel model;
 	private PatientVaccine patientVaccine;
 	private int selectedrow;
@@ -131,7 +135,6 @@ public class PatVacBrowser extends ModalJFrame {
 	public PatVacBrowser() {
 		super();
 		myFrame = this;
-		manager = Context.getApplicationContext().getBean(PatVacManager.class);
 		initialize();
 		setVisible(true);
 	}
@@ -200,7 +203,7 @@ public class PatVacBrowser extends ModalJFrame {
 			buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			buttonNew.addActionListener(actionEvent -> {
-				LocalDateTime now = LocalDateTime.now();
+				LocalDateTime now = TimeTools.getNow();
 				patientVaccine = new PatientVaccine(0, 0, now, new Patient(),
 						new Vaccine("", "", new VaccineType("", "")), 0);
 
@@ -285,7 +288,7 @@ public class PatVacBrowser extends ModalJFrame {
 
 					boolean deleted;
 					try {
-						deleted = manager.deletePatientVaccine(patientVaccine);
+						deleted = patVacManager.deletePatientVaccine(patientVaccine);
 					} catch (OHServiceException e) {
 						deleted = false;
 						OHServiceExceptionUtil.showMessages(e);
@@ -559,10 +562,9 @@ public class PatVacBrowser extends ModalJFrame {
 			vaccineTypeComboBox.setPreferredSize(new Dimension(200, 30));
 			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));
 
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			List<VaccineType> types = null;
 			try {
-				types = manager.getVaccineType();
+				types = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
@@ -591,7 +593,6 @@ public class PatVacBrowser extends ModalJFrame {
 			vaccineComboBox = new JComboBox();
 			vaccineComboBox.setPreferredSize(new Dimension(200, 30));
 		}
-		VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 
 		List<Vaccine> allVac = null;
 		vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
@@ -717,10 +718,8 @@ public class PatVacBrowser extends ModalJFrame {
 	class PatVacBrowsingModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 
 		public PatVacBrowsingModel() {
-			PatVacManager patVacManager = Context.getApplicationContext().getBean(PatVacManager.class);
 			try {
 				lPatVac = patVacManager.getPatientVaccine(!GeneralData.ENHANCEDSEARCH);
 			} catch (OHServiceException e) {
@@ -731,7 +730,7 @@ public class PatVacBrowser extends ModalJFrame {
 
 		public PatVacBrowsingModel(String vaccineTypeCode, String vaccineCode, LocalDateTime dateFrom, LocalDateTime dateTo, char sex, int ageFrom, int ageTo) {
 			try {
-				lPatVac = manager.getPatientVaccine(vaccineTypeCode, vaccineCode, dateFrom, dateTo, sex, ageFrom, ageTo);
+				lPatVac = patVacManager.getPatientVaccine(vaccineTypeCode, vaccineCode, dateFrom, dateTo, sex, ageFrom, ageTo);
 			} catch (OHServiceException e) {
 				lPatVac = null;
 				OHServiceExceptionUtil.showMessages(e);

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.malnutrition.gui;
 
@@ -106,7 +106,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 	private Admission adm;
 
-	private MalnutritionManager manager = Context.getApplicationContext().getBean(MalnutritionManager.class);
+	private MalnutritionManager malnutritionManager = Context.getApplicationContext().getBean(MalnutritionManager.class);
 
 	public MalnutritionBrowser(JFrame owner, Admission aAdm) {
 		super(owner, true);
@@ -182,7 +182,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 					} else {
 						boolean deleted;
 						try {
-							deleted = manager.deleteMalnutrition(malnutrition);
+							deleted = malnutritionManager.deleteMalnutrition(malnutrition);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -228,7 +228,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 			
 			if (null != s && !s.isEmpty()) {
 				try {
-					pMaln = manager.getMalnutrition(s);
+					pMaln = malnutritionManager.getMalnutrition(s);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}				

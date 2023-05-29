@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,11 +32,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -49,8 +50,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -59,6 +59,9 @@ import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
 import org.isf.menu.model.UserGroup;
 import org.isf.menu.model.UserMenuItem;
+import org.isf.session.UserSession;
+import org.isf.sessionaudit.manager.SessionAuditManager;
+import org.isf.sessionaudit.model.SessionAudit;
 import org.isf.sms.service.SmsSender;
 import org.isf.telemetry.constants.TelemetryConst;
 import org.isf.telemetry.daemon.TelemetryDaemon;
@@ -87,7 +90,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	// used to understand if a module is enabled
 	private Map<String, Boolean> activableModules;
 
+	private SessionAuditManager sessionAuditManager = Context.getApplicationContext().getBean(SessionAuditManager.class);
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
+	private Integer sessionAuditId;
 
 	@Override
 	public void loginInserted(AWTEvent e) {
@@ -129,8 +134,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private static User myUser;
 	private static List<UserMenuItem> myMenu;
 
-	final int menuXPosition = 10;
-	final int menuYDisplacement = 75;
+	static final int menuXPosition = 10;
+	static final int menuYDisplacement = 75;
 
 	// singleUser=true : one user
 	private boolean singleUser;
@@ -140,9 +145,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private boolean debug;
 	private MainMenu myFrame;
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
-	public MainMenu() {
+	public MainMenu(User myUserIn) {
+		myUser = myUserIn;
 		myFrame = this;
 		GeneralData.initialize();
 		this.activableModules = retrieveActivatedModulesMap();
@@ -171,12 +177,20 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		if (singleUser) {
 			LOGGER.info("Logging: Single User mode.");
 			myUser = new User(ADMIN_STR, new UserGroup(ADMIN_STR, ""), ADMIN_STR, "");
-			MDC.put("OHUser", myUser.getUserName());
-			MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
 		} else {
 			// get an user
 			LOGGER.info("Logging: Multi User mode.");
-			new Login(this);
+
+			if (null == myUser) {
+				JFrame hiddenOwner = new JFrame(MessageBundle.getMessage("angal.login.title"));
+				ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
+				hiddenOwner.setIconImage(img.getImage());
+				hiddenOwner.setLocation(-10000, -1000);
+				hiddenOwner.setSize(new Dimension(1, 1));
+				hiddenOwner.show();
+				new Login(hiddenOwner, this);
+				hiddenOwner.dispose();
+			}
 
 			if (null == myUser) {
 				// Login failed
@@ -188,9 +202,16 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			runTelemetry();
 		}
 
+		MDC.put("OHUser", myUser.getUserName());
+		MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
+		try {
+			this.sessionAuditId = sessionAuditManager.newSessionAudit(new SessionAudit(myUser.getUserName(), LocalDateTime.now(), null));
+		} catch (OHServiceException e1) {
+			LOGGER.error("Unable to log user login in the session_audit table");
+		}
 		// get menu items
 		try {
-			myMenu = manager.getMenu(myUser);
+			myMenu = userBrowsingManager.getMenu(myUser);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -259,7 +280,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				}
 			}
 		}
-		if (!flag_Sms) {  // remove SMS Manager if not enabled
+		if (!flag_Sms) { // remove SMS Manager if not enabled
 			List<UserMenuItem> junkMenu = new ArrayList<>();
 			for (UserMenuItem umi : myMenu) {
 				if ("smsmanager".equalsIgnoreCase(umi.getCode())) {
@@ -297,7 +318,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			myMenu.remove(umi);
 		}
 
-		setTitle(MessageBundle.formatMessage("angal.mainmenu.fmt.title", myUser.getUserName()));
 		ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
 		setIconImage(img.getImage());
 		// add panel with buttons to frame
@@ -313,15 +333,16 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		int frameHeight = getSize().height;
 		setLocation(menuXPosition, screenHeight - frameHeight - menuYDisplacement);
 
-		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		myFrame.setAlwaysOnTop(GeneralData.MAINMENUALWAYSONTOP);
 		myFrame.addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				actionExit(0);
 			}
 		});
-		
+
 		setVisible(true);
 	}
 
@@ -359,6 +380,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		if (2 == status) {
 			LOGGER.info("Login failed.");
 		}
+		updateSessionAudit();
 		String newLine = System.lineSeparator();
 		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine, newLine, newLine, newLine);
 		System.exit(status);
@@ -417,8 +439,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		private JButton[] button;
 
 		public MainPanel(MainMenu parentFrame) {
+			this.parentFrame = parentFrame;
 			int numItems = 0;
-			
+
 			setLayout(new BorderLayout());
 
 			for (UserMenuItem u : myMenu) {
@@ -433,13 +456,14 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				if (u.getMySubmenu().equals("main")) {
 					button[k] = new JButton(u.getButtonLabel());
 					button[k].setMnemonic(KeyEvent.VK_A + (u.getShortcut() - 'A'));
-
 					button[k].addActionListener(parentFrame);
 					button[k].setActionCommand(u.getCode());
 					k++;
 				}
 			}
-			
+
+			addLogoutButton(button, k);
+
 			add(getLogoPanel(), BorderLayout.WEST);
 
 			JPanel buttonsPanel = new JPanel();
@@ -449,11 +473,35 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				buttonsPanel.add(jButton);
 			}
 			SpringUtilities.makeCompactGrid(buttonsPanel, button.length, 1, 0, 0, 0, 10);
-			
+
 			JPanel centerPanel = new JPanel();
+			centerPanel.setLayout(new BorderLayout());
+
+			JLabel userName = new JLabel(MessageBundle.formatMessage("angal.mainmenu.username.fmt", myUser.getUserName()));
+			userName.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+			userName.setToolTipText(myUser.getUserName());
+			int nameWidth = buttonsPanel.getLayout().minimumLayoutSize(buttonsPanel).getSize().width;
+			userName.setMaximumSize(new Dimension(nameWidth, 20));
+			userName.setPreferredSize(new Dimension(nameWidth, 20));
+
+			centerPanel.add(userName, BorderLayout.NORTH);
 			centerPanel.add(buttonsPanel, BorderLayout.CENTER); // to center anyway, regardless the window's size
-			
+
 			add(centerPanel, BorderLayout.CENTER);
+		}
+
+		public void addLogoutButton(JButton[] button, int k) {
+			button[k] = new JButton(MessageBundle.getMessage("angal.menu.logout.btn"));
+			button[k].setMnemonic(MessageBundle.getMnemonic("angal.menu.logout.btn.key"));
+			if (!singleUser) {
+				button[k].addActionListener(actionEvent -> {
+					updateSessionAudit();
+					UserSession.restartSession();
+				});
+			} else {
+				button[k].addActionListener(actionEvent -> actionExit(0));
+			}
+			button[k].setActionCommand("logout");
 		}
 
 		private JPanel getLogoPanel() {
@@ -476,42 +524,28 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 	}
 
-	@Override
-	public Dimension getPreferredSize() {
-		Dimension dimension = super.getPreferredSize();
-		String title = truncate(this.getTitle(), 25);
-		if (title != null) {
-			Font defaultFont = UIManager.getDefaults().getFont("Label.font");
-			int titleStringWidth = SwingUtilities.computeStringWidth(new JLabel().getFontMetrics(defaultFont), title);
-
-			// accounts for the three dots that are appended when the title is too long
-			int threeDotsWidth = 10;
-
-			// account for titlebar button widths. (estimated)
-			String os = System.getProperty("os.name").toLowerCase();
-			if (os.indexOf("win") >= 0) {
-				titleStringWidth += 180;
-				
-			} else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
-				titleStringWidth += 120;
-				
-			} else { // others, assuming unix-like
-				titleStringWidth += 120;
-			}
-
-			if (dimension.getWidth() + threeDotsWidth <= titleStringWidth) {
-				dimension = new Dimension(titleStringWidth, (int) dimension.getHeight());
-			}
-		}
-		return dimension;
-	}
-
-	private String truncate(String string, int size) {
-		return string.substring(0, Integer.min(size - 1, string.length()));
-	}
-
 	public static User getUser() {
 		return myUser;
+	}
+
+	public static void clearUser() {
+		myUser = null;
+	}
+
+	private void updateSessionAudit() {
+		try {
+			if (sessionAuditId == null) {
+				return;
+			}
+			Optional<SessionAudit> sa = sessionAuditManager.getSessionAudit(this.sessionAuditId);
+			if (sa.isPresent()) {
+				SessionAudit sessionAudit = sa.get();
+				sessionAudit.setLogoutDate(LocalDateTime.now());
+				sessionAuditManager.updateSessionAudit(sessionAudit);
+			}
+		} catch (OHServiceException e) {
+			LOGGER.error("Unable to log user login in the session_audit table");
+		}
 	}
 
 	@Override

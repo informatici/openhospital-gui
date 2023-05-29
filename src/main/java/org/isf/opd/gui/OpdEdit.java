@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.opd.gui;
 
@@ -66,6 +66,9 @@ import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
+import org.isf.ward.manager.WardBrowserManager;
+import org.isf.ward.model.Ward;
 
 /**
  * ------------------------------------------
@@ -124,31 +127,31 @@ public class OpdEdit extends JDialog {
 		}
 	}
 	
-	private JPanel insertPanel = null;
-	private JPanel principalPanel = null;
-	private JPanel jAgePanel = null;
-	private JPanel jSexPanel = null;
-	private JPanel jNewPatientPanel= null;
-	private JPanel jDatePanel= null;
-	private JPanel jDiseasePanel = null;
-	private JPanel jDiseasePanel2 = null;
-	private JPanel jDiseasePanel3 = null;
-	private JPanel jDiseaseTypePanel = null;
-	private JComboBox<DiseaseType> diseaseTypeBox = null;
-	private JComboBox diseaseBox = null;
-	private JComboBox diseaseBox2 = null;
-	private JComboBox diseaseBox3 = null;
-	private GoodDateTimeSpinnerChooser opdDateField = null;
-	private JPanel jPanel2 = null;
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JCheckBox newPatientCheckBox = null;
-	private JCheckBox referralToCheckBox = null;
-	private JCheckBox referralFromCheckBox = null;
-	private VoLimitedTextField ageField = null;
-	private JPanel sexPanel = null;
+	private JPanel insertPanel;
+	private JPanel principalPanel;
+	private JPanel jAgePanel;
+	private JPanel jSexPanel;
+	private JPanel jNewPatientPanel;
+	private JPanel jDatePanel;
+	private JPanel jDiseasePanel;
+	private JPanel jDiseasePanel2;
+	private JPanel jDiseasePanel3;
+	private JPanel jDiseaseTypePanel;
+	private JComboBox<DiseaseType> diseaseTypeBox;
+	private JComboBox diseaseBox;
+	private JComboBox diseaseBox2;
+	private JComboBox diseaseBox3;
+	private GoodDateTimeSpinnerChooser opdDateField;
+	private JPanel jPanel2;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JCheckBox newPatientCheckBox;
+	private JCheckBox referralToCheckBox;
+	private JCheckBox referralFromCheckBox;
+	private VoLimitedTextField ageField;
+	private JPanel sexPanel;
 	private JRadioButton radiof;
-	private Integer age = null;
+	private Integer age;
 	private Opd opd;
 	private boolean insert;
 	private char sex;
@@ -161,9 +164,10 @@ public class OpdEdit extends JDialog {
 	/*
 	 * Managers and Arrays
 	 */
-	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
-	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private List<DiseaseType> types;
 	private List<Disease> diseasesAll;
 	
@@ -185,8 +189,8 @@ public class OpdEdit extends JDialog {
 		opd = old;
 		insert = inserting;
 		try {
-			types = typeManager.getDiseaseType();
-			diseasesAll = diseaseManager.getDiseaseAll();
+			types = diseaseTypeBrowserManager.getDiseaseType();
+			diseasesAll = diseaseBrowserManager.getDiseaseAll();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -299,10 +303,10 @@ public class OpdEdit extends JDialog {
 		List<Disease> diseases = null;
 		try {
 			if (diseaseTypeBox.getSelectedIndex() == 0) {
-				diseases = diseaseManager.getDiseaseOpd();
+				diseases = diseaseBrowserManager.getDiseaseOpd();
 			} else {
 				String code = ((DiseaseType)diseaseTypeBox.getSelectedItem()).getCode();
-				diseases = diseaseManager.getDiseaseOpd(code);
+				diseases = diseaseBrowserManager.getDiseaseOpd(code);
 			}
 		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
@@ -343,7 +347,7 @@ public class OpdEdit extends JDialog {
 		Disease elem2=null;
 		List<Disease> diseases = null;
 		try {
-			diseases = diseaseManager.getDiseaseOpd();
+			diseases = diseaseBrowserManager.getDiseaseOpd();
 		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -383,7 +387,7 @@ public class OpdEdit extends JDialog {
 		Disease elem2=null;
 		List<Disease> diseases = null;
 		try {
-			diseases = diseaseManager.getDiseaseOpd();
+			diseases = diseaseBrowserManager.getDiseaseOpd();
 		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -447,6 +451,7 @@ public class OpdEdit extends JDialog {
 						Disease disease = null;
 						Disease disease2 = null;
 						Disease disease3 = null;
+						Ward ward = null;
 
 						if (newPatientCheckBox.isSelected()) {
 							newPatient = 'N';
@@ -503,6 +508,18 @@ public class OpdEdit extends JDialog {
 						opd.setDate(visitDate);
 						opd.setNote("");
 						opd.setUserID(UserBrowsingManager.getCurrentUser());
+						
+						if (insert) {
+							try {
+								if (wardBrowserManager.opdControl(true)) {
+									ward = wardBrowserManager.findWard("OPD");
+									opd.setWard(ward);
+								}
+							} catch (OHServiceException e) {
+								OHServiceExceptionUtil.showMessages(e);
+								return;
+							}
+						}
 
 						try {
 							if (insert) {    // Insert
@@ -510,15 +527,15 @@ public class OpdEdit extends JDialog {
 								// remember for later use
 								RememberDates.setLastOpdVisitDate(visitDate);
 
-								result = opdManager.newOpd(opd);
-								if (result) {
+								Opd insertedOpd = opdBrowserManager.newOpd(opd);
+								if (insertedOpd != null) {
 									fireSurgeryInserted(opd);
 									dispose();
 								} else {
 									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 								}
 							} else {    // Update
-								Opd updatedOpd = opdManager.updateOpd(opd);
+								Opd updatedOpd = opdBrowserManager.updateOpd(opd);
 								if (updatedOpd != null) {
 									fireSurgeryUpdated(updatedOpd);
 									dispose();
@@ -538,10 +555,10 @@ public class OpdEdit extends JDialog {
 	private int getOpdProgYear(LocalDateTime date) {
 		int opdNum = 0;
 		if (date == null) {
-			date = LocalDateTime.now();
+			date = TimeTools.getNow();
 		}
 		try {
-			opdNum = opdManager.getProgYear(date.getYear()) + 1;
+			opdNum = opdBrowserManager.getProgYear(date.getYear()) + 1;
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -676,12 +693,12 @@ public class OpdEdit extends JDialog {
 			searchDiseaseButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			searchDiseaseButton.addActionListener(new ActionListener() {
 
-				List<Disease> diseasesOPD = null;
+				List<Disease> diseasesOPD;
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						diseasesOPD = diseaseManager.getDiseaseOpd();
+						diseasesOPD = diseaseBrowserManager.getDiseaseOpd();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -740,12 +757,12 @@ public class OpdEdit extends JDialog {
 			searchDiseaseButton2.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			searchDiseaseButton2.addActionListener(new ActionListener() {
 
-				List<Disease> diseasesOPD = null;
+				List<Disease> diseasesOPD;
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						diseasesOPD = diseaseManager.getDiseaseOpd();
+						diseasesOPD = diseaseBrowserManager.getDiseaseOpd();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -803,12 +820,12 @@ public class OpdEdit extends JDialog {
 			searchDiseaseButton3.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			searchDiseaseButton3.addActionListener(new ActionListener() {
 
-				List<Disease> diseasesOPD = null;
+				List<Disease> diseasesOPD;
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						diseasesOPD = diseaseManager.getDiseaseOpd();
+						diseasesOPD = diseaseBrowserManager.getDiseaseOpd();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -895,7 +912,7 @@ public class OpdEdit extends JDialog {
 			LocalDateTime dateIn;
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDate() == null) {
-					dateIn = LocalDateTime.now();
+					dateIn = TimeTools.getNow();
 				} else {
 					dateIn = RememberDates.getLastOpdVisitDate();
 				}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.priceslist.gui;
 
@@ -87,40 +87,31 @@ public class PricesBrowser extends ModalJFrame {
 	private boolean[] columnsResizable = { true, false };
 	private int[] columnWidth = { 400, 150 };
 
-	private PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
+	private PriceListManager priceListManager = Context.getApplicationContext().getBean(PriceListManager.class);
+	private PricesOthersManager pricesOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+	private OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
+
 	private List<PriceList> listArray;
 	private List<Price> priceArray;
 	private PriceList listSelected;
 
 	private PriceNode examNodes;
-	private ExamBrowsingManager examManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 	private List<Exam> examArray;
 
 	private PriceNode opeNodes;
-	private OperationBrowserManager operManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	private List<Operation> operArray;
 
 	private PriceNode medNodes;
-	private MedicalBrowsingManager mediManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private List<Medical> mediArray;
 
 	private PriceNode othNodes;
-	private PricesOthersManager othManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 	private List<PricesOthers> othArray;
 
-	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
-
 	public PricesBrowser() {
-		try {
-			mediArray = mediManager.getMedicals();
-			examArray = examManager.getExams();
-			operArray = operManager.getOperation();
-			listArray = listManager.getLists();
-			priceArray = listManager.getPrices();
-			othArray = othManager.getOthers();
-		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-		}
+		updateFromDB();
 		initComponents();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -156,7 +147,7 @@ public class PricesBrowser extends ModalJFrame {
 			jPrintTableButton.addActionListener(actionEvent -> {
 
 				try {
-					printManager.print("PriceList", listManager.convertPrice(listSelected, priceArray), 0);
+					printManager.print("PriceList", priceListManager.convertPrice(listSelected, priceArray), 0);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e, PricesBrowser.this);
 				}
@@ -241,7 +232,7 @@ public class PricesBrowser extends ModalJFrame {
 					List<Price> updateList = convertTreeToArray();
 					boolean updated = false;
 					try {
-						updated = listManager.updatePrices(listSelected, updateList);
+						updated = priceListManager.updatePrices(listSelected, updateList);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -324,12 +315,12 @@ public class PricesBrowser extends ModalJFrame {
 	private void updateFromDB() {
 
 		try {
-			listArray = listManager.getLists();
-			priceArray = listManager.getPrices();
-			examArray = examManager.getExams();
-			operArray = operManager.getOperation();
-			mediArray = mediManager.getMedicals();
-			othArray = othManager.getOthers();
+			listArray = priceListManager.getLists();
+			priceArray = priceListManager.getPrices();
+			examArray = examBrowsingManager.getExams();
+			operArray = operationBrowserManager.getOperation();
+			mediArray = medicalBrowsingManager.getMedicalsSortedByName();
+			othArray = pricesOthersManager.getOthers();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

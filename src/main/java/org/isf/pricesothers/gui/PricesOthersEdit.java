@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.pricesothers.gui;
 
@@ -86,8 +86,9 @@ public class PricesOthersEdit extends JDialog {
 			((PricesOthersListener) listener).pricesOthersUpdated(event);
 		}
 	}
-	
-	
+
+	private PricesOthersManager pricesOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
+
 	private static final long serialVersionUID = 1L;
 	private JPanel jPanelData;
 	private JPanel jPanelCodeDescription;
@@ -147,18 +148,19 @@ public class PricesOthersEdit extends JDialog {
 				pOther.setDischarge(jCheckBoxDischarge.isSelected());
 				pOther.setUndefined(jCheckBoxUndefined.isSelected());
 
-				PricesOthersManager pOtherManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 				boolean result = false;
 				try {
-					if (insert) {      // inserting
-						result = pOtherManager.newOther(pOther);
-						if (result) {
+					if (insert) {	// inserting
+						PricesOthers insertedPricesOthers = pricesOthersManager.newOther(pOther);
+						if (insertedPricesOthers != null) {
 							fireOtherInserted();
+							result = true;
 						}
-					} else {             // updating
-						result = pOtherManager.updateOther(pOther);
-						if (result) {
+					} else {	// updating
+						PricesOthers updatedPricesOthers = pricesOthersManager.updateOther(pOther);
+						if (updatedPricesOthers != null) {
 							fireOtherUpdated();
+							result = true;
 						}
 					}
 				} catch (OHServiceException e) {

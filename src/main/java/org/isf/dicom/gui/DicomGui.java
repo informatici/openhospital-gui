@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.dicom.gui;
 
@@ -82,14 +82,14 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 	private JSplitPane jSplitPane1;
 	private JPanel jPanelMain;
 
-	private ThumbnailViewGui thumbnail = null;
+	private ThumbnailViewGui thumbnail;
 	private int patient = -1;
 	private Patient ohPatient;
 	private int position = 150;
 
-	private JFrame myJFrame = null;
+	private JFrame myJFrame;
 
-	private ModalJFrame owner = null;
+	private ModalJFrame owner;
 
 	/**
 	 * Construct a GUI
@@ -433,7 +433,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 	// BUTTONS
 
-	private FileDicom selectedElement = null;
+	private FileDicom selectedElement;
 
 	public void disableDeleteButton() {
 		selectedElement = null;

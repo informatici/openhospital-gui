@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.malnutrition.gui;
 
@@ -97,7 +97,7 @@ public class InsertMalnutrition extends JDialog {
 
 	private boolean inserting;
 	
-	private MalnutritionManager manager = Context.getApplicationContext().getBean(MalnutritionManager.class);
+	private MalnutritionManager malnutritionManager = Context.getApplicationContext().getBean(MalnutritionManager.class);
 
 	InsertMalnutrition(JDialog owner, Malnutrition malnutrition, boolean insert) {
 		super(owner, true);
@@ -183,22 +183,22 @@ public class InsertMalnutrition extends JDialog {
 			maln.setDateSupp(suppDate.getDateStartOfDay());
 			maln.setDateConf(confDate.getDateStartOfDay());
 
-			if (inserting) {
-				boolean inserted = false;
+			if (inserting) {	//inserting
+				Malnutrition insertedMalnutrition = null;
 				try {
-					inserted = manager.newMalnutrition(maln);
+					insertedMalnutrition = malnutritionManager.newMalnutrition(maln);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
-				if (inserted) {
+				if (insertedMalnutrition != null) {
 					fireMalnutritionInserted();
 					dispose();
 				}
 
-			} else {
+			} else {	//updating
 				Malnutrition updatedMaln = null;
 				try {
-					updatedMaln = manager.updateMalnutrition(maln);
+					updatedMaln = malnutritionManager.updateMalnutrition(maln);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}

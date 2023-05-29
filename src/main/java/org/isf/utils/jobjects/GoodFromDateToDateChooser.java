@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -39,11 +39,11 @@ public class GoodFromDateToDateChooser extends JDialog {
 	private JButton buttonOK;
 	private JButton buttonExcel;
 	private JButton buttonCancel;
-	private boolean isCancel = false;
+	private boolean isCancel;
 	private JPanel datesChooserPanel;
 	private LocalDate dateFrom;
 	private LocalDate dateTo;
-	private boolean isExcel = false;
+	private boolean isExcel;
 
 	public GoodFromDateToDateChooser(ModalJFrame owner) {
 		super(owner, true);
@@ -120,10 +120,10 @@ public class GoodFromDateToDateChooser extends JDialog {
 	private JPanel getDatesChoosers(LocalDate dateFrom, LocalDate dateTo) {
 		if (datesChooserPanel == null) {
 			datesChooserPanel = new JPanel();
-			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ":"));
+			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
 			fromDateChooser = new GoodDateChooser(dateFrom);
 			datesChooserPanel.add(fromDateChooser);
-			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ":"));
+			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
 			toDateChooser = new GoodDateChooser(dateTo);
 			datesChooserPanel.add(toDateChooser);
 		}

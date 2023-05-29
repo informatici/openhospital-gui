@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.agetype.gui;
 
@@ -58,12 +58,14 @@ public class AgeTypeBrowser extends ModalJFrame {
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {80, 80, 80, 200};
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jEditSaveButton = null;
-	private JButton jCloseButton = null;
-	private JTable jTable = null;
-	private boolean edit = false;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JButton jEditSaveButton;
+	private JButton jCloseButton;
+	private JTable jTable;
+	private boolean edit;
+
+	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 
 	/**
 	 * This method initializes
@@ -120,9 +122,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 					if (jTable.isEditing()) {
 						jTable.getCellEditor().stopCellEditing();
 					}
-					AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 					try {
-						manager.updateAgeType(pAgeType);
+						ageTypeBrowserManager.updateAgeType(pAgeType);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -164,11 +165,10 @@ public class AgeTypeBrowser extends ModalJFrame {
 	class AgeTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
-		
+
 		public AgeTypeBrowserModel() {
 			try {
-				pAgeType = manager.getAgeType();
+				pAgeType = ageTypeBrowserManager.getAgeType();
 			} catch (OHServiceException e) {
 				pAgeType = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);

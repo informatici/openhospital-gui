@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.patient.gui;
 
@@ -46,6 +46,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class PatientBrowser extends ModalJFrame implements PatientListener {
 
 	private static final long serialVersionUID = 1L;
+	
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
@@ -54,18 +55,20 @@ public class PatientBrowser extends ModalJFrame implements PatientListener {
 			MessageBundle.getMessage("angal.common.city.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.telephone.txt").toUpperCase()
 	};
-	private JPanel jButtonPanel = null;
-	private JPanel jContainPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JTable jTable = null;
+	private JPanel jButtonPanel;
+	private JPanel jContainPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JTable jTable;
 	private PatientBrowserModel model;
 	private int[] pColumnWidth = { 200, 30, 25, 100, 100, 50 };
 	private int selectedrow;
 	private Patient patient;
-	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+
 	private List<Patient> pPat;
 
 	private JTable getJTable() {
@@ -215,7 +218,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener {
 					Patient pat = (Patient) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.patient.deletepatient.fmt.msg", pat.getName());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deletePatient(pat))) {
+						if ((answer == JOptionPane.YES_OPTION) && (patientBrowserManager.deletePatient(pat))) {
 							pPat.remove(pPat.size() - jTable.getSelectedRow() - 1);
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -234,9 +237,8 @@ public class PatientBrowser extends ModalJFrame implements PatientListener {
 		private static final long serialVersionUID = 1L;
 
 		public PatientBrowserModel() {
-			PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 			try {
-				pPat = manager.getPatient();
+				pPat = patientBrowserManager.getPatient();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

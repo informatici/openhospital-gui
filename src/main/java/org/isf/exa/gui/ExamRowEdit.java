@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.exa.gui;
 
@@ -82,14 +82,16 @@ public class ExamRowEdit extends JDialog {
 			((ExamRowListener) listener).examRowInserted(event);
 		}
 	}
-	
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JLabel descLabel = null;
-	private VoLimitedTextField descriptionTextField = null;
+
+	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JLabel descLabel;
+	private VoLimitedTextField descriptionTextField;
     private Exam exam;
 	private ExamRow examRow;
     
@@ -192,9 +194,9 @@ public class ExamRowEdit extends JDialog {
 				examRow.setDescription(descriptionTextField.getText().toUpperCase());
 				examRow.setExamCode(exam);
 
-				ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 				try {
-					if (manager.newExamRow(examRow)) {
+					ExamRow insertedExamRow = examRowBrowsingManager.newExamRow(examRow);
+					if (insertedExamRow != null) {
 						fireExamRowInserted();
 						dispose();
 					}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -47,7 +47,7 @@ public class OhTableOperationModel<T> implements TableModel {
 
 	List<T> dataList;
 	List<T> filteredList;
-	OperationBrowserManager manageop = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	
 	public  OhTableOperationModel(List<T> dataList) {
 		this.dataList = dataList;
@@ -142,7 +142,7 @@ public class OhTableOperationModel<T> implements TableModel {
 					case 1:
 						Operation ope = null;
 						try {
-							ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
+							ope = operationBrowserManager.getOperationByCode(opdObj.getOperation().getCode());
 						} catch (OHServiceException ohServiceException) {
 							LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 						}
@@ -153,10 +153,10 @@ public class OhTableOperationModel<T> implements TableModel {
 						}
 						break;
 					case 2:
-						value = manageop.getResultDescriptionTranslated(opdObj.getOpResult());
+						value = operationBrowserManager.getResultDescriptionTranslated(opdObj.getOpResult());
 						break;
 					case 3:
-						value = opdObj.getTransUnit() + "";
+						value = String.valueOf(opdObj.getTransUnit());
 						break;
 					default:
 						break;

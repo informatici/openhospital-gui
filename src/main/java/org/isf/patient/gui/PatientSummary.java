@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.patient.gui;
 
@@ -40,10 +40,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.utils.image.ImageUtil;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +66,7 @@ public class PatientSummary {
 	private int borderThickness = 10;
 	private int imageMaxWidth = 140;
 
-	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	public PatientSummary(Patient patient) {
 		super();
@@ -184,11 +186,11 @@ public class PatientSummary {
 		
 		JLabel patientPhoto = new JLabel();
 		if (patient.getPatientProfilePhoto() != null && patient.getPatientProfilePhoto().getPhotoAsImage() != null) {
-			patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, patient.getPatientProfilePhoto().getPhotoAsImage())));
+			patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(patient.getPatientProfilePhoto().getPhotoAsImage(), GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH)));
 		} else {
 			try {
 				Image noPhotoImage = ImageIO.read(new File("rsc/images/nophoto.png"));
-				patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, noPhotoImage)));
+				patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(noPhotoImage, GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH)));
 			} catch (IOException ioe) {
 				LOGGER.error("rsc/images/nophoto.png is missing...");
 			}
@@ -249,7 +251,7 @@ public class PatientSummary {
 		if (patient.getTelephone() == null || patient.getTelephone().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel("" + patient.getTelephone());
+			l = new JLabel(patient.getTelephone());
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
@@ -314,7 +316,7 @@ public class PatientSummary {
 		if (patient.getMaritalStatus().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getMaritalStatus().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
+			l = new JLabel(patientBrowserManager.getMaritalTranslated(patient.getMaritalStatus()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
@@ -326,7 +328,7 @@ public class PatientSummary {
 		if (patient.getProfession().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getProfession().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel(patientManager.getProfessionTranslated(patient.getProfession()));
+			l = new JLabel(patientBrowserManager.getProfessionTranslated(patient.getProfession()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
@@ -334,7 +336,7 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientAgePanel() {
-		JLabel l = new JLabel("" + patient.getAge());
+		JLabel l = new JLabel(String.valueOf(patient.getAge()));
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
 		return lP;
