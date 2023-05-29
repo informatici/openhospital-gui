@@ -227,9 +227,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				}
 				new CommunicationFrame();
 				/*
-				 * Interaction communication = new Interaction(); 
-				 * communication.incomingChat();
-				 * communication.receiveFile();
+				 * Interaction communication = new Interaction(); communication.incomingChat(); communication.receiveFile();
 				 */
 			} catch (XMPPException e) {
 				String message = e.getMessage();
@@ -439,8 +437,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		private JButton[] button;
 
 		public MainPanel(MainMenu parentFrame) {
-			this.parentFrame = parentFrame;
-			int numItems = 0;
+			int numItems = 1;
 
 			setLayout(new BorderLayout());
 
