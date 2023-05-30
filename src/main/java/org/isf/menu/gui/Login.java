@@ -172,6 +172,16 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			for (User u : users) {
 				if (u.getUserName().equals(userName)) {
 					user = userBrowsingManager.getUserByName(u.getUserName());
+					// is this login within the idle time set (if any)?
+					if (GeneralData.PASSWORDIDLE > 0 && user.getLastLogin() != null) {
+						if (user.getLastLogin().plusDays(GeneralData.PASSWORDIDLE).isBefore(TimeTools.getNow())) {
+							userBrowsingManager.lockUser(user);
+							MessageDialog.error(this, "angal.login.accounthasnotbeenusedindayscontacttheadministrator.fmt.msg", GeneralData.PASSWORDIDLE);
+							pwd.setText("");
+							pwd.grabFocus();
+							return;
+						}
+					}
 					if (user.isAccountLocked()) {
 						boolean isUnlocked = userBrowsingManager.unlockWhenTimeExpired(user);
 						if (!isUnlocked) {
@@ -189,6 +199,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				}
 			}
 			if (found) {
+				userBrowsingManager.setLastLogin(user);
 				// good PW, so reset failed attempts if there are any
 				if (user.getFailedAttempts() > 0) {
 					userBrowsingManager.resetFailedAttempts(user);
