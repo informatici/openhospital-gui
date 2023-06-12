@@ -811,12 +811,30 @@ function set_database_root_pw {
 }
 
 ###################################################################
-function create_database {
-	Write-Host "Creating $DATABASE_NAME database..."
-	# create database user and OH database
+function create_database_user {
+	Write-Host "Creating database user [$DATABASE_USER]..."
+	# create database user
 	
     $SQLCOMMAND=@"
-    -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
+    -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD';"
+"@
+	try {
+		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+ 	}
+	catch {
+		Write-Host "Error: Database user creation failed! Exiting." -ForeGroundColor Red
+		shutdown_database;
+		Read-Host; exit 2
+	}
+}
+
+###################################################################
+function create_database {
+	Write-Host "Creating database [$DATABASE_NAME]..."
+	# create OH database
+	
+    $SQLCOMMAND=@"
+    -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
 "@
 	try {
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
@@ -827,7 +845,6 @@ function create_database {
 		Read-Host; exit 2
 	}
 }
-
 ###################################################################
 function import_database {
 	Write-Host "Checking for SQL creation script..."
@@ -1272,6 +1289,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			if (( "$choice" -eq "y" )) {
 				# ask user for root database password
 				$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password [root@$DATABASE_SERVER] -> "
+				create_database_user;
 				create_database;
 			}
 			# ask user for database password
@@ -1374,6 +1392,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 						initialize_database;
 						start_database;	
 						set_database_root_pw;
+						create_database_user;
 						create_database;
 					}
 					test_database_connection;
@@ -1648,7 +1667,9 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 		start_database;	
 		# set database root password
 		set_database_root_pw;
-		# create database and user
+		# create database user
+		create_database_user;
+		# create database
 		create_database;
 		# load data
 		import_database;

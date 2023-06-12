@@ -722,12 +722,26 @@ function set_database_root_pw {
 }
 
 ###################################################################
-function create_database {
-	echo "Creating $DATABASE_NAME database..."
-	# create database user and OH database
+function create_database_user {
+	echo "Creating database user [$DATABASE_USER]..."
+	# create database user
 	./$MYSQL_DIR/bin/mysql -u root -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
 	-e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; \
-	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; \
+	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD';" >> ./$LOG_DIR/$LOG_FILE 2>&1
+	
+	if [ $? -ne 0 ]; then
+		echo "Error: Database user creation failed! Exiting."
+		shutdown_database;
+		exit 2
+	fi
+}
+
+###################################################################
+function create_database {
+	echo "Creating database [$DATABASE_NAME]..."
+	# create OH database
+	./$MYSQL_DIR/bin/mysql -u root -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
+	-e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; \
 	GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%' ; " >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
 	if [ $? -ne 0 ]; then
@@ -1138,6 +1152,7 @@ function parse_user_input {
 			# ask user for root database password
 			read -p "Please insert the MariaDB / MySQL database root password [root@$DATABASE_SERVER] -> " -s DATABASE_ROOT_PW
 			echo ""
+			create_database_user;
 			create_database;
 		fi
 		# ask user for database password
@@ -1249,6 +1264,7 @@ function parse_user_input {
 					initialize_database;
 					start_database;
 					set_database_root_pw;
+					create_database_user;
 					create_database;
 				fi
 				test_database_connection;
@@ -1555,7 +1571,9 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 		start_database;	
 		# set database root password
 		set_database_root_pw;
-		# create database and user
+		# create database user
+		create_database_user;
+		# create database 
 		create_database;
 		# load data
 		import_database;
