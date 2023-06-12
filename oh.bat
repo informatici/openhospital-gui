@@ -148,8 +148,8 @@ set DB_CREATE_SQL=create_all_en.sql
 REM #-> DB_CREATE_SQL default is set to create_all_en.sql - set to "create_all_demo.sql" for demo or create_all_[lang].sql for language
 
 REM ######## Architecture
-REM # ARCH can be set to 32 or x64
-REM set ARCH=32
+REM # ARCH can be set to i686 (32 bit) or x64 (64bit)
+REM set ARCH=i686
 set ARCH=x64
 
 REM ######## MySQL Software
@@ -172,7 +172,7 @@ REM set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
 REM set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 REM # JRE 11 32bit - i686 - zulu - default
-set JAVA_DIR=zulu11.64.19-ca-jre11.0.19-win_i686
+set JAVA_DIR=zulu11.64.19-ca-jre11.0.19-win_%ARCH%
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin

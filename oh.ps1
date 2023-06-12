@@ -1245,21 +1245,29 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		###################################################
 		"i"	{ # initialize/install OH database
 			# set mode to CLIENT
-			$OH_MODE="CLIENT"
-			Write-Host "Do you want to initialize/install the [$DATABASE_NAME] database on:"
+			#$OH_MODE="CLIENT"
+			Write-Host ""
+			Write-Host "*************************************************************"
+			Write-Host "***             Database installation wizard              ***"
+			Write-Host "*************************************************************"
+			Write-Host ""
+			Write-Host "Current database settings are:"
 			Write-Host ""
 			Write-Host " Database Server -> $DATABASE_SERVER"
-			Write-Host " TCP port -> $DATABASE_PORT"
+			Write-Host " TCP port -> $DATABASE_PORT" 
 			Write-Host " Database name -> $DATABASE_NAME"
 			Write-Host " Database user -> $DATABASE_USER"
 			Write-Host " Database password -> $DATABASE_PASSWORD"
 			Write-Host ""
 			Write-Host "-> To change this values select [m] option from main menu <-"
+			Write-Host ""
+			Write-Host "Do you want to initialize/install the [$DATABASE_NAME] database?"
+			Write-Host ""
 			get_confirmation 1;
 			initialize_dir_structure;
 			set_language;
 			mysql_check;
-			Write-Host "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server ?"
+			Write-Host "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server?"
 			$choice = Read-Host -Prompt "Press [y] to confirm: "
 			if (( "$choice" -eq "y" )) {
 				# ask user for root database password
@@ -1269,7 +1277,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			# ask user for database password
 			$script:DATABASE_PASSWORD = Read-Host "Please insert the MariaDB / MySQL database password for user [$DATABASE_USER@$DATABASE_SERVER] -> "
 			Write-Host ""
-			Write-Host "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER] ?"
+			Write-Host "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER]?"
 			get_confirmation 1;
 			test_database_connection;
 			import_database;
@@ -1287,16 +1295,25 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			$script:DEMO_DATA="off"
 			#$script:OH_SINGLE_USER=Read-Host	"Please select Single user configuration (yes/no)" 
 	                #### script:OH_SINGLE_USER=${OH_SINGLE_USER:-Off} # set default # TBD
-			Write-Host 				""
-			Write-Host 				"***** Database configuration *****"
-			Write-Host 				""
+			Write-Host ""
+			Write-Host "**************************************************************"
+			Write-Host "***             Database configuration wizard              ***"
+			Write-Host "***   Enter settings and generate OH configuration files   ***"
+			Write-Host "**************************************************************"
+			Write-Host ""
 			$script:DATABASE_SERVER=Read-Host	"Enter database server IP address [DATABASE_SERVER]"
 			$script:DATABASE_PORT=Read-Host		"Enter database server TCP port [DATABASE_PORT]"
 			$script:DATABASE_NAME=Read-Host		"Enter database database name [DATABASE_NAME]"
 			$script:DATABASE_USER=Read-Host		"Enter database user name [DATABASE_USER]"
 			$script:DATABASE_PASSWORD=Read-Host	"Enter database password [DATABASE_PASSWORD]"
-			Write-Host				"Do you want to save entered settings to OH configuration files?"
-			get_confirmation 1;
+			Write-Host ""
+			Write-Host "-> Database settings <-"
+			Write-Host ""
+			Write-Host "-> DATABASE_SERVER=$DATABASE_SERVER"
+			Write-Host "-> DATABASE_PORT=$DATABASE_PORT"
+			Write-Host "-> DATABASE_NAME=$DATABASE_NAME"
+			Write-Host "-> DATABASE_USER=$DATABASE_USER"
+			Write-Host ""
 			set_db_name;
 			$script:WRITE_CONFIG_FILES="on"; write_config_files;
 			Write-Host "Done!"
@@ -1330,6 +1347,10 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		}
 		###################################################
 		"r"	{ # restore database
+			Write-Host ""
+			Write-Host "*************************************************************"
+			Write-Host "***               Database restore wizard                 ***"
+			Write-Host "*************************************************************"
 			# check if local portable database exists
 			if ( ($OH_MODE -ne "CLIENT") -And (Test-Path "$OH_PATH/$DATA_DIR") ){
 				Write-Host "Error: Portable database already present. Remove existing data before restoring." -ForegroundColor Red
@@ -1342,7 +1363,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 					Write-Host "Error: No SQL file found!" -ForegroundColor Red
 				}
 				else {
-					Write-Host "Found $DB_CREATE_SQL - are you sure you want to restore it on [$DATABASE_NAME@$DATABASE_SERVER] ?"
+					Write-Host "Found $DB_CREATE_SQL - are you sure you want to restore it on [$DATABASE_NAME@$DATABASE_SERVER]?"
 					get_confirmation 1;
 					# check if mysql utilities exist
 					mysql_check;
@@ -1452,7 +1473,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		"X"	{ # kill processes / clean installation
 			# kill mariadb/mysqld processes
 			Write-Host "Stopping Open Hospital..."	
-			Write-Host "Warning: do you want to kill all java and mysql/mariadb processes ?"
+			Write-Host "Warning: do you want to kill all java and mysql/mariadb processes?"
 			$choice = Read-Host -Prompt "Press [y] to confirm: "
 			if (( "$choice" -eq "y" )) {
 				Write-Host "Killing mariadb/mysql..."	
@@ -1497,6 +1518,10 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				$script:DB_CREATE_SQL=""
 				$script:EXPERT_MODE=""
 				$script:API_SERVER=""
+				Write-Host ""
+				Write-Host "Warning: in order to reload database settings, exit script and relaunch."
+				Write-Host "Select [v] option from script menu to check current settings."
+				Write-Host ""
 				# set variables to defaults
 				set_defaults;
 			}

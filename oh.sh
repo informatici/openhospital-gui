@@ -1110,9 +1110,13 @@ function parse_user_input {
 	###################################################
 	i)	# initialize/install OH database
 		# set mode to CLIENT
-		OH_MODE="CLIENT"
+		#OH_MODE="CLIENT"
 		echo ""
-		echo "Do you want to initialize/install the [$DATABASE_NAME] database on:"
+		echo "*************************************************************"
+		echo "***             Database installation wizard              ***"
+		echo "*************************************************************"
+		echo ""
+		echo "Current database settings are:"
 		echo ""
 		echo " Database Server -> $DATABASE_SERVER"
 		echo " TCP port -> $DATABASE_PORT" 
@@ -1122,11 +1126,13 @@ function parse_user_input {
 		echo ""
 		echo "-> To change this values select [m] option from main menu <-"
 		echo ""
+		echo "Do you want to initialize/install the [$DATABASE_NAME] database?"
+		echo ""
 		get_confirmation 1;
 		initialize_dir_structure;
 		set_language;
 		mysql_check;
-		echo "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server ?"
+		echo "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server?"
 		read -p "Press [y] to confirm: " choice
 		if [ "$choice" = "y" ]; then
 			# ask user for root database password
@@ -1137,7 +1143,7 @@ function parse_user_input {
 		# ask user for database password
 		read -p "Please insert the MariaDB / MySQL database password for user [$DATABASE_USER@$DATABASE_SERVER] -> " -s DATABASE_PASSWORD
 		echo ""
-		echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER] ?"
+		echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER]?"
 		get_confirmation 1;
 		test_database_connection;
 		import_database;
@@ -1160,11 +1166,13 @@ function parse_user_input {
 	###################################################
 	m)	# configure OH database connection manually
 		DEMO_DATA="off"
-		echo ""
 		#read -p "Please select Single user configuration (yes/no): " OH_SINGLE_USER
 		###### OH_SINGLE_USER=${OH_SINGLE_USER:-Off} # set default # TBD
 		echo ""
-		echo "***** Database configuration *****"
+		echo "**************************************************************"
+		echo "***         Database server configuration wizard           ***"
+		echo "***   Enter settings and generate OH configuration files   ***"
+		echo "**************************************************************"
 		echo ""
 		read -p "Enter database server IP address [DATABASE_SERVER]: " DATABASE_SERVER
 		read -p "Enter database server TCP port [DATABASE_PORT]: " DATABASE_PORT
@@ -1172,8 +1180,15 @@ function parse_user_input {
 		read -p "Enter database user name [DATABASE_USER]: " DATABASE_USER
 		read -p "Enter database password [DATABASE_PASSWORD]: " -s DATABASE_PASSWORD
 
-		echo "Do you want to save entered settings to OH configuration files?"
-		get_confirmation 1;
+		echo ""
+		echo ""
+		echo "-> Database settings <-"
+		echo ""
+		echo "-> DATABASE_SERVER=$DATABASE_SERVER"
+		echo "-> DATABASE_PORT=$DATABASE_PORT"
+		echo "-> DATABASE_NAME=$DATABASE_NAME"
+		echo "-> DATABASE_USER=$DATABASE_USER"
+		echo ""
 		set_db_name;
 		WRITE_CONFIG_FILES="on"; write_config_files;
 		echo "Done!"
@@ -1208,6 +1223,10 @@ function parse_user_input {
 		;;
 	###################################################
 	r)	# restore database
+		echo ""
+		echo "*************************************************************"
+		echo "***               Database restore wizard                 ***"
+		echo "*************************************************************"
 		# check if local portable database exists
 		if [ "$OH_MODE" != "CLIENT" ] && [ -d ./"$DATA_DIR" ]; then
 			echo ""
@@ -1327,7 +1346,7 @@ function parse_user_input {
 		echo ""
 		# kill mariadb/mysqld processes
         	echo "Stopping Open Hospital..."
-		echo "Warning: do you want to kill all java and mysql/mariadb processes ?"
+		echo "Warning: do you want to kill all java and mysql/mariadb processes?"
 		read -p "Press [y] to confirm: " choice
 		if [ "$choice" = "y" ]; then
 			# kill mariadb/mysqld processes
@@ -1373,6 +1392,11 @@ function parse_user_input {
 			unset DB_CREATE_SQL
 			unset EXPERT_MODE
 			unset API_SERVER
+			unset UI_INTERFACE
+			echo ""
+			echo "Warning: in order to reload database settings, exit script and relaunch."
+			echo "Select [v] option from script menu to check current settings."
+			echo ""
 			# set variables to defaults
 			set_defaults;
 		fi
