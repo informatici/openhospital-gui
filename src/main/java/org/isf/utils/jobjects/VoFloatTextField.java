@@ -28,7 +28,7 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
 /**
- * @author http://www.java2s.com/Code/Java/Swing-JFC/Textfieldonlyacceptsnumbers.htm
+ * @author <a href="http://www.java2s.com/Code/Java/Swing-JFC/Textfieldonlyacceptsnumbers.htm">...</a>
  */
 public class VoFloatTextField extends JTextField {
 

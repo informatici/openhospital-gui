@@ -33,8 +33,8 @@ public class JLabelRequired extends JLabel {
 	private static final String REQUIRED_MARK = " *";
 
 	/**
-	 * Creates a <code>JLabelRequired</code> instance with the specified
-	 * text and as the <code>setText</code> method is overridden an " *"
+	 * Creates a {@code JLabelRequired} instance with the specified
+	 * text and as the {@code setText} method is overridden an " *"
 	 * is added after the specified text.
 	 *
 	 * @param text The text to be displayed by the label.

@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -136,14 +135,13 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		add(panel);
 		pack();
 
-		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
 	}
-	
-	public Login(MainMenu parent) {
-		super(parent, MessageBundle.getMessage("angal.login.title"), true);
+
+	public Login(JFrame hiddenFrame, MainMenu parent) {
+		super(hiddenFrame, MessageBundle.getMessage("angal.login.title"), true);
 
 		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
 		
@@ -156,14 +154,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		add(panel);
 		pack();
 
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-
-		Dimension mySize = getSize();
-
-		setLocation((screensize.width - mySize.width) / 2,
-				(screensize.height - mySize.height) / 2);
-
+		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
 	}
@@ -181,6 +172,16 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			for (User u : users) {
 				if (u.getUserName().equals(userName)) {
 					user = userBrowsingManager.getUserByName(u.getUserName());
+					// is this login within the idle time set (if any)?
+					if (GeneralData.PASSWORDIDLE > 0 && user.getLastLogin() != null) {
+						if (user.getLastLogin().plusDays(GeneralData.PASSWORDIDLE).isBefore(TimeTools.getNow())) {
+							userBrowsingManager.lockUser(user);
+							MessageDialog.error(this, "angal.login.accounthasnotbeenusedindayscontacttheadministrator.fmt.msg", GeneralData.PASSWORDIDLE);
+							pwd.setText("");
+							pwd.grabFocus();
+							return;
+						}
+					}
 					if (user.isAccountLocked()) {
 						boolean isUnlocked = userBrowsingManager.unlockWhenTimeExpired(user);
 						if (!isUnlocked) {
@@ -198,6 +199,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				}
 			}
 			if (found) {
+				userBrowsingManager.setLastLogin(user);
 				// good PW, so reset failed attempts if there are any
 				if (user.getFailedAttempts() > 0) {
 					userBrowsingManager.resetFailedAttempts(user);

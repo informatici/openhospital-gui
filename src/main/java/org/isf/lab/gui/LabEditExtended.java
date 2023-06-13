@@ -66,7 +66,6 @@ import org.isf.lab.manager.LabRowManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryForPrint;
 import org.isf.lab.model.LaboratoryRow;
-import org.isf.lab.model.LaboratoryStatus;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
@@ -359,7 +358,7 @@ public class LabEditExtended extends ModalJFrame {
 				dateIn = TimeTools.getNow();
 			}
 		} else {
-			dateIn = lab.getDate();
+			dateIn = lab.getLabDate();
 		}
 		return new GoodDateTimeSpinnerChooser(dateIn);
 	}
@@ -568,7 +567,7 @@ public class LabEditExtended extends ModalJFrame {
 					labs.add(new LaboratoryForPrint(
 									lab.getCode(),
 									lab.getExam(),
-									lab.getDate(),
+									lab.getLabDate(),
 									lab.getResult()));
 					printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 				} catch (OHServiceException e) {
@@ -617,7 +616,7 @@ public class LabEditExtended extends ModalJFrame {
 					return;
 				}
 				List<String> labRow = new ArrayList<>();
-				lab.setDate(examDate);
+				lab.setLabDate(examDate);
 				RememberDates.setLastLabExamDate(examDate);
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
@@ -626,7 +625,7 @@ public class LabEditExtended extends ModalJFrame {
 				lab.setPatient(labPat);
 				lab.setPatName(labPat.getName());
 				lab.setSex(String.valueOf(labPat.getSex()));
-				lab.setStatus(LaboratoryStatus.DONE.toString());
+				// lab.setStatus(LaboratoryStatus.DONE.toString()); status remains unchanged
 
 				if (examSelected.getProcedure() == 1) {
 					lab.setResult(examRowComboBox.getSelectedItem().toString());

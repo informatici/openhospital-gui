@@ -83,8 +83,9 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.userbrowser.user.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.common.description.txt").toUpperCase() };
-	private int[] pColumnWidth = {70, 70, 150};
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.userbrowser.locked.col").toUpperCase()};
+	private int[] pColumnWidth = {70, 70, 150, 20};
 	private User user;
 	private DefaultTableModel model;
 	private JTable table;
@@ -105,6 +106,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		table.getColumnModel().getColumn(0).setPreferredWidth(pColumnWidth[0]);
 		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
 		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
+		table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
 
 		scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
@@ -321,6 +323,11 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		}
 
 		@Override
+		public Class getColumnClass(int column) {
+			return (column == 3) ? Boolean.class : String.class;
+		}
+
+		@Override
 		public int getRowCount() {
 			if (userList == null) {
 				return 0;
@@ -348,6 +355,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				return userList.get(r).getUserGroupName();
 			} else if (c == 2) {
 				return userList.get(r).getDesc();
+			} else if (c == 3) {
+				return userList.get(r).isAccountLocked();
 			}
 			return null;
 		}
