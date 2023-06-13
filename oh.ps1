@@ -191,6 +191,9 @@ $script:DEFAULT_DATABASE_NAME="$DATABASE_NAME"
 # set default data base_dir
 $script:DEFAULT_DATADIR="$DATA_DIR"
 
+# default database admin/root user
+$script:DATABASE_ROOT_USER="root"
+
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 $script:EXPERT_MODE="off"
 $script:OH_UI_URL="http://localhost:8080"
@@ -199,7 +202,7 @@ $script:OH_UI_URL="http://localhost:8080"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-$script:MYSQL_VERSION="10.6.12"
+$script:MYSQL_VERSION="10.6.14"
 $script:MYSQL32_VERSION="10.6.5"
 
 ######## define system and software architecture
@@ -612,8 +615,6 @@ function java_lib_setup {
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rpt_extra\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rpt_stat\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rsc\"
-	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rsc\icons\"
-	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rsc\images\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\lib\"
 	
 	# include all jar files under lib\
@@ -794,15 +795,15 @@ function set_database_root_pw {
 	# if using MySQL root password need to be set
 	switch -Regex ( $MYSQL_DIR ) {
 		"mysql" {
-		Write-Host "Setting MySQL root password..."
+		Write-Host "Setting $MYSQL_NAME $DATABASE_ROOT_USER password..."
         $SQLCOMMAND=@"
-        -u root --skip-password -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER 'root'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';"
+        -u $DATABASE_ROOT_USER --skip-password -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER '$DATABASE_ROOT_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';"
 "@
 			try {
 				Start-Process -FilePath "$OH_PATH/$MYSQL_DIR/bin/mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 			}
 			catch {
-				Write-Host "Error: MySQL root password not set! Try resetting installation with option [X]. Exiting." -ForegroundColor Red
+				Write-Host "Error: $MYSQL_NAME root password not set! Try resetting installation with option [X]. Exiting." -ForegroundColor Red
 				shutdown_database;
 				Read-Host; exit 2
 			}
@@ -816,7 +817,7 @@ function create_database_user {
 	# create database user
 	
     $SQLCOMMAND=@"
-    -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD';"
+    -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD';"
 "@
 	try {
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
@@ -834,7 +835,7 @@ function create_database {
 	# create OH database
 	
     $SQLCOMMAND=@"
-    -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
+    -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
 "@
 	try {
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
@@ -885,7 +886,7 @@ function import_database {
 #	cd "$OH_PATH/$SQL_EXTRA_DIR/"
 #
 #   $SQLCOMMAND=@"
-#   --local-infile=1 -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
+#   --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
 #"@
 #		try {
 #			Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
@@ -926,7 +927,7 @@ function dump_database {
 function shutdown_database {
 	if ( !( $OH_MODE -eq "CLIENT" ) ) {
 		Write-Host "Shutting down $MYSQL_NAME..."
-		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqladmin.exe" -ArgumentList ("-u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqladmin.exe" -ArgumentList ("-u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 		# wait till the $MYSQL_NAME socket file is removed -> TO BE IMPLEMENTED
 		# while ( -e $OH_PATH/$MYSQL_SOCKET ); do sleep 1; done
 		Start-Sleep -Seconds 2
@@ -1288,7 +1289,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			$choice = Read-Host -Prompt "Press [y] to confirm: "
 			if (( "$choice" -eq "y" )) {
 				# ask user for root database password
-				$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password [root@$DATABASE_SERVER] -> "
+				$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password [$DATABASE_ROOT_USER@$DATABASE_SERVER] -> "
 				create_database_user;
 				create_database;
 			}

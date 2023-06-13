@@ -131,6 +131,9 @@ DEFAULT_DATABASE_NAME="$DATABASE_NAME"
 # set default data base_dir
 DEFAULT_DATADIR="$DATA_DIR"
 
+# default database admin/root user
+DATABASE_ROOT_USER="root"
+
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 EXPERT_MODE="off"
 OH_UI_URL="http://localhost:8080"
@@ -139,8 +142,8 @@ OH_UI_URL="http://localhost:8080"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-MYSQL_VERSION="10.6.12"
-MYSQL32_VERSION="10.5.19"
+MYSQL_VERSION="10.6.14"
+MYSQL32_VERSION="10.5.21"
 PACKAGE_TYPE="systemd" 
 
 ######## define system and software architecture
@@ -558,8 +561,6 @@ function java_lib_setup {
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_extra
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_stat
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc
-	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc/icons
-	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc/images
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/lib
 
 	# include all jar files under lib/
@@ -711,8 +712,8 @@ function start_database {
 ###################################################################
 function set_database_root_pw {
 	# if using MySQL/MariaDB root password need to be set
-	echo "Setting $MYSQL_NAME root password..."
-	./$MYSQL_DIR/bin/mysql -u root --skip-password --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER 'root'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
+	echo "Setting $MYSQL_NAME $DATABASE_ROOT_USER password..."
+	./$MYSQL_DIR/bin/mysql -u $DATABASE_ROOT_USER --skip-password --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER '$DATABASE_ROOT_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
 	if [ $? -ne 0 ]; then
 		echo "Error: $MYSQL_NAME root password not set! Try resetting installation with option [X]. Exiting."
@@ -725,7 +726,7 @@ function set_database_root_pw {
 function create_database_user {
 	echo "Creating database user [$DATABASE_USER]..."
 	# create database user
-	./$MYSQL_DIR/bin/mysql -u root -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
+	./$MYSQL_DIR/bin/mysql -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
 	-e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; \
 	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD';" >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
@@ -740,7 +741,7 @@ function create_database_user {
 function create_database {
 	echo "Creating database [$DATABASE_NAME]..."
 	# create OH database
-	./$MYSQL_DIR/bin/mysql -u root -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
+	./$MYSQL_DIR/bin/mysql -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
 	-e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; \
 	GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%' ; " >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
@@ -766,7 +767,7 @@ function import_database {
 	# create OH database structure
 	echo "Importing database [$DATABASE_NAME] with user [$DATABASE_USER@$DATABASE_SERVER]..."
 	cd "./$SQL_DIR"
-#	../$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
+#	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
 	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
 	if [ $? -ne 0 ]; then
 		echo "Error: Database not imported! Exiting."
@@ -781,7 +782,7 @@ function import_database {
 #	if [ "$API_SERVER" = "on" ]; then
 #		echo "Setting admin password..."
 #		cd "$OH_PATH/$SQL_EXTRA_DIR/"
-#		$OH_PATH/$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./reset_admin_password_strong.sql >> ../../$LOG_DIR/$LOG_FILE 2>&1
+#		$OH_PATH/$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./reset_admin_password_strong.sql >> ../../$LOG_DIR/$LOG_FILE 2>&1
 #		if [ $? -ne 0 ]; then
 #		echo "Error! Exiting."
 #			shutdown_database;
@@ -821,7 +822,7 @@ function shutdown_database {
 	if [ "$OH_MODE" != "CLIENT" ]; then
 		echo "Shutting down $MYSQL_NAME..."
 		cd "$OH_PATH"
-		./$MYSQL_DIR/bin/mysqladmin -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
+		./$MYSQL_DIR/bin/mysqladmin -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
 		# wait till the MySQL tcp port is closed
 		until !( nc -z $DATABASE_SERVER $DATABASE_PORT ); do sleep 1; done
 		echo "$MYSQL_NAME stopped!"
@@ -1150,7 +1151,7 @@ function parse_user_input {
 		read -p "Press [y] to confirm: " choice
 		if [ "$choice" = "y" ]; then
 			# ask user for root database password
-			read -p "Please insert the MariaDB / MySQL database root password [root@$DATABASE_SERVER] -> " -s DATABASE_ROOT_PW
+			read -p "Please insert the MariaDB / MySQL database root password [$DATABASE_ROOT_USER@$DATABASE_SERVER] -> " -s DATABASE_ROOT_PW
 			echo ""
 			create_database_user;
 			create_database;
