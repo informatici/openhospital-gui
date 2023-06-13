@@ -4,6 +4,8 @@
 # external settings
 MODE=OH_MODE
 DEMODATA=off
+# experimental settings
+APISERVER=off
 
 # internal settings, modules, directories
 LANGUAGE=OH_LANGUAGE
@@ -70,6 +72,7 @@ STRONGLENGTH=6
 USERSLISTLOGIN=no
 PASSWORDTRIES=5
 PASSWORDLOCKTIME=60
+PASSWORDIDLE=365
 
 # telemetry
 TELEMETRYENABLED=yes

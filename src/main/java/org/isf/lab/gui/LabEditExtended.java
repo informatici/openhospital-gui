@@ -66,7 +66,6 @@ import org.isf.lab.manager.LabRowManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryForPrint;
 import org.isf.lab.model.LaboratoryRow;
-import org.isf.lab.model.LaboratoryStatus;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
@@ -626,7 +625,7 @@ public class LabEditExtended extends ModalJFrame {
 				lab.setPatient(labPat);
 				lab.setPatName(labPat.getName());
 				lab.setSex(String.valueOf(labPat.getSex()));
-				lab.setStatus(LaboratoryStatus.DONE.toString());
+				// lab.setStatus(LaboratoryStatus.DONE.toString()); status remains unchanged
 
 				if (examSelected.getProcedure() == 1) {
 					lab.setResult(examRowComboBox.getSelectedItem().toString());
