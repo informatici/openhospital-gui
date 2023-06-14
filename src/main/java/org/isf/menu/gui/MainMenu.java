@@ -124,6 +124,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	static final int menuXPosition = 10;
 	static final int menuYDisplacement = 75;
+	private static final String OH_TITLE = "OH";
 
 	// singleUser=true : one user
 	private boolean singleUser;
@@ -136,6 +137,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public MainMenu(User myUserIn) {
+		setTitle(OH_TITLE);
 		myUser = myUserIn;
 		myFrame = this;
 		GeneralData.initialize();
