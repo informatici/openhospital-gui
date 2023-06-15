@@ -578,7 +578,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						modified = true;
 					}
 				}
-				if (!thisBill.getAdmission().getWard().equals(currentAdmission.getWard())) {
+				if (thisBill.getAdmission() != null && !thisBill.getAdmission().getWard().equals(currentAdmission.getWard())) {
 					MessageDialog.info(PatientBillEdit.this,
 									MessageBundle.formatMessage("angal.newbill.thepatienthaschangedwardsarrow.fmt.msg",
 													thisBill.getAdmission().getWard(), currentAdmission.getWard()));
