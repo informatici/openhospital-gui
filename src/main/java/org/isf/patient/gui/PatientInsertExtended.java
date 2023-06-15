@@ -427,7 +427,6 @@ public class PatientInsertExtended extends JDialog {
 		return jAnamnesisButton;
 	}
 
-
 	/**
 	 * This method initializes jOkButton
 	 *
@@ -2177,13 +2176,13 @@ public class PatientInsertExtended extends JDialog {
 				jRightPanel.add(photoPanel, BorderLayout.NORTH);
 			}
 			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);
-			jRightPanel.add(getConsensus(), BorderLayout.SOUTH);
+			jRightPanel.add(getJPanelConsensus(), BorderLayout.SOUTH);
 
 		}
 		return jRightPanel;
 	}
 
-	private JPanel getConsensus() {
+	private JPanel getJPanelConsensus() {
 		try {
 			if (patient != null && patient.getCode() != null) {
 				consensus = this.patientConsensusManager.getPatientConsensusByUserId(patient.getCode()).get();
@@ -2197,15 +2196,19 @@ public class PatientInsertExtended extends JDialog {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		JCheckBox checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.consensus.txt"));
-		checkbox.addActionListener(e -> consensus.setConsensusFlag(!consensus.isConsensusFlag()));
-		checkbox.setSelected(consensus.isConsensusFlag());
-		panel.add(checkbox);
+		JCheckBox checkboxConsensus = new JCheckBox("<html><body style='width: 150px; padding-left: 10px;'>" +
+						MessageBundle.getMessage("angal.patient.consensus.consensus.txt") +
+						"</body></html>");
+		checkboxConsensus.addActionListener(e -> consensus.setConsensusFlag(!consensus.isConsensusFlag()));
+		checkboxConsensus.setSelected(consensus.isConsensusFlag());
+		panel.add(checkboxConsensus);
 
-		checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.service.txt"));
-		checkbox.addActionListener(e -> consensus.setServiceFlag(!consensus.isServiceFlag()));
-		checkbox.setSelected(consensus.isServiceFlag());
-		panel.add(checkbox);
+		JCheckBox checkboxService = new JCheckBox("<html><body style='width: 150px; padding-left: 10px;'>" +
+						MessageBundle.getMessage("angal.patient.consensus.service.txt") +
+						"</body></html>");
+		checkboxService.addActionListener(e -> consensus.setServiceFlag(!consensus.isServiceFlag()));
+		checkboxService.setSelected(consensus.isServiceFlag());
+		panel.add(checkboxService);
 
 		panel.setBorder(
 						BorderFactory.createCompoundBorder(
