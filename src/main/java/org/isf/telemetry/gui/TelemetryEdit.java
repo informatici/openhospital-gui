@@ -82,13 +82,13 @@ public class TelemetryEdit extends ModalJFrame {
 	private JPanel panel;
 	private TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
 	private TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
-	
+
 	public TelemetryEdit() {
 		super();
 		this.addTelemetryListener(parent);
 		init();
 	}
-	
+
 	public TelemetryEdit(MainMenu parent) {
 		super();
 		this.parent = parent;
@@ -100,8 +100,8 @@ public class TelemetryEdit extends ModalJFrame {
 	private void init() {
 		Telemetry telemetry = telemetryManager.retrieveSettings();
 		Map<String, Boolean> settings = telemetry != null && telemetry.getConsentMap() != null
-				? telemetry.getConsentMap()
-				: new HashMap<>();
+						? telemetry.getConsentMap()
+						: new HashMap<>();
 		List<CheckBoxWrapper> checkboxes = buildPermissionCheckboxes(Context.getApplicationContext(), settings);
 		JButton confirmButton = buildConfirmButton(checkboxes);
 		JButton askMeLaterButton = buildAskMeLaterButton();
@@ -110,10 +110,10 @@ public class TelemetryEdit extends ModalJFrame {
 		add(this.panel);
 		pack();
 
-		setLocationRelativeTo(null);
 		setTitle(MessageBundle.getMessage(KEY_TELEMETRY_TITLE));
 		setResizable(false);
 		setSize(new Dimension(700, 400));
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
@@ -151,7 +151,7 @@ public class TelemetryEdit extends ModalJFrame {
 	 * @return
 	 */
 	private List<CheckBoxWrapper> buildPermissionCheckboxes(ApplicationContext applicationContext,
-			Map<String, Boolean> consentMap) {
+					Map<String, Boolean> consentMap) {
 
 		Map<String, AbstractDataCollector> checkboxContractMap = applicationContext.getBeansOfType(AbstractDataCollector.class);
 		List<AbstractDataCollector> checkboxContractList = new ArrayList<>(checkboxContractMap.values());
@@ -162,7 +162,7 @@ public class TelemetryEdit extends ModalJFrame {
 		int[] i = { 0 };
 		checkboxContractList.forEach(springCheckboxConfigurationBean -> {
 			JCheckBox chb = new JCheckBox(springCheckboxConfigurationBean.getDescription(),
-					springCheckboxConfigurationBean.isSelected(consentMap));
+							springCheckboxConfigurationBean.isSelected(consentMap));
 			CheckBoxWrapper wrapper = new CheckBoxWrapper();
 			wrapper.setCheckbox(chb);
 			wrapper.setId(springCheckboxConfigurationBean.getId());
@@ -194,7 +194,7 @@ public class TelemetryEdit extends ModalJFrame {
 	 * @return
 	 */
 	private ActionListener buildConfirmationActionListener(List<CheckBoxWrapper> checkboxes,
-			TelemetryManager telemetryManager, TelemetryUtils telemetryUtils) {
+					TelemetryManager telemetryManager, TelemetryUtils telemetryUtils) {
 		JPanel panel = this.panel;
 		return new ActionListener() {
 
@@ -252,7 +252,7 @@ public class TelemetryEdit extends ModalJFrame {
 				String title = MessageBundle.getMessage(KEY_TELEMETRY_TITLE);
 
 				int result = JOptionPane.showConfirmDialog(panel, buttonPane, title, JOptionPane.YES_NO_OPTION,
-						JOptionPane.OK_CANCEL_OPTION);
+								JOptionPane.OK_CANCEL_OPTION);
 				LOGGER.debug("Dialog result: {}", result);
 				return result;
 			}
@@ -312,7 +312,7 @@ public class TelemetryEdit extends ModalJFrame {
 	}
 
 	public JPanel makePanel(List<CheckBoxWrapper> checkboxes, JButton confirmButton, JButton askMeLaterButton,
-			JButton neverAskButton) {
+					JButton neverAskButton) {
 
 		JPanel panel = new JPanel(new SpringLayout());
 
