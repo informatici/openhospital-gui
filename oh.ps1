@@ -1099,7 +1099,7 @@ function start_api_server {
 	}
 	
 	########## WORKAROUND to kill existing API server process ##################
-	########## TO BE REMOVED IN NEXT RELEASES
+	########## TO BE REMOVED IN NEXT RELEASE
 	##########
 	# check for stale PID files
 	if (( Test-Path "$OH_PATH/$TMP_DIR/$OH_API_PID" -PathType leaf )) {
@@ -1516,7 +1516,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				Get-Process java -ErrorAction SilentlyContinue | Stop-Process -PassThru
 			}
 			########## WORKAROUND to kill existing API server process ##################
-			########## TO BE REMOVED IN NEXT RELEASES
+			########## TO BE REMOVED IN NEXT RELEASE
 			##########
 			# check for stale PID files
 			if (( Test-Path "$OH_PATH/$TMP_DIR/$OH_API_PID" -PathType leaf )) {

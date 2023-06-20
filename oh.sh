@@ -962,7 +962,7 @@ function start_api_server {
 	fi
 	
 	########## WORKAROUND to kill existing API server process ##################
-	########## TO BE REMOVED IN NEXT RELEASES
+	########## TO BE REMOVED IN NEXT RELEASE
 	##########
 	# check for stale PID files
 	if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
@@ -1385,7 +1385,7 @@ function parse_user_input {
 			killall java
 		fi
 		########## WORKAROUND to kill existing API server process ##################
-		########## TO BE REMOVED IN NEXT RELEASES
+		########## TO BE REMOVED IN NEXT RELEASE
 		##########
 		# check for stale PID files
 		if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
