@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -28,7 +28,7 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
 /**
- * @author http://www.java2s.com/Code/Java/Swing-JFC/Textfieldonlyacceptsnumbers.htm
+ * @author <a href="http://www.java2s.com/Code/Java/Swing-JFC/Textfieldonlyacceptsnumbers.htm">...</a>
  */
 public class VoDoubleTextField extends JTextField {
 
@@ -39,7 +39,7 @@ public class VoDoubleTextField extends JTextField {
 	 * @param columns - number of columns to show
 	 */
 	public VoDoubleTextField(double defval, int columns) {
-		super("" + defval, columns);
+		super(String.valueOf(defval), columns);
 	}
 
 	@Override

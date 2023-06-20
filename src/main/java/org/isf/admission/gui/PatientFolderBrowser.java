@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.admission.gui;
 
@@ -176,7 +176,7 @@ public class PatientFolderBrowser extends ModalJFrame
 		setVisible(true);
 	}
 
-	private JPanel jContentPane = null;
+	private JPanel jContentPane;
 
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
@@ -495,7 +495,7 @@ public class PatientFolderBrowser extends ModalJFrame
 				labTable.clearSelection();
 				for (int i = 0; i < labList.size(); i++) {
 					Laboratory laboratory = (Laboratory) sorterLab.getValueAt(i, -1);
-					LocalDate labDate = laboratory.getDate().toLocalDate();
+					LocalDate labDate = laboratory.getLabDate().toLocalDate();
 
 					// Check that the lab date is included between admission date and discharge date.
 					// If the patient has not been discharged yet (and then discharge date doesn't exist)
@@ -534,12 +534,12 @@ public class PatientFolderBrowser extends ModalJFrame
 		return buttonPanel;
 	}
 
-	private JButton opdReportButton = null;
-	private JButton admReportButton = null;
-	private JButton disReportButton = null;
-	private JButton launchReportButton = null;
-    private JButton dicomButton = null;
-	private JButton closeButton=null;
+	private JButton opdReportButton;
+	private JButton admReportButton;
+	private JButton disReportButton;
+	private JButton launchReportButton;
+    private JButton dicomButton;
+	private JButton closeButton;
 
 	private JButton getOpdReportButton() {
 		if (opdReportButton == null) {
@@ -640,7 +640,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			dicomButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.dicom.btn.key"));
 			dicomButton.addActionListener(actionEvent -> {
 				DicomGui dg = new DicomGui(patient, PatientFolderBrowser.this);
-				((ModalJFrame) dg).showAsModal(this);
+				dg.showAsModal(this);
 			});
 		}
 		return dicomButton;
@@ -864,7 +864,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					}
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
-					String status = "" + opdList.get(z).getNewPatient();
+					String status = String.valueOf(opdList.get(z).getNewPatient());
 					return (status.compareTo("R") == 0
 							? MessageBundle.getMessage("angal.opd.reattendance.txt")
 							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
@@ -921,7 +921,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			if (column == -1) {
 				return laboratory;
 			} else if (column == 0) {
-				return laboratory.getDate();
+				return laboratory.getLabDate();
 			} else if (column == 1) {
 				return laboratory.getExam().getDescription();
 			} else if (column == 2) {

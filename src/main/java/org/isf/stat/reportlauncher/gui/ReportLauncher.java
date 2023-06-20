@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.stat.reportlauncher.gui;
 
@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -105,8 +106,8 @@ public class ReportLauncher extends ModalJFrame {
 	private JComboBox<String> jRptComboBox;
 
 	private List<File> jasperFilesInFolder;
-	private HashMap<String, File> reportNameFileMap;
-	private HashMap<String, List<String>> folderNameFileNameMap;
+	private Map<String, File> reportNameFileMap;
+	private Map<String, List<String>> folderNameFileNameMap;
 	private List<String> userInputParamNames;
 
 	private JComboBox<String> shareWith;
@@ -241,7 +242,7 @@ public class ReportLauncher extends ModalJFrame {
 				folderNameFileNameMap.put("rpt_extra", loadedFiles.stream().map(t -> t.getName().replace(".jasper", "")).collect(Collectors.toList()));
 
 				reportNameFileMap = new HashMap<>();
-				List<String> jRptComboBoxList = new LinkedList<String>();
+				List<String> jRptComboBoxList = new LinkedList<>();
 				for (File f : jasperFilesInFolder) {
 					try {
 						Properties props = ConfigurationProperties.loadPropertiesFile(
@@ -269,7 +270,7 @@ public class ReportLauncher extends ModalJFrame {
 				jRptComboBoxList.forEach(t -> jRptComboBox.addItem(t));
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("Exception in getJParameterSelectionPanel method.", e);
 			}
 
 			jRptComboBox.addActionListener(actionEvent -> {
@@ -278,7 +279,8 @@ public class ReportLauncher extends ModalJFrame {
 				}
 			});
 
-			jMonthLabel = new JLabel("        " + MessageBundle.getMessage("angal.stat.month"));
+			// TODO: fix how the layout of the last two fields are done; adding spaces is a hack
+			jMonthLabel = new JLabel("               " + MessageBundle.getMessage("angal.stat.month"));
 
 			jMonthComboBox = new JComboBox<>();
 			jMonthComboBox.addItem(MessageBundle.getMessage("angal.stat.january"));
@@ -296,7 +298,8 @@ public class ReportLauncher extends ModalJFrame {
 
 			jMonthComboBox.setSelectedIndex(month - 1);
 
-			jYearLabel = new JLabel("                  " + MessageBundle.getMessage("angal.stat.year"));
+			// TODO: fix how the layout of the last two fields are done; adding spaces is a hack
+			jYearLabel = new JLabel("                    " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox<>();
 
 			for (int i = 0; i < 20; i++) {
@@ -326,6 +329,7 @@ public class ReportLauncher extends ModalJFrame {
 			jMonthPanel.add(jToDateField, null);
 		}
 		return jMonthPanel;
+
 	}
 
 	protected void selectAction() {
@@ -358,7 +362,7 @@ public class ReportLauncher extends ModalJFrame {
 					jToDateField.setVisible(false);
 				}
 			} catch (JRException e) {
-				e.printStackTrace();
+				LOGGER.error("Exception in selectAction method.", e);
 			}
 		}
 	}

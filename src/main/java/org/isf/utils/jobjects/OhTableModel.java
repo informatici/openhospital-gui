@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -44,7 +44,7 @@ public class OhTableModel<T> implements TableModel {
 	List<T> dataList;
 	List<T> filteredList;
 	String searchQuery = "";
-	boolean allowSearchByCode = false;
+	boolean allowSearchByCode;
 
 	public OhTableModel(List<T> dataList) {
 		this.dataList = dataList;
@@ -191,7 +191,7 @@ public class OhTableModel<T> implements TableModel {
 			if (obj instanceof Price) {
 				Price priceObj = (Price) obj;
 				if (columnIndex == 0) {
-					value = priceObj.getItem() != null ? priceObj.getItem() : priceObj.getId() + "";
+					value = priceObj.getItem() != null ? priceObj.getItem() : String.valueOf(priceObj.getId());
 				} else {
 					value = priceObj.getDesc();
 				}
@@ -199,7 +199,7 @@ public class OhTableModel<T> implements TableModel {
 			if (obj instanceof MedicalWard) {
 				MedicalWard mdwObj = (MedicalWard) obj;
 				if (columnIndex == 0) {
-					value = mdwObj.getMedical().getProdCode() != null ? mdwObj.getMedical().getProdCode() : mdwObj.getMedical().getCode() + "";
+					value = mdwObj.getMedical().getProdCode() != null ? mdwObj.getMedical().getProdCode() : String.valueOf(mdwObj.getMedical().getCode());
 				} else {
 					value = mdwObj.getMedical().getDescription();
 				}
@@ -207,7 +207,7 @@ public class OhTableModel<T> implements TableModel {
 			if (obj instanceof PricesOthers) {
 				PricesOthers mdwObj = (PricesOthers) obj;
 				if (columnIndex == 0) {
-					value = mdwObj.getCode() != null ? mdwObj.getCode() : mdwObj.getId() + "";
+					value = mdwObj.getCode() != null ? mdwObj.getCode() : String.valueOf(mdwObj.getId());
 				} else {
 					value = mdwObj.getDescription();
 				}
@@ -216,7 +216,7 @@ public class OhTableModel<T> implements TableModel {
 			if (obj instanceof BillItems) {
 				BillItems mdwObj = (BillItems) obj;
 				if (columnIndex == 0) {
-					value = mdwObj.getItemDisplayCode() != null ? mdwObj.getItemDisplayCode() : mdwObj.getId() + "";
+					value = mdwObj.getItemDisplayCode() != null ? mdwObj.getItemDisplayCode() : String.valueOf(mdwObj.getId());
 				} else {
 					value = mdwObj.getItemDescription();
 				}

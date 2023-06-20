@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medicalstock.gui;
 
@@ -69,7 +69,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
-import org.isf.medstockmovtype.manager.MedicaldsrstockmovTypeBrowserManager;
+import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.db.NormalizeString;
@@ -127,12 +127,12 @@ public class MovStockMultipleDischarging extends JDialog {
 	}; 
 	private int optionSelected = UNITS;
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
-	private JComboBox shareWith = null;
+	private JComboBox shareWith;
 	private List<Medical> pool = new ArrayList<>();
 	
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
-	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 	private boolean isAutomaticLot() {
@@ -504,7 +504,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			jComboBoxDischargeType = new JComboBox<>();
 			List<MovementType> movTypes;
 			try {
-				movTypes = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
+				movTypes = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
 			} catch (OHServiceException e) {
 				movTypes = null;
 				OHServiceExceptionUtil.showMessages(e);
@@ -952,7 +952,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			movStockInsertingManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
 
 			if (isXmpp()) {
-				if (shareWith.isEnabled() && (!(((String) shareWith.getSelectedItem())
+				if (shareWith.isEnabled() && (!(shareWith.getSelectedItem()
 						.equals(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody"))))) { //$NON-NLS-1$
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 					for (Medical med : pool) {

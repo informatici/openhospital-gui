@@ -18,7 +18,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 #
 
@@ -43,7 +43,7 @@ WRITE_CONFIG_FILES="off"
 ############## OH general configuration - change at your own risk :-) ##############
 
 # OH_PATH is the directory where Open Hospital files are located
-# OH_PATH=/usr/local/OpenHospital/oh-1.12
+# OH_PATH=/usr/local/OpenHospital/oh-1.13
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #OH_MODE="PORTABLE" 
@@ -76,13 +76,9 @@ DATABASE_USER="isf"
 DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
-DICOM_MAX_SIZE="4M"
-DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
-DICOM_DIR="data/dicom_storage"
-
 # path and directories
 OH_DIR="."
-OH_DOC_DIR="../doc"
+OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
 PHOTO_DIR="data/photo"
@@ -92,9 +88,15 @@ SQL_DIR="sql"
 SQL_EXTRA_DIR="sql/extra"
 TMP_DIR="tmp"
 
+# imaging / dicom
+DICOM_MAX_SIZE="4M"
+DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
+DICOM_DIR="data/dicom_storage"
+
 # logging
 LOG_FILE="startup.log"
 OH_LOG_FILE="openhospital.log"
+API_LOG_FILE="api.log"
 
 # SQL creation files
 #DB_CREATE_SQL="create_all_en.sql" # default to en
@@ -110,12 +112,16 @@ EXT="tar.gz"
 # mysql configuration file
 MYSQL_CONF_FILE="my.cnf"
 
-# OH files
-OH_GUI="OH-gui.jar"
+# OH configuration files
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
 IMAGING_SETTINGS="dicom.properties"
 LOG4J_SETTINGS="log4j.properties"
+API_SETTINGS="application.properties"
+
+# OH jar bin files
+OH_GUI_JAR="OH-gui.jar"
+OH_API_JAR="openhospital-api-0.0.2.jar"
 
 # help file
 HELP_FILE="OH-readme.txt"
@@ -125,12 +131,20 @@ DEFAULT_DATABASE_NAME="$DATABASE_NAME"
 # set default data base_dir
 DEFAULT_DATADIR="$DATA_DIR"
 
+# default database admin/root user
+DATABASE_ROOT_USER="root"
+
+# activate expert mode - set to "on" to enable advanced functions - use at your own risk!
+EXPERT_MODE="off"
+OH_UI_URL="http://localhost:8080"
+OH_API_PID="../tmp/oh-api.pid"
+
 ################ Architecture and external software ################
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-MYSQL_VERSION="10.6.12"
-MYSQL32_VERSION="10.5.19"
+MYSQL_VERSION="10.6.14"
+MYSQL32_VERSION="10.5.21"
 PACKAGE_TYPE="systemd" 
 
 ######## define system and software architecture
@@ -170,38 +184,52 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 #JAVA_DIR="jdk-11.0.11+9-jre"
 
 ### JRE 11 - zulu distribution
-JAVA_DISTRO="zulu11.62.17-ca-jre11.0.18-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu11.64.19-ca-jre11.0.19-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
 
 ######################## DO NOT EDIT BELOW THIS LINE ########################
 
-######################## Functions ########################
+###########################  Functions  ###########################
 
+###################################################################
 function script_menu {
 	# show help / user options
 	echo " -----------------------------------------------------------------"
 	echo "|                                                                 |"
-	echo "|                    Open Hospital - $OH_VERSION                       |"
+	echo "|                  Open Hospital - $OH_VERSION                         |"
 	echo "|                                                                 |"
 	echo " -----------------------------------------------------------------"
 	echo " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
 	echo " -----------------------------------------------------------------"
+	if [ "$EXPERT_MODE" == "on" ]; then
+		echo " EXPERT MODE activated"
+		echo " API server set to $API_SERVER"
+		echo " -----------------------------------------------------------------"
+	fi
 	echo ""
-	echo " Usage: $SCRIPT_NAME [ -l $OH_LANGUAGE_LIST ] "
+	echo " Usage: $SCRIPT_NAME -[OPTION] "
 	echo ""
 	echo "   -C    set OH in CLIENT mode"
 	echo "   -P    set OH in PORTABLE mode"
 	echo "   -S    set OH in SERVER mode (portable)"
-	echo "   -l    set language: $OH_LANGUAGE_LIST"
-	echo "   -s    save OH configuration"
-	echo "   -X    clean/reset OH installation"
-	echo "   -v    show configuration"
+	echo "   -l    [ $OH_LANGUAGE_LIST ] -> set language"
+	echo "   -E    toggle EXPERT MODE - show advanced options"
+	echo "   -h    show help"
 	echo "   -q    quit"
 	echo ""
-	echo "   --------------------- "
-	echo "    advanced options"
+	if [ "$EXPERT_MODE" == "on" ]; then
+		script_menu_advanced;
+	fi
+}
+
+###################################################################
+function script_menu_advanced {
+	# show help / user options
+	echo "   -------------------------------- "
+	echo "    EXPERT MODE - advanced options"
 	echo ""
+	echo "   -A    toggle API server - EXPERIMENTAL"
 	echo "   -e    export/save OH database"
 	echo "   -r    restore OH database"
  	echo "   -d    toggle log level INFO/DEBUG"
@@ -209,10 +237,12 @@ function script_menu {
 	echo "   -D    initialize OH with Demo data"
 	echo "   -i    initialize/install OH database"
 	echo "   -m    configure database connection manually"
+	echo "   -s    save OH configuration"
 	echo "   -t    test database connection (CLIENT mode only)"
 	echo "   -u    create Desktop shortcut"
-	echo ""
-	echo "   -h    show help"
+	echo "   -v    show configuration"
+	echo "   -V    check for latest OH version"
+	echo "   -X    clean/reset OH installation"
 	echo ""
 }
 
@@ -223,16 +253,13 @@ function interactive_menu {
 		clear;
 		script_menu;
 		echo ""
-		IFS=
+		#IFS=
 		read -n 1 -p "Please select an option or press enter to start OH: " option
 		if [[ $option != "" ]]; then 
 			parse_user_input $option 1; # interactive
 		else
 			break # if enter pressed exit from loop and start OH
 		fi
-#		if [[ "$option" == "Z" ]]; then
-#			break; # start OH
-#		fi
 	done
 #	OPTIND=1 
 }
@@ -303,6 +330,7 @@ function read_settings {
 		OH_SINGLE_USER=$SINGLE_USER
 		OH_DOC_DIR=$OH_DOC_DIR
 		DEMO_DATA=$DEMODATA
+		API_SERVER=$APISERVER
 	fi
 
 	# check for database settings file and read values
@@ -337,6 +365,11 @@ function set_defaults {
 	if [ -z "$OH_LANGUAGE" ]; then
 		OH_LANGUAGE="en"
 	fi
+	
+	# OH DOC DIR - set default to "doc" (../doc for oh)
+	if [ -z "$OH_DOC_DIR" ]; then
+		OH_DOC_DIR="doc"
+	fi
 
 	# set database creation script in chosen language
 	if [ -z "$DB_CREATE_SQL" ]; then
@@ -357,6 +390,22 @@ function set_defaults {
 	if [ -z "$DEMO_DATA" ]; then
 		DEMO_DATA="off"
 	fi
+
+	# api server - set default to off
+	if [ -z "$API_SERVER" ]; then
+		API_SERVER="off"
+	fi
+	
+	# UI interface - set default to off
+	if [ -z "$UI_INTERFACE" ]; then
+		UI_INTERFACE="off"
+	fi
+
+	# EXPERT_MODE features - set default to off
+	if [ -z "$EXPERT_MODE" ]; then
+		EXPERT_MODE="off"
+	fi
+
 	# set escaped path (/ in place of \)
 	OH_PATH_ESCAPED=$(echo $OH_PATH | sed -e 's/\//\\\//g')
 	DICOM_DIR_ESCAPED=$(echo $DICOM_DIR | sed -e 's/\//\\\//g')
@@ -472,11 +521,11 @@ desktop_path=$(xdg-user-dir DESKTOP)
 echo "[Desktop Entry]
 	Type=Application
 	# The version of the Desktop Entry Specification
-	Version=1.12.0
+	Version=1.13.0
 	# The name of the application
 	Name=OpenHospital
 	# A comment which will be used as a tooltip
-	Comment=Open Hospital 1.12 shortcut
+	Comment=Open Hospital 1.13 shortcut
 	# The path to the folder in which the executable is run
 	Path=$OH_PATH
 	# The executable of the application, possibly with arguments
@@ -488,7 +537,7 @@ echo "[Desktop Entry]
 	# Describes the categories in which this entry should be shown
 	Categories=Utility;Application;
 	" > $desktop_path/OpenHospital.desktop
-echo "Done !"
+echo "Done!"
 }
 
 ###################################################################
@@ -505,7 +554,7 @@ function java_lib_setup {
 
 	# CLASSPATH setup
 	# include OH jar file
-	OH_CLASSPATH="$OH_PATH"/$OH_DIR/bin/$OH_GUI
+	OH_CLASSPATH="$OH_PATH"/$OH_DIR/bin/$OH_GUI_JAR
 	
 	# include all needed directories
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/bundle
@@ -513,8 +562,6 @@ function java_lib_setup {
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_extra
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_stat
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc
-	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc/icons
-	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc/images
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/lib
 
 	# include all jar files under lib/
@@ -666,8 +713,8 @@ function start_database {
 ###################################################################
 function set_database_root_pw {
 	# if using MySQL/MariaDB root password need to be set
-	echo "Setting $MYSQL_NAME root password..."
-	./$MYSQL_DIR/bin/mysql -u root --skip-password --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DATABASE_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
+	echo "Setting $MYSQL_NAME $DATABASE_ROOT_USER password..."
+	./$MYSQL_DIR/bin/mysql -u $DATABASE_ROOT_USER --skip-password --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER '$DATABASE_ROOT_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
 	if [ $? -ne 0 ]; then
 		echo "Error: $MYSQL_NAME root password not set! Try resetting installation with option [X]. Exiting."
@@ -677,12 +724,26 @@ function set_database_root_pw {
 }
 
 ###################################################################
-function import_database {
-	echo "Creating OH Database..."
-	# create OH database and user
-	./$MYSQL_DIR/bin/mysql -u root -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
-	-e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; CREATE USER '$DATABASE_USER'@'localhost' IDENTIFIED BY '$DATABASE_PASSWORD'; \
-	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'localhost'; \
+function create_database_user {
+	echo "Creating database user [$DATABASE_USER]..."
+	# create database user
+	./$MYSQL_DIR/bin/mysql -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
+	-e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; \
+	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD';" >> ./$LOG_DIR/$LOG_FILE 2>&1
+	
+	if [ $? -ne 0 ]; then
+		echo "Error: Database user creation failed! Exiting."
+		shutdown_database;
+		exit 2
+	fi
+}
+
+###################################################################
+function create_database {
+	echo "Creating database [$DATABASE_NAME]..."
+	# create OH database
+	./$MYSQL_DIR/bin/mysql -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
+	-e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; \
 	GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%' ; " >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
 	if [ $? -ne 0 ]; then
@@ -690,7 +751,11 @@ function import_database {
 		shutdown_database;
 		exit 2
 	fi
+}
 
+###################################################################
+function import_database {
+	echo "Checking for SQL creation script..."
 	# check for database creation script
 	if [ -f ./$SQL_DIR/$DB_CREATE_SQL ]; then
 		echo "Using SQL file $SQL_DIR/$DB_CREATE_SQL..."
@@ -701,16 +766,33 @@ function import_database {
 	fi
 
 	# create OH database structure
-	echo "Importing database schema..."
+	echo "Importing database [$DATABASE_NAME] with user [$DATABASE_USER@$DATABASE_SERVER]..."
 	cd "./$SQL_DIR"
-	../$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
+#	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
+	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
 	if [ $? -ne 0 ]; then
 		echo "Error: Database not imported! Exiting."
 		shutdown_database;
 		cd "$CURRENT_DIR"
 		exit 2
 	fi
-	echo "Database imported!"
+	
+	# EXPERIMENTAL ONLY
+	# workaround for hard coded password limit - execute extra sql script 
+	# not needed anymore - see OP-1078
+#	if [ "$API_SERVER" = "on" ]; then
+#		echo "Setting admin password..."
+#		cd "$OH_PATH/$SQL_EXTRA_DIR/"
+#		$OH_PATH/$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./reset_admin_password_strong.sql >> ../../$LOG_DIR/$LOG_FILE 2>&1
+#		if [ $? -ne 0 ]; then
+#		echo "Error! Exiting."
+#			shutdown_database;
+#			cd "$CURRENT_DIR"
+#			exit 2
+#		fi
+#	fi
+
+	# end
 	cd "$OH_PATH"
 }
 
@@ -720,7 +802,7 @@ function dump_database {
 	if [ -x ./$MYSQL_DIR/bin/mysqldump ]; then
 		mkdir -p "$OH_PATH/$BACKUP_DIR"
 		echo "Dumping $MYSQL_NAME database..."
-		./$MYSQL_DIR/bin/mysqldump --skip-extended-insert -u root --password=$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME > ./$BACKUP_DIR/mysqldump_$DATE.sql
+		./$MYSQL_DIR/bin/mysqldump --skip-extended-insert -u $DATABASE_USER --password=$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME > ./$BACKUP_DIR/mysqldump_$DATE.sql
 		if [ $? -ne 0 ]; then
 			echo "Error: Database not dumped! Exiting."
 			cd "$CURRENT_DIR"
@@ -741,7 +823,7 @@ function shutdown_database {
 	if [ "$OH_MODE" != "CLIENT" ]; then
 		echo "Shutting down $MYSQL_NAME..."
 		cd "$OH_PATH"
-		./$MYSQL_DIR/bin/mysqladmin -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
+		./$MYSQL_DIR/bin/mysqladmin -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
 		# wait till the MySQL tcp port is closed
 		until !( nc -z $DATABASE_SERVER $DATABASE_PORT ); do sleep 1; done
 		echo "$MYSQL_NAME stopped!"
@@ -765,6 +847,19 @@ function test_database_connection {
 		fi
 	else
 		echo "Can't test database connection..."
+	fi
+}
+
+###################################################################
+function write_api_config_file {
+	######## application.properties setup - OH API server
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
+		[ -f ./$OH_DIR/rsc/$API_SETTINGS ] && mv -f ./$OH_DIR/rsc/$API_SETTINGS ./$OH_DIR/rsc/$API_SETTINGS.old
+		# generate OH API token and save to settings file
+		# JWT_TOKEN_SECRET=`openssl rand -base64 64 | xargs`
+		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
+		echo "Writing OH API configuration file -> $API_SETTINGS..."
+		sed -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" -e "s&OH_API_PID&"$OH_API_PID"&g" ./$OH_DIR/rsc/$API_SETTINGS.dist > ./$OH_DIR/rsc/$API_SETTINGS
 	fi
 }
 
@@ -800,23 +895,22 @@ function write_config_files {
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
 		[ -f ./$OH_DIR/rsc/$OH_SETTINGS ] && mv -f ./$OH_DIR/rsc/$OH_SETTINGS ./$OH_DIR/rsc/$OH_SETTINGS.old
 		echo "Writing OH configuration file -> $OH_SETTINGS..."
-		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" \
-		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" -e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" \
+		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
+		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
+		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
 		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS
 	fi
 }
 
 ###################################################################
 function clean_database {
-	# kill mariadb/mysqld processes
-	echo "Killing mariadb/mysql processes..."
-	killall mariadbd
 	# remove socket and pid file
 	echo "Removing socket and pid file..."
 	rm -rf ./$TMP_DIR/*
 	# remove database files
 	echo "Removing databases..."
-	rm -rf ./"$DATA_DIR"
+	# removing all databases under default data dir (prod / demo)
+	rm -rf ./$DEFAULT_DATADIR/*
 }
 
 ###################################################################
@@ -832,6 +926,8 @@ function clean_conf_files {
 	rm -f ./$OH_DIR/rsc/$LOG4J_SETTINGS.old
 	rm -f ./$OH_DIR/rsc/$IMAGING_SETTINGS
 	rm -f ./$OH_DIR/rsc/$IMAGING_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$API_SETTINGS
+	rm -f ./$OH_DIR/rsc/$API_SETTINGS.old
 }
 
 ###################################################################
@@ -858,8 +954,103 @@ function start_gui {
 }
 
 ###################################################################
+function start_api_server {
+	# check for application configuration files
+	if [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
+		echo "Error: missing $API_SETTINGS settings file. Exiting"
+		exit 1;
+	fi
+	
+	########## WORKAROUND to kill existing API server process ##################
+	########## TO BE REMOVED IN NEXT RELEASE
+	##########
+	# check for stale PID files
+	if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
+		API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
+		echo "Killing API server - process $API_PID_NUMBER..."
+		kill $API_PID_NUMBER
+	fi
+	##########
+
+	echo "------------------------"
+	echo "---- EXPERIMENTAL ------"
+	echo "------------------------"
+	echo "Starting API server..."
+	echo "Please wait, it might take some time..."
+	echo ""
+	echo "Connect to http://$OH_UI_URL for dashboard"
+	echo ""
+	
+	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
+	#$JAVA_BIN -client -Xms64m -Xmx1024m -cp "bin/openhospital-api-0.0.2.jar:rsc:static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$LOG_FILE 2>&1
+	
+	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &
+	
+	if [ $? -ne 0 ]; then
+		echo "An error occurred while starting Open Hospital API. Exiting."
+		shutdown_database;
+		cd "$CURRENT_DIR"
+		exit 4
+	fi
+	cd "$OH_PATH"
+}
+
+###################################################################
+function start_ui {
+	echo "Starting Open Hospital UI at $OH_UI_URL..."
+	# OH UI launch
+	if which gnome-open > /dev/null; then
+		gnome-open $OH_UI_URL
+	elif which xdg-open > /dev/null; then
+		xdg-open $OH_UI_URL
+	elif [ ! -n $BROWSER ]; then
+		$BROWSER $OH_UI_URL
+	else
+		echo "Could not detect the web browser to use."
+	fi
+}
+
+###################################################################
+function check_latest_oh_version {
+	echo "Checking online for Open Hospital latest version..."
+	LATEST_OH_VERSION=$(curl -s -L https://api.github.com/repos/informatici/openhospital/releases/latest | grep tag_name  | cut -b16-22)
+	echo "Latest OH version is" $LATEST_OH_VERSION
+	echo ""
+}
+
+###################################################################
 function parse_user_input {
 	case $1 in
+	###################################################
+	A)	# toggle API server
+		case "$API_SERVER" in
+			*on*)
+				API_SERVER="off";
+			;;
+			*off*)
+				API_SERVER="on";
+			;;
+		esac
+		#
+		write_api_config_file;
+		if (( $2==0 )); then API_SERVER="on"; fi
+		option="Z";
+		;;
+	###################################################
+	E)	# toggle EXPERT_MODE features
+		case "$EXPERT_MODE" in
+			*on*)
+				EXPERT_MODE="off";
+			;;
+			*off*)
+				EXPERT_MODE="on";
+			;;
+		esac
+		#
+		if (( $2==0 )); then EXPERT_MODE="on"; interactive_menu; fi
+		option="Z";
+		;;
 	###################################################
 	C)	# start in CLIENT mode
 		OH_MODE="CLIENT"
@@ -873,7 +1064,7 @@ function parse_user_input {
 		OH_MODE="PORTABLE"
 		set_oh_mode;
 		echo ""
-		if (( $2==0 )); then option="Z"; else read; fi
+		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	S)	# start in SERVER mode
@@ -942,33 +1133,48 @@ function parse_user_input {
 			exit 0;
 		fi
 		cat $HELP_FILE | less;
-		echo "Press any key to continue"; read;
 		;;
 	###################################################
 	i)	# initialize/install OH database
 		# set mode to CLIENT
-		OH_MODE="CLIENT"
+		#OH_MODE="CLIENT"
 		echo ""
-		echo "Do you want to initialize/install the OH database on:"
+		echo "*************************************************************"
+		echo "***             Database installation wizard              ***"
+		echo "*************************************************************"
+		echo ""
+		echo "Current database settings are:"
 		echo ""
 		echo " Database Server -> $DATABASE_SERVER"
 		echo " TCP port -> $DATABASE_PORT" 
+		echo " Database name -> $DATABASE_NAME"
+		echo " Database user -> $DATABASE_USER"
+		echo " Database password -> $DATABASE_PASSWORD"
+		echo ""
+		echo "-> To change this values select [m] option from main menu <-"
+		echo ""
+		echo "Do you want to initialize/install the [$DATABASE_NAME] database?"
 		echo ""
 		get_confirmation 1;
 		initialize_dir_structure;
 		set_language;
 		mysql_check;
-		# ask user for database root password
-		read -p "Please insert the MariaDB / MySQL database root password (root@"$DATABASE_SERVER") -> " DATABASE_ROOT_PW
+		echo "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server?"
+		read -p "Press [y] to confirm: " choice
+		if [ "$choice" = "y" ]; then
+			# ask user for root database password
+			read -p "Please insert the MariaDB / MySQL database root password [$DATABASE_ROOT_USER@$DATABASE_SERVER] -> " -s DATABASE_ROOT_PW
+			echo ""
+			create_database_user;
+			create_database;
+		fi
+		# ask user for database password
+		read -p "Please insert the MariaDB / MySQL database password for user [$DATABASE_USER@$DATABASE_SERVER] -> " -s DATABASE_PASSWORD
 		echo ""
-		echo "Installing the database....."
-		echo ""
-		echo " Database name -> $DATABASE_NAME"
-		echo " Database user -> $DATABASE_USER"
-		echo " Database password -> $DATABASE_PASSWORD"
-		echo ""
-		import_database;
+		echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER]?"
+		get_confirmation 1;
 		test_database_connection;
+		import_database;
 		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
@@ -988,20 +1194,29 @@ function parse_user_input {
 	###################################################
 	m)	# configure OH database connection manually
 		DEMO_DATA="off"
-		echo ""
 		#read -p "Please select Single user configuration (yes/no): " OH_SINGLE_USER
 		###### OH_SINGLE_USER=${OH_SINGLE_USER:-Off} # set default # TBD
 		echo ""
-		echo "***** Database configuration *****"
+		echo "**************************************************************"
+		echo "***         Database server configuration wizard           ***"
+		echo "***   Enter settings and generate OH configuration files   ***"
+		echo "**************************************************************"
 		echo ""
 		read -p "Enter database server IP address [DATABASE_SERVER]: " DATABASE_SERVER
 		read -p "Enter database server TCP port [DATABASE_PORT]: " DATABASE_PORT
 		read -p "Enter database database name [DATABASE_NAME]: " DATABASE_NAME
 		read -p "Enter database user name [DATABASE_USER]: " DATABASE_USER
-		read -p "Enter database password [DATABASE_PASSWORD]: " DATABASE_PASSWORD
+		read -p "Enter database password [DATABASE_PASSWORD]: " -s DATABASE_PASSWORD
 
-		echo "Do you want to save entered settings to OH configuration files?"
-		get_confirmation 1;
+		echo ""
+		echo ""
+		echo "-> Database settings <-"
+		echo ""
+		echo "-> DATABASE_SERVER=$DATABASE_SERVER"
+		echo "-> DATABASE_PORT=$DATABASE_PORT"
+		echo "-> DATABASE_NAME=$DATABASE_NAME"
+		echo "-> DATABASE_USER=$DATABASE_USER"
+		echo ""
 		set_db_name;
 		WRITE_CONFIG_FILES="on"; write_config_files;
 		echo "Done!"
@@ -1036,18 +1251,23 @@ function parse_user_input {
 		;;
 	###################################################
 	r)	# restore database
-		# check if database exists
 		echo ""
-		if [ -d ./"$DATA_DIR" ]; then
-			echo "Error: Database already present. Remove existing database before restoring. Exiting."
+		echo "*************************************************************"
+		echo "***               Database restore wizard                 ***"
+		echo "*************************************************************"
+		# check if local portable database exists
+		if [ "$OH_MODE" != "CLIENT" ] && [ -d ./"$DATA_DIR" ]; then
+			echo ""
+			echo "Error: Portable database already present. Remove existing data before restoring.."
 		else
-			echo "Restoring Open Hospital database...."
+			echo ""
 			# ask user for database/sql script to restore
 			read -p "Enter SQL dump/backup file that you want to restore - (in $SQL_DIR subdirectory) -> " DB_CREATE_SQL
-			if [ ! -f ./$SQL_DIR/$DB_CREATE_SQL ]; then
+			if [ ! -f $OH_PATH/$SQL_DIR/$DB_CREATE_SQL ]; then
 				echo "Error: No SQL file found! Exiting."
 			else
-				echo "Found $SQL_DIR/$DB_CREATE_SQL, restoring it..."
+				echo "Found $DB_CREATE_SQL - are you sure you want to restore it on [$DATABASE_NAME@$DATABASE_SERVER] ?"
+				get_confirmation 1;
 				# check if mysql utilities exist
 				mysql_check;
 				if [ "$OH_MODE" != "CLIENT" ]; then
@@ -1057,7 +1277,10 @@ function parse_user_input {
 					initialize_database;
 					start_database;
 					set_database_root_pw;
+					create_database_user;
+					create_database;
 				fi
+				test_database_connection;
 				import_database;
 				if [ $OH_MODE != "CLIENT" ]; then
 					shutdown_database;
@@ -1089,14 +1312,12 @@ function parse_user_input {
 			mysql_check;
 			test_database_connection;
 		fi
-		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	u)	# create Desktop shortcut
 		echo ""
-		echo "Creating/updating OH shortcut on Desktop..."
 		create_desktop_shortcut;
-		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -1114,6 +1335,7 @@ function parse_user_input {
 		echo "Config file generation is set to $WRITE_CONFIG_FILES"
 		echo ""
 		echo "--------- OH default configuration ---------"
+		echo "OH mode is set to $OH_MODE"
 		echo "Language is set to $OH_LANGUAGE"
 		echo "Demo data is set to $DEMO_DATA"
 		echo ""
@@ -1149,8 +1371,33 @@ function parse_user_input {
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
-	X)	# clean
+	X)	# kill processes / clean installation
 		echo ""
+		# kill mariadb/mysqld processes
+        	echo "Stopping Open Hospital..."
+		echo "Warning: do you want to kill all java and mysql/mariadb processes?"
+		read -p "Press [y] to confirm: " choice
+		if [ "$choice" = "y" ]; then
+			# kill mariadb/mysqld processes
+			echo "Killing mariadb/mysql..."
+			killall mariadbd
+			echo "Killing java..."
+			killall java
+		fi
+		########## WORKAROUND to kill existing API server process ##################
+		########## TO BE REMOVED IN NEXT RELEASE
+		##########
+		# check for stale PID files
+		if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
+			API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
+			echo "Killing API server - process $API_PID_NUMBER..."
+			kill $API_PID_NUMBER
+			echo "Removing API server pid file $OH_API_PID..."
+			rm -f $OH_PATH/$TMP_DIR/$OH_API_PID
+		fi
+		##########
+
+		# cleaning files
         	echo "Cleaning Open Hospital installation..."
 		echo "Warning: do you want to remove all existing log files?"
 		read -p "Press [y] to confirm: " choice
@@ -1162,26 +1409,40 @@ function parse_user_input {
 		if [ "$choice" = "y" ]; then
 			clean_conf_files;
 		fi
-		echo "Warning: do you want to remove all existing data and databases?"
-		read -p "Press [y] to confirm: " choice
-		if [ "$choice" = "y" ]; then		
-			echo "--->>> This operation cannot be undone"
-			echo "--->>> Are you sure?"
+		# remove local portable database
+		if [ "$OH_MODE" != "CLIENT" ]; then
+			echo "Warning: do you want to remove all existing data and databases?"
 			read -p "Press [y] to confirm: " choice
 			if [ "$choice" = "y" ]; then		
-				clean_database;
-        			echo "Done!"
+				echo "--->>> This operation cannot be undone"
+				echo "--->>> Are you sure?"
+				read -p "Press [y] to confirm: " choice
+				if [ "$choice" = "y" ]; then		
+					clean_database;
+				fi
 			fi
 		fi
-		# unset variables
-		#unset OH_MODE
-		#unset OH_LANGUAGE
-		#unset OH_SINGLE_USER
-		#unset LOG_LEVEL
-		#unset DEMO_DATA
-		# set defaults
-		#set_defaults;
-
+		echo "Warning: do you want to reset all existing configuration variables?"
+		read -p "Press [y] to confirm: " choice
+		if [ "$choice" = "y" ]; then
+			# unset variables
+			unset OH_MODE
+			unset OH_LANGUAGE
+			unset OH_SINGLE_USER
+			unset LOG_LEVEL
+			unset DEMO_DATA
+			unset DB_CREATE_SQL
+			unset EXPERT_MODE
+			unset API_SERVER
+			unset UI_INTERFACE
+			echo ""
+			echo "Warning: in order to reload database settings, exit script and relaunch."
+			echo "Select [v] option from script menu to check current settings."
+			echo ""
+			# set variables to defaults
+			set_defaults;
+		fi
+		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -1209,6 +1470,12 @@ function parse_user_input {
 	#	echo "Starting Open Hospital...";
 	#	fi
 	#	;;
+	###################################################
+	"V" )	# Check for latest OH version
+		echo "";
+		check_latest_oh_version;
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+		;;
 	###################################################
 	"Z" )	# Z key
 		option="Z";
@@ -1256,12 +1523,12 @@ cd "$OH_PATH"
 # reset in case getopts has been used previously in the shell
 OPTIND=1 
 # list of arguments expected in user input (- option)
-OPTSTRING=":CPSdDGhil:msrtvequQXZ?" 
+# E is excluded from command line option
+OPTSTRING=":AECPSdDGhil:msrtvequQXVZ?" 
 COMMAND_LINE_ARGS=$@
 
-# Parse arguments passed via command line
+# Parse arguments passed via command line / interactive input
 if [[ ${#COMMAND_LINE_ARGS} -ne 0 ]]; then
-	# function to parse input
 	while getopts ${OPTSTRING} option; do
 		parse_user_input $option 0; # non interactive
 	done
@@ -1330,7 +1597,11 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 		start_database;	
 		# set database root password
 		set_database_root_pw;
-		# create database and load data
+		# create database user
+		create_database_user;
+		# create database 
+		create_database;
+		# load data
 		import_database;
 	else
 	        echo "OH database found!"
@@ -1340,6 +1611,19 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 fi
 
 ######## OH startup
+
+# test if database connection is working
+test_database_connection;
+
+# check for API server
+if [ "$API_SERVER" = "on" ]; then
+	start_api_server;
+fi
+
+# check for UI interface
+if [ "$UI_INTERFACE" = "on" ]; then
+	start_ui;
+fi
 
 # if SERVER mode is selected, wait for CTRL-C input to exit
 if [ "$OH_MODE" = "SERVER" ]; then
@@ -1366,9 +1650,6 @@ if [ "$OH_MODE" = "SERVER" ]; then
 	done
 else
 	######## Open Hospital GUI startup - only for CLIENT or PORTABLE mode
-
-	# test if database connection is working
-	test_database_connection;
 
 	# generate config files if not existent
 	write_config_files;

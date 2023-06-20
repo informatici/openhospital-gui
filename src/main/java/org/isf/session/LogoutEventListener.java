@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.session;
 
@@ -38,7 +38,7 @@ public class LogoutEventListener implements DelayTimerCallback, AWTEventListener
 
 	@Override
 	public void eventDispatched(AWTEvent e) {
-		if (UserSession.isLoggedIn() && e instanceof KeyEvent && KeyEvent.KEY_PRESSED == ((KeyEvent) e).getID() && UserSession.getTimer() != null ) {
+		if (UserSession.isLoggedIn() && e instanceof KeyEvent && KeyEvent.KEY_PRESSED == e.getID() && UserSession.getTimer() != null ) {
 			UserSession.getTimer().startTimer();
 		}
 	}

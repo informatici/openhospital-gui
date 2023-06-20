@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.lab.gui;
 
@@ -94,17 +94,17 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		filterButton.doClick();
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel jButtonPanel = null;
-	private JButton buttonEdit = null;
-	private JButton buttonNew = null;
-	private JButton buttonDelete = null;
-	private JButton buttonClose = null;
-	private JButton printTableButton = null;
-	private JButton filterButton = null;
-	private JPanel jSelectionPanel = null;
-	private JTable jTable = null;
-	private JComboBox comboExams = null;
+	private JPanel jContentPane;
+	private JPanel jButtonPanel;
+	private JButton buttonEdit;
+	private JButton buttonNew;
+	private JButton buttonDelete;
+	private JButton buttonClose;
+	private JButton printTableButton;
+	private JButton filterButton;
+	private JPanel jSelectionPanel;
+	private JTable jTable;
+	private JComboBox comboExams;
 	private int pfrmHeight;
 	private List<Laboratory> pLabs;
 	private String[] pColumns = {
@@ -123,7 +123,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private LabBrowsingModel model;
 	private Laboratory laboratory;
 	private int selectedrow;
-	private String typeSelected = null;
+	private String typeSelected;
 	private JPanel dateFilterPanel;
 	private GoodDateChooser dateFrom;
 	private GoodDateChooser dateTo;
@@ -193,7 +193,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			printTableButton = new JButton(MessageBundle.getMessage("angal.lab.printtable.btn"));
 			printTableButton.setMnemonic(MessageBundle.getMnemonic("angal.lab.printtable.btn.key"));
 			printTableButton.addActionListener(actionEvent -> {
-				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
+				typeSelected = comboExams.getSelectedItem().toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
 				}
@@ -325,7 +325,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 					Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(LabBrowser.this, "angal.lab.deletelabexam.fmt.msg",
 							lab.getCreatedDate().format(DATE_TIME_FORMATTER),
-							lab.getDate().format(DATE_TIME_FORMATTER),
+							lab.getLabDate().format(DATE_TIME_FORMATTER),
 							lab.getExam(),
 							lab.getPatName(),
 							lab.getResult());
@@ -433,7 +433,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				}
 			}
 			comboExams.addActionListener(actionEvent -> {
-				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
+				typeSelected = comboExams.getSelectedItem().toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
 				}
@@ -468,7 +468,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
 			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
 			filterButton.addActionListener(actionEvent -> {
-				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
+				typeSelected = comboExams.getSelectedItem().toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
 				}
@@ -537,7 +537,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			if (c == -1) {
 				return lab;
 			} else if (c == 0) {
-				return lab.getDate().format(DATE_TIME_FORMATTER);
+				return lab.getLabDate().format(DATE_TIME_FORMATTER);
 			} else if (c == 1) {
 				return lab.getPatName();
 			} else if (c == 2) {

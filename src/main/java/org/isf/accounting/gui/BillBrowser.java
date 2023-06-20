@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.accounting.gui;
 
@@ -102,7 +102,7 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
  */
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
-	protected final static String NO_USERNAME = null;
+	protected static final String NO_USERNAME = null;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillBrowser.class);
 	private static final ImageIcon ADMISSION_ICON = new ImageIcon("rsc/icons/bed_icon.png");
@@ -162,10 +162,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JButton jButtonDelete;
 	private JButton jButtonClose;
 	private Patient patientParent;
-	private JTextField jAffiliatePersonJTextField = null;
+	private JTextField jAffiliatePersonJTextField;
 	private JButton jButtonReport;
 	private JComboBox<String> jComboUsers;
-	private JTextField medicalJTextField = null;
+	private JTextField medicalJTextField;
 	private JMonthChooser jComboBoxMonths;
 	private JYearChooser jComboBoxYears;
 	private JPanel panelSupRange;

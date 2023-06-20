@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -41,7 +41,7 @@ public class Menu {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Menu.class);
 
 	private static final Pattern DELIMITER = Pattern.compile("[._\\-+]");
-	private static final String MIN_JAVA_VERSION = "1.8";
+	private static final String MIN_JAVA_VERSION = "11";
 
 	/**
 	 * Create the GUI and show it.

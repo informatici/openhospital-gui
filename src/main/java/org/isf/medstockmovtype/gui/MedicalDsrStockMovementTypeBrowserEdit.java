@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.medstockmovtype.gui;
 
@@ -37,7 +37,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
-import org.isf.medstockmovtype.manager.MedicaldsrstockmovTypeBrowserManager;
+import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
@@ -46,35 +46,35 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
+public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private EventListenerList medicaldsrstockmovTypeListeners = new EventListenerList();
+	private EventListenerList medicalDsrStockMovementTypeListeners = new EventListenerList();
 
-	public interface MedicaldsrstockmovTypeListener extends EventListener {
+	public interface MedicalDsrStockMovementTypeListener extends EventListener {
 
-		void medicaldsrstockmovTypeUpdated(AWTEvent e);
+		void medicalDsrStockMovementTypeUpdated(AWTEvent e);
 
-		void medicaldsrstockmovTypeInserted(AWTEvent e);
+		void medicalDsrStockMovementTypeInserted(AWTEvent e);
 	}
 
-	public void addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener l) {
-		medicaldsrstockmovTypeListeners.add(MedicaldsrstockmovTypeListener.class, l);
+	public void addMedicalDsrStockMovementTypeListener(MedicalDsrStockMovementTypeListener l) {
+		medicalDsrStockMovementTypeListeners.add(MedicalDsrStockMovementTypeListener.class, l);
 	}
 
-    public void removeMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener listener) {
-    	medicaldsrstockmovTypeListeners.remove(MedicaldsrstockmovTypeListener.class, listener);
+    public void removeMedicalDsrStockMovementTypeListener(MedicalDsrStockMovementTypeListener listener) {
+    	medicalDsrStockMovementTypeListeners.remove(MedicalDsrStockMovementTypeListener.class, listener);
     }
 
-	private void fireMedicaldsrstockmovInserted(MovementType anMedicaldsrstockmovType) {
-		AWTEvent event = new AWTEvent(anMedicaldsrstockmovType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireMedicaldsrstockmovInserted(MovementType anMedicalDsrStockMovementType) {
+		AWTEvent event = new AWTEvent(anMedicalDsrStockMovementType, AWTEvent.RESERVED_ID_MAX + 1) {
 
 			private static final long serialVersionUID = 1L;
 		};
 
-		EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
+		EventListener[] listeners = medicalDsrStockMovementTypeListeners.getListeners(MedicalDsrStockMovementTypeListener.class);
 		for (EventListener listener : listeners) {
-			((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeInserted(event);
+			((MedicalDsrStockMovementTypeListener) listener).medicalDsrStockMovementTypeInserted(event);
 		}
 	}
 
@@ -84,34 +84,34 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 			private static final long serialVersionUID = 1L;
 		};
 
-		EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
+		EventListener[] listeners = medicalDsrStockMovementTypeListeners.getListeners(MedicalDsrStockMovementTypeListener.class);
 		for (EventListener listener : listeners) {
-			((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeUpdated(event);
+			((MedicalDsrStockMovementTypeListener) listener).medicalDsrStockMovementTypeUpdated(event);
 		}
 	}
     
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private VoLimitedTextField codeTextField = null;
-	private JComboBox<String> typeComboBox = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private VoLimitedTextField codeTextField;
+	private JComboBox<String> typeComboBox;
 	private String lastdescription;
-	private MovementType medicaldsrstockmovType;
+	private MovementType medicalDsrStockMovementType;
 	private boolean insert;
-	private JPanel jDataPanel = null;
-	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private JPanel jDataPanel;
+	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 
 	/**
 	 * This is the default constructor
 	 */
-	public MedicaldsrstockmovTypeBrowserEdit(JFrame owner, MovementType old, boolean inserting) {
+	public MedicalDsrStockMovementTypeBrowserEdit(JFrame owner, MovementType old, boolean inserting) {
 		super(owner, true);
 		insert = inserting;
-		medicaldsrstockmovType = old;//disease will be used for every operation
-		lastdescription = medicaldsrstockmovType.getDescription();
+		medicalDsrStockMovementType = old;//disease will be used for every operation
+		lastdescription = medicalDsrStockMovementType.getDescription();
 		initialize();
 	}
 
@@ -199,15 +199,15 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 			okButton.addActionListener(actionEvent -> {
 
 				String description = descriptionTextField.getText();
-				medicaldsrstockmovType.setDescription(description);
-				medicaldsrstockmovType.setCode(codeTextField.getText());
-				medicaldsrstockmovType.setType((String) typeComboBox.getSelectedItem());
+				medicalDsrStockMovementType.setDescription(description);
+				medicalDsrStockMovementType.setCode(codeTextField.getText());
+				medicalDsrStockMovementType.setType((String) typeComboBox.getSelectedItem());
 
 				if (insert) { // inserting
 					try {
-						MovementType insertedMovementType = medicaldsrstockmovTypeBrowserManager.newMedicaldsrstockmovType(medicaldsrstockmovType);
+						MovementType insertedMovementType = medicalDsrStockMovementTypeBrowserManager.newMedicalDsrStockMovementType(medicalDsrStockMovementType);
 						if (insertedMovementType != null) {
-							fireMedicaldsrstockmovInserted(medicaldsrstockmovType);
+							fireMedicaldsrstockmovInserted(medicalDsrStockMovementType);
 							dispose();
 						} else {
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
@@ -220,7 +220,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							MovementType updatedMovementType = medicaldsrstockmovTypeBrowserManager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
+							MovementType updatedMovementType = medicalDsrStockMovementTypeBrowserManager.updateMedicalDsrStockMovementType(medicalDsrStockMovementType);
 							if (updatedMovementType != null) {
 								fireMedicaldsrstockmovUpdated();
 								dispose();
@@ -246,8 +246,8 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 		if (descriptionTextField == null) {
 			descriptionTextField = new JTextField(20);
 			if (!insert) {
-				descriptionTextField.setText(medicaldsrstockmovType.getDescription());
-				lastdescription=medicaldsrstockmovType.getDescription();
+				descriptionTextField.setText(medicalDsrStockMovementType.getDescription());
+				lastdescription=medicalDsrStockMovementType.getDescription();
 			} 
 		}
 		return descriptionTextField;
@@ -262,7 +262,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 		if (codeTextField == null) {
 			codeTextField = new VoLimitedTextField(10);
 			if (!insert) {
-				codeTextField.setText(medicaldsrstockmovType.getCode());
+				codeTextField.setText(medicalDsrStockMovementType.getCode());
 				codeTextField.setEnabled(false);
 			}
 		}
@@ -280,7 +280,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 			typeComboBox.addItem("+");
 			typeComboBox.addItem("-");
 			if (!insert) {
-				typeComboBox.setSelectedItem(medicaldsrstockmovType.getType());
+				typeComboBox.setSelectedItem(medicalDsrStockMovementType.getType());
 				typeComboBox.setEnabled(false);
 			}
 		}

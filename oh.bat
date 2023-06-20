@@ -17,7 +17,7 @@ REM # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 REM # GNU General Public License for more details.
 REM #
 REM # You should have received a copy of the GNU General Public License
-REM # along with this program. If not, see <http://www.gnu.org/licenses/>.
+REM # along with this program. If not, see <https://www.gnu.org/licenses/>.
 REM #
 
 REM ################### Script configuration ###################
@@ -102,6 +102,11 @@ REM #
 REM ###################
 set OH_PATH=%~dps0
 
+REM ##########  set mode  #########
+REM set OH_MODE = PORTABLE SERVER CLIENT
+set OH_MODE="PORTABLE"
+
+REM ##########  set language  #########
 REM # Language setting - default set to en
 REM set OH_LANGUAGE=en fr es it pt ar
 set OH_LANGUAGE=en
@@ -109,8 +114,7 @@ set OH_LANGUAGE=en
 REM # set log level to INFO | DEBUG - default set to INFO
 set LOG_LEVEL=INFO
 
-REM ### Software configuration - change at your own risk :-)
-REM # Database
+REM ##################### Database configuration #######################
 set DATABASE_SERVER=localhost
 set DATABASE_PORT=3306
 set DATABASE_ROOT_PW=tmp2021oh111
@@ -118,10 +122,8 @@ set DATABASE_NAME=oh
 set DATABASE_USER=isf
 set DATABASE_PASSWORD=isf123
 
-set DICOM_MAX_SIZE="4M"
-set DICOM_STORAGE="FileSystemDicomManager"
-set DICOM_DIR="data\dicom_storage"
-
+REM #######################  OH configuration  #########################
+REM # path and directories
 set OH_DIR="."
 set OH_DOC_DIR="..\doc"
 set OH_SINGLE_USER="no"
@@ -133,6 +135,12 @@ set SQL_DIR="sql"
 set SQL_EXTRA="sql\extra"
 set TMP_DIR="tmp"
 
+REM # imagingin / dicom
+set DICOM_MAX_SIZE="4M"
+set DICOM_STORAGE="FileSystemDicomManager"
+set DICOM_DIR="data\dicom_storage"
+
+REM # logging
 set LOG_FILE=startup.log
 set OH_LOG_FILE=openhospital.log
 
@@ -140,18 +148,19 @@ set DB_CREATE_SQL=create_all_en.sql
 REM #-> DB_CREATE_SQL default is set to create_all_en.sql - set to "create_all_demo.sql" for demo or create_all_[lang].sql for language
 
 REM ######## Architecture
-REM # ARCH can be set to 32 or x64
-REM force ARCH to 32
-set ARCH=32
+REM # ARCH can be set to i686 (32 bit) or x64 (64bit)
+REM set ARCH=i686
+set ARCH=x64
 
 REM ######## MySQL Software
-REM # MariaDB 64bit
-REM https://archive.mariadb.org/mariadb-10.6.12/winx64-packages/mariadb-10.6.12-winx64.zip
+REM # MariaDB 64bit download URL
+REM https://archive.mariadb.org/mariadb-10.6.14/winx64-packages/mariadb-10.6.14-winx64.zip
 
-REM # MariaDB 32bit
+REM # MariaDB 32bit download  URL
 REM https://archive.mariadb.org/mariadb-10.6.5/win32-packages/mariadb-10.6.5-win32.zip
 
-set MYSQL_DIR=mariadb-10.6.5-win%ARCH%
+REM set MYSQL_DIR=mariadb-10.6.5-win%ARCH%
+set MYSQL_DIR=mariadb-10.6.14-win%ARCH%
 
 REM ####### JAVA Software
 REM # JRE 11 64bit - x86_64 - openjdk
@@ -163,7 +172,7 @@ REM set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
 REM set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 REM # JRE 11 32bit - i686 - zulu - default
-set JAVA_DIR=zulu11.62.17-ca-jre11.0.18-win_i686
+set JAVA_DIR=zulu11.64.19-ca-jre11.0.19-win_%ARCH%
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin
@@ -282,12 +291,12 @@ if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
 
 	echo Creating database...
 
-	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe -u root -p%DATABASE_ROOT_PW% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% -e "CREATE DATABASE %DATABASE_NAME% CHARACTER SET utf8; CREATE USER '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%'; GRANT ALL PRIVILEGES ON %DATABASE_NAME%.* TO '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%';" >> %OH_PATH%\%LOG_DIR%\%LOG_FILE% 2>&1
+	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe -u root -p%DATABASE_ROOT_PW% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% -e "CREATE USER '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%'; CREATE DATABASE %DATABASE_NAME% CHARACTER SET utf8; GRANT ALL PRIVILEGES ON %DATABASE_NAME%.* TO '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%';" >> %OH_PATH%\%LOG_DIR%\%LOG_FILE% 2>&1
  	if ERRORLEVEL 1 (goto error)
 
-	echo Importing database schema %DB_CREATE_SQL%...
+	echo Importing database %DATABASE_NAME% with user %DATABASE_USER%@%DATABASE_SERVER%...
 	cd /d %OH_PATH%\%SQL_DIR%
-	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe --local-infile=1 -u root -p%DATABASE_ROOT_PW% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% %DATABASE_NAME% < "%OH_PATH%\sql\%DB_CREATE_SQL%"  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe --local-infile=1 -u %DATABASE_USER% -p%DATABASE_PASSWORD% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% %DATABASE_NAME% < "%OH_PATH%\sql\%DB_CREATE_SQL%"  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 	if ERRORLEVEL 1 (goto error)
 	cd /d %OH_PATH%
 	echo Database imported!
@@ -312,8 +321,6 @@ set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_base
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_extra
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_stat
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc
-set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\icons
-set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\images
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\bin\OH-gui.jar
 
 REM # Setup native_lib_path for current architecture

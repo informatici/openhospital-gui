@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.operation.gui;
 
@@ -154,7 +154,7 @@ abstract class OperationRowBase extends JPanel {
 		searchOperationButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 		searchOperationButton.addActionListener(new ActionListener() {
 
-			List<Operation> operationsOPD = null;
+			List<Operation> operationsOPD;
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -373,7 +373,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected JComboBox<Operation> getOperationsBox() {
 		JComboBox<Operation> comboOpe = new JComboBox<>();
-		ArrayList<Operation> opeList = new ArrayList<>();
+		List<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(getOperationCollection());
 		} catch (OHServiceException ex) {
@@ -401,7 +401,7 @@ abstract class OperationRowBase extends JPanel {
 	public void addToForm() {
 		org.isf.operation.model.OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
 		/* ** for combo operation **** */
-		ArrayList<Operation> opeList = new ArrayList<>();
+		List<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(getOperationCollection());
 		} catch (OHServiceException ex) {
@@ -426,13 +426,13 @@ abstract class OperationRowBase extends JPanel {
 			textDate.setDateTime(opeRow.getOpDate());
 
 			textAreaRemark.setText(opeRow.getRemarks());
-			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
+			textFieldUnit.setText(String.valueOf(opeRow.getTransUnit()));
 		}
 
 		/* ***** resultat **** */
 		int index = 0;
 		for (int i = 0; i < operationResults.size(); i++) {
-			if (opeRow.getOpResult() != null && (operationBrowserManager.getResultDescriptionKey(operationResults.get(i) + "")).equals(opeRow.getOpResult())) { //$NON-NLS-1$
+			if (opeRow.getOpResult() != null && (operationBrowserManager.getResultDescriptionKey(operationResults.get(i))).equals(opeRow.getOpResult())) {
 				index = i;
 			}
 		}

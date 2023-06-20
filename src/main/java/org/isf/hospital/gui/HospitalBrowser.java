@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.hospital.gui;
 
@@ -55,9 +55,9 @@ public class HospitalBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JPanel jContainPanel = null;
-	private JPanel jButtonPanel = null;
-	private JPanel jDataPanel = null;
+	private JPanel jContainPanel;
+	private JPanel jButtonPanel;
+	private JPanel jDataPanel;
 	private GoodTimeChooser visitStartField;
 	private GoodTimeChooser visitEndField;
 	private VoIntegerTextField durationField;

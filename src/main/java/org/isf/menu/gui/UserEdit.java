@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -29,6 +29,7 @@ import java.util.EventListener;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -93,16 +94,17 @@ public class UserEdit extends JDialog {
 		}
 	}
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private JTextField nameTextField = null;
-	private JPasswordField pwdTextField = null;
-	private JPasswordField pwd2TextField = null;
-	private JComboBox<UserGroup> userGroupComboBox = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField nameTextField;
+	private JPasswordField pwdTextField;
+	private JPasswordField pwd2TextField;
+	private JComboBox<UserGroup> userGroupComboBox;
+	private JCheckBox accountLocked;
 
 	private User user;
 	private boolean insert;
@@ -173,8 +175,14 @@ public class UserEdit extends JDialog {
 			}
 			dataPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.description.label")));
 			dataPanel.add(getDescriptionTextField());
+			if (!insert) {
+				dataPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.locked.label")));
+				accountLocked = new JCheckBox();
+				accountLocked.setSelected(user.isAccountLocked());
+				dataPanel.add(accountLocked);
+			}
 			SpringUtilities.makeCompactGrid(dataPanel,
-					insert ? 5 : 3, 2,
+					insert ? 5 : 4, 2,
 					5, 5,
 					5, 5);
 		}
@@ -243,7 +251,7 @@ public class UserEdit extends JDialog {
 						Arrays.fill(repeatPassword, '0');
 						return;
 					}
-					if (password.length < GeneralData.STRONGLENGTH) {
+					if (GeneralData.STRONGLENGTH != 0 && password.length < GeneralData.STRONGLENGTH) {
 						MessageDialog.error(null, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 						Arrays.fill(password, '0');
 						Arrays.fill(repeatPassword, '0');
@@ -287,6 +295,11 @@ public class UserEdit extends JDialog {
 				} else {
 					user.setUserGroupName((UserGroup) userGroupComboBox.getSelectedItem());
 					try {
+						if (user.isAccountLocked() && !accountLocked.isSelected()) {
+							userBrowsingManager.unlockUser(user);
+						} else if (!user.isAccountLocked() && accountLocked.isSelected()) {
+							userBrowsingManager.lockUser(user);
+						}
 						result = userBrowsingManager.updateUser(user);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);

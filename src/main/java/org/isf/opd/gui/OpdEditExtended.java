@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.opd.gui;
 
@@ -113,6 +113,8 @@ import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ------------------------------------------
@@ -152,6 +154,8 @@ import org.isf.ward.model.Ward;
 public class OpdEditExtended extends ModalJFrame implements PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpdEditExtended.class);
 
 	public static final int DEFAULT_VISIT_DURATION = 30;
 	
@@ -216,36 +220,36 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private static final String LAST_OPD_LABEL = "<html><i>" + MessageBundle.getMessage("angal.opd.lastopdvisitm.txt") + "</i></html>:";
 	private static final String LAST_NOTE_LABEL = "<html><i>" + MessageBundle.getMessage("angal.opd.lastopdnote.txt") + "</i></html>:";
 
-	private JPanel jPanelMain = null;
+	private JPanel jPanelMain;
 	private JPanel jPanelNorth;
 	private JPanel jPanelCentral;
-	private JPanel jPanelData = null;
-	private JPanel jPanelButtons = null;
+	private JPanel jPanelData;
+	private JPanel jPanelButtons;
 
-	private JComboBox diseaseTypeBox = null;
-	private JComboBox diseaseBox1 = null;
-	private JComboBox diseaseBox2 = null;
-	private JComboBox diseaseBox3 = null;
-	private LocalDateTime visitDateOpd = null;
+	private JComboBox diseaseTypeBox;
+	private JComboBox diseaseBox1;
+	private JComboBox diseaseBox2;
+	private JComboBox diseaseBox3;
+	private LocalDateTime visitDateOpd;
 	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM, new Locale(GeneralData.LANGUAGE));
-	private GoodDateTimeSpinnerChooser opdDateFieldCal = null;
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JButton jButtonExamination = null;
-	private JButton jAnamnesisButton = null;
-	private JRadioButton rePatientButton = null;
-	private JRadioButton newPatientButton = null;
-	private JCheckBox referralToCheckBox = null;
-	private JCheckBox referralFromCheckBox = null;
+	private GoodDateTimeSpinnerChooser opdDateFieldCal;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JButton jButtonExamination;
+	private JButton jAnamnesisButton;
+	private JRadioButton rePatientButton;
+	private JRadioButton newPatientButton;
+	private JCheckBox referralToCheckBox;
+	private JCheckBox referralFromCheckBox;
 
-	private JPanel jPanelPatient = null;
+	private JPanel jPanelPatient;
 
-	private VoLimitedTextField jFieldFirstName = null;
-	private VoLimitedTextField jFieldSecondName = null;
-	private VoLimitedTextField jFieldAddress = null;
-	private VoLimitedTextField jFieldCity = null;
-	private VoLimitedTextField jFieldNextKin = null;
-	private VoLimitedTextField jFieldAge = null;
+	private VoLimitedTextField jFieldFirstName;
+	private VoLimitedTextField jFieldSecondName;
+	private VoLimitedTextField jFieldAddress;
+	private VoLimitedTextField jFieldCity;
+	private VoLimitedTextField jFieldNextKin;
+	private VoLimitedTextField jFieldAge;
 
 	private Opd opd;
 	private boolean insert;
@@ -255,23 +259,23 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JComboBox jComboPatResult;
 	private JRadioButton radiof;
 	private JRadioButton radiom;
-	private JButton jPatientEditButton = null;
-	private JButton jSearchButton = null;
-	private JLabel jLabelLastOpdVisit = null;
-	private JLabel jFieldLastOpdVisit = null;
-	private JLabel jLabelLastOpdNote = null;
-	private JLabel jFieldLastOpdNote = null;
+	private JButton jPatientEditButton;
+	private JButton jSearchButton;
+	private JLabel jLabelLastOpdVisit;
+	private JLabel jFieldLastOpdVisit;
+	private JLabel jLabelLastOpdNote;
+	private JLabel jFieldLastOpdNote;
 
-	private Patient opdPatient = null;
-	private JPanel jNotePanel = null;
-	private JTextArea jNoteTextArea = null;
-	private JPanel jPatientNotePanel = null;
-	private JTextArea jPatientNote = null;
-	private JPanel jOpdNumberPanel = null;
-	private JTextField jOpdNumField = null;
-	private JComboBox<Ward> opdWardBox = null;
-	private JComboBox<Ward> nextVisitWardBox = null;
-	private JButton nextVisitClearButton = null;
+	private Patient opdPatient;
+	private JPanel jNotePanel;
+	private JTextArea jNoteTextArea;
+	private JPanel jPatientNotePanel;
+	private JTextArea jPatientNote;
+	private JPanel jOpdNumberPanel;
+	private JTextField jOpdNumField;
+	private JComboBox<Ward> opdWardBox;
+	private JComboBox<Ward> nextVisitWardBox;
+	private JButton nextVisitClearButton;
 
 	/*
 	 * Managers and Arrays
@@ -320,8 +324,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 	/**
 	 * This method initializes
-	 *
-	 * @wbp.parser.constructor
 	 */
 	public OpdEditExtended(JFrame owner, Opd old, boolean inserting) {
 		super();
@@ -1726,8 +1728,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		}
 		return jButtonExamination;
 	}
-	
-	
+
 	private JButton getJAnamnesisButton() {
 		if (jAnamnesisButton == null) {
 			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
@@ -1735,22 +1736,21 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			OpdEditExtended self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
 				try {
-				PatientHistory ph = new PatientHistory();
-				ph.setPatientId(opdPatient.getCode());
-				Patient patient = this.patientBrowserManager.getPatientById(opdPatient.getCode());
-				PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(opdPatient.getCode())).orElse(ph);
-				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
-				PatientHistoryEdit dialog = new PatientHistoryEdit(OpdEditExtended.this, pph, true);
-				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-				dialog.pack();
-				dialog.setLocationRelativeTo(null);
-				dialog.setModal(insert);
-				dialog.setVisible(true);
-			} catch (OHServiceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-				});
+					PatientHistory ph = new PatientHistory();
+					ph.setPatientId(opdPatient.getCode());
+					Patient patient = this.patientBrowserManager.getPatientById(opdPatient.getCode());
+					PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(opdPatient.getCode())).orElse(ph);
+					PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
+					PatientHistoryEdit dialog = new PatientHistoryEdit(OpdEditExtended.this, pph, true);
+					dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+					dialog.pack();
+					dialog.setLocationRelativeTo(null);
+					dialog.setModal(insert);
+					dialog.setVisible(true);
+				} catch (OHServiceException e) {
+					LOGGER.error("Exception in getJAnamnesisButton method.", e);
+				}
+			});
 		}
 		return jAnamnesisButton;
 	}

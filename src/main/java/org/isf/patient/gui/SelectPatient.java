@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.patient.gui;
 
@@ -328,7 +328,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 					@Override
 					public void keyTyped(KeyEvent e) {
 						lastKey = "";
-						String s = "" + e.getKeyChar();
+						String s = String.valueOf(e.getKeyChar());
 						if (Character.isLetterOrDigit(e.getKeyChar())) {
 							lastKey = s;
 						}
@@ -573,7 +573,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 			if (GeneralData.PATIENTEXTENDED) {
 				PatientInsertExtended newrecord = new PatientInsertExtended(SelectPatient.this, new Patient(), true);
-				newrecord.addPatientListener((PatientListener) SelectPatient.this);
+				newrecord.addPatientListener(SelectPatient.this);
 				newrecord.setVisible(true);
 			} else {
 				PatientInsert newrecord = new PatientInsert(SelectPatient.this, new Patient(), true);

@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.patient.gui;
 
@@ -251,7 +251,7 @@ public class PatientSummary {
 		if (patient.getTelephone() == null || patient.getTelephone().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel("" + patient.getTelephone());
+			l = new JLabel(patient.getTelephone());
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
@@ -336,7 +336,7 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientAgePanel() {
-		JLabel l = new JLabel("" + patient.getAge());
+		JLabel l = new JLabel(String.valueOf(patient.getAge()));
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
 		return lP;

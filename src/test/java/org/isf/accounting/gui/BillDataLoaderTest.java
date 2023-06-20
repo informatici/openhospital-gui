@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.accounting.gui;
 
@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 
 public class BillDataLoaderTest {
 	
-	private final static String NO_USERNAME = null;
+	private static final String NO_USERNAME = null;
     @Test
     public void shouldLoadPendingBillsFromManagerForParentPatient() throws OHServiceException {
         // given:

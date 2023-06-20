@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.ward.gui;
 
@@ -98,24 +98,24 @@ public class WardEdit extends JDialog {
 
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
-	private JPanel jContentPane = null;
-	private JPanel dataPanel = null;
-	private JPanel buttonPanel = null;
-	private JButton cancelButton = null;
-	private JButton okButton = null;
-	private JTextField descriptionTextField = null;
-	private JTextField codeTextField = null;
-	private JTextField telTextField = null;
-	private JTextField faxTextField = null;
-	private JTextField emailTextField = null;
-	private JTextField bedsTextField = null;
-	private JTextField nursTextField = null;
-	private JTextField docsTextField = null;
-	private JTextField durationTextField = null;
-	private JCheckBox isOpdCheck = null;
-	private JCheckBox isPharmacyCheck = null;
-	private JCheckBox isMaleCheck = null;
-	private JCheckBox isFemaleCheck = null;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField codeTextField;
+	private JTextField telTextField;
+	private JTextField faxTextField;
+	private JTextField emailTextField;
+	private JTextField bedsTextField;
+	private JTextField nursTextField;
+	private JTextField docsTextField;
+	private JTextField durationTextField;
+	private JCheckBox isOpdCheck;
+	private JCheckBox isPharmacyCheck;
+	private JCheckBox isMaleCheck;
+	private JCheckBox isFemaleCheck;
 	private Ward ward;
 	private boolean insert;
 	private int beds;

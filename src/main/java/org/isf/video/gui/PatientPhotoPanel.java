@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.video.gui;
 
@@ -61,12 +61,12 @@ public class PatientPhotoPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
 	private static final String PROFILE_PICTURE_FORMAT = "png";
 	// Photo Components:
-	private JPanel jPhotoPanel = null;
-	private PhotoPanel externalPanel = null;
+	private JPanel jPhotoPanel;
+	private PhotoPanel externalPanel;
 	private PatientInsertExtended owner;
 	
-	private JButton jGetPhotoButton = null;
-	private JButton jAttachPhotoButton = null;
+	private JButton jGetPhotoButton;
+	private JButton jAttachPhotoButton;
 
 	private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
 
@@ -118,8 +118,7 @@ public class PatientPhotoPanel extends JPanel {
 						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, GeneralData.MAX_PROFILE_IMAGE_FILE_SIZE_BYTES, PROFILE_PICTURE_FORMAT));
 					} 
 				} catch (IOException e1) {
-					LOGGER.error("Oooops! Can't resize profile picture.");
-					e1.printStackTrace();
+					LOGGER.error("Oooops! Can't resize profile picture.", e1);
 				}
 			});
 
@@ -216,7 +215,7 @@ class CroppingDialog extends JDialog {
 	/*
 	 * Return Value
 	 */
-	private BufferedImage cropped = null;
+	private BufferedImage cropped;
 
 	private JButton saveButton;
 

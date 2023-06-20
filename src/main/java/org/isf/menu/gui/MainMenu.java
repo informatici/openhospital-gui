@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -122,8 +122,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private static User myUser;
 	private static List<UserMenuItem> myMenu;
 
-	final static int menuXPosition = 10;
-	final static int menuYDisplacement = 75;
+	static final int menuXPosition = 10;
+	static final int menuYDisplacement = 75;
+	private static final String OH_TITLE = "OH";
 
 	// singleUser=true : one user
 	private boolean singleUser;
@@ -136,6 +137,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public MainMenu(User myUserIn) {
+		setTitle(OH_TITLE);
 		myUser = myUserIn;
 		myFrame = this;
 		GeneralData.initialize();
@@ -169,7 +171,14 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			LOGGER.info("Logging: Multi User mode.");
 
 			if (null == myUser) {
-				new Login(this);
+				JFrame hiddenOwner = new JFrame(MessageBundle.getMessage("angal.login.title"));
+				ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
+				hiddenOwner.setIconImage(img.getImage());
+				hiddenOwner.setLocation(-10000, -1000);
+				hiddenOwner.setSize(new Dimension(1, 1));
+				hiddenOwner.show();
+				new Login(hiddenOwner, this);
+				hiddenOwner.dispose();
 			}
 
 			if (null == myUser) {

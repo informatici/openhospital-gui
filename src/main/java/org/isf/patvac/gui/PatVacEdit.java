@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.patvac.gui;
 
@@ -81,31 +81,31 @@ public class PatVacEdit extends JDialog {
 	private boolean insert;
 
 	private PatientVaccine patVac;
-	private JPanel jContentPane = null;
-	private JPanel buttonPanel = null;
-	private JPanel dataPanel = null;
-	private JPanel dataPatient = null;
+	private JPanel jContentPane;
+	private JPanel buttonPanel;
+	private JPanel dataPanel;
+	private JPanel dataPatient;
 
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JButton jSearchButton = null;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JButton jSearchButton;
 
-	private JComboBox<Vaccine> vaccineComboBox = null;
-	private JComboBox<Object> patientComboBox = null;
-	private JComboBox<VaccineType> vaccineTypeComboBox = null;
+	private JComboBox<Vaccine> vaccineComboBox;
+	private JComboBox<Object> patientComboBox;
+	private JComboBox<VaccineType> vaccineTypeComboBox;
 
-	private VoLimitedTextField patTextField = null;
-	private VoLimitedTextField ageTextField = null;
-	private VoLimitedTextField sexTextField = null;
-	private VoLimitedTextField progrTextField = null;
+	private VoLimitedTextField patTextField;
+	private VoLimitedTextField ageTextField;
+	private VoLimitedTextField sexTextField;
+	private VoLimitedTextField progrTextField;
 
 	private JTextField jTextPatientSrc;
 	private Patient selectedPatient;
 	private String lastKey;
 	private String s;
-	private List<Patient> patientList = null;
-	private GoodDateChooser vaccineDateFieldCal = null;
-	private LocalDateTime dateIn = null;
+	private List<Patient> patientList;
+	private GoodDateChooser vaccineDateFieldCal;
+	private LocalDateTime dateIn;
 	private int patNextYProg;
 
 	private JPanel centerPanel;
@@ -314,7 +314,7 @@ public class PatVacEdit extends JDialog {
 				@Override
 				public void keyTyped(KeyEvent e) {
 					lastKey = "";
-					String s = "" + e.getKeyChar();
+					String s = String.valueOf(e.getKeyChar());
 					if (Character.isLetterOrDigit(e.getKeyChar())) {
 						lastKey = s;
 					}
@@ -486,8 +486,8 @@ public class PatVacEdit extends JDialog {
 			if (key != null) {
 				// Search key extended to name and code
 				StringBuilder sbName = new StringBuilder();
-				sbName.append(elem.getSecondName().toUpperCase());
-				sbName.append(elem.getFirstName().toUpperCase());
+				sbName.append(elem.getSecondName());
+				sbName.append(elem.getFirstName());
 				sbName.append(elem.getCode());
 				String name = sbName.toString();
 
@@ -533,8 +533,8 @@ public class PatVacEdit extends JDialog {
 	 */
 	private void setPatient(Patient selectedPatient) {
 		patTextField.setText(selectedPatient.getName());
-		ageTextField.setText(selectedPatient.getAge() + "");
-		sexTextField.setText(selectedPatient.getSex() + "");
+		ageTextField.setText(String.valueOf(selectedPatient.getAge()));
+		sexTextField.setText(String.valueOf(selectedPatient.getSex()));
 		dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), 
 						MessageBundle.formatMessage("angal.patvac.patientcode.fmt.msg", selectedPatient.getCode())));
 	}
@@ -681,7 +681,7 @@ public class PatVacEdit extends JDialog {
 		if (sexTextField == null) {
 			sexTextField = new VoLimitedTextField(1, 1);
 			if (!insert) {
-				sexTextField.setText("" + patVac.getPatSex());
+				sexTextField.setText(String.valueOf(patVac.getPatSex()));
 			}
 		}
 		return sexTextField;

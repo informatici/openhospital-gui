@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.opd.gui;
 
@@ -114,23 +114,23 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private static final long serialVersionUID = 2372745781159245861L;
 
-	private JPanel jButtonPanel = null;
-	private JPanel jContainPanel = null;
-	private JButton jNewButton = null;
-	private JButton jEditButton = null;
-	private JButton jCloseButton = null;
-	private JButton jDeleteButton = null;
-	private JPanel dateFilterPanel = null;
-	private JPanel jSelectionDiseasePanel = null;
-	private JPanel jAgeFromPanel = null;
-	private VoLimitedTextField jAgeFromTextField = null;
-	private JPanel jAgeToPanel = null;
-	private VoLimitedTextField jAgeToTextField = null;
-	private JPanel jAgePanel = null;
+	private JPanel jButtonPanel;
+	private JPanel jContainPanel;
+	private JButton jNewButton;
+	private JButton jEditButton;
+	private JButton jCloseButton;
+	private JButton jDeleteButton;
+	private JPanel dateFilterPanel;
+	private JPanel jSelectionDiseasePanel;
+	private JPanel jAgeFromPanel;
+	private VoLimitedTextField jAgeFromTextField;
+	private JPanel jAgeToPanel;
+	private VoLimitedTextField jAgeToTextField;
+	private JPanel jAgePanel;
 	private JComboBox<DiseaseType> jDiseaseTypeBox;
 	private JComboBox<Disease> jDiseaseBox;
 	private JComboBox jWardBox;
-	private JPanel sexPanel = null;
+	private JPanel sexPanel;
 	private Integer ageTo = 0;
 	private Integer ageFrom = 0;
 	private DiseaseType allDiseaseType = new DiseaseType(
@@ -161,7 +161,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
 	private List<Opd> pSur;
-	private JTable jTable = null;
+	private JTable jTable;
 	private OpdBrowsingModel model;
 	private int[] pColumnWidth = {50, 80, 100, 130, 70, 150, 30, 30, 195, 195, 50, 50};
 	private boolean[] columnResizable = { false, false, false, false, false, true, false, false, true, true, false, false };
@@ -169,9 +169,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
 	private boolean[] columnsBold = { true, true, false, false, true, false, false, false, false, false, false, false };
 	private int selectedrow;
-	private JButton filterButton = null;
+	private JButton filterButton;
 	private String rowCounterText = MessageBundle.getMessage("angal.common.count.label") + ' ';
-	private JLabel rowCounter = null;
+	private JLabel rowCounter;
 	private JRadioButton radioNewAttendance;
 	private JRadioButton radioReAttendance;
 	private JRadioButton radioAllPatiens;
@@ -179,7 +179,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JRadioButton radioMale;
 	private JRadioButton radioFemale;
 	private JRadioButton radioAllGender;
-	private List<Disease> diseases = null;
+	private List<Disease> diseases;
 	protected AbstractButton searchDiseaseButton;
 	private GoodDateChooser dateFrom;
 	private GoodDateChooser dateTo;
@@ -187,7 +187,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JTextField opdCodeFilter;
 	private JTextField progYearFilter;
 	private JTextField patientCodeFilter;
-	private ButtonGroup groupUserFilter = null;
+	private ButtonGroup groupUserFilter;
 	private JRadioButton radioMyPatients;
 	private JRadioButton radioAllPatients;
 
@@ -681,7 +681,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	public JComboBox<Disease> getDiseaseBox() {
 		if (jDiseaseBox == null) {
-			jDiseaseBox = new JComboBox<Disease>();
+			jDiseaseBox = new JComboBox<>();
 
 		}
 		try {
@@ -1169,7 +1169,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				}
 				progYearFilter.setText("");
 				patientCodeFilter.setText("");
-				List<Opd> opdList = new ArrayList<Opd>();
+				List<Opd> opdList = new ArrayList<>();
 				Optional<Opd> opd = opdBrowserManager.getOpdById(code);
 				if (opd.isPresent()) {
 					opdList.add(opd.get());

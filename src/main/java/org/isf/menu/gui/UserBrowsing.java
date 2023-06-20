@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.menu.gui;
 
@@ -83,8 +83,9 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.userbrowser.user.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.common.description.txt").toUpperCase() };
-	private int[] pColumnWidth = {70, 70, 150};
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.userbrowser.locked.col").toUpperCase()};
+	private int[] pColumnWidth = {70, 70, 150, 20};
 	private User user;
 	private DefaultTableModel model;
 	private JTable table;
@@ -105,6 +106,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		table.getColumnModel().getColumn(0).setPreferredWidth(pColumnWidth[0]);
 		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
 		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
+		table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
 
 		scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
@@ -188,7 +190,12 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				});
 				String newPassword = "";
 				JPanel stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-				stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.fmt.msg", GeneralData.STRONGLENGTH)));
+				if (GeneralData.STRONGLENGTH != 0) {
+					stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.fmt.msg", GeneralData.STRONGLENGTH)));
+				} else {
+					stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.msg")));
+				}
+
 				stepPanel.add(pwd);
 
 				while (newPassword.isEmpty()) {
@@ -199,15 +206,21 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 						return;
 					}
 					newPassword = new String(pwd.getPassword());
-					if (newPassword.isEmpty() || newPassword.length() < GeneralData.STRONGLENGTH) {
-						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
+					if (newPassword.isEmpty()) {
+						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustnotbeblank.msg");
 						newPassword = "";
 						pwd.setText("");
 					} else {
-						if (!userBrowsingManager.isPasswordStrong(newPassword)) {
-							MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+						if (GeneralData.STRONGLENGTH != 0 && newPassword.length() < GeneralData.STRONGLENGTH) {
+							MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 							newPassword = "";
 							pwd.setText("");
+						} else {
+							if (!userBrowsingManager.isPasswordStrong(newPassword)) {
+								MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+								newPassword = "";
+								pwd.setText("");
+							}
 						}
 					}
 				}
@@ -310,6 +323,11 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		}
 
 		@Override
+		public Class getColumnClass(int column) {
+			return (column == 3) ? Boolean.class : String.class;
+		}
+
+		@Override
 		public int getRowCount() {
 			if (userList == null) {
 				return 0;
@@ -337,6 +355,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				return userList.get(r).getUserGroupName();
 			} else if (c == 2) {
 				return userList.get(r).getDesc();
+			} else if (c == 3) {
+				return userList.get(r).isAccountLocked();
 			}
 			return null;
 		}

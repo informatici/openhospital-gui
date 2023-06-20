@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.exa.gui;
 
@@ -161,7 +161,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			table.getSelectionModel().addListSelectionListener(selectionEvent -> {
 				if (!selectionEvent.getValueIsAdjusting()) {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-					exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
+					exam = (Exam) (model.getValueAt(selectedrow, -1));
 					jButtonShow.setEnabled(exam.getProcedure() != 3);
 				}
 			});
@@ -178,7 +178,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 				return;
 			}
 			selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-			Exam examToDelete = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
+			Exam examToDelete = (Exam) (model.getValueAt(selectedrow, -1));
 			int answer = MessageDialog.yesNo(null, "angal.exa.deleteexam.fmt.msg", examToDelete.getCode(), examToDelete.getDescription());
 			if ((answer == JOptionPane.YES_OPTION)) {
 				boolean deleted;
@@ -222,7 +222,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 					MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-					exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
+					exam = (Exam) (model.getValueAt(selectedrow, -1));
 					ExamEdit editrecord = new ExamEdit(myFrame, exam, false);
 					editrecord.addExamListener(ExamBrowser.this);
 					editrecord.setVisible(true);
@@ -241,7 +241,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 					MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-					exam = (Exam)(((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
+					exam = (Exam)(model.getValueAt(selectedrow, -1));
 					new ExamShow(myFrame, exam);
 				}
 			});

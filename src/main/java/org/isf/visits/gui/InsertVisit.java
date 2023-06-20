@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.visits.gui;
 
@@ -97,12 +97,12 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	/*
 	 * Return Value
 	 */
-	private LocalDateTime visitDate = null;
+	private LocalDateTime visitDate;
 	private JPanel wardPanel;
 	private JComboBox<Ward> wardBox;
 	private Ward ward;
 	private Visit visit;
-	private boolean insert = false;
+	private boolean insert;
 	
 	/*
 	 * Managers
