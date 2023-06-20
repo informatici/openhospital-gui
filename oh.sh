@@ -961,13 +961,13 @@ function start_api_server {
 		exit 1;
 	fi
 	
-	########## WORKAROUND to kill existing api servers ##################
+	########## WORKAROUND to kill existing API server process ##################
 	########## TO BE REMOVED IN NEXT RELEASES
 	##########
 	# check for stale PID files
 	if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
 		API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
-		echo "Killing process $API_PID_NUMBER..."
+		echo "Killing API server - process $API_PID_NUMBER..."
 		kill $API_PID_NUMBER
 	fi
 	##########
@@ -1384,6 +1384,19 @@ function parse_user_input {
 			echo "Killing java..."
 			killall java
 		fi
+		########## WORKAROUND to kill existing API server process ##################
+		########## TO BE REMOVED IN NEXT RELEASES
+		##########
+		# check for stale PID files
+		if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
+			API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
+			echo "Killing API server - process $API_PID_NUMBER..."
+			kill $API_PID_NUMBER
+			echo "Removing API server pid file $OH_API_PID..."
+			rm -f $OH_PATH/$TMP_DIR/$OH_API_PID
+		fi
+		##########
+
 		# cleaning files
         	echo "Cleaning Open Hospital installation..."
 		echo "Warning: do you want to remove all existing log files?"

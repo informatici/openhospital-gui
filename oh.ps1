@@ -1098,14 +1098,14 @@ function start_api_server {
 		exit 1;
 	}
 	
-	########## WORKAROUND to kill existing api servers ##################
+	########## WORKAROUND to kill existing API server process ##################
 	########## TO BE REMOVED IN NEXT RELEASES
 	##########
 	# check for stale PID files
 	if (( Test-Path "$OH_PATH/$TMP_DIR/$OH_API_PID" -PathType leaf )) {
 		$file_tmp_data = Get-Content "$OH_PATH/$TMP_DIR/$OH_API_PID"
 		$API_PID_NUMBER=$file_tmp_data.toint32($null)
-		Write-Host "Killing process $API_PID_NUMBER..."
+		Write-Host "Killing API server - process $API_PID_NUMBER..."
 		Stop-Process -Id $API_PID_NUMBER -ErrorAction SilentlyContinue
 	}
 	##########
@@ -1515,6 +1515,19 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				Write-Host "Killing java..."	
 				Get-Process java -ErrorAction SilentlyContinue | Stop-Process -PassThru
 			}
+			########## WORKAROUND to kill existing API server process ##################
+			########## TO BE REMOVED IN NEXT RELEASES
+			##########
+			# check for stale PID files
+			if (( Test-Path "$OH_PATH/$TMP_DIR/$OH_API_PID" -PathType leaf )) {
+				$file_tmp_data = Get-Content "$OH_PATH/$TMP_DIR/$OH_API_PID"
+				$API_PID_NUMBER=$file_tmp_data.toint32($null)
+				Write-Host "Killing API server - process $API_PID_NUMBER..."
+				Stop-Process -Id $API_PID_NUMBER -ErrorAction SilentlyContinue
+				Write-Host "Removing API server pid file $OH_API_PID..."
+				Remove-Item "$OH_PATH/$TMP_DIR/$OH_API_PID" -Recurse -Confirm:$false -ErrorAction Ignore
+			}
+			##########
 			Write-Host "Cleaning Open Hospital installation..."
 			Write-Host "Warning: do you want to remove all existing log files?" -ForegroundColor Red
 			$choice = Read-Host -Prompt "Press [y] to confirm: "
