@@ -19,7 +19,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
 <#
@@ -197,6 +197,7 @@ $script:DATABASE_ROOT_USER="root"
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 $script:EXPERT_MODE="off"
 $script:OH_UI_URL="http://localhost:8080"
+$script:OH_API_PID="../tmp/oh-api.pid"
 
 ############## Architecture and external software ##############
 
@@ -960,40 +961,6 @@ function test_database_connection {
 }
 
 ###################################################################
-function start_api_server {
-	# check for application configuration files
-	if ( !( Test-Path "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS" -PathType leaf )) {
-		Write-Host "Error: missing $API_SETTINGS settings file. Exiting" -ForeGround Red
-		exit 1;
-	}
-
-	Write-Host "------------------------"
-	Write-Host "---- EXPERIMENTAL ------"
-	Write-Host "------------------------"
-	Write-Host "Starting API server..."
-	Write-Host "Please wait, it might take some time..."
-	Write-Host ""
-	Write-Host "Connect to http://localhost:8080 for dashboard"
-	Write-Host ""
-
-        cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
-
-	$JAVA_API_ARGS="-server -Xms64m -Xmx1024m -cp ./bin/$OH_API_JAR;./rsc;./static org.springframework.boot.loader.JarLauncher"
-
-	Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_API_ARGS -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
-
-        # $JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher
-
-#        if [ $? -ne 0 ]; then
-#                echo "An error occurred while starting Open Hospital API. Exiting."
-#                shutdown_database;
-#                cd "$CURRENT_DIR"
-#                exit 4
-#        fi
-        cd "$OH_PATH"
-}
-
-###################################################################
 function write_api_config_file {
 	######## application.properties setup - OH API server
 	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS" -PathType leaf) ) {
@@ -1002,6 +969,7 @@ function write_api_config_file {
 		$JWT_TOKEN_SECRET=( -join ($(for($i=0; $i -lt 64; $i++) { ((65..90)+(97..122)+(".")+("!")+("?")+("&") | Get-Random | % {[char]$_}) })) )
 		Write-Host "Writing OH API configuration file -> $API_SETTINGS..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS.dist").replace("JWT_TOKEN_SECRET","$JWT_TOKEN_SECRET") | Set-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS").replace("OH_API_PID","$OH_API_PID") | Set-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"
 	}
 }
 
@@ -1120,6 +1088,52 @@ $JAVA_ARGS="-client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library
 	
 	# go back to starting directory
 	cd "$CURRENT_DIR"
+}
+
+###################################################################
+function start_api_server {
+	# check for application configuration files
+	if ( !( Test-Path "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS" -PathType leaf )) {
+		Write-Host "Error: missing $API_SETTINGS settings file. Exiting" -ForeGround Red
+		exit 1;
+	}
+	
+	########## WORKAROUND to kill existing API server process ##################
+	########## TO BE REMOVED IN NEXT RELEASE
+	##########
+	# check for stale PID files
+	if (( Test-Path "$OH_PATH/$TMP_DIR/$OH_API_PID" -PathType leaf )) {
+		$file_tmp_data = Get-Content "$OH_PATH/$TMP_DIR/$OH_API_PID"
+		$API_PID_NUMBER=$file_tmp_data.toint32($null)
+		Write-Host "Killing API server - process $API_PID_NUMBER..."
+		Stop-Process -Id $API_PID_NUMBER -ErrorAction SilentlyContinue
+	}
+	##########
+
+	Write-Host "------------------------"
+	Write-Host "---- EXPERIMENTAL ------"
+	Write-Host "------------------------"
+	Write-Host "Starting API server..."
+	Write-Host "Please wait, it might take some time..."
+	Write-Host ""
+	Write-Host "Connect to http://localhost:8080 for dashboard"
+	Write-Host ""
+
+        cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+
+	$JAVA_API_ARGS="-server -Xms64m -Xmx1024m -cp ./bin/$OH_API_JAR;./rsc;./static org.springframework.boot.loader.JarLauncher"
+
+	Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_API_ARGS -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+
+        # $JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher
+
+#        if [ $? -ne 0 ]; then
+#                echo "An error occurred while starting Open Hospital API. Exiting."
+#                shutdown_database;
+#                cd "$CURRENT_DIR"
+#                exit 4
+#        fi
+        cd "$OH_PATH"
 }
 
 ###################################################################
@@ -1501,6 +1515,19 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				Write-Host "Killing java..."	
 				Get-Process java -ErrorAction SilentlyContinue | Stop-Process -PassThru
 			}
+			########## WORKAROUND to kill existing API server process ##################
+			########## TO BE REMOVED IN NEXT RELEASE
+			##########
+			# check for stale PID files
+			if (( Test-Path "$OH_PATH/$TMP_DIR/$OH_API_PID" -PathType leaf )) {
+				$file_tmp_data = Get-Content "$OH_PATH/$TMP_DIR/$OH_API_PID"
+				$API_PID_NUMBER=$file_tmp_data.toint32($null)
+				Write-Host "Killing API server - process $API_PID_NUMBER..."
+				Stop-Process -Id $API_PID_NUMBER -ErrorAction SilentlyContinue
+				Write-Host "Removing API server pid file $OH_API_PID..."
+				Remove-Item "$OH_PATH/$TMP_DIR/$OH_API_PID" -Recurse -Confirm:$false -ErrorAction Ignore
+			}
+			##########
 			Write-Host "Cleaning Open Hospital installation..."
 			Write-Host "Warning: do you want to remove all existing log files?" -ForegroundColor Red
 			$choice = Read-Host -Prompt "Press [y] to confirm: "

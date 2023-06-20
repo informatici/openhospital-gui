@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
+#
 
 #################### Script info and configuration - Do not edit #####################
 # set script DEBUG mode
@@ -136,6 +137,7 @@ DATABASE_ROOT_USER="root"
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 EXPERT_MODE="off"
 OH_UI_URL="http://localhost:8080"
+OH_API_PID="../tmp/oh-api.pid"
 
 ################ Architecture and external software ################
 
@@ -849,38 +851,6 @@ function test_database_connection {
 }
 
 ###################################################################
-function start_api_server {
-	# check for application configuration files
-	if [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
-		echo "Error: missing $API_SETTINGS settings file. Exiting"
-		exit 1;
-	fi
-
-	echo "------------------------"
-	echo "---- EXPERIMENTAL ------"
-	echo "------------------------"
-	echo "Starting API server..."
-	echo "Please wait, it might take some time..."
-	echo ""
-	echo "Connect to http://$OH_UI_URL for dashboard"
-	echo ""
-	
-	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
-	#$JAVA_BIN -client -Xms64m -Xmx1024m -cp "bin/openhospital-api-0.0.2.jar:rsc:static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$LOG_FILE 2>&1
-	
-	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
-	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &
-	
-	if [ $? -ne 0 ]; then
-		echo "An error occurred while starting Open Hospital API. Exiting."
-		shutdown_database;
-		cd "$CURRENT_DIR"
-		exit 4
-	fi
-	cd "$OH_PATH"
-}
-
-###################################################################
 function write_api_config_file {
 	######## application.properties setup - OH API server
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
@@ -889,7 +859,7 @@ function write_api_config_file {
 		# JWT_TOKEN_SECRET=`openssl rand -base64 64 | xargs`
 		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
 		echo "Writing OH API configuration file -> $API_SETTINGS..."
-		sed -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" ./$OH_DIR/rsc/$API_SETTINGS.dist > ./$OH_DIR/rsc/$API_SETTINGS
+		sed -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" -e "s&OH_API_PID&"$OH_API_PID"&g" ./$OH_DIR/rsc/$API_SETTINGS.dist > ./$OH_DIR/rsc/$API_SETTINGS
 	fi
 }
 
@@ -981,6 +951,49 @@ function start_gui {
 		cd "$CURRENT_DIR"
 		exit 4
 	fi
+}
+
+###################################################################
+function start_api_server {
+	# check for application configuration files
+	if [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
+		echo "Error: missing $API_SETTINGS settings file. Exiting"
+		exit 1;
+	fi
+	
+	########## WORKAROUND to kill existing API server process ##################
+	########## TO BE REMOVED IN NEXT RELEASE
+	##########
+	# check for stale PID files
+	if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
+		API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
+		echo "Killing API server - process $API_PID_NUMBER..."
+		kill $API_PID_NUMBER
+	fi
+	##########
+
+	echo "------------------------"
+	echo "---- EXPERIMENTAL ------"
+	echo "------------------------"
+	echo "Starting API server..."
+	echo "Please wait, it might take some time..."
+	echo ""
+	echo "Connect to http://$OH_UI_URL for dashboard"
+	echo ""
+	
+	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
+	#$JAVA_BIN -client -Xms64m -Xmx1024m -cp "bin/openhospital-api-0.0.2.jar:rsc:static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$LOG_FILE 2>&1
+	
+	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &
+	
+	if [ $? -ne 0 ]; then
+		echo "An error occurred while starting Open Hospital API. Exiting."
+		shutdown_database;
+		cd "$CURRENT_DIR"
+		exit 4
+	fi
+	cd "$OH_PATH"
 }
 
 ###################################################################
@@ -1371,6 +1384,19 @@ function parse_user_input {
 			echo "Killing java..."
 			killall java
 		fi
+		########## WORKAROUND to kill existing API server process ##################
+		########## TO BE REMOVED IN NEXT RELEASE
+		##########
+		# check for stale PID files
+		if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
+			API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
+			echo "Killing API server - process $API_PID_NUMBER..."
+			kill $API_PID_NUMBER
+			echo "Removing API server pid file $OH_API_PID..."
+			rm -f $OH_PATH/$TMP_DIR/$OH_API_PID
+		fi
+		##########
+
 		# cleaning files
         	echo "Cleaning Open Hospital installation..."
 		echo "Warning: do you want to remove all existing log files?"
