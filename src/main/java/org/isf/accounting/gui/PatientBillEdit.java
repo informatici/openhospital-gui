@@ -452,7 +452,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private void setCurrencyCode() {
 		try {
-			if (thisBill != null && thisBill.isList() && thisBill.getPriceList().getCurrency() != null && !thisBill.getPriceList().getCurrency().equals("")) {
+			if (thisBill != null && thisBill.isList() && thisBill.getPriceList() != null && thisBill.getPriceList().getCurrency() != null
+							&& !thisBill.getPriceList().getCurrency().equals("")) {
 				// if bill is defined (editing), then currency is the one of its pricelist
 				this.currencyCod = thisBill.getPriceList().getCurrency();
 
