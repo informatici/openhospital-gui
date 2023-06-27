@@ -403,18 +403,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			this.prcArray = priceListManager.getPrices();
 			this.lstArray = priceListManager.getLists();
 			this.othPrices = pricesOthersManager.getOthers();
-			if (thisBill != null && thisBill.isList() && !thisBill.getPriceList().getCurrency().equals("")) {
-				// if bill is defined (editing), then currency is the one of its pricelist
-				this.currencyCod = thisBill.getPriceList().getCurrency();
-
-			} else if (!lstArray.get(0).getCurrency().equals("")) {
-				// if bill is not defined (inserting), then currency is the one of the first pricelist (default)
-				this.currencyCod = lstArray.get(0).getCurrency();
-
-			} else {
-				// fallback to hospital currency if not defined for pricelist
-				this.currencyCod = hospitalManager.getHospitalCurrencyCod();
-			}
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
 		}
@@ -458,7 +446,28 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			}
 		}
 		setPriceListArray();
+		setCurrencyCode();
 		updateTotals();
+	}
+
+	private void setCurrencyCode() {
+		try {
+			if (thisBill != null && thisBill.isList() && thisBill.getPriceList() != null && thisBill.getPriceList().getCurrency() != null
+							&& !thisBill.getPriceList().getCurrency().equals("")) {
+				// if bill is defined (editing), then currency is the one of its pricelist
+				this.currencyCod = thisBill.getPriceList().getCurrency();
+
+			} else if (!lstArray.get(0).getCurrency().equals("")) {
+				// if bill is not defined (inserting), then currency is the one of the first pricelist (default)
+				this.currencyCod = lstArray.get(0).getCurrency();
+
+			} else {
+				// fallback to hospital currency if not defined for pricelist
+				this.currencyCod = hospitalManager.getHospitalCurrencyCod();
+			}
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
+		}
 	}
 
 	private void updateGUI() {
@@ -593,7 +602,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						modified = true;
 					}
 				}
-				if (thisBill.getAdmission() != null && !thisBill.getAdmission().getWard().equals(currentAdmission.getWard())) {
+				if (thisBill.getAdmission() != null && currentAdmission != null && !thisBill.getAdmission().getWard().equals(currentAdmission.getWard())) {
 					MessageDialog.info(PatientBillEdit.this,
 									MessageBundle.formatMessage("angal.newbill.thepatienthaschangedwardsarrow.fmt.msg",
 													thisBill.getAdmission().getWard(), currentAdmission.getWard()));
