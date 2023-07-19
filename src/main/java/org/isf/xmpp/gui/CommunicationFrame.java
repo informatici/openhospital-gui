@@ -229,7 +229,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				if (message.getType() == Message.Type.chat) {
 					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
 					LOGGER.debug("GUI: {}", CommunicationFrame.this);
-					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf("@"));
+					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf('@'));
 					printMessage(getArea(user, true), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {
 						setVisible(true);
@@ -406,11 +406,11 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			if (text.startsWith("011100100110010101110000011011110111001001110100")) {//report jasper //$NON-NLS-1$
 				area.printReport(user, text);
 			} else if (text.startsWith("0101010001000001")) { //file transfer accepted 0101010001000001=TA //$NON-NLS-1$
-				int index = text.indexOf("$"); //$NON-NLS-1$
+				int index = text.indexOf('$'); //$NON-NLS-1$
 				area.printNotification(text.substring(index + 1));
 				LOGGER.debug("Transfer accepted."); //$NON-NLS-1$
 			} else if (text.startsWith("0101010001010010")) {// file transfer refused 0101010001010010=TR //$NON-NLS-1$
-				int index = text.indexOf("$"); //$NON-NLS-1$
+				int index = text.indexOf('$'); //$NON-NLS-1$
 				LOGGER.debug("Transfer rejected."); //$NON-NLS-1$
 				area.printNotification(text.substring(index + 1));
 			} else {
@@ -478,7 +478,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	public void processMessage(Chat arg0, Message arg1) {
 		if (arg1.getType() == Message.Type.normal) {
 			LOGGER.debug("Send message from: {}", arg0.getThreadID());
-			String user = arg0.getParticipant().substring(0, arg0.getParticipant().indexOf("@"));
+			String user = arg0.getParticipant().substring(0, arg0.getParticipant().indexOf('@'));
 			printMessage((getArea(user, false)), user, arg1.getBody(), false);
 			if (!this.isVisible()) {
 				this.setVisible(true);
@@ -566,7 +566,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				if (message.getType() == Message.Type.chat) {
 					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
 					LOGGER.debug("GUI: {}", CommunicationFrame.this);
-					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf("@"));
+					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf('@'));
 					printMessage((getArea(user, false)), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {
 						setVisible(true);
