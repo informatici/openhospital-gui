@@ -1652,29 +1652,29 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private String compileFileName() {
 		StringBuilder filename = new StringBuilder(MessageBundle.getMessage("angal.wardpharmacy.stockwardledger.txt"));
-		filename.append("_").append(jComboBoxWard.getSelectedItem());
+		filename.append('_').append(jComboBoxWard.getSelectedItem());
 		int index = jTabbedPaneWard.getSelectedIndex();
 		if (index == 0) {
-			filename.append("_").append(MessageBundle.getMessage("angal.medicalstockward.outcomes"));
+			filename.append('_').append(MessageBundle.getMessage("angal.medicalstockward.outcomes"));
 		} else if (index == 1) {
-			filename.append("_").append(MessageBundle.getMessage("angal.medicalstockward.incomings"));
+			filename.append('_').append(MessageBundle.getMessage("angal.medicalstockward.incomings"));
 		} else if (index == 2) {
-			filename.append("_").append(MessageBundle.getMessage("angal.medicalstockward.drugs"));
+			filename.append('_').append(MessageBundle.getMessage("angal.medicalstockward.drugs"));
 		}
 		if (jComboBoxTypes.isEnabled()
 				&& !jComboBoxTypes.getSelectedItem().equals(
 				MessageBundle.getMessage("angal.common.alltypes.txt"))) {
 
-			filename.append("_").append(jComboBoxTypes.getSelectedItem());
+			filename.append('_').append(jComboBoxTypes.getSelectedItem());
 		}
 		if (jComboBoxMedicals.isEnabled()
 				&& !jComboBoxMedicals.getSelectedItem().equals(
 				MessageBundle.getMessage("angal.medicalstockward.allmedicals"))) {
 
-			filename.append("_").append(jComboBoxMedicals.getSelectedItem());
+			filename.append('_').append(jComboBoxMedicals.getSelectedItem());
 		}
-		filename.append("_").append(TimeTools.formatDateTime(jCalendarFrom.getDateStartOfDay(), DATE_FORMAT_YYYYMMDD))
-				.append("_").append(TimeTools.formatDateTime(jCalendarTo.getDateStartOfDay(), DATE_FORMAT_YYYYMMDD));
+		filename.append('_').append(TimeTools.formatDateTime(jCalendarFrom.getDateStartOfDay(), DATE_FORMAT_YYYYMMDD))
+				.append('_').append(TimeTools.formatDateTime(jCalendarTo.getDateStartOfDay(), DATE_FORMAT_YYYYMMDD));
 
 		return filename.toString();
 	}

@@ -246,7 +246,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			// Footer of thumbnail
 			int frameCount = instance.getFrameCount();
 			if (frameCount > 1) {
-				JLabel frames = new JLabel("[1/" + instance.getFrameCount() + "]");
+				JLabel frames = new JLabel("[1/" + instance.getFrameCount() + ']');
 				frames.setForeground(Color.YELLOW);
 				panel.add(frames, BorderLayout.SOUTH);
 			}
@@ -308,7 +308,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			// Footer of thumbnail
 			int frameCount = instance.getFrameCount();
 			if (frameCount > 1) {
-				JLabel frames = new JLabel("[1/" + instance.getFrameCount() + "]");
+				JLabel frames = new JLabel("[1/" + instance.getFrameCount() + ']');
 				frames.setForeground(Color.YELLOW);
 				panel.add(frames, BorderLayout.SOUTH);
 			}
@@ -347,7 +347,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		StringBuilder rv = new StringBuilder("<html>");
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.patient")).append(separator).append(dicomFile.getDicomPatientName());
 		if (isValorized(dicomFile.getDicomPatientAge())) {
-			rv.append("[").append(MessageBundle.getMessage("angal.common.age.txt")).append(separator).append(sanitize(dicomFile.getDicomPatientAge())).append("]");
+			rv.append('[').append(MessageBundle.getMessage("angal.common.age.txt")).append(separator).append(sanitize(dicomFile.getDicomPatientAge())).append(']');
 		}
 		rv.append(newline);
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.modality")).append(separator).append(sanitize(dicomFile.getModality()));

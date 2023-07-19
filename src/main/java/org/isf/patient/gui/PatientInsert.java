@@ -269,7 +269,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 								MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 							} else {
 								bdate = bdate.minusYears(age);
-								String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
+								String name = jFirstNameTextField.getText() + ' ' + jSecondNameTextField.getText();
 								try {
 									if (patientBrowserManager.isNamePresent(name)) {
 										switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
@@ -325,7 +325,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 						}
 					}
 				} else { //Update
-					String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
+					String name = jFirstNameTextField.getText() + ' ' + jSecondNameTextField.getText();
 					if (!(patient.getName().equals(name))) {
 						try {
 							if (patientBrowserManager.isNamePresent(name)) {

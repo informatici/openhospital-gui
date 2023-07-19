@@ -612,7 +612,7 @@ public class WardPharmacyRectify extends JDialog {
 		StringBuilder message = new StringBuilder(med.toString());
 		String prodCode = med.getProdCode();
 		if (prodCode != null && !prodCode.equals("")) {
-			title.append(" ").append(MessageBundle.getMessage("angal.common.code.txt")); //$NON-NLS-1$ //$NON-NLS-2$
+			title.append(' ').append(MessageBundle.getMessage("angal.common.code.txt")); //$NON-NLS-1$ //$NON-NLS-2$
 			title.append(": ").append(prodCode); //$NON-NLS-1$
 		} else { 
 			title.append(": "); //$NON-NLS-1$

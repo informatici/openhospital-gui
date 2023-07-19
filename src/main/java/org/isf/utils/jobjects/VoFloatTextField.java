@@ -72,7 +72,7 @@ public class VoFloatTextField extends JTextField {
 			String oldString = getText(0, getLength());
 			String newString = oldString.substring(0, offs) + str + oldString.substring(offs);
 			try {
-				Float.parseFloat(newString + "0");
+				Float.parseFloat(newString + '0');
 				super.insertString(offs, str, a);
 			} catch (NumberFormatException e) {
 				if (!str.matches("^[a-zA-Z0-9]*$")) {

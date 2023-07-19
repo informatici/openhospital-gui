@@ -454,7 +454,7 @@ public class PatientInsertExtended extends JDialog {
 					return;
 				}
 				if (insert) {
-					String name = firstName + " " + secondName;
+					String name = firstName + ' ' + secondName;
 					try {
 						if (patientBrowserManager.isNamePresent(name)) {
 							switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
@@ -693,7 +693,7 @@ public class PatientInsertExtended extends JDialog {
 			years = ageType.getFrom();
 			if (index == 1) {
 				months = jAgeMonthsComboBox.getSelectedIndex();
-				patient.setAgetype(ageType.getCode() + "/" + months);
+				patient.setAgetype(ageType.getCode() + '/' + months);
 				birthDate = LocalDate.now().minusYears(years).minusMonths(months);
 			} else {
 				birthDate = LocalDate.now().minusYears(years);
@@ -1708,7 +1708,7 @@ public class PatientInsertExtended extends JDialog {
 			jDataContainPanel = new JPanel();
 			if (!insert) {
 				StringBuilder title = new StringBuilder(patient.getName()).append(" (").append(MessageBundle.getMessage("angal.common.code.txt")).append(": ")
-								.append(patient.getCode()).append(")");
+								.append(patient.getCode()).append(')');
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel, title.toString());
 			} else {
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel, MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));

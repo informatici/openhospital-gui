@@ -179,11 +179,11 @@ public class MedicalEdit extends JDialog {
 		if (dataPanel == null) {
 			dataPanel = new JPanel(new SpringLayout());
 
-			JLabel typeLabel = new JLabel(MessageBundle.getMessage("angal.medicals.type") + ":");
-			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ":");
-			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ":");
-			JLabel pcsperpckLabel = new JLabel(MessageBundle.getMessage("angal.medicals.pcsperpckExt") + ":");
-			JLabel criticLabel = new JLabel(MessageBundle.getMessage("angal.medicals.criticallevel") + ":");
+			JLabel typeLabel = new JLabel(MessageBundle.getMessage("angal.medicals.type") + ':');
+			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
+			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
+			JLabel pcsperpckLabel = new JLabel(MessageBundle.getMessage("angal.medicals.pcsperpckExt") + ':');
+			JLabel criticLabel = new JLabel(MessageBundle.getMessage("angal.medicals.criticallevel") + ':');
 
 			dataPanel.add(typeLabel);
 			dataPanel.add(getTypeComboBox());
