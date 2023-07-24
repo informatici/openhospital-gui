@@ -256,7 +256,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 						int textParts = (textLength + maxLength - 1) / maxLength;
 						StringBuilder message = new StringBuilder();
 						message.append(e1.getMessages().get(0).getMessage())
-								.append("\n")
+								.append('\n')
 								.append(MessageBundle.getMessage("angal.sms.doyouwanttosplitinmoremessages"))
 								.append(" (").append(textParts).append(")?");
 

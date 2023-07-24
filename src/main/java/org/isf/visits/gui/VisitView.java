@@ -600,11 +600,11 @@ public class VisitView extends ModalJFrame {
 	private Object getVisitString(Visit visit, LocalDateTime localDateTime) {
 		StringBuilder strBuilder = new StringBuilder();
 		strBuilder.append(formatDateTime(localDateTime)).append(" - "); //$NON-NLS-1$
-		strBuilder.append("(").append(MessageBundle.getMessage("angal.common.patientID")).append(": ").append(visit.getPatient().getCode()).append(") - "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		strBuilder.append('(').append(MessageBundle.getMessage("angal.common.patientID")).append(": ").append(visit.getPatient().getCode()).append(") - "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		strBuilder.append(visit.getPatient().getName()).append(" - "); //$NON-NLS-1$
 		strBuilder.append(visit.getService() == null || visit.getService().isEmpty() ? MessageBundle.getMessage("angal.common.notdefined.txt") : visit.getService()) //$NON-NLS-1$
-						.append(" "); //$NON-NLS-1$
-		strBuilder.append("(").append(visit.getDuration()).append(MessageBundle.getMessage("angal.common.minutesabbr")).append(")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						.append(' '); //$NON-NLS-1$
+		strBuilder.append('(').append(visit.getDuration()).append(MessageBundle.getMessage("angal.common.minutesabbr")).append(')'); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return strBuilder.toString();
 	}
 

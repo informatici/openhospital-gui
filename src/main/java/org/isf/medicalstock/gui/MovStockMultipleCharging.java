@@ -213,7 +213,7 @@ public class MovStockMultipleCharging extends JDialog {
 		gbcDateChooser.gridy = 0;
 		headerPanel.add(getJDateChooser(), gbcDateChooser);
 
-		JLabel jLabelReferenceNo = new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.referencenumberabb") + ":"); //$NON-NLS-1$
+		JLabel jLabelReferenceNo = new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.referencenumberabb") + ':'); //$NON-NLS-1$
 		GridBagConstraints gbcLabelReferenceNo = new GridBagConstraints();
 		gbcLabelReferenceNo.anchor = GridBagConstraints.EAST;
 		gbcLabelReferenceNo.insets = new Insets(5, 0, 5, 5);
@@ -230,7 +230,7 @@ public class MovStockMultipleCharging extends JDialog {
 		headerPanel.add(jTextFieldReference, gbcTextFieldReference);
 		jTextFieldReference.setColumns(10);
 
-		JLabel jLabelChargeType = new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.chargetype") + ":"); //$NON-NLS-1$
+		JLabel jLabelChargeType = new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.chargetype") + ':'); //$NON-NLS-1$
 		GridBagConstraints gbcLabelChargeType = new GridBagConstraints();
 		gbcLabelChargeType.anchor = GridBagConstraints.EAST;
 		gbcLabelChargeType.insets = new Insets(0, 5, 5, 5);
@@ -245,7 +245,7 @@ public class MovStockMultipleCharging extends JDialog {
 		gbcComboBoxChargeType.gridy = 1;
 		headerPanel.add(getJComboBoxChargeType(), gbcComboBoxChargeType);
 
-		JLabel jLabelSupplier = new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.supplier") + ":"); //$NON-NLS-1$
+		JLabel jLabelSupplier = new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.supplier") + ':'); //$NON-NLS-1$
 		GridBagConstraints gbcLabelSupplier = new GridBagConstraints();
 		gbcLabelSupplier.anchor = GridBagConstraints.WEST;
 		gbcLabelSupplier.insets = new Insets(0, 5, 0, 5);
@@ -690,7 +690,7 @@ public class MovStockMultipleCharging extends JDialog {
 		StringBuilder message = new StringBuilder(med.toString());
 		String prodCode = med.getProdCode();
 		if (prodCode != null && !prodCode.equals("")) {
-			title.append(" ").append(MessageBundle.getMessage("angal.common.code.txt"));
+			title.append(' ').append(MessageBundle.getMessage("angal.common.code.txt"));
 			title.append(": ").append(prodCode);
 		} else { 
 			title.append(": ");

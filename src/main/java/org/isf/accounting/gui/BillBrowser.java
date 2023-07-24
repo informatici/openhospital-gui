@@ -875,8 +875,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 			jComboUsers.addActionListener(actionEvent -> {
 				user = (String) jComboUsers.getSelectedItem();
-				jTableUser.setValueAt("<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>", 0, 0);
-				jTableUser.setValueAt("<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>", 0, 2);
+				jTableUser.setValueAt("<html><b>" + user + ' ' + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>", 0, 0);
+				jTableUser.setValueAt("<html><b>" + user + ' ' + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>", 0, 2);
 				updateTotals();
 				jTableBills.setModel(new BillTableModel("ALL", user)); //$NON-NLS-1$
 				jTablePending.setModel(new BillTableModel("O", user)); //$NON-NLS-1$
@@ -1124,9 +1124,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jTableUser.setModel(
 					new DefaultTableModel(new Object[][]
 						{ {
-								"<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>",
+								"<html><b>" + user + ' ' + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>",
 								userToday,
-								"<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>",
+								"<html><b>" + user + ' ' + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>",
 								userPeriod
 						} },
 							new String[] { "", "", "", "" }) {

@@ -70,6 +70,6 @@ public class DicomLoader extends AbstractDicomLoader {
 	@Override
 	public void setLoaded(int loaded) {
 		bar.setValue(loaded);
-		jLabelTitle.setText(labelTitle + " [" + loaded + "/" + numfiles + "]");
+		jLabelTitle.setText(labelTitle + " [" + loaded + '/' + numfiles + ']');
 	}
 }

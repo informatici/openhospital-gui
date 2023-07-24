@@ -332,7 +332,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		if (med.getTotalQuantity() == 0) {
 			StringBuilder message = new StringBuilder()
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.outofstock")) //$NON-NLS-1$
-				.append("\n") //$NON-NLS-1$
+				.append('\n') //$NON-NLS-1$
 				.append(med.getDescription()); //$NON-NLS-1$
 			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, message.toString());
 			return false;
@@ -346,7 +346,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			if (mov.getMedical() == med) {
 				StringBuilder message = new StringBuilder()
 					.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.alreadyinthisform")) //$NON-NLS-1$
-					.append("\n") //$NON-NLS-1$
+					.append('\n') //$NON-NLS-1$
 					.append(med.getDescription()); //$NON-NLS-1$
 				JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, message.toString());
 				return true;
@@ -646,7 +646,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		if (qty > totalQty) {
 			StringBuilder message = new StringBuilder();
 			message.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.thequantityisnotavailable")) //$NON-NLS-1$
-				.append("\n") //$NON-NLS-1$
+				.append('\n') //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty);
 			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, message.toString());
@@ -690,14 +690,14 @@ public class MovStockMultipleDischarging extends JDialog {
 		
 		StringBuilder message = new StringBuilder();
 		message.append(med)
-			.append("\n") //$NON-NLS-1$
+			.append('\n') //$NON-NLS-1$
 			.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 			.append(totalQty); //$NON-NLS-1$
 		
 		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
 		String prodCode = med.getProdCode();
 		if (prodCode != null && !prodCode.equals("")) { //$NON-NLS-1$
-			title.append(" ") //$NON-NLS-1$
+			title.append(' ') //$NON-NLS-1$
 			.append(MessageBundle.getMessage("angal.common.code.txt"))
 			.append(": ") //$NON-NLS-1$
 			.append(prodCode);

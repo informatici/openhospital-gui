@@ -447,7 +447,7 @@ public class DicomViewGui extends JPanel {
 		if (txt == null) {
 			txt = "";
 		}
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.serie.n") + " " + txt, ws, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.serie.n") + ' ' + txt, ws, hi);
 		canvas.setColor(orig);
 	}
 

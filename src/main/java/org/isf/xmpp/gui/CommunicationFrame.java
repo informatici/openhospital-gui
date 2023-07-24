@@ -184,9 +184,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				String userName = interaction.userFromAddress(presence.getFrom());
 				StringBuilder sb = new StringBuilder();
 				if (!presence.isAvailable()) {
-					sb.append(userName).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowoffline.txt"));
+					sb.append(userName).append(' ').append(MessageBundle.getMessage("angal.xmpp.isnowoffline.txt"));
 				} else if (presence.isAvailable()) {
-					sb.append(userName).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowonline.txt"));
+					sb.append(userName).append(' ').append(MessageBundle.getMessage("angal.xmpp.isnowonline.txt"));
 				}
 				int index = tabs.indexOfTab(userName);
 				if (index != -1) {

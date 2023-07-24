@@ -328,7 +328,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			/* Getting Report parameters */
 			String sortBy;
 			String groupBy = null;
-			String filter = "%" + searchString.getText() + "%";
+			String filter = '%' + searchString.getText() + '%';
 			if (pbox.getSelectedItem() instanceof MedicalType) {
 				groupBy = ((MedicalType) pbox.getSelectedItem()).getDescription();
 			}
@@ -344,9 +344,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				}
 				if (groupBy == null) {
 					groupBy = "%";
-					sortBy = "MDSRT_DESC, " + columnName + " " + columnOrder;
+					sortBy = "MDSRT_DESC, " + columnName + ' ' + columnOrder;
 				} else {
-					sortBy = columnName + " " + columnOrder;
+					sortBy = columnName + ' ' + columnOrder;
 				}
 
 			} else { //default values
@@ -462,7 +462,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				&& !pbox.getSelectedItem().equals(
 				MessageBundle.getMessage("angal.common.all.txt").toUpperCase())) {
 
-			filename.append("_").append(pbox.getSelectedItem());
+			filename.append('_').append(pbox.getSelectedItem());
 		}
 		return filename.toString();
 	}

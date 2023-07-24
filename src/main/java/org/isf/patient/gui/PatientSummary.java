@@ -139,7 +139,7 @@ public class PatientSummary {
 				.append(MessageBundle.getMessage("angal.common.code.txt"))
 				.append(": ")
 				.append(patient.getCode())
-				.append(")");
+				.append(')');
 		JLabel l = new JLabel(label.toString());
 		l.setBackground(Color.CYAN);
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.CENTER, insetSize, insetSize));
@@ -221,14 +221,14 @@ public class PatientSummary {
 	}
 	
 	private JPanel getPatientNamePanel() {
-		JLabel l = new JLabel(patient.getSecondName() + " " + patient.getFirstName());
+		JLabel l = new JLabel(patient.getSecondName() + ' ' + patient.getFirstName());
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
 		return lP;
 	}
 
 	private JPanel getPatientTaxCodePanel() {
-		JLabel l = new JLabel(patient.getTaxCode() + " ");
+		JLabel l = new JLabel(patient.getTaxCode() + ' ');
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
 		return lP;
@@ -359,14 +359,14 @@ public class PatientSummary {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisdead"));
 		}
 		// added
-			labelBfr.append((patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : "(" + patient.getMotherName() + ")<BR>"));
+			labelBfr.append((patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getMotherName() + ")<BR>"));
 		if (patient.getFather() == 'A') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisalive"));
 		} else if (patient.getFather() == 'D') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisdead"));
 		}
 		// added
-		labelBfr.append((patient.getFatherName() == null || patient.getFatherName().compareTo("") == 0 ? "<BR>" : "(" + patient.getFatherName() + ")<BR>"));
+		labelBfr.append((patient.getFatherName() == null || patient.getFatherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getFatherName() + ")<BR>"));
 		if (patient.getParentTogether() == 'Y') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.parentslivetoghether"));
 		} else if (patient.getParentTogether() == 'N') {

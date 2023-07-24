@@ -329,7 +329,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 			String buttonText = Integer.toString(week);
 
 			if (week < 10) {
-				buttonText = "0" + buttonText;
+				buttonText = '0' + buttonText;
 			}
 
 			weeks[i].setText(buttonText);

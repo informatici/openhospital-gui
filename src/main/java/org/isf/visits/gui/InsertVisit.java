@@ -402,7 +402,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	@Override
 	public void patientSelected(Patient patient) {
 		patientSelected = patient;
-		patientTextField.setText(patientSelected != null ? patientSelected.getFirstName() + " " + patientSelected.getSecondName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
+		patientTextField.setText(patientSelected != null ? patientSelected.getFirstName() + ' ' + patientSelected.getSecondName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
 		jButtonPickPatient.setText(MessageBundle.getMessage("angal.visit.changepatient")); //$NON-NLS-1$
 		wardBox.setModel(getWardBox().getModel());
 		pack();

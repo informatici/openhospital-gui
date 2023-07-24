@@ -67,7 +67,7 @@ public class VoIntegerTextField extends JTextField {
 			String oldString = getText(0, getLength());
 			String newString = oldString.substring(0, offs) + str + oldString.substring(offs);
 			try {
-				Integer.parseInt(newString + "0");
+				Integer.parseInt(newString + '0');
 				super.insertString(offs, str, a);
 			} catch (NumberFormatException e) {
 			}

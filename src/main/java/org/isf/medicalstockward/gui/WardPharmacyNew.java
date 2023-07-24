@@ -486,7 +486,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (qty > totalQty) {
 			StringBuilder message = new StringBuilder();
 			message.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.thequantityisnotavailable")) //$NON-NLS-1$
-				.append("\n") //$NON-NLS-1$
+				.append('\n') //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty);
 			JOptionPane.showMessageDialog(WardPharmacyNew.this, message.toString());
