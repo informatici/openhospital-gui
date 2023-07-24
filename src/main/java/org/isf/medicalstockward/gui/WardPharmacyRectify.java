@@ -653,8 +653,8 @@ public class WardPharmacyRectify extends JDialog {
 			jSpinnerNewQty = new JSpinner(spinnerNewQtyModel);
 			jSpinnerNewQty.setFont(FONT_BOLD);
 			jSpinnerNewQty.addChangeListener(changeEvent -> {
-				Double stock = Double.parseDouble(jTextFieldStockQty.getText());
-				Double newQty = spinnerNewQtyModel.getNumber().doubleValue();
+				double stock = Double.parseDouble(jTextFieldStockQty.getText());
+				double newQty = spinnerNewQtyModel.getNumber().doubleValue();
 				if (stock > 0) {
 					jButtonChooseLot.setEnabled(true);
 				}
