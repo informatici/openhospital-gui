@@ -183,7 +183,7 @@ public class HospitalBrowser extends ModalJFrame {
 	private boolean isModified() {
 		LocalTime startTime = visitStartField.getLocalTime();
 		LocalTime endTime = visitEndField.getLocalTime();
-		if (!nameJTextField.getText().equalsIgnoreCase(hospital.getDescription())
+		return !nameJTextField.getText().equalsIgnoreCase(hospital.getDescription())
 				|| !addressJTextField.getText().equalsIgnoreCase(hospital.getAddress())
 				|| !cityJTextField.getText().equalsIgnoreCase(hospital.getCity())
 				|| !teleJTextField.getText().equalsIgnoreCase(hospital.getTelephone() == null ? "" : hospital.getTelephone())
@@ -192,10 +192,7 @@ public class HospitalBrowser extends ModalJFrame {
 				|| !currencyCodeJTextField.getText().equalsIgnoreCase(hospital.getCurrencyCod() == null ? "" : hospital.getCurrencyCod())
 				|| !startTime.equals(hospital.getVisitStartTime().toLocalTime())
 				|| !endTime.equals(hospital.getVisitEndTime().toLocalTime())
-		        || durationField.getValue() != hospital.getVisitDuration()) {
-			return true;
-		}
-		return false;
+				|| durationField.getValue() != hospital.getVisitDuration();
 	}
 
 	private void saveConfirm() {
