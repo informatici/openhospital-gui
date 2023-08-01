@@ -597,7 +597,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 	public void actionPerformed(ActionEvent actionEvent) {
 		JButton button = (JButton) actionEvent.getSource();
 		String buttonText = button.getText();
-		int day = Integer.valueOf(buttonText);
+		int day = Integer.parseInt(buttonText);
 		setDay(day);
 	}
 
