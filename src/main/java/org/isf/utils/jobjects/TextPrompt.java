@@ -186,17 +186,9 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 		// prompt should be displayed.
 
 		if (component.hasFocus()) {
-			if (show == Show.ALWAYS || show == Show.FOCUS_GAINED) {
-				setVisible(true);
-			} else {
-				setVisible(false);
-			}
+			setVisible(show == Show.ALWAYS || show == Show.FOCUS_GAINED);
 		} else {
-			if (show == Show.ALWAYS || show == Show.FOCUS_LOST) {
-				setVisible(true);
-			} else {
-				setVisible(false);
-			}
+			setVisible(show == Show.ALWAYS || show == Show.FOCUS_LOST);
 		}
 	}
 

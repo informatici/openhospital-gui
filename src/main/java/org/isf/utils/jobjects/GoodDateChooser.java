@@ -63,11 +63,7 @@ public class GoodDateChooser extends Panel {
 		dateSettings = new DatePickerSettings();
 		dateSettings.setLocale(new Locale(GeneralData.LANGUAGE));
 		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT_DD_MM_YYYY);
-		if (emptyAllowed) {
-			dateSettings.setAllowEmptyDates(true);
-		} else {
-			dateSettings.setAllowEmptyDates(false);
-		}
+		dateSettings.setAllowEmptyDates(emptyAllowed);
 		datePicker = new DatePicker(dateSettings);
 		// This helps the manual editing of the year field not to reset to some *very* old year value
 		if (futureDates) {
