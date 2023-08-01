@@ -121,7 +121,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private List<Integer> units;
 	private List<Integer> quantities;
 	private JTableModel model;
-	private String[] qtyOption = new String[] {
+	private String[] qtyOption = {
 			MessageBundle.getMessage("angal.medicalstock.multipledischarging.units"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstock.multipledischarging.packets") //$NON-NLS-1$
 	}; 
