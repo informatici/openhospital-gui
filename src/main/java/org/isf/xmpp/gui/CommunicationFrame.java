@@ -59,24 +59,26 @@ import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.xmpp.gui.ChatTab.TabButton;
-import org.isf.xmpp.manager.AbstractCommunicationFrame;
 import org.isf.xmpp.manager.ComplexCellRender;
 import org.isf.xmpp.manager.Interaction;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferNegotiator;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CommunicationFrame extends AbstractCommunicationFrame {
+public class CommunicationFrame extends JFrame implements MessageListener, FileTransferListener, ChatManagerListener {
 
 	private static final
 	long serialVersionUID = 1L;
