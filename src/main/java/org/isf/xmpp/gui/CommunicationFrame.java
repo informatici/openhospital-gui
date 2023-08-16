@@ -59,7 +59,7 @@ import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.xmpp.gui.ChatTab.TabButton;
-import org.isf.xmpp.manager.ComplexCellRender;
+import org.isf.xmpp.gui.ComplexCellRender;
 import org.isf.xmpp.manager.Interaction;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;

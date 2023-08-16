@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package org.isf.xmpp.manager;
+package org.isf.xmpp.gui;
 
 import java.awt.Color;
 import java.awt.Component;
