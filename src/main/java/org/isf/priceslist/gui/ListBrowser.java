@@ -221,7 +221,7 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 
 						// Save new list
 						if (newName.isEmpty()) {
-							newName = MessageBundle.getMessage("angal.priceslist.copyof").concat(" ").concat(list.getName());
+							newName = MessageBundle.formatMessage("angal.priceslist.copyof.fmt", list.getName());
 						}
 						PriceList copiedList = new PriceList(list.getId(), MessageBundle.getMessage("angal.priceslist.acode"), newName,
 								MessageBundle.getMessage("angal.priceslist.adescription"), list.getCurrency());
