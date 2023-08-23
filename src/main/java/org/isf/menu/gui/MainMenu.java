@@ -32,6 +32,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -176,7 +177,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				hiddenOwner.setIconImage(img.getImage());
 				hiddenOwner.setLocation(-10000, -1000);
 				hiddenOwner.setSize(new Dimension(1, 1));
-				hiddenOwner.show();
+				hiddenOwner.setVisible(true);
 				new Login(hiddenOwner, this);
 				hiddenOwner.dispose();
 			}
@@ -361,7 +362,12 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 						return;
 					}
 					try {
-						Object target = Class.forName(app).newInstance();
+						Object target;
+						try {
+							target = Class.forName(app).getDeclaredConstructor().newInstance();
+						} catch (InvocationTargetException | NoSuchMethodException e) {
+							throw new RuntimeException(e);
+						}
 						try {
 							((ModalJFrame) target).showAsModal(this);
 						} catch (ClassCastException noModalJFrame) {
