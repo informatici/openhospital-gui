@@ -1162,7 +1162,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				String codeHint = ((JTextField) e.getSource()).getText();
 				int code = 0;
 				try {
-					code = Integer.valueOf(codeHint).intValue();
+					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
 					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
@@ -1196,7 +1196,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				String codeHint = ((JTextField) e.getSource()).getText();
 				int code = 0;
 				try {
-					code = Integer.valueOf(codeHint).intValue();
+					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
 					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
@@ -1226,7 +1226,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				String codeHint = ((JTextField) e.getSource()).getText();
 				int code = 0;
 				try {
-					code = Integer.valueOf(codeHint).intValue();
+					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
 					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
