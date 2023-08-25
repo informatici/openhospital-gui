@@ -121,7 +121,7 @@ API_SETTINGS="application.properties"
 
 # OH jar bin files
 OH_GUI_JAR="OH-gui.jar"
-OH_API_JAR="openhospital-api-0.0.2.jar"
+OH_API_JAR="openhospital-api-0.1.0.jar"
 
 # help file
 HELP_FILE="OH-readme.txt"
@@ -982,7 +982,7 @@ function start_api_server {
 	echo ""
 	
 	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
-	#$JAVA_BIN -client -Xms64m -Xmx1024m -cp "bin/openhospital-api-0.0.2.jar:rsc:static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$LOG_FILE 2>&1
+	#$JAVA_BIN -client -Xms64m -Xmx1024m -cp "bin/openhospital-api-0.1.0.jar:rsc:static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$LOG_FILE 2>&1
 	
 	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
 	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &

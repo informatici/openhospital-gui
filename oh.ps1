@@ -181,7 +181,7 @@ $script:API_SETTINGS="application.properties"
 
 # OH jar bin files
 $script:OH_GUI_JAR="OH-gui.jar"
-$script:OH_API_JAR="openhospital-api-0.0.2.jar"
+$script:OH_API_JAR="openhospital-api-0.1.0.jar"
 
 # help file
 $script:HELP_FILE="OH-readme.txt"
