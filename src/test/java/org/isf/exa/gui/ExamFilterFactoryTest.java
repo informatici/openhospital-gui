@@ -29,12 +29,12 @@ import javax.swing.RowFilter;
 
 import org.junit.jupiter.api.Test;
 
-public class ExamFilterFactoryTest {
+class ExamFilterFactoryTest {
 
 	private ExamFilterFactory examFilterFactory = new ExamFilterFactory();
 
 	@Test
-	public void shouldBuildFiltersForAllWordsProvided() {
+	void shouldBuildFiltersForAllWordsProvided() {
 		// given:
 		String text = "mkbewe mokebe testo";
 
@@ -42,11 +42,11 @@ public class ExamFilterFactoryTest {
 		List<RowFilter<Object, Object>> rowFilters = examFilterFactory.buildFilters(text);
 
 		// then
-		assertThat(rowFilters.size()).isEqualTo(3);
+		assertThat(rowFilters).hasSize(3);
 	}
 
 	@Test
-	public void shouldReturnEmptyForEmptyText() {
+	void shouldReturnEmptyForEmptyText() {
 		// given:
 		String text = "";
 
@@ -54,11 +54,11 @@ public class ExamFilterFactoryTest {
 		List<RowFilter<Object, Object>> rowFilters = examFilterFactory.buildFilters(text);
 
 		// then
-		assertThat(rowFilters.size()).isEqualTo(0);
+		assertThat(rowFilters).isEmpty();
 	}
 
 	@Test
-	public void shouldReturnEmptyForBadPattern() {
+	void shouldReturnEmptyForBadPattern() {
 		// given:
 		String text = "*hgf*";
 
@@ -66,7 +66,7 @@ public class ExamFilterFactoryTest {
 		List<RowFilter<Object, Object>> rowFilters = examFilterFactory.buildFilters(text);
 
 		// then
-		assertThat(rowFilters.size()).isEqualTo(0);
+		assertThat(rowFilters).isEmpty();
 	}
 
 }

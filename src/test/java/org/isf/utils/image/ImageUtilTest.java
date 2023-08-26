@@ -33,10 +33,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Disabled("Disabled until native libraries are available in CI build")
-public class ImageUtilTest {
+class ImageUtilTest {
 
 	@Test
-	public void testScaling() throws Exception {
+	void testScaling() throws Exception {
 		File file = new File(getClass().getResource("patient.jpg").getFile());
 		BufferedImage image = ImageIO.read(file);
 		int originalWidth = image.getWidth();

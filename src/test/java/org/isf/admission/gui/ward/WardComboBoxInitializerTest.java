@@ -5,7 +5,7 @@
  * Open Hospital is a free and open source software for healthcare data management.
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU General License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -14,9 +14,9 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU General License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU General License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.admission.gui.ward;
@@ -36,19 +36,19 @@ import org.isf.ward.model.Ward;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class WardComboBoxInitializerTest {
+class WardComboBoxInitializerTest {
 
 	private WardBrowserManager wardBrowserManager;
 	private JComboBox wardComboBox;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		wardBrowserManager = new WardBrowserManagerStub();
 		wardComboBox = new JComboBox();
 	}
 
 	@Test
-	public void shouldSkipFemaleWardForMalePatient() throws OHServiceException {
+	void shouldSkipFemaleWardForMalePatient() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('M');
@@ -72,7 +72,7 @@ public class WardComboBoxInitializerTest {
 	}
 
 	@Test
-	public void shouldSkipWardWithoutBeds() throws OHServiceException {
+	void shouldSkipWardWithoutBeds() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('M');
@@ -97,7 +97,7 @@ public class WardComboBoxInitializerTest {
 	}
 
 	@Test
-	public void shouldSkipMaleWardForFemalePatient() throws OHServiceException {
+	void shouldSkipMaleWardForFemalePatient() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('F');
@@ -121,7 +121,7 @@ public class WardComboBoxInitializerTest {
 	}
 
 	@Test
-	public void shouldSelectRecentlySavedWard() throws OHServiceException {
+	void shouldSelectRecentlySavedWard() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('F');
@@ -144,7 +144,7 @@ public class WardComboBoxInitializerTest {
 	}
 
 	@Test
-	public void shouldSelectWardFromAdmissionWhenEditing() throws OHServiceException {
+	void shouldSelectWardFromAdmissionWhenEditing() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('M');

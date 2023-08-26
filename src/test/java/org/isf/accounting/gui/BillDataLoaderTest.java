@@ -35,11 +35,12 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.junit.jupiter.api.Test;
 
-public class BillDataLoaderTest {
+class BillDataLoaderTest {
 	
 	private static final String NO_USERNAME = null;
+
     @Test
-    public void shouldLoadPendingBillsFromManagerForParentPatient() throws OHServiceException {
+    void shouldLoadPendingBillsFromManagerForParentPatient() throws OHServiceException {
         // given:
         Patient patientParent = new Patient();
         patientParent.setCode(1);
@@ -63,11 +64,11 @@ public class BillDataLoaderTest {
         List<Bill> result = billDataLoader.loadBills("O", NO_USERNAME);
 
         // then:
-        assertThat(result.size()).isEqualTo(3);
+        assertThat(result).hasSize(3);
     }
 
     @Test
-    public void shouldLoadPendingBillsFromPeriodOnly() throws OHServiceException {
+    void shouldLoadPendingBillsFromPeriodOnly() throws OHServiceException {
         // given:
         BillDataLoader billDataLoader = new BillDataLoader(
                 Arrays.asList(
@@ -86,11 +87,11 @@ public class BillDataLoaderTest {
         List<Bill> result = billDataLoader.loadBills("O", NO_USERNAME);
 
         // then:
-        assertThat(result.size()).isEqualTo(1);
+        assertThat(result).hasSize(1);
     }
 
     @Test
-    public void shouldLoadAllBillsMergedWithBillsFromPaymentWithoutDuplicates() throws OHServiceException {
+    void shouldLoadAllBillsMergedWithBillsFromPaymentWithoutDuplicates() throws OHServiceException {
         // given:
         BillDataLoader billDataLoader = new BillDataLoader(
                 Arrays.asList(
@@ -109,11 +110,11 @@ public class BillDataLoaderTest {
         List<Bill> result = billDataLoader.loadBills("ALL", NO_USERNAME);
 
         // then:
-        assertThat(result.size()).isEqualTo(3);
+        assertThat(result).hasSize(3);
     }
 
     @Test
-    public void shouldLoadClosedBillFromGivenPeriod() throws OHServiceException {
+    void shouldLoadClosedBillFromGivenPeriod() throws OHServiceException {
         // given:
         BillDataLoader billDataLoader = new BillDataLoader(
                 Arrays.asList(
@@ -132,7 +133,7 @@ public class BillDataLoaderTest {
         List<Bill> result = billDataLoader.loadBills("C", NO_USERNAME);
 
         // then:
-        assertThat(result.size()).isEqualTo(1);
+        assertThat(result).hasSize(1);
     }
 
 

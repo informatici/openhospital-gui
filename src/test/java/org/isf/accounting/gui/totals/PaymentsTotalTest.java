@@ -30,10 +30,10 @@ import org.isf.accounting.TestBill;
 import org.isf.accounting.TestPayment;
 import org.junit.jupiter.api.Test;
 
-public class PaymentsTotalTest {
+class PaymentsTotalTest {
 
 	@Test
-	public void shouldCalculateFromPayments() {
+	void shouldCalculateFromPayments() {
 		// given:
 		PaymentsTotal paymentsTotal = new PaymentsTotal(
 				Arrays.asList(1, 2),
@@ -51,7 +51,7 @@ public class PaymentsTotalTest {
 	}
 
 	@Test
-	public void shouldSkipPaymentsForDeletedBills() {
+	void shouldSkipPaymentsForDeletedBills() {
 		// given:
 		PaymentsTotal paymentsTotal = new PaymentsTotal(
 				Arrays.asList(1),
