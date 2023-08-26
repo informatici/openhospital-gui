@@ -408,7 +408,6 @@ public class PatientInsertExtended extends JDialog {
 		if (jAnamnesisButton == null) {
 			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
-			PatientInsertExtended self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
 				patientHistory = new PatientHistory();
 				if (patient.getCode() != null) {

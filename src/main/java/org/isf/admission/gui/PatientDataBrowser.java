@@ -183,8 +183,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	
 	
 	private JPanel patientData;
-	private boolean isMalnutrition;
-	
+
 	private JPanel getPatientDataPanel() {
 		patientData = new JPanel();
 		patientData.setLayout(new BorderLayout());
@@ -194,7 +193,6 @@ public class PatientDataBrowser extends ModalJFrame implements
 		PatientSummary ps = new PatientSummary(patient);
 		for (Admission elem : admList) {
 			if (elem.getType().equalsIgnoreCase("M")) {
-				isMalnutrition = true;
 				break;
 			}
 		}

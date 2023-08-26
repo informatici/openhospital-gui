@@ -349,15 +349,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				if (elem.getQty() != 0.0) {
 					if (q != 0) {
 						if (elem.getQty() <= q) {
-							MedicalWard e = elem;
 							q = (int) (q - elem.getQty());
 							int maxquantity = (int) (elem.getQty() - 0);
 							medWard = elem;
 							addItem(medWard, maxquantity);
 
 						} else {
-							MedicalWard e = elem;
-							int qu = (int) (elem.getQty() - q);
 							medWard = elem;
 
 							addItem(medWard, q);
