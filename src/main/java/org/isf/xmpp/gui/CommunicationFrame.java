@@ -263,7 +263,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 			int returnVal = fileChooser.showOpenDialog(getParent());
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
-				LOGGER.debug("Selected file: {}", file.toString());
+				LOGGER.debug("Selected file: {}", file);
 				String receiver = ((RosterEntry) buddyList.getSelectedValue()).getName();
 				LOGGER.debug("Receiver: {}", receiver);
 				interaction.sendFile(receiver, file, null);
@@ -319,7 +319,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 					LOGGER.debug("Index : {}", index);
 					if (index >= 0) {
 						user = ((RosterEntry) buddyList.getModel().getElementAt(index)).getName();
-						LOGGER.debug("User selected: {}", user.toString()); //$NON-NLS-1$
+						LOGGER.debug("User selected: {}", user); //$NON-NLS-1$
 						newChat = new ChatPanel();
 						roster = interaction.getRoster();
 						Presence presence = roster.getPresence(((RosterEntry) buddyList.getModel().getElementAt(index)).getUser());

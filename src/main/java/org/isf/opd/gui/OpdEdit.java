@@ -443,7 +443,6 @@ public class OpdEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-						boolean result;
 						LocalDateTime visitDate;
 						char newPatient;
 						String referralTo;

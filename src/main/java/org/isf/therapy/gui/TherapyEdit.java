@@ -297,10 +297,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		notifyCheckBox.setEnabled(false);
 	}
 
-	private String getDate() {
-		return DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD).format(TimeTools.getNow());
-	}
-
 	private void showTherapies() {
 		for (Therapy th : therapies) {
 			showTherapy(th);

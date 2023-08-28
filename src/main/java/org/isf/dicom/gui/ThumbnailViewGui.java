@@ -333,8 +333,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 	public FileDicom getSelectedInstance() {
 		DicomThumbsModel dicomThumbsModel = (DicomThumbsModel) getModel();
-		FileDicom selected = (FileDicom) dicomThumbsModel.getElementAt(getSelectionModel().getMinSelectionIndex());
-		return selected;
+		return (FileDicom) dicomThumbsModel.getElementAt(getSelectionModel().getMinSelectionIndex());
 	}
 
 	public DicomThumbsModel getDicomThumbsModel() {

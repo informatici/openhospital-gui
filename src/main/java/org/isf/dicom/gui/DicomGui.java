@@ -44,6 +44,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
@@ -85,11 +86,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 	private ThumbnailViewGui thumbnail;
 	private int patient = -1;
 	private Patient ohPatient;
-	private int position = 150;
-
 	private JFrame myJFrame;
-
-	private ModalJFrame owner;
 
 	/**
 	 * Construct a GUI
@@ -100,7 +97,6 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		super();
 		this.patient = patient.getCode();
 		this.ohPatient = patient;
-		this.owner = owner;
 
 		initialize();
 		//setVisible(true);
@@ -108,7 +104,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		myJFrame = this;
 
 		// TMP
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	/**
@@ -151,7 +147,6 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 			y = ois.readInt();
 			h = ois.readInt();
 			w = ois.readInt();
-			position = ois.readInt();
 			lastDir = ois.readUTF();
 			ois.close();
 		} catch (Exception e) {

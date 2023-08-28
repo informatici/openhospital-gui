@@ -484,7 +484,6 @@ public class WardPharmacyRectify extends JDialog {
 			}
 		}
 		if (newLot) {
-			Medical med = (Medical) jComboBoxMedical.getSelectedItem();
 			Lot addLot = askLot();
 			if (addLot == null) {
 				return null;
@@ -534,8 +533,6 @@ public class WardPharmacyRectify extends JDialog {
 	}
 
 	protected Lot askLot() {
-		LocalDateTime preparationDate = TimeTools.getNow();
-		LocalDateTime expiringDate = TimeTools.getNow();
 		Lot lot = null;
 		JTextField lotNameTextField = new JTextField(15);
 
@@ -574,8 +571,8 @@ public class WardPharmacyRectify extends JDialog {
 				if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
 					MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.expirydatebeforepreparationdate");
 				} else {
-					expiringDate = expireDateChooser.getDateEndOfDay();
-					preparationDate = preparationDateChooser.getDateStartOfDay();
+					LocalDateTime expiringDate = expireDateChooser.getDateEndOfDay();
+					LocalDateTime preparationDate = preparationDateChooser.getDateStartOfDay();
 					lot = new Lot(lotName, preparationDate, expiringDate);
 				}
 			} else {

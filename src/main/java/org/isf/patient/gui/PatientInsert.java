@@ -153,11 +153,6 @@ public class PatientInsert extends JDialog implements ActionListener {
 	private JPanel jNextKin;
 	private JPanel jTelephone;
 	private JPanel jDataContainPanel;
-	private int pfrmBase = 2;
-	private int pfrmWidth = 1;
-	private int pfrmHeight = 1;
-	private int pfrmBordX;
-	private int pfrmBordY;
 	private JTextArea jNoteTextArea;
 	private JPanel jNotePanel;
 	private JScrollPane jNoteScrollPane;
