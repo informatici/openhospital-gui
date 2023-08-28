@@ -31,10 +31,10 @@ import org.isf.exa.model.Exam;
 import org.isf.lab.model.Laboratory;
 import org.junit.jupiter.api.Test;
 
-public class ExamComboBoxTest {
+class ExamComboBoxTest {
 
 	@Test
-	public void shouldCreateComboBoxWithPersistedExamsAndExamFromLaboratorySelected() {
+	void shouldCreateComboBoxWithPersistedExamsAndExamFromLaboratorySelected() {
 		// given:
 		Exam exam = TestExam.examWithCode("test");
 		Exam exam2 = TestExam.examWithCode("test2");
@@ -48,12 +48,11 @@ public class ExamComboBoxTest {
 
 		// then:
 		assertThat(examComboBox.getItemCount()).isEqualTo(3);
-		assertThat(selectedExam.isPresent()).isTrue();
-		assertThat(selectedExam.get()).isEqualTo(exam2);
+		assertThat(selectedExam).isPresent().contains(exam2);
 	}
 
 	@Test
-	public void shouldCreateComboBoxWithPersistedExamsAndNotSelectWhenInsertMode() {
+	void shouldCreateComboBoxWithPersistedExamsAndNotSelectWhenInsertMode() {
 		// given:
 		Exam exam = TestExam.examWithCode("test");
 		Exam exam2 = TestExam.examWithCode("test2");
@@ -67,7 +66,7 @@ public class ExamComboBoxTest {
 
 		// then:
 		assertThat(examComboBox.getItemCount()).isEqualTo(3);
-		assertThat(selectedExam.isPresent()).isFalse();
+		assertThat(selectedExam).isNotPresent();
 	}
 
 }

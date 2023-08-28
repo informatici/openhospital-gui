@@ -29,10 +29,10 @@ import java.util.List;
 import org.isf.exa.model.ExamRow;
 import org.junit.jupiter.api.Test;
 
-public class ExamRowComboBoxTest {
+class ExamRowComboBoxTest {
 
 	@Test
-	public void shouldAddExamRowsWithDescriptionDifferentThanGivenString() {
+	void shouldAddExamRowsWithDescriptionDifferentThanGivenString() {
 		// given:
 		List<ExamRow> examRows = Arrays.asList(
 				TestExamRow.examRowWithDesc("test"),

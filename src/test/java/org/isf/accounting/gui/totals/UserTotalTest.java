@@ -30,13 +30,13 @@ import org.isf.accounting.TestBill;
 import org.isf.accounting.TestPayment;
 import org.junit.jupiter.api.Test;
 
-public class UserTotalTest {
+class UserTotalTest {
 
     public static final String TEST_USER = "testUser";
     public static final String OTHER_USER = "dupaUser";
 
     @Test
-    public void shouldCalculateFromPayments() {
+    void shouldCalculateFromPayments() {
         // given:
         UserTotal userTotal = new UserTotal(
                 Arrays.asList(1, 2),
@@ -55,7 +55,7 @@ public class UserTotalTest {
     }
 
     @Test
-    public void shouldSkipPaymentsForDeletedBills() {
+    void shouldSkipPaymentsForDeletedBills() {
         // given:
         UserTotal userTotal = new UserTotal(
                 Arrays.asList(1),
@@ -74,7 +74,7 @@ public class UserTotalTest {
     }
 
     @Test
-    public void shouldSkipPaymentForOtherUser() {
+    void shouldSkipPaymentForOtherUser() {
         // given:
         UserTotal userTotal = new UserTotal(
                 Arrays.asList(1, 2),
