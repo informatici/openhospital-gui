@@ -66,7 +66,6 @@ import org.isf.sms.service.SmsSender;
 import org.isf.telemetry.constants.TelemetryConst;
 import org.isf.telemetry.daemon.TelemetryDaemon;
 import org.isf.telemetry.gui.TelemetryEdit;
-import org.isf.telemetry.gui.TelemetryEdit.TelemetryListener;
 import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.utils.exception.OHServiceException;
@@ -80,13 +79,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener, TelemetryListener {
+public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener {
 
 	private static final long serialVersionUID = 7620582079916035164L;
 	public static final String ADMIN_STR = "admin";
 	private boolean flag_Xmpp;
 	private boolean flag_Sms;
-	private Thread telemetryThread;
+	private TelemetryDaemon telemetryDaemon;
 	// used to understand if a module is enabled
 	private Map<String, Boolean> activableModules;
 
@@ -368,10 +367,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			// show telemetry popup
 			new TelemetryEdit(this);
 		}
-
 		// start telemetry daemon
-		Thread thread = new Thread(new TelemetryDaemon());
-		thread.start();
+		this.telemetryDaemon = TelemetryDaemon.getTelemetryDaemon();
+		telemetryDaemon.start();
 	}
 
 	private void actionExit(int status) {
@@ -545,16 +543,4 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 	}
 
-	@Override
-	public void telemetryInserted(AWTEvent e) {
-		if (e.getSource() instanceof Telemetry) {
-			Telemetry telemetry = (Telemetry) e.getSource();
-			LOGGER.info("Telemetry: \"{}\" telemetry inserted.", telemetry);
-			if (null != this.telemetryThread) {
-				this.telemetryThread = new Thread(new TelemetryDaemon());
-				this.telemetryThread.start();
-			}
-		}
-
-	}
 }

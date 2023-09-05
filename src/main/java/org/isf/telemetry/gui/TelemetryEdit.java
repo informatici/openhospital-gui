@@ -28,6 +28,7 @@ import java.awt.FlowLayout;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventListener;
@@ -49,7 +50,9 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
+import org.isf.telemetry.daemon.TelemetryDaemon;
 import org.isf.telemetry.envdatacollector.AbstractDataCollector;
+import org.isf.telemetry.envdatacollector.constants.CollectorsConst;
 import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.telemetry.util.TelemetryUtils;
@@ -57,6 +60,7 @@ import org.isf.utils.ExceptionUtils;
 import org.isf.utils.exception.OHException;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.layout.SpringUtilities;
+import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -77,7 +81,6 @@ public class TelemetryEdit extends ModalJFrame {
 	private static final String KEY_TELEMETRY_BUTTON_LABEL_ASK_NEVER = "angal.telemetry.button.label.ask.never";
 	private static final String KEY_TELEMETRY_CONFIRMATION_DIALOG_MESSAGE = "angal.telemetry.confirmation.dialog.message";
 
-	private MainMenu parent;
 	private EventListenerList telemetryListeners = new EventListenerList();
 	private JPanel panel;
 	private TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
@@ -85,16 +88,13 @@ public class TelemetryEdit extends ModalJFrame {
 
 	public TelemetryEdit() {
 		super();
-		this.addTelemetryListener(parent);
 		init();
 	}
 
 	public TelemetryEdit(MainMenu parent) {
 		super();
-		this.parent = parent;
-		this.addTelemetryListener(parent);
 		init();
-		super.showAsModal(this.parent);
+		super.showAsModal(parent);
 	}
 
 	private void init() {
@@ -167,22 +167,15 @@ public class TelemetryEdit extends ModalJFrame {
 			wrapper.setCheckbox(chb);
 			wrapper.setId(springCheckboxConfigurationBean.getId());
 			wrapper.setOrder(Integer.valueOf(i[0]++));
+			if (springCheckboxConfigurationBean.getId().equals("FUN_TEL")) {
+				// Compulsory Collector
+				wrapper.getCheckbox().setSelected(true);
+				wrapper.getCheckbox().setEnabled(false);
+			}
 			result.add(wrapper);
 		});
 
 		return result;
-	}
-
-	private void fireTelemetryInserted(Telemetry telemetry) {
-		AWTEvent event = new AWTEvent(telemetry, AWTEvent.RESERVED_ID_MAX + 1) {
-
-			private static final long serialVersionUID = 1L;
-		};
-
-		EventListener[] listeners = telemetryListeners.getListeners(TelemetryListener.class);
-		for (EventListener listener : listeners) {
-			((TelemetryListener) listener).telemetryInserted(event);
-		}
 	}
 
 	/**
@@ -202,13 +195,15 @@ public class TelemetryEdit extends ModalJFrame {
 				Map<String, Boolean> consentMap = buildConsentData(checkboxes);
 				if (this.isReallyEnabled(consentMap)) {
 					try {
+						Telemetry telemetry = telemetryManager.enable(consentMap);
 						Map<String, Map<String, String>> dataToSend = telemetryUtils.retrieveDataToSend(consentMap);
+						dataToSend = prepareDataToSend(telemetry, dataToSend);
+
 						if (isShowDialog(dataToSend) == JOptionPane.OK_OPTION) {
-							LOGGER.debug("Trying to send a message...");
-							Telemetry telemetry = telemetryManager.enable(consentMap);
-							fireTelemetryInserted(telemetry);
-							GeneralData.initialize();
+							LOGGER.debug("Trying to send data...");
+							telemetryManager.save(telemetry);
 							telemetryUtils.sendTelemetryData(dataToSend, GeneralData.DEBUG);
+							TelemetryDaemon.getTelemetryDaemon().reloadSettings();
 						} else {
 							LOGGER.debug("User canceled action.");
 							return;
@@ -218,10 +213,31 @@ public class TelemetryEdit extends ModalJFrame {
 						LOGGER.error(ExceptionUtils.retrieveExceptionStacktrace(f));
 					}
 				} else {
-					telemetryManager.disable(new HashMap<>());
+					Telemetry telemetry = telemetryManager.disable(new HashMap<>());
+					telemetryManager.save(telemetry);
 				}
-				removeTelemetryListener(parent);
 				dispose();
+			}
+
+			private Map<String, Map<String, String>> prepareDataToSend(Telemetry telemetry, Map<String, Map<String, String>> dataToSend) {
+				Map<String, String> tempTelemetryData = dataToSend.get("FUN_TEL");
+				telemetry.setSentTimestamp(LocalDateTime.now());
+				if (null == telemetry.getSentTimestamp()) {
+					telemetry.setSentTimestamp(LocalDateTime.now());
+				}
+				tempTelemetryData.put(CollectorsConst.TEL_SENT_DATE, TimeTools.formatDateTimeReport(telemetry.getSentTimestamp()));
+				if (null != telemetry.getOptinDate()) {
+					tempTelemetryData.put(CollectorsConst.TEL_OPTIN_DATE, TimeTools.formatDateTimeReport(telemetry.getOptinDate()));
+				} else {
+					tempTelemetryData.remove(CollectorsConst.TEL_OPTIN_DATE);
+				}
+				if (null != telemetry.getOptoutDate()) {
+					tempTelemetryData.put(CollectorsConst.TEL_OPTOUT_DATE, TimeTools.formatDateTimeReport(telemetry.getOptoutDate()));
+				} else {
+					tempTelemetryData.remove(CollectorsConst.TEL_OPTOUT_DATE);
+				}
+				dataToSend.put("FUN_TEL", tempTelemetryData);
+				return dataToSend;
 			}
 
 			private int isShowDialog(Map<String, Map<String, String>> dataToSend) {
@@ -266,10 +282,6 @@ public class TelemetryEdit extends ModalJFrame {
 				return rows;
 			}
 
-			private void removeTelemetryListener(TelemetryListener listener) {
-				telemetryListeners.remove(TelemetryListener.class, listener);
-			}
-
 			private boolean isReallyEnabled(Map<String, Boolean> cd) {
 				if (cd == null || cd.isEmpty()) {
 					return false;
@@ -304,7 +316,23 @@ public class TelemetryEdit extends ModalJFrame {
 		return new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				telemetryManager.disable(new HashMap<>());
+				Telemetry telemetry = telemetryManager.disable(new HashMap<>());
+				telemetryManager.save(telemetry);
+
+				// send opt-out info before stopping
+				Map<String, Boolean> consentMap = new HashMap<String, Boolean>();
+				consentMap.put("FUN_TEL", true);
+				try {
+					LOGGER.info("Trying to send a last opt-out message...");
+					Map<String, Map<String, String>> dataToSend = telemetryUtils.retrieveDataToSend(consentMap);
+					telemetryUtils.sendTelemetryData(dataToSend, GeneralData.DEBUG);
+				} catch (RuntimeException | OHException sendException) {
+					LOGGER.error("Something strange happened: " + sendException.getMessage());
+					LOGGER.error(ExceptionUtils.retrieveExceptionStacktrace(sendException));
+				}
+
+				TelemetryDaemon.getTelemetryDaemon().reloadSettings();
+				TelemetryDaemon.getTelemetryDaemon().stop();
 				dispose();
 			}
 		};
