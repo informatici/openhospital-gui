@@ -167,7 +167,7 @@ public class TelemetryEdit extends ModalJFrame {
 			wrapper.setCheckbox(chb);
 			wrapper.setId(springCheckboxConfigurationBean.getId());
 			wrapper.setOrder(Integer.valueOf(i[0]++));
-			if (springCheckboxConfigurationBean.getId().equals("FUN_TEL")) {
+			if (springCheckboxConfigurationBean.getId().equals("TEL_ID")) {
 				// Compulsory Collector
 				wrapper.getCheckbox().setSelected(true);
 				wrapper.getCheckbox().setEnabled(false);
@@ -220,7 +220,7 @@ public class TelemetryEdit extends ModalJFrame {
 			}
 
 			private Map<String, Map<String, String>> prepareDataToSend(Telemetry telemetry, Map<String, Map<String, String>> dataToSend) {
-				Map<String, String> tempTelemetryData = dataToSend.get("FUN_TEL");
+				Map<String, String> tempTelemetryData = dataToSend.get("TEL_ID");
 				telemetry.setSentTimestamp(LocalDateTime.now());
 				if (null == telemetry.getSentTimestamp()) {
 					telemetry.setSentTimestamp(LocalDateTime.now());
@@ -236,7 +236,7 @@ public class TelemetryEdit extends ModalJFrame {
 				} else {
 					tempTelemetryData.remove(CollectorsConst.TEL_OPTOUT_DATE);
 				}
-				dataToSend.put("FUN_TEL", tempTelemetryData);
+				dataToSend.put("TEL_ID", tempTelemetryData);
 				return dataToSend;
 			}
 
@@ -321,7 +321,7 @@ public class TelemetryEdit extends ModalJFrame {
 
 				// send opt-out info before stopping
 				Map<String, Boolean> consentMap = new HashMap<String, Boolean>();
-				consentMap.put("FUN_TEL", true);
+				consentMap.put("TEL_ID", true);
 				try {
 					LOGGER.info("Trying to send a last opt-out message...");
 					Map<String, Map<String, String>> dataToSend = telemetryUtils.retrieveDataToSend(consentMap);
