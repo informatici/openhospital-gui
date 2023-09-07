@@ -76,12 +76,8 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 	private JButton jButtonLoadDicom;
 	private JButton jButtonDeleteDicom;
-	private JPanel jPanel1;
 	private JPanel jPanelDetail;
-	private JPanel jPanelButton;
-	private JScrollPane jScrollPane2;
 	private JSplitPane jSplitPane1;
-	private JPanel jPanelMain;
 
 	private ThumbnailViewGui thumbnail;
 	private int patient = -1;
@@ -171,8 +167,8 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 	}
 
 	private void initComponents() {
-		jPanelMain = new JPanel();
-		jPanel1 = new JPanel();
+		JPanel jPanelMain = new JPanel();
+		JPanel jPanel1 = new JPanel();
 		jButtonLoadDicom = new JButton(MessageBundle.getMessage("angal.dicom.load.btn"));
 		jButtonLoadDicom.setMnemonic(MessageBundle.getMnemonic("angal.dicom.load.btn.key"));
 		jButtonLoadDicom.setName("jButtonLoadDicom");
@@ -184,7 +180,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 		jPanelDetail = new DicomViewGui(null, null);
 		jPanelDetail.setName("jPanelDetail");
-		jPanelButton = new JPanel();
+		JPanel jPanelButton = new JPanel();
 		jPanelButton.add(jButtonLoadDicom);
 		jPanelButton.add(jButtonDeleteDicom);
 		jPanelMain.setName("mainPanel");
@@ -212,7 +208,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		thumbnail = new ThumbnailViewGui(patient, this);
 		thumbnail.initialize();
 
-		jScrollPane2 = new JScrollPane();
+		JScrollPane jScrollPane2 = new JScrollPane();
 		jScrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		jScrollPane2.setViewportView(thumbnail);

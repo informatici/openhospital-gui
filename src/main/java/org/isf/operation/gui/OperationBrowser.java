@@ -89,10 +89,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private int pfrmBase = 8;
 	private int pfrmWidth = 5;
 	private int pfrmHeight = 5;
-	private int pfrmBordX;
-	private int pfrmBordY;
 	private int selectedrow;
-	private JLabel selectlabel;
 	private JComboBox<OperationType> diseaseTypeFilter;
 	private List<Operation> pOperation;
 	private String[] pColumns = {
@@ -116,8 +113,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		setTitle(MessageBundle.getMessage("angal.operation.operationsbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
+		int pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
+		int pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
 		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth,
 				screensize.height / pfrmBase * pfrmHeight);
 		myFrame = this;
@@ -134,7 +131,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		JPanel buttonPanel = new JPanel();
 
-		selectlabel = new JLabel(MessageBundle.getMessage("angal.operation.selecttype")); //$NON-NLS-1$
+		JLabel selectlabel = new JLabel(MessageBundle.getMessage("angal.operation.selecttype")); //$NON-NLS-1$
 		buttonPanel.add(selectlabel);
 
 		diseaseTypeFilter = new JComboBox<>();

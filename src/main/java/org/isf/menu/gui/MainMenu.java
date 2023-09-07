@@ -129,22 +129,21 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	// singleUser=true : one user
 	private boolean singleUser;
-	// internalPharmacies=false : no internalPharmacies
-	private boolean internalPharmacies;
-	// debug mode
-	private boolean debug;
-	private MainMenu myFrame;
 
 	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public MainMenu(User myUserIn) {
 		setTitle(OH_TITLE);
 		myUser = myUserIn;
-		myFrame = this;
+		MainMenu myFrame = this;
 		GeneralData.initialize();
 		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); // for all fixed options YES_NO_CANCEL in dialogs
 		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
+		// internalPharmacies=false : no internalPharmacies
+		boolean internalPharmacies;
+		// debug mode
+		boolean debug;
 		try {
 			internalPharmacies = GeneralData.INTERNALPHARMACIES;
 			debug = GeneralData.DEBUG;
@@ -392,11 +391,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		private static final long serialVersionUID = 4338749100837551874L;
 
-		private JButton[] button;
-		private MainMenu parentFrame;
-
 		public MainPanel(MainMenu parentFrame) {
-			this.parentFrame = parentFrame;
 			int numItems = 1;
 
 			setLayout(new BorderLayout());
@@ -406,7 +401,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 					numItems++;
 				}
 			}
-			button = new JButton[numItems];
+			JButton[] button = new JButton[numItems];
 
 			int k = 0;
 			for (UserMenuItem u : myMenu) {

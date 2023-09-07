@@ -105,7 +105,6 @@ public class ReportLauncher extends ModalJFrame {
 
 	private JComboBox<String> jRptComboBox;
 
-	private List<File> jasperFilesInFolder;
 	private Map<String, File> reportNameFileMap;
 	private Map<String, List<String>> folderNameFileNameMap;
 	private List<String> userInputParamNames;
@@ -222,7 +221,7 @@ public class ReportLauncher extends ModalJFrame {
 			JLabel jRptLabel = new JLabel(MessageBundle.getMessage("angal.stat.report"));
 
 			jRptComboBox = new JComboBox<>();
-			jasperFilesInFolder = new LinkedList<>();
+			List<File> jasperFilesInFolder = new LinkedList<>();
 			folderNameFileNameMap = new HashMap<>();
 			try {
 				List<File> loadedFiles = Files.walk(Paths.get("./rpt_stat"))

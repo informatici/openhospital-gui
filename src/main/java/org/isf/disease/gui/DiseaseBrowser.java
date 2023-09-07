@@ -87,7 +87,6 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	}
 	
 	private int selectedrow;
-	private JLabel selectlabel;
 	private JComboBox pbox;
 	private List<Disease> pDisease;
 	private String[] pColumns = {
@@ -120,8 +119,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		JPanel buttonPanel = new JPanel();
-		
-		selectlabel = new JLabel(MessageBundle.getMessage("angal.disease.selecttype"));
+
+		JLabel selectlabel = new JLabel(MessageBundle.getMessage("angal.disease.selecttype"));
 		buttonPanel.add(selectlabel);
 		
 		pbox = new JComboBox();

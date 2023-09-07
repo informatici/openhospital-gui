@@ -64,9 +64,6 @@ public class PatientPhotoPanel extends JPanel {
 	private JPanel jPhotoPanel;
 	private PhotoPanel externalPanel;
 	private PatientInsertExtended owner;
-	
-	private JButton jGetPhotoButton;
-	private JButton jAttachPhotoButton;
 
 	private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
 
@@ -128,7 +125,7 @@ public class PatientPhotoPanel extends JPanel {
 
 			final Box buttonBox1 = Box.createHorizontalBox();
 
-			jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.file.btn"));
+			JButton jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.file.btn"));
 			jAttachPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.file.btn.key"));
 			jAttachPhotoButton.setMinimumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
@@ -157,7 +154,7 @@ public class PatientPhotoPanel extends JPanel {
 			final Webcam webcam = Webcam.getDefault();
 
 			if (GeneralData.VIDEOMODULEENABLED && webcam != null) {
-				jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.newphoto.btn"));
+				JButton jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.newphoto.btn"));
 				jGetPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.newphoto.btn.key"));
 				jGetPhotoButton.setMinimumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 				jGetPhotoButton.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));

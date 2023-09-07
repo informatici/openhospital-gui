@@ -170,7 +170,6 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	private boolean[] pColumnResizable = { false, false, false, false, true, false };
 	private AdmittedPatient patient;
 	private JTable table;
-	private JScrollPane scrollPane;
 	private AdmittedPatientBrowser myFrame;
 
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
@@ -679,7 +678,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			tableWidth += j;
 		}
 
-		scrollPane = new JScrollPane(table);
+		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setPreferredSize(new Dimension(tableWidth + 200, 200));
 		return scrollPane;
 	}

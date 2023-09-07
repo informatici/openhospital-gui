@@ -43,7 +43,6 @@ import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 public class GoodDateChooser extends Panel {
 
 	private DatePicker datePicker;
-	private DatePickerSettings dateSettings;
 
 	public GoodDateChooser() {
 		this(LocalDate.now());
@@ -60,7 +59,7 @@ public class GoodDateChooser extends Panel {
 	public GoodDateChooser(LocalDate date, boolean futureDates, boolean emptyAllowed) {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(layout);
-		dateSettings = new DatePickerSettings();
+		DatePickerSettings dateSettings = new DatePickerSettings();
 		dateSettings.setLocale(new Locale(GeneralData.LANGUAGE));
 		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT_DD_MM_YYYY);
 		dateSettings.setAllowEmptyDates(emptyAllowed);

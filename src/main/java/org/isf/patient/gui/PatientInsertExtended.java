@@ -210,7 +210,6 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel jBirthDateGroupPanel;
 	private LocalDate birthDate;
 	private JLabel jBirthDateAge;
-	private GoodDateChooser jBirthDateChooser;
 
 	// AgeDescription Components:
 	private int ageType;
@@ -788,7 +787,7 @@ public class PatientInsertExtended extends JDialog {
 				birthDate = patient.getBirthDate();
 			}
 
-			jBirthDateChooser = new GoodDateChooser(birthDate, false);
+			GoodDateChooser jBirthDateChooser = new GoodDateChooser(birthDate, false);
 			jBirthDateChooser.addDateChangeListener(event -> {
 				LocalDate newDate = event.getNewDate();
 				if (newDate != null) {

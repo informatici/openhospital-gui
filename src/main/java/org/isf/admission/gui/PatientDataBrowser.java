@@ -180,12 +180,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 		}
 		return jContentPane;
 	}
-	
-	
-	private JPanel patientData;
 
 	private JPanel getPatientDataPanel() {
-		patientData = new JPanel();
+		JPanel patientData = new JPanel();
 		patientData.setLayout(new BorderLayout());
 		
 		patientData.add(getTablesPanel(), BorderLayout.EAST);
@@ -208,7 +205,6 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 	private List<Admission> admList;
 	private List<Disease> disease;
-	private List<Ward> ward;
 	private List<Opd> opdList;
 
 	private String[] pColumns = {
@@ -224,13 +220,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 	private JTable admTable;
 	private TableSorter sorter;
-	
-	private JScrollPane scrollPane;
-	
-	private JPanel tablesPanel;
-	
+
 	private JPanel getTablesPanel() {
-		tablesPanel = new JPanel(new BorderLayout());
+		JPanel tablesPanel = new JPanel(new BorderLayout());
 		
 		admModel = new AdmissionBrowserModel();
 		sorter = new TableSorter(admModel);
@@ -245,7 +237,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 			}
 		}
 
-		scrollPane = new JScrollPane(admTable);
+		JScrollPane scrollPane = new JScrollPane(admTable);
 		scrollPane.setPreferredSize(new Dimension(500, 440));
 		tablesPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -409,7 +401,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				ward = wardBrowserManager.getWards();
+				List<Ward> ward = wardBrowserManager.getWards();
 			} catch(OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
 			}

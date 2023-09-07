@@ -205,7 +205,6 @@ public class PatientFolderBrowser extends ModalJFrame
 	private List<Admission> admList;
 	private List<Laboratory> labList;
 	private List<Disease> disease;
-	private List<Ward> ward;
 	private List<Opd> opdList;
 	private List <PatientExamination> examinationList;
 
@@ -705,7 +704,7 @@ public class PatientFolderBrowser extends ModalJFrame
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				ward = wardBrowserManager.getWards();
+				List<Ward> ward = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

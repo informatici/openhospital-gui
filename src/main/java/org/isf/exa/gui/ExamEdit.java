@@ -108,15 +108,10 @@ public class ExamEdit extends JDialog {
 	private JPanel buttonPanel;
 	private JButton cancelButton;
 	private JButton okButton;
-	private JLabel descLabel;
-	private JLabel codeLabel;
-	private JLabel procLabel;
-	private JLabel defLabel;
 	private VoLimitedTextField descriptionTextField;
 	private VoLimitedTextField codeTextField;
 	private JComboBox<String> procComboBox;
 	private VoLimitedTextField defTextField;
-	private JLabel typeLabel;
 	private JComboBox<ExamType> examTypeComboBox;
 	private Exam exam;
 	private boolean insert;
@@ -177,11 +172,11 @@ public class ExamEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			typeLabel = new JLabel(MessageBundle.getMessage("angal.exa.type") + ':');
-			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
-			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
-			procLabel = new JLabel(MessageBundle.getMessage("angal.exa.procedure") + ':');
-			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default") + ':');
+			JLabel typeLabel = new JLabel(MessageBundle.getMessage("angal.exa.type") + ':');
+			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
+			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
+			JLabel procLabel = new JLabel(MessageBundle.getMessage("angal.exa.procedure") + ':');
+			JLabel defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default") + ':');
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(typeLabel);
 			dataPanel.add(getExamTypeComboBox());

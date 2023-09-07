@@ -46,10 +46,7 @@ public class MedicalsrMovPatList extends JPanel {
 
 	private Patient myPatient;
 	private List<MovementWard> drugsData;
-	private JDialog dialogDrug;
 	private JTable jTableData;
-	private OhTableDrugsModel<MovementWard> modelMedWard;
-	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 
 	public MedicalsrMovPatList(Object object) {
@@ -78,13 +75,14 @@ public class MedicalsrMovPatList extends JPanel {
 		jTableData = new JTable();
 		scrollPaneData.setViewportView(jTableData);
 		/* ** apply default oh cellRender **** */
+		OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 		jTableData.setDefaultRenderer(Object.class, cellRenderer);
 		jTableData.setDefaultRenderer(Double.class, cellRenderer);
 
-		modelMedWard = new OhTableDrugsModel<>(drugsData);
+		OhTableDrugsModel<MovementWard> modelMedWard = new OhTableDrugsModel<>(drugsData);
 
 		jTableData.setModel(modelMedWard);
-		dialogDrug = new JDialog();
+		JDialog dialogDrug = new JDialog();
 		dialogDrug.setLocationRelativeTo(null);
 		dialogDrug.setSize(450, 280);
 		dialogDrug.setLocationRelativeTo(null);
