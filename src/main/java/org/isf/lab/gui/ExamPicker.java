@@ -59,13 +59,6 @@ import org.isf.utils.jobjects.OhTableModelExam;
  */
 public class ExamPicker extends JPanel {
 
-	private JButton jButtonSelect;
-	private JButton jButtonCancel;
-	private JLabel jLabelImage;
-	private JPanel jPanel1;
-	private JPanel jPanel2;
-	private JPanel jPanel3;
-	private JScrollPane jScrollPane1;
 	private JTable jTableData;
 	private JTextField jTextFieldFind;
 
@@ -88,8 +81,8 @@ public class ExamPicker extends JPanel {
 	@SuppressWarnings("unchecked")
 	private void initComponents(TableModel model) {
 
-		jPanel3 = new JPanel();
-		jPanel1 = new JPanel();
+		JPanel jPanel3 = new JPanel();
+		JPanel jPanel1 = new JPanel();
 
 		jPanel3.setBackground(new java.awt.Color(240, 240, 240));
 
@@ -103,7 +96,7 @@ public class ExamPicker extends JPanel {
 		gblPanel1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gblPanel1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		jPanel1.setLayout(gblPanel1);
-		jScrollPane1 = new javax.swing.JScrollPane();
+		JScrollPane jScrollPane1 = new JScrollPane();
 		jTableData = new javax.swing.JTable();
 
 		jTableData.setSelectionModel(new DefaultListSelectionModel() {
@@ -192,7 +185,7 @@ public class ExamPicker extends JPanel {
 		gblPanel3.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		jPanel3.setLayout(gblPanel3);
 
-		jLabelImage = new JLabel(MessageBundle.getMessage("angal.exams.find"));
+		JLabel jLabelImage = new JLabel(MessageBundle.getMessage("angal.exams.find"));
 		jLabelImage.setIcon(new javax.swing.ImageIcon("rsc/icons/operation_dialog.png"));
 		GridBagConstraints gbcLabelImage = new GridBagConstraints();
 		gbcLabelImage.anchor = GridBagConstraints.WEST;
@@ -273,10 +266,10 @@ public class ExamPicker extends JPanel {
 			}
 		});
 
-		jPanel2 = new JPanel();
+		JPanel jPanel2 = new JPanel();
 		jPanel2.setBackground(new java.awt.Color(240, 240, 240));
 
-		jButtonSelect = new JButton(MessageBundle.getMessage("angal.common.select.btn"));
+		JButton jButtonSelect = new JButton(MessageBundle.getMessage("angal.common.select.btn"));
 		jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
 		jButtonSelect.addMouseListener(new java.awt.event.MouseAdapter() {
 
@@ -287,7 +280,7 @@ public class ExamPicker extends JPanel {
 		});
 		jButtonSelect.addActionListener(actionEvent -> jButtonSelectActionPerformed(actionEvent));
 
-		jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		JButton jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 		jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		jButtonCancel.addMouseListener(new java.awt.event.MouseAdapter() {
 

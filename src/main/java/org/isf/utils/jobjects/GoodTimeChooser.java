@@ -34,7 +34,6 @@ public class GoodTimeChooser extends Panel {
 	private static final String TIME_FORMAT = "H:mm";
 
 	private TimePicker timePicker;
-	private TimePickerSettings timeSettings;
 
 	public GoodTimeChooser(LocalTime time) {
 		this(time, true);
@@ -43,7 +42,7 @@ public class GoodTimeChooser extends Panel {
 	public GoodTimeChooser(LocalTime time, boolean useSpinner) {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(layout);
-		timeSettings = new TimePickerSettings();
+		TimePickerSettings timeSettings = new TimePickerSettings();
 		timeSettings.setAllowEmptyTimes(false);
 		timeSettings.setAllowKeyboardEditing(true);
 		timeSettings.setFormatForDisplayTime(TIME_FORMAT);

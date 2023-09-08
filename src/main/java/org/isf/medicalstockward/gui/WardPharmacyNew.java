@@ -178,10 +178,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JRadioButton jRadioWard;
 	private JComboBox wardBox;
 	private JPanel panelWard;
-	/*
-	 * Adds to facilitate the selection of products
-	 */
-	private JPanel searchPanel;
 	private JTextField searchTextField;
 	private JButton searchButton;
 	private JComboBox jComboBoxMedicals;
@@ -887,7 +883,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			}
 		});
 
-		searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		/*
+		 * Adds to facilitate the selection of products
+		 */
+		JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		searchPanel.add(searchTextField);
 		searchPanel.add(searchButton);
 		searchPanel.add(getJComboBoxMedicals());

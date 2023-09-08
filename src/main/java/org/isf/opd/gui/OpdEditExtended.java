@@ -297,8 +297,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private List<Patient> pat = new ArrayList<>();
 
 	private Disease lastOPDDisease1;
-	private LocalTime visitStartTime;
-	private LocalTime visitEndTime;
 	private int visitDuration;
 
 	/*
@@ -388,6 +386,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 	private void getHospitalHours() {
 		Hospital hospital;
+		LocalTime visitStartTime;
+		LocalTime visitEndTime;
 		try {
 			hospital = hospitalBrowsingManager.getHospital();
 			visitStartTime = hospital.getVisitStartTime().toLocalTime();

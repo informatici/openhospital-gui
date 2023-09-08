@@ -93,7 +93,6 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 	private Interaction interaction;
 	private static JFrame frame;
 	private Roster roster;
-	private JMenuItem sendFile, getInfo;
 	private JTextPane userInfo;
 	private ChatMessages area;
 
@@ -255,8 +254,10 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 
 		buddyList = getBuddyList();
 		final JPopupMenu popUpMenu = new JPopupMenu();
+		JMenuItem sendFile;
 		popUpMenu.add(sendFile = new JMenuItem(MessageBundle.getMessage("angal.xmpp.sendfile.txt")));
 		popUpMenu.add(new JPopupMenu.Separator());
+		JMenuItem getInfo;
 		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo.txt")));
 		final JFileChooser fileChooser = new JFileChooser();
 		sendFile.addActionListener(actionEvent -> {

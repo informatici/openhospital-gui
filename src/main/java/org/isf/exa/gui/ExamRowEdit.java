@@ -90,7 +90,6 @@ public class ExamRowEdit extends JDialog {
 	private JPanel buttonPanel;
 	private JButton cancelButton;
 	private JButton okButton;
-	private JLabel descLabel;
 	private VoLimitedTextField descriptionTextField;
     private Exam exam;
 	private ExamRow examRow;
@@ -143,8 +142,8 @@ public class ExamRowEdit extends JDialog {
 	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getDataPanel() {
-		if (dataPanel == null) {		
-			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
+		if (dataPanel == null) {
+			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			dataPanel = new JPanel();
 			dataPanel.add(descLabel); 
 			dataPanel.add(getDescriptionTextField());  

@@ -167,8 +167,6 @@ public class SubMenu extends JDialog implements ActionListener {
 
 		private static final long serialVersionUID = 4338749100837551874L;
 
-		private JButton[] button;
-		
 		int calculatedHeight;
 
 		public SubPanel(SubMenu dialogFrame, String subName) {
@@ -180,7 +178,7 @@ public class SubMenu extends JDialog implements ActionListener {
 				}
 			}
 
-			button = new JButton[numItems];
+			JButton[] button = new JButton[numItems];
 
 			int k = 0;
 			for (UserMenuItem u : myMenu) {

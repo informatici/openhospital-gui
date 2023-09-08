@@ -74,15 +74,14 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 
 	@Override
 	public void initComponents() {
-		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		photoBoothPanel = new JPanel();
 		photoContainer = new JPanel();
 		streamingPanel = new JPanel();
 		snapshotPanel = new JPanel();
-		resolutionPanel = new JPanel();
-		webcamLabel = new JLabel();
+		JPanel resolutionPanel = new JPanel();
+		JLabel webcamLabel = new JLabel();
 		webcamComboBox = new JComboBox();
-		resolutionLabel = new JLabel();
+		JLabel resolutionLabel = new JLabel();
 		resolutionComboBox = new JComboBox();
 		captureButton = new JButton();
 		buttonContainer = new JPanel();
@@ -153,23 +152,17 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 		cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		buttonContainer.add(cancelButton, CC.xy(3, 1));
 		photoBoothPanel.add(buttonContainer, CC.xy(3, 7, CC.RIGHT, CC.DEFAULT));
-		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
-	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JPanel photoBoothPanel;
 	private JPanel photoContainer;
 	private JPanel streamingPanel;
 	private JPanel snapshotPanel;
-	private JPanel resolutionPanel;
-	private JLabel webcamLabel;
 	protected JComboBox webcamComboBox;
-	private JLabel resolutionLabel;
 	protected JComboBox resolutionComboBox;
 	private JButton captureButton;
 	private JPanel buttonContainer;
 	private JButton okButton;
 	private JButton cancelButton;
-	// JFormDesigner - End of variables declaration  //GEN-END:variables
 
 }

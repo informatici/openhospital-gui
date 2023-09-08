@@ -77,7 +77,6 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	}
 
 	private int selectedrow;
-	private JLabel selectlabel;
 	private JComboBox<UserGroup> userGroupFilter;
 	private List<User> userList;
 	private String[] pColumns = {
@@ -89,7 +88,6 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private User user;
 	private DefaultTableModel model;
 	private JTable table;
-	private JScrollPane scrollPane;
 
 	private String pSelection;
 
@@ -108,12 +106,12 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
 		table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
 
-		scrollPane = new JScrollPane(table);
+		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel();
 
-		selectlabel = new JLabel(MessageBundle.getMessage("angal.userbrowser.selectgroup.label"));
+		JLabel selectlabel = new JLabel(MessageBundle.getMessage("angal.userbrowser.selectgroup.label"));
 		buttonPanel.add(selectlabel);
 
 		userGroupFilter = new JComboBox<>();

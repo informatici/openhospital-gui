@@ -76,8 +76,6 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	private int pfrmBase = 10;
 	private int pfrmWidth = 8;
 	private int pfrmHeight = 6;
-	private int pfrmBordX;
-	private int pfrmBordY;
 	private JPanel jContentPane;
 	private JPanel jButtonPanel;
 	private JButton jEditButton;
@@ -123,8 +121,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		this.setTitle(MessageBundle.getMessage("angal.supplier.suppliersbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
+		int pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
+		int pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
 		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 	}

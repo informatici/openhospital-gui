@@ -42,10 +42,7 @@ public class ExamRowSubPanel extends JPanel {
 	private static final Dimension LABEL_SIZE = new Dimension(175, 20);
 	private static final Dimension SUBPANEL_SIZE = new Dimension(500, 25);
 
-	private JLabel label;
 	private JRadioButton radioPos;
-	private JRadioButton radioNeg;
-	private ButtonGroup group;
 
 	public static ExamRowSubPanel forExamRow(ExamRow r) {
 		return new ExamRowSubPanel(r, NEGATIVE_ABBR_TXT);
@@ -60,14 +57,14 @@ public class ExamRowSubPanel extends JPanel {
 	}
 
 	private ExamRowSubPanel(ExamRow row, String result) {
-		label = new JLabel(row.getDescription());
+		JLabel label = new JLabel(row.getDescription());
 		label.setMinimumSize(LABEL_SIZE);
 		label.setPreferredSize(LABEL_SIZE);
 		this.add(label);
 
-		group = new ButtonGroup();
+		ButtonGroup group = new ButtonGroup();
 		radioPos = new JRadioButton(POSITIVE_ABBR_TXT);
-		radioNeg = new JRadioButton(NEGATIVE_ABBR_TXT);
+		JRadioButton radioNeg = new JRadioButton(NEGATIVE_ABBR_TXT);
 		group.add(radioPos);
 		group.add(radioNeg);
 
