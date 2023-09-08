@@ -105,7 +105,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel jSelectionPanel;
 	private JTable jTable;
 	private JComboBox comboExams;
-	private int pfrmHeight;
+	private int pfrmHeight = 100;
 	private List<Laboratory> pLabs;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
