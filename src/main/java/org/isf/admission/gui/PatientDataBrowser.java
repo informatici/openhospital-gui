@@ -68,8 +68,6 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.table.TableSorter;
-import org.isf.ward.manager.WardBrowserManager;
-import org.isf.ward.model.Ward;
 
 /**
  * This class shows and allows to modify all patient data and all patient admissions.
@@ -199,7 +197,6 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 
 	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
@@ -399,11 +396,6 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				admList = admissionBrowserManager.getAdmissions(patient);
 			} catch(OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-			}
-			try {
-				List<Ward> ward = wardBrowserManager.getWards();
-			} catch(OHServiceException e) {
-                OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
 				disease = diseaseBrowserManager.getDiseaseAll();
