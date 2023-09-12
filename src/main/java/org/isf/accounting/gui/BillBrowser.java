@@ -165,7 +165,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTextField jAffiliatePersonJTextField;
 	private JButton jButtonReport;
 	private JComboBox<String> jComboUsers;
-	private JTextField medicalJTextField;
 	private JMonthChooser jComboBoxMonths;
 	private JYearChooser jComboBoxYears;
 	private JPanel panelSupRange;
@@ -842,21 +841,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		jAffiliatePersonJTextField.setText(patientParent != null ? patientParent.getName() : "");
 
 		if (patientParent != null) {
-			if (medicalJTextField != null) {
-				medicalJTextField.setText("");
-			}
 			updateDataSet(dateFrom, dateTo, patientParent);
 			updateTables();
 			updateTotals();
 		}
-	}
-
-	public Patient getPatientParent() {
-		return patientParent;
-	}
-
-	public void setPatientParent(Patient patientParent) {
-		this.patientParent = patientParent;
 	}
 
 	private JComboBox<String> getJComboUsers() {
