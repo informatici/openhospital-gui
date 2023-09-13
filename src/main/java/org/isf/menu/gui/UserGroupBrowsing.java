@@ -69,8 +69,6 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	
 	private static final int DEFAULT_WIDTH = 200;
 	private static final int DEFAULT_HEIGHT = 150;
-	private int pfrmWidth;
-	private int pfrmHeight;
 	private int selectedrow;
 	private List<UserGroup> pGroup;
 	private String[] pColumns = {
@@ -93,8 +91,8 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		pfrmWidth = screensize.width / 2;
-		pfrmHeight = screensize.height / 4;
+		int pfrmWidth = screensize.width / 2;
+		int pfrmHeight = screensize.height / 4;
 		setBounds(screensize.width / 4, screensize.height / 4, pfrmWidth, pfrmHeight);
 		
 		model = new UserGroupBrowserModel();

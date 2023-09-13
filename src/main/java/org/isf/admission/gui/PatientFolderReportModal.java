@@ -68,14 +68,12 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JCheckBox allCheck;
 	private JPanel labelPanel;
 	private LocalDate fromDate;
-	private LocalDate toDate;
 	private String selectedReport;
 
 	public PatientFolderReportModal(JFrame parent, Integer code, LocalDate fromDate, LocalDate toDate, String selectedReport) {
 		this.parent = parent;
 		this.patId = code;
 		this.fromDate = fromDate;
-		this.toDate = toDate;
 		this.selectedReport = selectedReport.toUpperCase();
 		switch(this.selectedReport) {
 			case "ADMISSION":

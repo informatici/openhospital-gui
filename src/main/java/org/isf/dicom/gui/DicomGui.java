@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -44,6 +44,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
@@ -75,21 +76,13 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 	private JButton jButtonLoadDicom;
 	private JButton jButtonDeleteDicom;
-	private JPanel jPanel1;
 	private JPanel jPanelDetail;
-	private JPanel jPanelButton;
-	private JScrollPane jScrollPane2;
 	private JSplitPane jSplitPane1;
-	private JPanel jPanelMain;
 
 	private ThumbnailViewGui thumbnail;
 	private int patient = -1;
 	private Patient ohPatient;
-	private int position = 150;
-
 	private JFrame myJFrame;
-
-	private ModalJFrame owner;
 
 	/**
 	 * Construct a GUI
@@ -100,7 +93,6 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		super();
 		this.patient = patient.getCode();
 		this.ohPatient = patient;
-		this.owner = owner;
 
 		initialize();
 		//setVisible(true);
@@ -108,7 +100,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		myJFrame = this;
 
 		// TMP
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	/**
@@ -151,7 +143,6 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 			y = ois.readInt();
 			h = ois.readInt();
 			w = ois.readInt();
-			position = ois.readInt();
 			lastDir = ois.readUTF();
 			ois.close();
 		} catch (Exception e) {
@@ -176,8 +167,8 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 	}
 
 	private void initComponents() {
-		jPanelMain = new JPanel();
-		jPanel1 = new JPanel();
+		JPanel jPanelMain = new JPanel();
+		JPanel jPanel1 = new JPanel();
 		jButtonLoadDicom = new JButton(MessageBundle.getMessage("angal.dicom.load.btn"));
 		jButtonLoadDicom.setMnemonic(MessageBundle.getMnemonic("angal.dicom.load.btn.key"));
 		jButtonLoadDicom.setName("jButtonLoadDicom");
@@ -189,7 +180,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 		jPanelDetail = new DicomViewGui(null, null);
 		jPanelDetail.setName("jPanelDetail");
-		jPanelButton = new JPanel();
+		JPanel jPanelButton = new JPanel();
 		jPanelButton.add(jButtonLoadDicom);
 		jPanelButton.add(jButtonDeleteDicom);
 		jPanelMain.setName("mainPanel");
@@ -217,7 +208,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		thumbnail = new ThumbnailViewGui(patient, this);
 		thumbnail.initialize();
 
-		jScrollPane2 = new JScrollPane();
+		JScrollPane jScrollPane2 = new JScrollPane();
 		jScrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		jScrollPane2.setViewportView(thumbnail);

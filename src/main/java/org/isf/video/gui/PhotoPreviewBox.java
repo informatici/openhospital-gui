@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -42,7 +42,6 @@ public class PhotoPreviewBox extends Box {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PhotoPreviewBox.class);
 
 	public JButton photoButton;
-	private ImageIcon previewIcon;
 
 	public String path;
 	public String resolution;
@@ -61,7 +60,7 @@ public class PhotoPreviewBox extends Box {
 		try {
 			Image img = ImageIO.read(new File(path));
 
-			previewIcon = new ImageIcon(img.getScaledInstance(80, 63, Image.SCALE_SMOOTH));
+			ImageIcon previewIcon = new ImageIcon(img.getScaledInstance(80, 63, Image.SCALE_SMOOTH));
 			photoButton = new JButton("", previewIcon);
 
 			photoButton.setBackground(Color.white);

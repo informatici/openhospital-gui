@@ -297,8 +297,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private List<Patient> pat = new ArrayList<>();
 
 	private Disease lastOPDDisease1;
-	private LocalTime visitStartTime;
-	private LocalTime visitEndTime;
 	private int visitDuration;
 
 	/*
@@ -388,6 +386,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 	private void getHospitalHours() {
 		Hospital hospital;
+		LocalTime visitStartTime;
+		LocalTime visitEndTime;
 		try {
 			hospital = hospitalBrowsingManager.getHospital();
 			visitStartTime = hospital.getVisitStartTime().toLocalTime();
@@ -473,7 +473,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 		// TODO: this should be a formatted message in the bundle and not "appended" together
 		StringBuilder lastOPDDisease = new StringBuilder();
-		lastOPDDisease.append(MessageBundle.getMessage("angal.opd.on.txt")).append(" ").append(currentDateFormat.format(lastOpd.getDate())).append(" - ");
+		lastOPDDisease.append(MessageBundle.getMessage("angal.opd.on.txt")).append(' ').append(currentDateFormat.format(lastOpd.getDate())).append(" - ");
 		if (lastOPDDisease1 != null) {
 			setAttendance();
 			lastOPDDisease.append(lastOPDDisease1.getDescription());
@@ -1510,7 +1510,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			jPanelPatient.setLayout(gblPanelPatient);
 			setMyMatteBorder(jPanelPatient, MessageBundle.getMessage("angal.common.patient.txt"));
 
-			JLabel jLabelFirstName = new JLabel(MessageBundle.getMessage("angal.opd.firstname.txt") + "\t");
+			JLabel jLabelFirstName = new JLabel(MessageBundle.getMessage("angal.opd.firstname.txt") + '\t');
 			GridBagConstraints gbcLabelFirstName = new GridBagConstraints();
 			gbcLabelFirstName.fill = GridBagConstraints.BOTH;
 			gbcLabelFirstName.insets = new Insets(5, 5, 5, 5);
@@ -1526,7 +1526,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcFieldFirstName.gridx = 1;
 			gbcFieldFirstName.gridy = 0;
 			jPanelPatient.add(jFieldFirstName, gbcFieldFirstName);
-			JLabel jLabelSecondName = new JLabel(MessageBundle.getMessage("angal.opd.secondname.txt") + "\t");
+			JLabel jLabelSecondName = new JLabel(MessageBundle.getMessage("angal.opd.secondname.txt") + '\t');
 			GridBagConstraints gbcLabelSecondName = new GridBagConstraints();
 			gbcLabelSecondName.insets = new Insets(5, 5, 5, 5);
 			gbcLabelSecondName.fill = GridBagConstraints.BOTH;

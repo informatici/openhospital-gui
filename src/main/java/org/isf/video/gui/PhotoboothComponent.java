@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -74,15 +74,14 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 
 	@Override
 	public void initComponents() {
-		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		photoBoothPanel = new JPanel();
 		photoContainer = new JPanel();
 		streamingPanel = new JPanel();
 		snapshotPanel = new JPanel();
-		resolutionPanel = new JPanel();
-		webcamLabel = new JLabel();
+		JPanel resolutionPanel = new JPanel();
+		JLabel webcamLabel = new JLabel();
 		webcamComboBox = new JComboBox();
-		resolutionLabel = new JLabel();
+		JLabel resolutionLabel = new JLabel();
 		resolutionComboBox = new JComboBox();
 		captureButton = new JButton();
 		buttonContainer = new JPanel();
@@ -90,98 +89,80 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 		cancelButton = new JButton();
 
 		//======== photoBoothPanel ========
-		{
-			photoBoothPanel.setLayout(new FormLayout(
-				"$ugap, $lcgap, default:grow, $lcgap, $ugap",
-				"$ugap, $lgap, fill:default:grow, 2*($lgap, default), $lgap, $ugap"));
+		photoBoothPanel.setLayout(new FormLayout(
+			"$ugap, $lcgap, default:grow, $lcgap, $ugap",
+			"$ugap, $lgap, fill:default:grow, 2*($lgap, default), $lgap, $ugap"));
 
-			//======== photoContainer ========
-			{
-				photoContainer.setLayout(new FormLayout(
-					"default:grow, $lcgap, default:grow",
-					"fill:default:grow"));
-				((FormLayout)photoContainer.getLayout()).setColumnGroups(new int[][] {{1, 3}});
+		//======== photoContainer ========
+		photoContainer.setLayout(new FormLayout(
+			"default:grow, $lcgap, default:grow",
+			"fill:default:grow"));
+		((FormLayout)photoContainer.getLayout()).setColumnGroups(new int[][] {{1, 3}});
 
-				//======== streamingPanel ========
-				{
-					streamingPanel.setPreferredSize(new Dimension(300, 200));
-					streamingPanel.setMinimumSize(new Dimension(300, 200));
-					streamingPanel.setLayout(new FormLayout(
-						"default:grow",
-						"default:grow"));
-				}
-				photoContainer.add(streamingPanel, CC.xy(1, 1));
+		//======== streamingPanel ========
+		streamingPanel.setPreferredSize(new Dimension(300, 200));
+		streamingPanel.setMinimumSize(new Dimension(300, 200));
+		streamingPanel.setLayout(new FormLayout(
+			"default:grow",
+			"default:grow"));
+		photoContainer.add(streamingPanel, CC.xy(1, 1));
 
-				//======== snapshotPanel ========
-				{
-					snapshotPanel.setMinimumSize(new Dimension(300, 200));
-					snapshotPanel.setPreferredSize(new Dimension(300, 200));
-					snapshotPanel.setLayout(new FormLayout(
-						"default:grow",
-						"default:grow"));
-				}
-				photoContainer.add(snapshotPanel, CC.xy(3, 1));
-			}
-			photoBoothPanel.add(photoContainer, CC.xy(3, 3, CC.FILL, CC.FILL));
+		//======== snapshotPanel ========
+		snapshotPanel.setMinimumSize(new Dimension(300, 200));
+		snapshotPanel.setPreferredSize(new Dimension(300, 200));
+		snapshotPanel.setLayout(new FormLayout(
+			"default:grow",
+			"default:grow"));
+		photoContainer.add(snapshotPanel, CC.xy(3, 1));
+		photoBoothPanel.add(photoContainer, CC.xy(3, 3, CC.FILL, CC.FILL));
 
-			//======== resolutionPanel ========
-			{
-				resolutionPanel.setLayout(new FormLayout(
-					"default, 3*($lcgap), default, $lcgap, $rgap, $lcgap, default, 3*($lcgap), default, $lcgap, $button",
-					"default"));
+		//======== resolutionPanel ========
+		resolutionPanel.setLayout(new FormLayout(
+			"default, 3*($lcgap), default, $lcgap, $rgap, $lcgap, default, 3*($lcgap), default, $lcgap, $button",
+			"default"));
 
-				//---- webcamLabel ----
-				webcamLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.webcam.txt"));
-				resolutionPanel.add(webcamLabel, CC.xy(1, 1));
-				resolutionPanel.add(webcamComboBox, CC.xy(5, 1));
+		//---- webcamLabel ----
+		webcamLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.webcam.txt"));
+		resolutionPanel.add(webcamLabel, CC.xy(1, 1));
+		resolutionPanel.add(webcamComboBox, CC.xy(5, 1));
 
-				//---- resolutionLabel ----
-				resolutionLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.resolution.txt"));
-				resolutionPanel.add(resolutionLabel, CC.xy(9, 1));
-				resolutionPanel.add(resolutionComboBox, CC.xy(13, 1));
+		//---- resolutionLabel ----
+		resolutionLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.resolution.txt"));
+		resolutionPanel.add(resolutionLabel, CC.xy(9, 1));
+		resolutionPanel.add(resolutionComboBox, CC.xy(13, 1));
 
-				//---- captureButton ----
-				captureButton.setText(MessageBundle.getMessage("angal.photoboothcomponent.capture.btn"));
-				cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.photoboothcomponent.capture.btn.key"));
-				resolutionPanel.add(captureButton, CC.xy(15, 1));
-			}
-			photoBoothPanel.add(resolutionPanel, CC.xy(3, 5, CC.CENTER, CC.DEFAULT));
+		//---- captureButton ----
+		captureButton.setText(MessageBundle.getMessage("angal.photoboothcomponent.capture.btn"));
+		cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.photoboothcomponent.capture.btn.key"));
+		resolutionPanel.add(captureButton, CC.xy(15, 1));
+		photoBoothPanel.add(resolutionPanel, CC.xy(3, 5, CC.CENTER, CC.DEFAULT));
 
-			//======== buttonContainer ========
-			{
-				buttonContainer.setLayout(new FormLayout(
-					"$button, $lcgap, $button",
-					"default"));
+		//======== buttonContainer ========
+		buttonContainer.setLayout(new FormLayout(
+			"$button, $lcgap, $button",
+			"default"));
 
-				//---- okButton ----
-				okButton.setText(MessageBundle.getMessage("angal.common.ok.btn"));
-				okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-				buttonContainer.add(okButton, CC.xy(1, 1));
+		//---- okButton ----
+		okButton.setText(MessageBundle.getMessage("angal.common.ok.btn"));
+		okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+		buttonContainer.add(okButton, CC.xy(1, 1));
 
-				//---- cancelButton ----
-				cancelButton.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
-				cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-				buttonContainer.add(cancelButton, CC.xy(3, 1));
-			}
-			photoBoothPanel.add(buttonContainer, CC.xy(3, 7, CC.RIGHT, CC.DEFAULT));
-		}
-		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+		//---- cancelButton ----
+		cancelButton.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
+		cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+		buttonContainer.add(cancelButton, CC.xy(3, 1));
+		photoBoothPanel.add(buttonContainer, CC.xy(3, 7, CC.RIGHT, CC.DEFAULT));
 	}
 
-	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JPanel photoBoothPanel;
 	private JPanel photoContainer;
 	private JPanel streamingPanel;
 	private JPanel snapshotPanel;
-	private JPanel resolutionPanel;
-	private JLabel webcamLabel;
 	protected JComboBox webcamComboBox;
-	private JLabel resolutionLabel;
 	protected JComboBox resolutionComboBox;
 	private JButton captureButton;
 	private JPanel buttonContainer;
 	private JButton okButton;
 	private JButton cancelButton;
-	// JFormDesigner - End of variables declaration  //GEN-END:variables
 
 }

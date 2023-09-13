@@ -68,8 +68,6 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.table.TableSorter;
-import org.isf.ward.manager.WardBrowserManager;
-import org.isf.ward.model.Ward;
 
 /**
  * This class shows and allows to modify all patient data and all patient admissions.
@@ -180,13 +178,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 		}
 		return jContentPane;
 	}
-	
-	
-	private JPanel patientData;
-	private boolean isMalnutrition;
-	
+
 	private JPanel getPatientDataPanel() {
-		patientData = new JPanel();
+		JPanel patientData = new JPanel();
 		patientData.setLayout(new BorderLayout());
 		
 		patientData.add(getTablesPanel(), BorderLayout.EAST);
@@ -194,7 +188,6 @@ public class PatientDataBrowser extends ModalJFrame implements
 		PatientSummary ps = new PatientSummary(patient);
 		for (Admission elem : admList) {
 			if (elem.getType().equalsIgnoreCase("M")) {
-				isMalnutrition = true;
 				break;
 			}
 		}
@@ -204,13 +197,11 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 
 	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 	private List<Admission> admList;
 	private List<Disease> disease;
-	private List<Ward> ward;
 	private List<Opd> opdList;
 
 	private String[] pColumns = {
@@ -226,13 +217,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 	private JTable admTable;
 	private TableSorter sorter;
-	
-	private JScrollPane scrollPane;
-	
-	private JPanel tablesPanel;
-	
+
 	private JPanel getTablesPanel() {
-		tablesPanel = new JPanel(new BorderLayout());
+		JPanel tablesPanel = new JPanel(new BorderLayout());
 		
 		admModel = new AdmissionBrowserModel();
 		sorter = new TableSorter(admModel);
@@ -247,7 +234,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 			}
 		}
 
-		scrollPane = new JScrollPane(admTable);
+		JScrollPane scrollPane = new JScrollPane(admTable);
 		scrollPane.setPreferredSize(new Dimension(500, 440));
 		tablesPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -409,11 +396,6 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				admList = admissionBrowserManager.getAdmissions(patient);
 			} catch(OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-			}
-			try {
-				ward = wardBrowserManager.getWards();
-			} catch(OHServiceException e) {
-                OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
 				disease = diseaseBrowserManager.getDiseaseAll();

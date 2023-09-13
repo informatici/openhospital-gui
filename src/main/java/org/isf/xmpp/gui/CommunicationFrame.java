@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -59,24 +59,25 @@ import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.xmpp.gui.ChatTab.TabButton;
-import org.isf.xmpp.manager.AbstractCommunicationFrame;
-import org.isf.xmpp.manager.ComplexCellRender;
 import org.isf.xmpp.manager.Interaction;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferNegotiator;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CommunicationFrame extends AbstractCommunicationFrame {
+public class CommunicationFrame extends JFrame implements MessageListener, FileTransferListener, ChatManagerListener {
 
 	private static final
 	long serialVersionUID = 1L;
@@ -92,7 +93,6 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	private Interaction interaction;
 	private static JFrame frame;
 	private Roster roster;
-	private JMenuItem sendFile, getInfo;
 	private JTextPane userInfo;
 	private ChatMessages area;
 
@@ -184,9 +184,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				String userName = interaction.userFromAddress(presence.getFrom());
 				StringBuilder sb = new StringBuilder();
 				if (!presence.isAvailable()) {
-					sb.append(userName).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowoffline.txt"));
+					sb.append(userName).append(' ').append(MessageBundle.getMessage("angal.xmpp.isnowoffline.txt"));
 				} else if (presence.isAvailable()) {
-					sb.append(userName).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowonline.txt"));
+					sb.append(userName).append(' ').append(MessageBundle.getMessage("angal.xmpp.isnowonline.txt"));
 				}
 				int index = tabs.indexOfTab(userName);
 				if (index != -1) {
@@ -229,7 +229,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				if (message.getType() == Message.Type.chat) {
 					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
 					LOGGER.debug("GUI: {}", CommunicationFrame.this);
-					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf("@"));
+					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf('@'));
 					printMessage(getArea(user, true), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {
 						setVisible(true);
@@ -254,15 +254,17 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 		buddyList = getBuddyList();
 		final JPopupMenu popUpMenu = new JPopupMenu();
+		JMenuItem sendFile;
 		popUpMenu.add(sendFile = new JMenuItem(MessageBundle.getMessage("angal.xmpp.sendfile.txt")));
 		popUpMenu.add(new JPopupMenu.Separator());
+		JMenuItem getInfo;
 		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo.txt")));
 		final JFileChooser fileChooser = new JFileChooser();
 		sendFile.addActionListener(actionEvent -> {
 			int returnVal = fileChooser.showOpenDialog(getParent());
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
-				LOGGER.debug("Selected file: {}", file.toString());
+				LOGGER.debug("Selected file: {}", file);
 				String receiver = ((RosterEntry) buddyList.getSelectedValue()).getName();
 				LOGGER.debug("Receiver: {}", receiver);
 				interaction.sendFile(receiver, file, null);
@@ -318,7 +320,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 					LOGGER.debug("Index : {}", index);
 					if (index >= 0) {
 						user = ((RosterEntry) buddyList.getModel().getElementAt(index)).getName();
-						LOGGER.debug("User selected: {}", user.toString()); //$NON-NLS-1$
+						LOGGER.debug("User selected: {}", user); //$NON-NLS-1$
 						newChat = new ChatPanel();
 						roster = interaction.getRoster();
 						Presence presence = roster.getPresence(((RosterEntry) buddyList.getModel().getElementAt(index)).getUser());
@@ -406,11 +408,11 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			if (text.startsWith("011100100110010101110000011011110111001001110100")) {//report jasper //$NON-NLS-1$
 				area.printReport(user, text);
 			} else if (text.startsWith("0101010001000001")) { //file transfer accepted 0101010001000001=TA //$NON-NLS-1$
-				int index = text.indexOf("$"); //$NON-NLS-1$
+				int index = text.indexOf('$'); //$NON-NLS-1$
 				area.printNotification(text.substring(index + 1));
 				LOGGER.debug("Transfer accepted."); //$NON-NLS-1$
 			} else if (text.startsWith("0101010001010010")) {// file transfer refused 0101010001010010=TR //$NON-NLS-1$
-				int index = text.indexOf("$"); //$NON-NLS-1$
+				int index = text.indexOf('$'); //$NON-NLS-1$
 				LOGGER.debug("Transfer rejected."); //$NON-NLS-1$
 				area.printNotification(text.substring(index + 1));
 			} else {
@@ -478,7 +480,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	public void processMessage(Chat arg0, Message arg1) {
 		if (arg1.getType() == Message.Type.normal) {
 			LOGGER.debug("Send message from: {}", arg0.getThreadID());
-			String user = arg0.getParticipant().substring(0, arg0.getParticipant().indexOf("@"));
+			String user = arg0.getParticipant().substring(0, arg0.getParticipant().indexOf('@'));
 			printMessage((getArea(user, false)), user, arg1.getBody(), false);
 			if (!this.isVisible()) {
 				this.setVisible(true);
@@ -566,7 +568,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				if (message.getType() == Message.Type.chat) {
 					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
 					LOGGER.debug("GUI: {}", CommunicationFrame.this);
-					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf("@"));
+					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf('@'));
 					printMessage((getArea(user, false)), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {
 						setVisible(true);

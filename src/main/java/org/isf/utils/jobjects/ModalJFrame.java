@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,6 +21,7 @@
  */
 package org.isf.utils.jobjects;
 
+import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -74,7 +75,7 @@ public class ModalJFrame extends JFrame {
 			@Override
 			public void windowActivated(WindowEvent e) {
 				if (frame.isShowing()) {
-					frame.setExtendedState(JFrame.NORMAL);
+					frame.setExtendedState(Frame.NORMAL);
 					frame.toFront();
 				} else {
 					owner.removeWindowListener(this);

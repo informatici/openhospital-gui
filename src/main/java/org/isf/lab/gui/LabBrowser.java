@@ -105,7 +105,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel jSelectionPanel;
 	private JTable jTable;
 	private JComboBox comboExams;
-	private int pfrmHeight;
+	private int pfrmHeight = 100;
 	private List<Laboratory> pLabs;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
@@ -153,10 +153,9 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContentPane.add(getJSelectionPanel(), java.awt.BorderLayout.WEST);
-			jContentPane.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContentPane.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContentPane.add(getJSelectionPanel(), BorderLayout.WEST);
+			jContentPane.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContentPane;

@@ -27,6 +27,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -70,7 +71,7 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 		setFont(component.getFont());
 		setForeground(component.getForeground());
 		setBorder(new EmptyBorder(component.getInsets()));
-		setHorizontalAlignment(JLabel.LEADING);
+		setHorizontalAlignment(SwingConstants.LEADING);
 
 		component.addFocusListener(this);
 		document.addDocumentListener(this);
@@ -186,17 +187,9 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 		// prompt should be displayed.
 
 		if (component.hasFocus()) {
-			if (show == Show.ALWAYS || show == Show.FOCUS_GAINED) {
-				setVisible(true);
-			} else {
-				setVisible(false);
-			}
+			setVisible(show == Show.ALWAYS || show == Show.FOCUS_GAINED);
 		} else {
-			if (show == Show.ALWAYS || show == Show.FOCUS_LOST) {
-				setVisible(true);
-			} else {
-				setVisible(false);
-			}
+			setVisible(show == Show.ALWAYS || show == Show.FOCUS_LOST);
 		}
 	}
 

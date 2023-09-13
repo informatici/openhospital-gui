@@ -503,10 +503,6 @@ public class LabEdit extends ModalJFrame {
 				String matSelected = (String) matComboBox.getSelectedItem();
 				examSelected = (Exam) examComboBox.getSelectedItem();
 
-				Integer patId = -1;
-				if (patientComboBox.getSelectedIndex() > 0) {
-					patId = ((Patient) (patientComboBox.getSelectedItem())).getCode();
-				}
 				String sex = sexTextField.getText().toUpperCase();
 				if (!(sex.equals("M") || sex.equals("F"))) {
 					MessageDialog.error(null, "angal.lab.pleaseinsertmformaleorfforfemale.msg");

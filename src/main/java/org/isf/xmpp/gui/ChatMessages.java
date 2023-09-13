@@ -64,7 +64,7 @@ public class ChatMessages extends JTextPane {
 	public void printNotification(String notification) throws BadLocationException {
 		StyleConstants.setForeground(keyWord, greenColor);
 		sDoc = getDocument();
-		sDoc.insertString(sDoc.getEndPosition().getOffset(), "*** " + notification + "\n", keyWord);
+		sDoc.insertString(sDoc.getEndPosition().getOffset(), "*** " + notification + '\n', keyWord);
 	}
 
 	//print notification of file transfer
@@ -74,7 +74,7 @@ public class ChatMessages extends JTextPane {
 		int position = doc.getEndPosition().getOffset();
 		StyleConstants.setForeground(keyWord, greenColor);
 		try {
-			doc.insertString(position, "\n*** " + fileTransfer + "\n", keyWord);
+			doc.insertString(position, "\n*** " + fileTransfer + '\n', keyWord);
 		} catch (BadLocationException badLocationException) {
 			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
@@ -94,10 +94,10 @@ public class ChatMessages extends JTextPane {
 			StyleConstants.setForeground(keyWord, redColor);
 		}
 		sDoc = getDocument();
-		sDoc.insertString(sDoc.getEndPosition().getOffset(), "(" + simpleDateFormat.format(new Date()) + ") " + user + " : ", keyWord);
+		sDoc.insertString(sDoc.getEndPosition().getOffset(), '(' + simpleDateFormat.format(new Date()) + ") " + user + " : ", keyWord);
 		StyleConstants.setBold(keyWord, false);
 		StyleConstants.setForeground(keyWord, Color.black);
-		sDoc.insertString(sDoc.getEndPosition().getOffset(), message + "\n", keyWord);
+		sDoc.insertString(sDoc.getEndPosition().getOffset(), message + '\n', keyWord);
 	}
 
 	public void printReport(String name, String report) {

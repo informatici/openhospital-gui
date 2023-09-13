@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -70,6 +70,6 @@ public class DicomLoader extends AbstractDicomLoader {
 	@Override
 	public void setLoaded(int loaded) {
 		bar.setValue(loaded);
-		jLabelTitle.setText(labelTitle + " [" + loaded + "/" + numfiles + "]");
+		jLabelTitle.setText(labelTitle + " [" + loaded + '/' + numfiles + ']');
 	}
 }

@@ -32,6 +32,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,25 +136,26 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	static final int menuXPosition = 10;
 	static final int menuYDisplacement = 75;
+	private static final String OH_TITLE = "OH";
 
 	// singleUser=true : one user
 	private boolean singleUser;
-	// internalPharmacies=false : no internalPharmacies
-	private boolean internalPharmacies;
-	// debug mode
-	private boolean debug;
-	private MainMenu myFrame;
 
 	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public MainMenu(User myUserIn) {
+		setTitle(OH_TITLE);
 		myUser = myUserIn;
-		myFrame = this;
+		MainMenu myFrame = this;
 		GeneralData.initialize();
 		this.activableModules = retrieveActivatedModulesMap();
 		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); // for all fixed options YES_NO_CANCEL in dialogs
 		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
+		// internalPharmacies=false : no internalPharmacies
+		boolean internalPharmacies;
+		// debug mode
+		boolean debug;
 		try {
 			internalPharmacies = GeneralData.INTERNALPHARMACIES;
 			debug = GeneralData.DEBUG;
@@ -186,7 +188,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				hiddenOwner.setIconImage(img.getImage());
 				hiddenOwner.setLocation(-10000, -1000);
 				hiddenOwner.setSize(new Dimension(1, 1));
-				hiddenOwner.show();
+				hiddenOwner.setVisible(true);
 				new Login(hiddenOwner, this);
 				hiddenOwner.dispose();
 			}
@@ -407,7 +409,12 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 						return;
 					}
 					try {
-						Object target = Class.forName(app).newInstance();
+						Object target;
+						try {
+							target = Class.forName(app).getDeclaredConstructor().newInstance();
+						} catch (InvocationTargetException | NoSuchMethodException e) {
+							throw new RuntimeException(e);
+						}
 						try {
 							((ModalJFrame) target).showAsModal(this);
 						} catch (ClassCastException noModalJFrame) {
@@ -432,8 +439,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		private static final long serialVersionUID = 4338749100837551874L;
 
-		private JButton[] button;
-
 		public MainPanel(MainMenu parentFrame) {
 			int numItems = 1;
 
@@ -444,7 +449,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 					numItems++;
 				}
 			}
-			button = new JButton[numItems];
+			JButton[] button = new JButton[numItems];
 
 			int k = 0;
 			for (UserMenuItem u : myMenu) {

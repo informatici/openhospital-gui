@@ -147,7 +147,7 @@ public class JTextFieldSearchModel extends JPanel {
 					Show.FOCUS_GAINED);
 			suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			suggestion.setForeground(Color.GRAY);
-			suggestion.setHorizontalAlignment(JLabel.CENTER);
+			suggestion.setHorizontalAlignment(SwingConstants.CENTER);
 			suggestion.changeAlpha(0.5f);
 			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 			if (medical != null) {

@@ -18,7 +18,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 #
 
@@ -43,7 +43,7 @@ WRITE_CONFIG_FILES="off"
 ############## OH general configuration - change at your own risk :-) ##############
 
 # OH_PATH is the directory where Open Hospital files are located
-# OH_PATH=/usr/local/OpenHospital/oh-1.12
+# OH_PATH=/usr/local/OpenHospital/oh-1.13
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #OH_MODE="PORTABLE" 
@@ -121,7 +121,7 @@ API_SETTINGS="application.properties"
 
 # OH jar bin files
 OH_GUI_JAR="OH-gui.jar"
-OH_API_JAR="openhospital-api-0.0.2.jar"
+OH_API_JAR="openhospital-api-0.1.0.jar"
 
 # help file
 HELP_FILE="OH-readme.txt"
@@ -131,16 +131,20 @@ DEFAULT_DATABASE_NAME="$DATABASE_NAME"
 # set default data base_dir
 DEFAULT_DATADIR="$DATA_DIR"
 
+# default database admin/root user
+DATABASE_ROOT_USER="root"
+
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 EXPERT_MODE="off"
 OH_UI_URL="http://localhost:8080"
+OH_API_PID="../tmp/oh-api.pid"
 
 ################ Architecture and external software ################
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-MYSQL_VERSION="10.6.12"
-MYSQL32_VERSION="10.5.19"
+MYSQL_VERSION="10.6.14"
+MYSQL32_VERSION="10.5.21"
 PACKAGE_TYPE="systemd" 
 
 ######## define system and software architecture
@@ -517,11 +521,11 @@ desktop_path=$(xdg-user-dir DESKTOP)
 echo "[Desktop Entry]
 	Type=Application
 	# The version of the Desktop Entry Specification
-	Version=1.12.0
+	Version=1.13.0
 	# The name of the application
 	Name=OpenHospital
 	# A comment which will be used as a tooltip
-	Comment=Open Hospital 1.12 shortcut
+	Comment=Open Hospital 1.13 shortcut
 	# The path to the folder in which the executable is run
 	Path=$OH_PATH
 	# The executable of the application, possibly with arguments
@@ -558,8 +562,6 @@ function java_lib_setup {
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_extra
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_stat
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc
-	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc/icons
-	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc/images
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/lib
 
 	# include all jar files under lib/
@@ -711,8 +713,8 @@ function start_database {
 ###################################################################
 function set_database_root_pw {
 	# if using MySQL/MariaDB root password need to be set
-	echo "Setting $MYSQL_NAME root password..."
-	./$MYSQL_DIR/bin/mysql -u root --skip-password --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER 'root'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
+	echo "Setting $MYSQL_NAME $DATABASE_ROOT_USER password..."
+	./$MYSQL_DIR/bin/mysql -u $DATABASE_ROOT_USER --skip-password --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER '$DATABASE_ROOT_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
 	if [ $? -ne 0 ]; then
 		echo "Error: $MYSQL_NAME root password not set! Try resetting installation with option [X]. Exiting."
@@ -725,7 +727,7 @@ function set_database_root_pw {
 function create_database_user {
 	echo "Creating database user [$DATABASE_USER]..."
 	# create database user
-	./$MYSQL_DIR/bin/mysql -u root -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
+	./$MYSQL_DIR/bin/mysql -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
 	-e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; \
 	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD';" >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
@@ -740,7 +742,7 @@ function create_database_user {
 function create_database {
 	echo "Creating database [$DATABASE_NAME]..."
 	# create OH database
-	./$MYSQL_DIR/bin/mysql -u root -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
+	./$MYSQL_DIR/bin/mysql -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --protocol=tcp --host=$DATABASE_SERVER --port=$DATABASE_PORT \
 	-e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; \
 	GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%' ; " >> ./$LOG_DIR/$LOG_FILE 2>&1
 	
@@ -766,7 +768,7 @@ function import_database {
 	# create OH database structure
 	echo "Importing database [$DATABASE_NAME] with user [$DATABASE_USER@$DATABASE_SERVER]..."
 	cd "./$SQL_DIR"
-#	../$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
+#	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
 	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
 	if [ $? -ne 0 ]; then
 		echo "Error: Database not imported! Exiting."
@@ -781,7 +783,7 @@ function import_database {
 #	if [ "$API_SERVER" = "on" ]; then
 #		echo "Setting admin password..."
 #		cd "$OH_PATH/$SQL_EXTRA_DIR/"
-#		$OH_PATH/$MYSQL_DIR/bin/mysql --local-infile=1 -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./reset_admin_password_strong.sql >> ../../$LOG_DIR/$LOG_FILE 2>&1
+#		$OH_PATH/$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./reset_admin_password_strong.sql >> ../../$LOG_DIR/$LOG_FILE 2>&1
 #		if [ $? -ne 0 ]; then
 #		echo "Error! Exiting."
 #			shutdown_database;
@@ -821,7 +823,7 @@ function shutdown_database {
 	if [ "$OH_MODE" != "CLIENT" ]; then
 		echo "Shutting down $MYSQL_NAME..."
 		cd "$OH_PATH"
-		./$MYSQL_DIR/bin/mysqladmin -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
+		./$MYSQL_DIR/bin/mysqladmin -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
 		# wait till the MySQL tcp port is closed
 		until !( nc -z $DATABASE_SERVER $DATABASE_PORT ); do sleep 1; done
 		echo "$MYSQL_NAME stopped!"
@@ -849,38 +851,6 @@ function test_database_connection {
 }
 
 ###################################################################
-function start_api_server {
-	# check for application configuration files
-	if [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
-		echo "Error: missing $API_SETTINGS settings file. Exiting"
-		exit 1;
-	fi
-
-	echo "------------------------"
-	echo "---- EXPERIMENTAL ------"
-	echo "------------------------"
-	echo "Starting API server..."
-	echo "Please wait, it might take some time..."
-	echo ""
-	echo "Connect to http://$OH_UI_URL for dashboard"
-	echo ""
-	
-	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
-	#$JAVA_BIN -client -Xms64m -Xmx1024m -cp "bin/openhospital-api-0.0.2.jar:rsc:static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$LOG_FILE 2>&1
-	
-	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
-	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &
-	
-	if [ $? -ne 0 ]; then
-		echo "An error occurred while starting Open Hospital API. Exiting."
-		shutdown_database;
-		cd "$CURRENT_DIR"
-		exit 4
-	fi
-	cd "$OH_PATH"
-}
-
-###################################################################
 function write_api_config_file {
 	######## application.properties setup - OH API server
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
@@ -889,7 +859,7 @@ function write_api_config_file {
 		# JWT_TOKEN_SECRET=`openssl rand -base64 64 | xargs`
 		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
 		echo "Writing OH API configuration file -> $API_SETTINGS..."
-		sed -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" ./$OH_DIR/rsc/$API_SETTINGS.dist > ./$OH_DIR/rsc/$API_SETTINGS
+		sed -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" -e "s&OH_API_PID&"$OH_API_PID"&g" ./$OH_DIR/rsc/$API_SETTINGS.dist > ./$OH_DIR/rsc/$API_SETTINGS
 	fi
 }
 
@@ -981,6 +951,49 @@ function start_gui {
 		cd "$CURRENT_DIR"
 		exit 4
 	fi
+}
+
+###################################################################
+function start_api_server {
+	# check for application configuration files
+	if [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
+		echo "Error: missing $API_SETTINGS settings file. Exiting"
+		exit 1;
+	fi
+	
+	########## WORKAROUND to kill existing API server process ##################
+	########## TO BE REMOVED IN NEXT RELEASE
+	##########
+	# check for stale PID files
+	if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
+		API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
+		echo "Killing API server - process $API_PID_NUMBER..."
+		kill $API_PID_NUMBER
+	fi
+	##########
+
+	echo "------------------------"
+	echo "---- EXPERIMENTAL ------"
+	echo "------------------------"
+	echo "Starting API server..."
+	echo "Please wait, it might take some time..."
+	echo ""
+	echo "Connect to http://$OH_UI_URL for dashboard"
+	echo ""
+	
+	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
+	#$JAVA_BIN -client -Xms64m -Xmx1024m -cp "bin/openhospital-api-0.1.0.jar:rsc:static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$LOG_FILE 2>&1
+	
+	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &
+	
+	if [ $? -ne 0 ]; then
+		echo "An error occurred while starting Open Hospital API. Exiting."
+		shutdown_database;
+		cd "$CURRENT_DIR"
+		exit 4
+	fi
+	cd "$OH_PATH"
 }
 
 ###################################################################
@@ -1150,7 +1163,7 @@ function parse_user_input {
 		read -p "Press [y] to confirm: " choice
 		if [ "$choice" = "y" ]; then
 			# ask user for root database password
-			read -p "Please insert the MariaDB / MySQL database root password [root@$DATABASE_SERVER] -> " -s DATABASE_ROOT_PW
+			read -p "Please insert the MariaDB / MySQL database root password [$DATABASE_ROOT_USER@$DATABASE_SERVER] -> " -s DATABASE_ROOT_PW
 			echo ""
 			create_database_user;
 			create_database;
@@ -1371,6 +1384,19 @@ function parse_user_input {
 			echo "Killing java..."
 			killall java
 		fi
+		########## WORKAROUND to kill existing API server process ##################
+		########## TO BE REMOVED IN NEXT RELEASE
+		##########
+		# check for stale PID files
+		if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
+			API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
+			echo "Killing API server - process $API_PID_NUMBER..."
+			kill $API_PID_NUMBER
+			echo "Removing API server pid file $OH_API_PID..."
+			rm -f $OH_PATH/$TMP_DIR/$OH_API_PID
+		fi
+		##########
+
 		# cleaning files
         	echo "Cleaning Open Hospital installation..."
 		echo "Warning: do you want to remove all existing log files?"

@@ -382,8 +382,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelQty() {
-		JLabel jLabelQty = new JLabel(MessageBundle.getMessage("angal.common.quantity.txt"));
-		return jLabelQty;
+		return new JLabel(MessageBundle.getMessage("angal.common.quantity.txt"));
 	}
 
 	private JPanel getJPanelQuantity() {
@@ -476,8 +475,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelWeight() {
-		JLabel jLabelWeight = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
-		return jLabelWeight;
+		return new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
 	}
 	
 	private VoLimitedTextField getJWeightTextField() {
@@ -510,8 +508,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelAge() {
-		JLabel jLabelAge = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
-		return jLabelAge;
+		return new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
 	}
 	
 	private VoLimitedTextField getJAgeTextField() {
@@ -544,13 +541,11 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelPatient() {
-		JLabel jLabelPatient = new JLabel(MessageBundle.getMessage("angal.medicalstockwardedit.patient"));
-		return jLabelPatient;
+		return new JLabel(MessageBundle.getMessage("angal.medicalstockwardedit.patient"));
 	}
 	
 	private JLabel getJLabelInternalUse() {
-		JLabel jLabelInternalUse = new JLabel(MessageBundle.getMessage("angal.medicalstockwardedit.internaluse"));
-		return jLabelInternalUse;
+		return new JLabel(MessageBundle.getMessage("angal.medicalstockwardedit.internaluse"));
 	}
 
 	private JComboBox getJComboBoxDrugs(String s) {
@@ -605,8 +600,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelDrug() {
-		JLabel jLabelDrug = new JLabel(MessageBundle.getMessage("angal.medicalstockwardedit.drug"));
-		return jLabelDrug;
+		return new JLabel(MessageBundle.getMessage("angal.medicalstockwardedit.drug"));
 	}
 
 }

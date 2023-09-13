@@ -133,11 +133,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			}
 			patSearch = patArray;
 		}
-		if (pat == null) {
-			patient = null;
-		} else {
-			patient = pat;
-		}
+		patient = pat;
 		ps = new PatientSummary(patient);
 		initComponents();
 		addWindowListener(new WindowAdapter() {
@@ -164,11 +160,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			}
 			patSearch = patArray;
 		}
-		if (pat == null) {
-			patient = null;
-		} else {
-			patient = pat;
-		}
+		patient = pat;
 		ps = new PatientSummary(patient);
 		initComponents();
 		addWindowListener(new WindowAdapter() {

@@ -112,22 +112,17 @@ public class PatientInsert extends JDialog implements ActionListener {
 	private JPanel jSecondNamePanel;
 	private JTextField jSecondNameTextField;
 	private JPanel sexPanel;
-	private ButtonGroup sexGroup;
 	private String sexSelect = " ";
 	private char sex = 'M';
 	private boolean insert;
 	private Patient patient;
 	private JPanel jAddressPanel;
-	private JLabel jAddressLabel;
 	private JTextField jAddressTextField;
 	private JPanel jCityPanel;
-	private JLabel jCityLabel;
 	private JTextField jCityTextField;
 	private JPanel jTelPanel;
-	private JLabel jTelLabel;
 	private JTextField jTelephoneTextField;
 	private JPanel jNextKinPanel;
-	private JLabel jNextKinLabel;
 	private JTextField jNextKinTextField;
 	//	private int oldAge;
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
@@ -137,7 +132,6 @@ public class PatientInsert extends JDialog implements ActionListener {
 	private JPanel jFirstNamePanel;
 	private JPanel jLabelPanel;
 	private JPanel jSexLabelPanel;
-	private JLabel jLabel2;
 	private JPanel jSecondNamePanel1;
 	private JPanel jAgePanel1;
 	private JPanel jFirstName;
@@ -153,11 +147,6 @@ public class PatientInsert extends JDialog implements ActionListener {
 	private JPanel jNextKin;
 	private JPanel jTelephone;
 	private JPanel jDataContainPanel;
-	private int pfrmBase = 2;
-	private int pfrmWidth = 1;
-	private int pfrmHeight = 1;
-	private int pfrmBordX;
-	private int pfrmBordY;
 	private JTextArea jNoteTextArea;
 	private JPanel jNotePanel;
 	private JScrollPane jNoteScrollPane;
@@ -269,7 +258,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 								MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 							} else {
 								bdate = bdate.minusYears(age);
-								String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
+								String name = jFirstNameTextField.getText() + ' ' + jSecondNameTextField.getText();
 								try {
 									if (patientBrowserManager.isNamePresent(name)) {
 										switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
@@ -325,7 +314,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 						}
 					}
 				} else { //Update
-					String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
+					String name = jFirstNameTextField.getText() + ' ' + jSecondNameTextField.getText();
 					if (!(patient.getName().equals(name))) {
 						try {
 							if (patientBrowserManager.isNamePresent(name)) {
@@ -498,7 +487,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 	private JPanel getSexPanel() {
 		if (sexPanel == null) {			
 			sexPanel = new JPanel();
-			sexGroup=new ButtonGroup();
+			ButtonGroup sexGroup = new ButtonGroup();
 			JRadioButton radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
 			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			sexPanel.add(getJSexLabelPanel(), null);
@@ -528,7 +517,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 */
 	private JPanel getJAddressPanel() {
 		if (jAddressPanel == null) {
-			jAddressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
+			JLabel jAddressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
 			jAddressPanel = new JPanel();
 			jAddressPanel.add(jAddressLabel, BorderLayout.EAST);
 		}
@@ -557,7 +546,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 */
 	private JPanel getJCityPanel() {
 		if (jCityPanel == null) {
-			jCityLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt"));
+			JLabel jCityLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt"));
 			jCityPanel = new JPanel();		
 			jCityPanel.add(jCityLabel, BorderLayout.EAST);
 		}
@@ -586,7 +575,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 */
 	private JPanel getJTelPanel() {
 		if (jTelPanel == null) {
-			jTelLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
+			JLabel jTelLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			jTelPanel = new JPanel();				
 			jTelPanel.add(jTelLabel,  BorderLayout.EAST);
 		}
@@ -615,7 +604,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 */
 	private JPanel getJNextKinPanel() {
 		if (jNextKinPanel == null) {
-			jNextKinLabel = new JLabel(MessageBundle.getMessage("angal.patient.nextkin"));
+			JLabel jNextKinLabel = new JLabel(MessageBundle.getMessage("angal.patient.nextkin"));
 			jNextKinPanel = new JPanel();			
 			jNextKinPanel.add(jNextKinLabel, BorderLayout.EAST);
 		}
@@ -719,7 +708,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 */
 	private JPanel getJSexLabelPanel() {
 		if (jSexLabelPanel == null) {
-			jLabel2 = new JLabel(MessageBundle.getMessage("angal.patient.sexstar"));
+			JLabel jLabel2 = new JLabel(MessageBundle.getMessage("angal.patient.sexstar"));
 			jSexLabelPanel = new JPanel();
 			jSexLabelPanel.setLayout(new BorderLayout());
 			

@@ -101,7 +101,6 @@ public class DeliveryTypeBrowserEdit extends JDialog {
     private DeliveryType deliveryType;
     private boolean insert;
     private JPanel jDataPanel;
-    private JLabel jCodeLabel;
 
     /**
      * This is the default constructor; we pass the arraylist and the selectedrow

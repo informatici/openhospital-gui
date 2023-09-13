@@ -27,9 +27,9 @@ import java.awt.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SessionRefresheTimerRunnable implements Runnable {
+public class SessionRefreshTimerRunnable implements Runnable {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRefresheTimerRunnable.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRefreshTimerRunnable.class);
 	private static final long THREAD_SLEEP_TIME = 5000;
 
 	private double x;
@@ -50,7 +50,7 @@ public class SessionRefresheTimerRunnable implements Runnable {
 				if (x != this.x || y != this.y) {
 					if (UserSession.getTimer() != null) {
 						UserSession.getTimer().startTimer();
-						LOGGER.debug("Mouse moved. Session refreshed.");
+						LOGGER.trace("Mouse moved. Session refreshed.");
 					}
 					this.x = x;
 					this.y = y;

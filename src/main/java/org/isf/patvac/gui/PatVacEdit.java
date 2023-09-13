@@ -105,7 +105,6 @@ public class PatVacEdit extends JDialog {
 	private String s;
 	private List<Patient> patientList;
 	private GoodDateChooser vaccineDateFieldCal;
-	private LocalDateTime dateIn;
 	private int patNextYProg;
 
 	private JPanel centerPanel;
@@ -363,6 +362,7 @@ public class PatVacEdit extends JDialog {
 	 * @return GoodDateChooser
 	 */
 	private GoodDateChooser getVaccineDateFieldCal() {
+		LocalDateTime dateIn;
 		if (insert) {
 			dateIn = RememberDates.getLastPatientVaccineDate();
 		} else {

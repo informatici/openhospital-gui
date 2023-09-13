@@ -93,11 +93,8 @@ public class Cropping extends JPanel {
 				int newWidth = (int) (newHeight * ratio);
 				return new Dimension(newWidth, newHeight);
 			}
-			
-			if (currentWidth == currentHeight) {
-				return new Dimension(currentWidth, currentHeight);
-			}
-		} 
+			return new Dimension(currentWidth, currentHeight);
+		}
 		
 		return new Dimension(currentWidth, currentHeight);
 	}

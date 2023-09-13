@@ -32,10 +32,10 @@ import org.isf.lab.model.Laboratory;
 import org.isf.patient.model.Patient;
 import org.junit.jupiter.api.Test;
 
-public class PatientComboBoxTest {
+class PatientComboBoxTest {
 
 	@Test
-	public void shouldCreateComboBoxWithPatientsAndPatientFromLaboratorySelected() {
+	void shouldCreateComboBoxWithPatientsAndPatientFromLaboratorySelected() {
 		// given:
 		Patient patient = TestPatient.patientWithCode(1);
 		Patient patient2 = TestPatient.patientWithCode(2);
@@ -49,12 +49,11 @@ public class PatientComboBoxTest {
 
 		// then:
 		assertThat(patientComboBox.getItemCount()).isEqualTo(3);
-		assertThat(selectedPatient.isPresent()).isTrue();
-		assertThat(selectedPatient.get()).isEqualTo(patient2);
+		assertThat(selectedPatient).isPresent().contains(patient2);
 	}
 
 	@Test
-	public void shouldCreateComboBoxWithPatientsAndNotSelectWhenInsertMode() {
+	void shouldCreateComboBoxWithPatientsAndNotSelectWhenInsertMode() {
 		// given:
 		Patient patient = TestPatient.patientWithCode(1);
 		Patient patient2 = TestPatient.patientWithCode(2);
@@ -68,7 +67,7 @@ public class PatientComboBoxTest {
 
 		// then:
 		assertThat(patientComboBox.getItemCount()).isEqualTo(3);
-		assertThat(selectedPatient.isPresent()).isFalse();
+		assertThat(selectedPatient).isNotPresent();
 		assertThat(patientComboBox.getSelectedItem()).isEqualTo(MessageBundle.getMessage("angal.lab.selectapatient"));
 	}
 

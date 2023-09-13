@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2022 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -33,10 +33,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Disabled("Disabled until native libraries are available in CI build")
-public class ImageUtilTest {
+class ImageUtilTest {
 
 	@Test
-	public void testScaling() throws Exception {
+	void testScaling() throws Exception {
 		File file = new File(getClass().getResource("patient.jpg").getFile());
 		BufferedImage image = ImageIO.read(file);
 		int originalWidth = image.getWidth();

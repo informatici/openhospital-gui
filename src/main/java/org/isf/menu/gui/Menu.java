@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -88,19 +88,19 @@ public class Menu {
 		if (runningVersion == null || requiredVersion == null) {
 			return true;
 		}
-		Scanner scannerRunningVersion = new Scanner(runningVersion);
-		Scanner scannerRequiredVersion = new Scanner(requiredVersion);
-		scannerRunningVersion.useDelimiter(DELIMITER);
-		scannerRequiredVersion.useDelimiter(DELIMITER);
-		while (scannerRunningVersion.hasNextInt() && scannerRequiredVersion.hasNextInt()) {
-			int running = scannerRunningVersion.nextInt();
-			int required = scannerRequiredVersion.nextInt();
-			if (running == required) {
-				continue;
+		try(Scanner scannerRunningVersion = new Scanner(runningVersion); Scanner scannerRequiredVersion = new Scanner(requiredVersion)) {
+			scannerRunningVersion.useDelimiter(DELIMITER);
+			scannerRequiredVersion.useDelimiter(DELIMITER);
+			while (scannerRunningVersion.hasNextInt() && scannerRequiredVersion.hasNextInt()) {
+				int running = scannerRunningVersion.nextInt();
+				int required = scannerRequiredVersion.nextInt();
+				if (running == required) {
+					continue;
+				}
+				return running >= required;
 			}
-			return running >= required;
+			return true;
 		}
-		return true;
 	}
 
 	public static void main(String[] args) {

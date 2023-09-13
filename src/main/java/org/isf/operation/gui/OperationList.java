@@ -66,7 +66,6 @@ public class OperationList extends JPanel {
 	}
 
 	private JTable jTableData;
-	private JDialog dialogOpe;
 	private List<OperationRow> oprowData;
 	private Opd myOpd;
 	private Admission myAdmission;
@@ -163,8 +162,8 @@ public class OperationList extends JPanel {
 		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 		
 		jTableData.setModel(modelOhOpeRow);
-		
-		dialogOpe = new JDialog();
+
+		JDialog dialogOpe = new JDialog();
 		dialogOpe.setLocationRelativeTo(null);
 		dialogOpe.setSize(450, 280);
 		dialogOpe.setLocationRelativeTo(null);

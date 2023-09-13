@@ -484,7 +484,6 @@ public class WardPharmacyRectify extends JDialog {
 			}
 		}
 		if (newLot) {
-			Medical med = (Medical) jComboBoxMedical.getSelectedItem();
 			Lot addLot = askLot();
 			if (addLot == null) {
 				return null;
@@ -534,8 +533,6 @@ public class WardPharmacyRectify extends JDialog {
 	}
 
 	protected Lot askLot() {
-		LocalDateTime preparationDate = TimeTools.getNow();
-		LocalDateTime expiringDate = TimeTools.getNow();
 		Lot lot = null;
 		JTextField lotNameTextField = new JTextField(15);
 
@@ -574,8 +571,8 @@ public class WardPharmacyRectify extends JDialog {
 				if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
 					MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.expirydatebeforepreparationdate");
 				} else {
-					expiringDate = expireDateChooser.getDateEndOfDay();
-					preparationDate = preparationDateChooser.getDateStartOfDay();
+					LocalDateTime expiringDate = expireDateChooser.getDateEndOfDay();
+					LocalDateTime preparationDate = preparationDateChooser.getDateStartOfDay();
 					lot = new Lot(lotName, preparationDate, expiringDate);
 				}
 			} else {
@@ -612,7 +609,7 @@ public class WardPharmacyRectify extends JDialog {
 		StringBuilder message = new StringBuilder(med.toString());
 		String prodCode = med.getProdCode();
 		if (prodCode != null && !prodCode.equals("")) {
-			title.append(" ").append(MessageBundle.getMessage("angal.common.code.txt")); //$NON-NLS-1$ //$NON-NLS-2$
+			title.append(' ').append(MessageBundle.getMessage("angal.common.code.txt")); //$NON-NLS-1$ //$NON-NLS-2$
 			title.append(": ").append(prodCode); //$NON-NLS-1$
 		} else { 
 			title.append(": "); //$NON-NLS-1$
@@ -653,8 +650,8 @@ public class WardPharmacyRectify extends JDialog {
 			jSpinnerNewQty = new JSpinner(spinnerNewQtyModel);
 			jSpinnerNewQty.setFont(FONT_BOLD);
 			jSpinnerNewQty.addChangeListener(changeEvent -> {
-				Double stock = Double.parseDouble(jTextFieldStockQty.getText());
-				Double newQty = spinnerNewQtyModel.getNumber().doubleValue();
+				double stock = Double.parseDouble(jTextFieldStockQty.getText());
+				double newQty = spinnerNewQtyModel.getNumber().doubleValue();
 				if (stock > 0) {
 					jButtonChooseLot.setEnabled(true);
 				}

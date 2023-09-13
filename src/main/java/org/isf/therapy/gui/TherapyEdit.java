@@ -297,10 +297,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		notifyCheckBox.setEnabled(false);
 	}
 
-	private String getDate() {
-		return DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD).format(TimeTools.getNow());
-	}
-
 	private void showTherapies() {
 		for (Therapy th : therapies) {
 			showTherapy(th);
@@ -787,7 +783,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				// to free memory
 				if (therapyModified || visitModified) {
 					int ok = JOptionPane.showConfirmDialog(TherapyEdit.this,
-									MessageBundle.getMessage("angal.common.save") + "?"); //$NON-NLS-1$
+									MessageBundle.getMessage("angal.common.save") + '?'); //$NON-NLS-1$
 					if (ok == JOptionPane.YES_OPTION) {
 						saveButton.doClick();
 					} else if (ok == JOptionPane.NO_OPTION) {
@@ -889,7 +885,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		if (!medOutStock.isEmpty()) {
 			StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.therapy.followingdrugsarefewornotavailable")); //$NON-NLS-1$
 			for (Medical med : medOutStock) {
-				message.append("\n").append(med.toString());
+				message.append('\n').append(med.toString());
 			}
 			JOptionPane.showMessageDialog(TherapyEdit.this, message.toString(),
 					MessageBundle.getMessage("angal.therapy.therapynotavailable.title"), JOptionPane.WARNING_MESSAGE);

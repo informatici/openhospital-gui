@@ -64,7 +64,6 @@ public class PatientSummary {
 	
 	private int maximumWidth = 350;
 	private int borderThickness = 10;
-	private int imageMaxWidth = 140;
 
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
@@ -133,31 +132,6 @@ public class PatientSummary {
 
 	final int insetSize = 5;
 
-	private JPanel getPatientTitlePanel() {
-		StringBuilder label = new StringBuilder(MessageBundle.getMessage("angal.admission.patientsummary"))
-				.append(" (")
-				.append(MessageBundle.getMessage("angal.common.code.txt"))
-				.append(": ")
-				.append(patient.getCode())
-				.append(")");
-		JLabel l = new JLabel(label.toString());
-		l.setBackground(Color.CYAN);
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.CENTER, insetSize, insetSize));
-		lP.add(l);
-		return lP;
-	}
-	
-	private Image scaleImage(int maxDim, Image photo) {
-		double scale = (double) maxDim / (double) photo.getHeight(null);
-		if (photo.getWidth(null) > photo.getHeight(null)) {
-			scale = (double) maxDim / (double) photo.getWidth(null);
-		}
-		int scaledW = (int) (scale * photo.getWidth(null));
-		int scaledH = (int) (scale * photo.getHeight(null));
-		
-		return photo.getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH);
-	}
-	
 	private JPanel getPatientCard() {
 		JPanel cardPanel = new JPanel();
 		cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.X_AXIS));
@@ -219,16 +193,9 @@ public class PatientSummary {
 		}
 		return string;
 	}
-	
-	private JPanel getPatientNamePanel() {
-		JLabel l = new JLabel(patient.getSecondName() + " " + patient.getFirstName());
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
-		return lP;
-	}
 
 	private JPanel getPatientTaxCodePanel() {
-		JLabel l = new JLabel(patient.getTaxCode() + " ");
+		JLabel l = new JLabel(patient.getTaxCode() + ' ');
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
 		return lP;
@@ -335,22 +302,6 @@ public class PatientSummary {
 		return lP;
 	}
 
-	private JPanel getPatientAgePanel() {
-		JLabel l = new JLabel(String.valueOf(patient.getAge()));
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
-		return lP;
-	}
-
-	private JPanel getPatientSexPanel() {
-		JLabel l = new JLabel((patient.getSex() == 'F'
-				? MessageBundle.getMessage("angal.common.female.txt")
-				: MessageBundle.getMessage("angal.common.male.txt")));
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
-		return lP;
-	}
-
 	private JPanel getPatientParentNewsPanel() {
 		StringBuffer labelBfr = new StringBuffer("<html>");
 		if (patient.getMother() == 'A') {
@@ -359,14 +310,14 @@ public class PatientSummary {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisdead"));
 		}
 		// added
-			labelBfr.append((patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : "(" + patient.getMotherName() + ")<BR>"));
+			labelBfr.append((patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getMotherName() + ")<BR>"));
 		if (patient.getFather() == 'A') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisalive"));
 		} else if (patient.getFather() == 'D') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisdead"));
 		}
 		// added
-		labelBfr.append((patient.getFatherName() == null || patient.getFatherName().compareTo("") == 0 ? "<BR>" : "(" + patient.getFatherName() + ")<BR>"));
+		labelBfr.append((patient.getFatherName() == null || patient.getFatherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getFatherName() + ")<BR>"));
 		if (patient.getParentTogether() == 'Y') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.parentslivetoghether"));
 		} else if (patient.getParentTogether() == 'N') {

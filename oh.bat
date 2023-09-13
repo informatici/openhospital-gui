@@ -17,7 +17,7 @@ REM # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 REM # GNU General Public License for more details.
 REM #
 REM # You should have received a copy of the GNU General Public License
-REM # along with this program. If not, see <http://www.gnu.org/licenses/>.
+REM # along with this program. If not, see <https://www.gnu.org/licenses/>.
 REM #
 
 REM ################### Script configuration ###################
@@ -154,13 +154,13 @@ set ARCH=x64
 
 REM ######## MySQL Software
 REM # MariaDB 64bit download URL
-REM https://archive.mariadb.org/mariadb-10.6.12/winx64-packages/mariadb-10.6.12-winx64.zip
+REM https://archive.mariadb.org/mariadb-10.6.14/winx64-packages/mariadb-10.6.14-winx64.zip
 
 REM # MariaDB 32bit download  URL
 REM https://archive.mariadb.org/mariadb-10.6.5/win32-packages/mariadb-10.6.5-win32.zip
 
 REM set MYSQL_DIR=mariadb-10.6.5-win%ARCH%
-set MYSQL_DIR=mariadb-10.6.12-win%ARCH%
+set MYSQL_DIR=mariadb-10.6.14-win%ARCH%
 
 REM ####### JAVA Software
 REM # JRE 11 64bit - x86_64 - openjdk
@@ -321,8 +321,6 @@ set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_base
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_extra
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_stat
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc
-set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\icons
-set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\images
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\bin\OH-gui.jar
 
 REM # Setup native_lib_path for current architecture

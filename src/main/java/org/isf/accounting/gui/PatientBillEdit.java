@@ -403,7 +403,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			this.prcArray = priceListManager.getPrices();
 			this.lstArray = priceListManager.getLists();
 			this.othPrices = pricesOthersManager.getOthers();
-			this.currencyCod = hospitalManager.getHospitalCurrencyCod();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
 		}
@@ -447,7 +446,28 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			}
 		}
 		setPriceListArray();
+		setCurrencyCode();
 		updateTotals();
+	}
+
+	private void setCurrencyCode() {
+		try {
+			if (thisBill != null && thisBill.isList() && thisBill.getPriceList() != null && thisBill.getPriceList().getCurrency() != null
+							&& !thisBill.getPriceList().getCurrency().equals("")) {
+				// if bill is defined (editing), then currency is the one of its pricelist
+				this.currencyCod = thisBill.getPriceList().getCurrency();
+
+			} else if (!lstArray.get(0).getCurrency().equals("")) {
+				// if bill is not defined (inserting), then currency is the one of the first pricelist (default)
+				this.currencyCod = lstArray.get(0).getCurrency();
+
+			} else {
+				// fallback to hospital currency if not defined for pricelist
+				this.currencyCod = hospitalManager.getHospitalCurrencyCod();
+			}
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
+		}
 	}
 
 	private void updateGUI() {
@@ -501,11 +521,15 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			} else {
 				PriceList priceListFound = priceList.get();
 				if (!priceListFound.getCurrency().equals("") && !priceListFound.getCurrency().equals(this.currencyCod)) {
+					// the currency has changed since last read (editing)
 					MessageDialog.info(PatientBillEdit.this,
 									MessageBundle.formatMessage("angal.newbill.thepricelistcurrencycodehaschangedarrow.fmt.msg",
 													priceListFound.getCurrency(), this.currencyCod));
 					setCurrencyCodeFromList(priceListFound);
 				}
+				// NOTE: there is no way to spot currency changes after last save because the currency is not saved along with the bill but with the pricelist.
+				// So, when opening the bill (editing), we don't know the currency, which is taken from the linked pricelist (whatever it is) and automatically
+				// applied, without alert. We don't have (yet) a versioning of price lists, nor a currency field for an invoice.
 			}
 		}
 
@@ -578,7 +602,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						modified = true;
 					}
 				}
-				if (!thisBill.getAdmission().getWard().equals(currentAdmission.getWard())) {
+				if (thisBill.getAdmission() != null && currentAdmission != null && !thisBill.getAdmission().getWard().equals(currentAdmission.getWard())) {
 					MessageDialog.info(PatientBillEdit.this,
 									MessageBundle.formatMessage("angal.newbill.thepatienthaschangedwardsarrow.fmt.msg",
 													thisBill.getAdmission().getWard(), currentAdmission.getWard()));

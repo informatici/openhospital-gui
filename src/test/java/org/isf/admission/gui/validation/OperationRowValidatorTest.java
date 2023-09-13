@@ -34,18 +34,18 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class OperationRowValidatorTest {
+class OperationRowValidatorTest {
 
 	OperationRowValidator operationRowValidator;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		GeneralData.LANGUAGE = "en-EN";
 		operationRowValidator = new OperationRowValidator();
 	}
 
 	@Test
-	public void shouldNotAddErrorsWhenDateRangeIsCorrect() {
+	void shouldNotAddErrorsWhenDateRangeIsCorrect() {
 		// given:
 		LocalDateTime operationDate = LocalDateTime.of(2020, 2, 2, 11, 0);
 		LocalDateTime admissionDate = LocalDateTime.of(2020, 2, 1, 11, 0);
@@ -58,11 +58,11 @@ public class OperationRowValidatorTest {
 		);
 
 		// then:
-		assertThat(result.isEmpty()).isTrue();
+		assertThat(result).isEmpty();
 	}
 
 	@Test
-	public void shouldNotAddErrorsWhenAdmissionAndDischargeDatesAreNull() {
+	void shouldNotAddErrorsWhenAdmissionAndDischargeDatesAreNull() {
 		// given:
 		LocalDateTime operationDate = LocalDateTime.of(2020, 2, 2, 11, 0);
 		LocalDateTime admissionDate = null;
@@ -75,11 +75,11 @@ public class OperationRowValidatorTest {
 		);
 
 		// then:
-		assertThat(result.isEmpty()).isTrue();
+		assertThat(result).isEmpty();
 	}
 
 	@Test
-	public void shouldAddErrorsForOperationsBeforeAdmissionDate() {
+	void shouldAddErrorsForOperationsBeforeAdmissionDate() {
 		// given:
 		LocalDateTime firstOperationDate = LocalDateTime.of(2019, 2, 2, 11, 0);
 		LocalDateTime secondOperationDate = LocalDateTime.of(2018, 2, 2, 11, 0);
@@ -96,11 +96,11 @@ public class OperationRowValidatorTest {
 		);
 
 		// then:
-		assertThat(result.size()).isEqualTo(2);
+		assertThat(result).hasSize(2);
 	}
 
 	@Test
-	public void shouldAddErrorsForOperationsBeforeAdmissionDateWhenDischargeDateNotProvided() {
+	void shouldAddErrorsForOperationsBeforeAdmissionDateWhenDischargeDateNotProvided() {
 		// given:
 		LocalDateTime firstOperationDate = LocalDateTime.of(2019, 2, 2, 11, 0);
 		LocalDateTime secondOperationDate = LocalDateTime.of(2018, 2, 2, 11, 0);
@@ -117,11 +117,11 @@ public class OperationRowValidatorTest {
 		);
 
 		// then:
-		assertThat(result.size()).isEqualTo(2);
+		assertThat(result).hasSize(2);
 	}
 
 	@Test
-	public void shouldAddErrorsForOperationsAfterDischargeDate() {
+	void shouldAddErrorsForOperationsAfterDischargeDate() {
 		// given:
 		LocalDateTime firstOperationDate = LocalDateTime.of(2020, 2, 4, 11, 0);
 		LocalDateTime secondOperationDate = LocalDateTime.of(2020, 2, 4, 11, 0);
@@ -138,7 +138,7 @@ public class OperationRowValidatorTest {
 		);
 
 		// then:
-		assertThat(result.size()).isEqualTo(2);
+		assertThat(result).hasSize(2);
 	}
 
 }

@@ -210,7 +210,6 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel jBirthDateGroupPanel;
 	private LocalDate birthDate;
 	private JLabel jBirthDateAge;
-	private GoodDateChooser jBirthDateChooser;
 
 	// AgeDescription Components:
 	private int ageType;
@@ -408,7 +407,6 @@ public class PatientInsertExtended extends JDialog {
 		if (jAnamnesisButton == null) {
 			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
-			PatientInsertExtended self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
 				patientHistory = new PatientHistory();
 				if (patient.getCode() != null) {
@@ -426,7 +424,6 @@ public class PatientInsertExtended extends JDialog {
 		}
 		return jAnamnesisButton;
 	}
-
 
 	/**
 	 * This method initializes jOkButton
@@ -455,7 +452,7 @@ public class PatientInsertExtended extends JDialog {
 					return;
 				}
 				if (insert) {
-					String name = firstName + " " + secondName;
+					String name = firstName + ' ' + secondName;
 					try {
 						if (patientBrowserManager.isNamePresent(name)) {
 							switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
@@ -694,7 +691,7 @@ public class PatientInsertExtended extends JDialog {
 			years = ageType.getFrom();
 			if (index == 1) {
 				months = jAgeMonthsComboBox.getSelectedIndex();
-				patient.setAgetype(ageType.getCode() + "/" + months);
+				patient.setAgetype(ageType.getCode() + '/' + months);
 				birthDate = LocalDate.now().minusYears(years).minusMonths(months);
 			} else {
 				birthDate = LocalDate.now().minusYears(years);
@@ -790,7 +787,7 @@ public class PatientInsertExtended extends JDialog {
 				birthDate = patient.getBirthDate();
 			}
 
-			jBirthDateChooser = new GoodDateChooser(birthDate, false);
+			GoodDateChooser jBirthDateChooser = new GoodDateChooser(birthDate, false);
 			jBirthDateChooser.addDateChangeListener(event -> {
 				LocalDate newDate = event.getNewDate();
 				if (newDate != null) {
@@ -1709,7 +1706,7 @@ public class PatientInsertExtended extends JDialog {
 			jDataContainPanel = new JPanel();
 			if (!insert) {
 				StringBuilder title = new StringBuilder(patient.getName()).append(" (").append(MessageBundle.getMessage("angal.common.code.txt")).append(": ")
-								.append(patient.getCode()).append(")");
+								.append(patient.getCode()).append(')');
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel, title.toString());
 			} else {
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel, MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
@@ -2177,13 +2174,13 @@ public class PatientInsertExtended extends JDialog {
 				jRightPanel.add(photoPanel, BorderLayout.NORTH);
 			}
 			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);
-			jRightPanel.add(getConsensus(), BorderLayout.SOUTH);
+			jRightPanel.add(getJPanelConsensus(), BorderLayout.SOUTH);
 
 		}
 		return jRightPanel;
 	}
 
-	private JPanel getConsensus() {
+	private JPanel getJPanelConsensus() {
 		try {
 			if (patient != null && patient.getCode() != null) {
 				consensus = this.patientConsensusManager.getPatientConsensusByUserId(patient.getCode()).get();
@@ -2197,15 +2194,19 @@ public class PatientInsertExtended extends JDialog {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		JCheckBox checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.consensus.txt"));
-		checkbox.addActionListener(e -> consensus.setConsensusFlag(!consensus.isConsensusFlag()));
-		checkbox.setSelected(consensus.isConsensusFlag());
-		panel.add(checkbox);
+		JCheckBox checkboxConsensus = new JCheckBox("<html><body style='width: 150px; padding-left: 10px;'>" +
+						MessageBundle.getMessage("angal.patient.consensus.consensus.txt") +
+						"</body></html>");
+		checkboxConsensus.addActionListener(e -> consensus.setConsensusFlag(!consensus.isConsensusFlag()));
+		checkboxConsensus.setSelected(consensus.isConsensusFlag());
+		panel.add(checkboxConsensus);
 
-		checkbox = new JCheckBox(MessageBundle.getMessage("angal.patient.consensus.service.txt"));
-		checkbox.addActionListener(e -> consensus.setServiceFlag(!consensus.isServiceFlag()));
-		checkbox.setSelected(consensus.isServiceFlag());
-		panel.add(checkbox);
+		JCheckBox checkboxService = new JCheckBox("<html><body style='width: 150px; padding-left: 10px;'>" +
+						MessageBundle.getMessage("angal.patient.consensus.service.txt") +
+						"</body></html>");
+		checkboxService.addActionListener(e -> consensus.setServiceFlag(!consensus.isServiceFlag()));
+		checkboxService.setSelected(consensus.isServiceFlag());
+		panel.add(checkboxService);
 
 		panel.setBorder(
 						BorderFactory.createCompoundBorder(

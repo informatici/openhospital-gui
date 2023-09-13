@@ -165,7 +165,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTextField jAffiliatePersonJTextField;
 	private JButton jButtonReport;
 	private JComboBox<String> jComboUsers;
-	private JTextField medicalJTextField;
 	private JMonthChooser jComboBoxMonths;
 	private JYearChooser jComboBoxYears;
 	private JPanel panelSupRange;
@@ -842,21 +841,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		jAffiliatePersonJTextField.setText(patientParent != null ? patientParent.getName() : "");
 
 		if (patientParent != null) {
-			if (medicalJTextField != null) {
-				medicalJTextField.setText("");
-			}
 			updateDataSet(dateFrom, dateTo, patientParent);
 			updateTables();
 			updateTotals();
 		}
-	}
-
-	public Patient getPatientParent() {
-		return patientParent;
-	}
-
-	public void setPatientParent(Patient patientParent) {
-		this.patientParent = patientParent;
 	}
 
 	private JComboBox<String> getJComboUsers() {
@@ -875,8 +863,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 			jComboUsers.addActionListener(actionEvent -> {
 				user = (String) jComboUsers.getSelectedItem();
-				jTableUser.setValueAt("<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>", 0, 0);
-				jTableUser.setValueAt("<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>", 0, 2);
+				jTableUser.setValueAt("<html><b>" + user + ' ' + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>", 0, 0);
+				jTableUser.setValueAt("<html><b>" + user + ' ' + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>", 0, 2);
 				updateTotals();
 				jTableBills.setModel(new BillTableModel("ALL", user)); //$NON-NLS-1$
 				jTablePending.setModel(new BillTableModel("O", user)); //$NON-NLS-1$
@@ -1124,9 +1112,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jTableUser.setModel(
 					new DefaultTableModel(new Object[][]
 						{ {
-								"<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>",
+								"<html><b>" + user + ' ' + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>",
 								userToday,
-								"<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>",
+								"<html><b>" + user + ' ' + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>",
 								userPeriod
 						} },
 							new String[] { "", "", "", "" }) {

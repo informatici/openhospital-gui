@@ -173,11 +173,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private String rowCounterText = MessageBundle.getMessage("angal.common.count.label") + ' ';
 	private JLabel rowCounter;
 	private JRadioButton radioNewAttendance;
-	private JRadioButton radioReAttendance;
 	private JRadioButton radioAllPatiens;
 	private final JFrame myFrame;
 	private JRadioButton radioMale;
-	private JRadioButton radioFemale;
 	private JRadioButton radioAllGender;
 	private List<Disease> diseases;
 	protected AbstractButton searchDiseaseButton;
@@ -187,7 +185,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JTextField opdCodeFilter;
 	private JTextField progYearFilter;
 	private JTextField patientCodeFilter;
-	private ButtonGroup groupUserFilter;
 	private JRadioButton radioMyPatients;
 	private JRadioButton radioAllPatients;
 
@@ -496,7 +493,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	public JPanel getUserPanel() {
 		JPanel userPanel = new JPanel();
-		groupUserFilter = new ButtonGroup();
+		ButtonGroup groupUserFilter = new ButtonGroup();
 		radioMyPatients = new JRadioButton(MessageBundle.getMessage("angal.opd.mypatient.btn"));
 		radioAllPatients = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
 		radioAllPatients.setSelected(true);
@@ -715,7 +712,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			sexPanel = new JPanel();
 			ButtonGroup group = new ButtonGroup();
 			radioMale = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
-			radioFemale = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
+			JRadioButton radioFemale = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			radioAllGender = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
 			radioAllGender.setSelected(true);
 			group.add(radioMale);
@@ -734,7 +731,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		
 		ButtonGroup groupNewPatient = new ButtonGroup();
 		radioNewAttendance = new JRadioButton(MessageBundle.getMessage("angal.opd.new.btn"));
-		radioReAttendance = new JRadioButton(MessageBundle.getMessage("angal.opd.reattendance.btn"));
+		JRadioButton radioReAttendance = new JRadioButton(MessageBundle.getMessage("angal.opd.reattendance.btn"));
 		radioAllPatiens = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
 		radioAllPatiens.setSelected(true);
 		groupNewPatient.add(radioAllPatiens);
@@ -1162,7 +1159,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				String codeHint = ((JTextField) e.getSource()).getText();
 				int code = 0;
 				try {
-					code = Integer.valueOf(codeHint).intValue();
+					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
 					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
@@ -1196,7 +1193,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				String codeHint = ((JTextField) e.getSource()).getText();
 				int code = 0;
 				try {
-					code = Integer.valueOf(codeHint).intValue();
+					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
 					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
@@ -1226,7 +1223,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				String codeHint = ((JTextField) e.getSource()).getText();
 				int code = 0;
 				try {
-					code = Integer.valueOf(codeHint).intValue();
+					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
 					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;

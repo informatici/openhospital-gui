@@ -33,16 +33,16 @@ import org.isf.lab.model.LaboratoryRow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ExamRowSubPanelTest {
+class ExamRowSubPanelTest {
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		GeneralData.LANGUAGE = "en";
 		MessageBundle.initialize();
 	}
 
 	@Test
-	public void shouldCreateWithSelectedNResultWhenOnlyExamRowProvided() {
+	void shouldCreateWithSelectedNResultWhenOnlyExamRowProvided() {
 		// given:
 		ExamRow examRow = new ExamRow();
 
@@ -54,7 +54,7 @@ public class ExamRowSubPanelTest {
 	}
 
 	@Test
-	public void shouldCreateWithSelectedPResultWhenMatchesLaboratoryRow() {
+	void shouldCreateWithSelectedPResultWhenMatchesLaboratoryRow() {
 		// given:
 		ExamRow examRow = new ExamRow();
 		examRow.setDescription("test2");
@@ -71,7 +71,7 @@ public class ExamRowSubPanelTest {
 	}
 
 	@Test
-	public void shouldCreateWithSelectedNResultWhenNotMatchesLaboratoryRow() {
+	void shouldCreateWithSelectedNResultWhenNotMatchesLaboratoryRow() {
 		// given:
 		ExamRow examRow = new ExamRow();
 		examRow.setDescription("test2");

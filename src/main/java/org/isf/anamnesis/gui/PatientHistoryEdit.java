@@ -214,7 +214,6 @@ public class PatientHistoryEdit extends JDialog {
 
 	// Buttons
 	private JButton jButtonSave;
-	private JButton jButtonExamination;
 	private JButton jButtonCancel;
 
 	// Actions in this form
@@ -1541,7 +1540,6 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jLabelSecondNameText.gridx = 5;
 			gbc_jLabelSecondNameText.gridy = 0;
 			jPanelPatient.add(getJLabelSecondNameText(), gbc_jLabelSecondNameText);
-			GridBagConstraints gbc_jLabelSTPCode = new GridBagConstraints();
 		}
 		return jPanelPatient;
 	}

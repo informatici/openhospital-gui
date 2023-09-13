@@ -33,12 +33,12 @@ import javax.swing.JComboBox;
 import org.isf.disease.model.Disease;
 import org.junit.jupiter.api.Test;
 
-public class DiseaseFinderTest {
+class DiseaseFinderTest {
 
 	private DiseaseFinder diseaseFinder = new DiseaseFinder();
 
 	@Test
-	public void shouldFindDiseaseByDescriptionContaining() {
+	void shouldFindDiseaseByDescriptionContaining() {
 		// given:
 		List<Disease> diseases = new ArrayList<>(Arrays.asList(TestDisease.diseaseWithDescription("AIDS")));
 
@@ -46,11 +46,11 @@ public class DiseaseFinderTest {
 		List<Disease> result = diseaseFinder.getSearchDiagnosisResults("id", diseases);
 
 		// then:
-		assertThat(result.size()).isEqualTo(1);
+		assertThat(result).hasSize(1);
 	}
 
 	@Test
-	public void shouldFindAllByEmptyQuery() {
+	void shouldFindAllByEmptyQuery() {
 		// given:
 		List<Disease> diseases = new ArrayList<>(Arrays.asList(TestDisease.diseaseWithDescription("AIDS")));
 
@@ -58,11 +58,11 @@ public class DiseaseFinderTest {
 		List<Disease> result = diseaseFinder.getSearchDiagnosisResults("", diseases);
 
 		// then:
-		assertThat(result.size()).isEqualTo(1);
+		assertThat(result).hasSize(1);
 	}
 
 	@Test
-	public void shouldNotFindByWrongDescription() {
+	void shouldNotFindByWrongDescription() {
 		// given:
 		List<Disease> diseases = new ArrayList<>(Arrays.asList(TestDisease.diseaseWithDescription("AIDS")));
 
@@ -70,11 +70,11 @@ public class DiseaseFinderTest {
 		List<Disease> result = diseaseFinder.getSearchDiagnosisResults("hiv", diseases);
 
 		// then:
-		assertThat(result.isEmpty()).isTrue();
+		assertThat(result).isEmpty();
 	}
 
 	@Test
-	public void shouldFindAndSelectAndAddAllFromDiseaseList() {
+	void shouldFindAndSelectAndAddAllFromDiseaseList() {
 		// given:
 		List<Disease> diseases = new ArrayList<>(
 				Arrays.asList(
@@ -89,13 +89,13 @@ public class DiseaseFinderTest {
 		Optional<Disease> result = diseaseFinder.findAndSelectDisease(diseaseToFind, diseases, diseaseBox);
 
 		// then:
-		assertThat(result.isPresent()).isTrue();
+		assertThat(result).isPresent();
 		assertThat(diseaseBox.getItemCount()).isEqualTo(2);
 		assertThat(diseaseBox.getSelectedItem()).isEqualTo(diseaseToFind);
 	}
 
 	@Test
-	public void shouldReturnEmptyForNullDiseaseToFind() {
+	void shouldReturnEmptyForNullDiseaseToFind() {
 		// given:
 		List<Disease> diseases = new ArrayList<>(
 				Arrays.asList(
@@ -110,12 +110,12 @@ public class DiseaseFinderTest {
 		Optional<Disease> result = diseaseFinder.findAndSelectDisease(diseaseToFind, diseases, diseaseBox);
 
 		// then:
-		assertThat(result.isPresent()).isFalse();
+		assertThat(result).isNotPresent();
 		assertThat(diseaseBox.getItemCount()).isEqualTo(2);
 	}
 
 	@Test
-	public void shouldReturnEmptyForNotFoundDisease() {
+	void shouldReturnEmptyForNotFoundDisease() {
 		// given:
 		List<Disease> diseases = new ArrayList<>(
 				Arrays.asList(
@@ -130,12 +130,12 @@ public class DiseaseFinderTest {
 		Optional<Disease> result = diseaseFinder.findAndSelectDisease(diseaseToFind, diseases, diseaseBox);
 
 		// then:
-		assertThat(result.isPresent()).isFalse();
+		assertThat(result).isNotPresent();
 		assertThat(diseaseBox.getItemCount()).isEqualTo(2);
 	}
 
 	@Test
-	public void shouldFindAndSelectAndAddSelectedFromAllDiseaseList() {
+	void shouldFindAndSelectAndAddSelectedFromAllDiseaseList() {
 		// given:
 		List<Disease> diseases = new ArrayList<>(
 				Arrays.asList(
@@ -150,13 +150,13 @@ public class DiseaseFinderTest {
 		Optional<Disease> result = diseaseFinder.findAndSelectFromAllDiseases(diseaseToFind, diseases, diseaseBox);
 
 		// then:
-		assertThat(result.isPresent()).isTrue();
+		assertThat(result).isPresent();
 		assertThat(diseaseBox.getItemCount()).isOne();
 		assertThat(diseaseBox.getSelectedItem()).isEqualTo(diseaseToFind);
 	}
 
 	@Test
-	public void shouldReturnEmptyForNotFoundFromAllDiseaseList() {
+	void shouldReturnEmptyForNotFoundFromAllDiseaseList() {
 		// given:
 		List<Disease> diseases = new ArrayList<>(
 				Arrays.asList(
@@ -171,7 +171,7 @@ public class DiseaseFinderTest {
 		Optional<Disease> result = diseaseFinder.findAndSelectFromAllDiseases(diseaseToFind, diseases, diseaseBox);
 
 		// then:
-		assertThat(result.isPresent()).isFalse();
+		assertThat(result).isNotPresent();
 		assertThat(diseaseBox.getItemCount()).isZero();
 	}
 

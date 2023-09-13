@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -329,7 +329,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 			String buttonText = Integer.toString(week);
 
 			if (week < 10) {
-				buttonText = "0" + buttonText;
+				buttonText = '0' + buttonText;
 			}
 
 			weeks[i].setText(buttonText);
@@ -597,7 +597,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 	public void actionPerformed(ActionEvent actionEvent) {
 		JButton button = (JButton) actionEvent.getSource();
 		String buttonText = button.getText();
-		int day = Integer.valueOf(buttonText);
+		int day = Integer.parseInt(buttonText);
 		setDay(day);
 	}
 

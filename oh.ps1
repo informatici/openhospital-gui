@@ -19,7 +19,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
 <#
@@ -98,7 +98,7 @@ $global:ProgressPreference= 'SilentlyContinue'
 ##################### OH general configuration ####################
 
 # -> OH_PATH is the directory where Open Hospital files are located
-# OH_PATH="c:\Users\OH\OpenHospital\oh-1.12"
+# OH_PATH="c:\Users\OH\OpenHospital\oh-1.13"
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #$script:OH_MODE="PORTABLE"
@@ -181,7 +181,7 @@ $script:API_SETTINGS="application.properties"
 
 # OH jar bin files
 $script:OH_GUI_JAR="OH-gui.jar"
-$script:OH_API_JAR="openhospital-api-0.0.2.jar"
+$script:OH_API_JAR="openhospital-api-0.1.0.jar"
 
 # help file
 $script:HELP_FILE="OH-readme.txt"
@@ -191,15 +191,19 @@ $script:DEFAULT_DATABASE_NAME="$DATABASE_NAME"
 # set default data base_dir
 $script:DEFAULT_DATADIR="$DATA_DIR"
 
+# default database admin/root user
+$script:DATABASE_ROOT_USER="root"
+
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 $script:EXPERT_MODE="off"
 $script:OH_UI_URL="http://localhost:8080"
+$script:OH_API_PID="../tmp/oh-api.pid"
 
 ############## Architecture and external software ##############
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-$script:MYSQL_VERSION="10.6.12"
+$script:MYSQL_VERSION="10.6.14"
 $script:MYSQL32_VERSION="10.6.5"
 
 ######## define system and software architecture
@@ -612,8 +616,6 @@ function java_lib_setup {
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rpt_extra\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rpt_stat\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rsc\"
-	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rsc\icons\"
-	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rsc\images\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\lib\"
 	
 	# include all jar files under lib\
@@ -794,15 +796,15 @@ function set_database_root_pw {
 	# if using MySQL root password need to be set
 	switch -Regex ( $MYSQL_DIR ) {
 		"mysql" {
-		Write-Host "Setting MySQL root password..."
+		Write-Host "Setting $MYSQL_NAME $DATABASE_ROOT_USER password..."
         $SQLCOMMAND=@"
-        -u root --skip-password -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER 'root'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';"
+        -u $DATABASE_ROOT_USER --skip-password -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "ALTER USER '$DATABASE_ROOT_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';"
 "@
 			try {
 				Start-Process -FilePath "$OH_PATH/$MYSQL_DIR/bin/mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 			}
 			catch {
-				Write-Host "Error: MySQL root password not set! Try resetting installation with option [X]. Exiting." -ForegroundColor Red
+				Write-Host "Error: $MYSQL_NAME root password not set! Try resetting installation with option [X]. Exiting." -ForegroundColor Red
 				shutdown_database;
 				Read-Host; exit 2
 			}
@@ -816,7 +818,7 @@ function create_database_user {
 	# create database user
 	
     $SQLCOMMAND=@"
-    -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD';"
+    -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD';"
 "@
 	try {
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
@@ -834,7 +836,7 @@ function create_database {
 	# create OH database
 	
     $SQLCOMMAND=@"
-    -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
+    -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
 "@
 	try {
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
@@ -885,7 +887,7 @@ function import_database {
 #	cd "$OH_PATH/$SQL_EXTRA_DIR/"
 #
 #   $SQLCOMMAND=@"
-#   --local-infile=1 -u root -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
+#   --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
 #"@
 #		try {
 #			Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
@@ -926,7 +928,7 @@ function dump_database {
 function shutdown_database {
 	if ( !( $OH_MODE -eq "CLIENT" ) ) {
 		Write-Host "Shutting down $MYSQL_NAME..."
-		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqladmin.exe" -ArgumentList ("-u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqladmin.exe" -ArgumentList ("-u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 		# wait till the $MYSQL_NAME socket file is removed -> TO BE IMPLEMENTED
 		# while ( -e $OH_PATH/$MYSQL_SOCKET ); do sleep 1; done
 		Start-Sleep -Seconds 2
@@ -959,40 +961,6 @@ function test_database_connection {
 }
 
 ###################################################################
-function start_api_server {
-	# check for application configuration files
-	if ( !( Test-Path "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS" -PathType leaf )) {
-		Write-Host "Error: missing $API_SETTINGS settings file. Exiting" -ForeGround Red
-		exit 1;
-	}
-
-	Write-Host "------------------------"
-	Write-Host "---- EXPERIMENTAL ------"
-	Write-Host "------------------------"
-	Write-Host "Starting API server..."
-	Write-Host "Please wait, it might take some time..."
-	Write-Host ""
-	Write-Host "Connect to http://localhost:8080 for dashboard"
-	Write-Host ""
-
-        cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
-
-	$JAVA_API_ARGS="-server -Xms64m -Xmx1024m -cp ./bin/$OH_API_JAR;./rsc;./static org.springframework.boot.loader.JarLauncher"
-
-	Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_API_ARGS -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
-
-        # $JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher
-
-#        if [ $? -ne 0 ]; then
-#                echo "An error occurred while starting Open Hospital API. Exiting."
-#                shutdown_database;
-#                cd "$CURRENT_DIR"
-#                exit 4
-#        fi
-        cd "$OH_PATH"
-}
-
-###################################################################
 function write_api_config_file {
 	######## application.properties setup - OH API server
 	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS" -PathType leaf) ) {
@@ -1001,6 +969,7 @@ function write_api_config_file {
 		$JWT_TOKEN_SECRET=( -join ($(for($i=0; $i -lt 64; $i++) { ((65..90)+(97..122)+(".")+("!")+("?")+("&") | Get-Random | % {[char]$_}) })) )
 		Write-Host "Writing OH API configuration file -> $API_SETTINGS..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS.dist").replace("JWT_TOKEN_SECRET","$JWT_TOKEN_SECRET") | Set-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS").replace("OH_API_PID","$OH_API_PID") | Set-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"
 	}
 }
 
@@ -1119,6 +1088,52 @@ $JAVA_ARGS="-client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library
 	
 	# go back to starting directory
 	cd "$CURRENT_DIR"
+}
+
+###################################################################
+function start_api_server {
+	# check for application configuration files
+	if ( !( Test-Path "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS" -PathType leaf )) {
+		Write-Host "Error: missing $API_SETTINGS settings file. Exiting" -ForeGround Red
+		exit 1;
+	}
+	
+	########## WORKAROUND to kill existing API server process ##################
+	########## TO BE REMOVED IN NEXT RELEASE
+	##########
+	# check for stale PID files
+	if (( Test-Path "$OH_PATH/$TMP_DIR/$OH_API_PID" -PathType leaf )) {
+		$file_tmp_data = Get-Content "$OH_PATH/$TMP_DIR/$OH_API_PID"
+		$API_PID_NUMBER=$file_tmp_data.toint32($null)
+		Write-Host "Killing API server - process $API_PID_NUMBER..."
+		Stop-Process -Id $API_PID_NUMBER -ErrorAction SilentlyContinue
+	}
+	##########
+
+	Write-Host "------------------------"
+	Write-Host "---- EXPERIMENTAL ------"
+	Write-Host "------------------------"
+	Write-Host "Starting API server..."
+	Write-Host "Please wait, it might take some time..."
+	Write-Host ""
+	Write-Host "Connect to http://localhost:8080 for dashboard"
+	Write-Host ""
+
+        cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+
+	$JAVA_API_ARGS="-server -Xms64m -Xmx1024m -cp ./bin/$OH_API_JAR;./rsc;./static org.springframework.boot.loader.JarLauncher"
+
+	Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_API_ARGS -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+
+        # $JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher
+
+#        if [ $? -ne 0 ]; then
+#                echo "An error occurred while starting Open Hospital API. Exiting."
+#                shutdown_database;
+#                cd "$CURRENT_DIR"
+#                exit 4
+#        fi
+        cd "$OH_PATH"
 }
 
 ###################################################################
@@ -1288,7 +1303,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			$choice = Read-Host -Prompt "Press [y] to confirm: "
 			if (( "$choice" -eq "y" )) {
 				# ask user for root database password
-				$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password [root@$DATABASE_SERVER] -> "
+				$script:DATABASE_ROOT_PW = Read-Host "Please insert the MariaDB / MySQL database root password [$DATABASE_ROOT_USER@$DATABASE_SERVER] -> "
 				create_database_user;
 				create_database;
 			}
@@ -1500,6 +1515,19 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				Write-Host "Killing java..."	
 				Get-Process java -ErrorAction SilentlyContinue | Stop-Process -PassThru
 			}
+			########## WORKAROUND to kill existing API server process ##################
+			########## TO BE REMOVED IN NEXT RELEASE
+			##########
+			# check for stale PID files
+			if (( Test-Path "$OH_PATH/$TMP_DIR/$OH_API_PID" -PathType leaf )) {
+				$file_tmp_data = Get-Content "$OH_PATH/$TMP_DIR/$OH_API_PID"
+				$API_PID_NUMBER=$file_tmp_data.toint32($null)
+				Write-Host "Killing API server - process $API_PID_NUMBER..."
+				Stop-Process -Id $API_PID_NUMBER -ErrorAction SilentlyContinue
+				Write-Host "Removing API server pid file $OH_API_PID..."
+				Remove-Item "$OH_PATH/$TMP_DIR/$OH_API_PID" -Recurse -Confirm:$false -ErrorAction Ignore
+			}
+			##########
 			Write-Host "Cleaning Open Hospital installation..."
 			Write-Host "Warning: do you want to remove all existing log files?" -ForegroundColor Red
 			$choice = Read-Host -Prompt "Press [y] to confirm: "

@@ -178,10 +178,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JRadioButton jRadioWard;
 	private JComboBox wardBox;
 	private JPanel panelWard;
-	/*
-	 * Adds to facilitate the selection of products
-	 */
-	private JPanel searchPanel;
 	private JTextField searchTextField;
 	private JButton searchButton;
 	private JComboBox jComboBoxMedicals;
@@ -349,15 +345,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				if (elem.getQty() != 0.0) {
 					if (q != 0) {
 						if (elem.getQty() <= q) {
-							MedicalWard e = elem;
 							q = (int) (q - elem.getQty());
 							int maxquantity = (int) (elem.getQty() - 0);
 							medWard = elem;
 							addItem(medWard, maxquantity);
 
 						} else {
-							MedicalWard e = elem;
-							int qu = (int) (elem.getQty() - q);
 							medWard = elem;
 
 							addItem(medWard, q);
@@ -486,7 +479,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (qty > totalQty) {
 			StringBuilder message = new StringBuilder();
 			message.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.thequantityisnotavailable")) //$NON-NLS-1$
-				.append("\n") //$NON-NLS-1$
+				.append('\n') //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty);
 			JOptionPane.showMessageDialog(WardPharmacyNew.this, message.toString());
@@ -890,7 +883,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			}
 		});
 
-		searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		/*
+		 * Adds to facilitate the selection of products
+		 */
+		JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		searchPanel.add(searchTextField);
 		searchPanel.add(searchButton);
 		searchPanel.add(getJComboBoxMedicals());

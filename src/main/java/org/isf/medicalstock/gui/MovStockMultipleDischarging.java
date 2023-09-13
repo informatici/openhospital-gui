@@ -121,7 +121,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private List<Integer> units;
 	private List<Integer> quantities;
 	private JTableModel model;
-	private String[] qtyOption = new String[] {
+	private String[] qtyOption = {
 			MessageBundle.getMessage("angal.medicalstock.multipledischarging.units"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstock.multipledischarging.packets") //$NON-NLS-1$
 	}; 
@@ -192,44 +192,36 @@ public class MovStockMultipleDischarging extends JDialog {
 	private JPanel getJButtonPanel() {
 
 		JPanel buttonPanel = new JPanel();
-		{
-			JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
-			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			deleteButton.addActionListener(actionEvent -> {
-				int row = jTableMovements.getSelectedRow();
-				if (row > -1) {
-					model.removeItem(row);
-				}
-			});
-			buttonPanel.add(deleteButton);
-		}
-		{
-			JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
-			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			saveButton.addActionListener(actionEvent -> {
-				if (!checkAndPrepareMovements()) {
-					return;
-				}
-				if (!save()) {
-					rollBackMovements();
-					return;
-				}
-				dispose();
-			});
-			buttonPanel.add(saveButton);
-		}
-		{
-			JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
-			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(actionEvent -> dispose());
-			buttonPanel.add(cancelButton);
-		}
-		{
-			if (isXmpp()) {
-				shareWith = getShareUser();
-				shareWith.setEnabled(false);
-				buttonPanel.add(shareWith);
+		JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+		deleteButton.addActionListener(actionEvent -> {
+			int row = jTableMovements.getSelectedRow();
+			if (row > -1) {
+				model.removeItem(row);
 			}
+		});
+		buttonPanel.add(deleteButton);
+		JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
+		saveButton.addActionListener(actionEvent -> {
+			if (!checkAndPrepareMovements()) {
+				return;
+			}
+			if (!save()) {
+				rollBackMovements();
+				return;
+			}
+			dispose();
+		});
+		buttonPanel.add(saveButton);
+		JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+		cancelButton.addActionListener(actionEvent -> dispose());
+		buttonPanel.add(cancelButton);
+		if (isXmpp()) {
+			shareWith = getShareUser();
+			shareWith.setEnabled(false);
+			buttonPanel.add(shareWith);
 		}
 
 		return buttonPanel;
@@ -254,14 +246,12 @@ public class MovStockMultipleDischarging extends JDialog {
 			TextPrompt suggestion = new TextPrompt(
 					MessageBundle.getMessage("angal.medicalstock.typeacodeoradescriptionandpressenter"), //$NON-NLS-1$ 
 					jTextFieldSearch, 
-					Show.FOCUS_LOST); 
-			{
-				suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
-				suggestion.setForeground(Color.GRAY);
-				suggestion.setHorizontalAlignment(SwingConstants.CENTER);
-				suggestion.changeAlpha(0.5f);
-				suggestion.changeStyle(Font.BOLD + Font.ITALIC);
-			}
+					Show.FOCUS_LOST);
+			suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
+			suggestion.setForeground(Color.GRAY);
+			suggestion.setHorizontalAlignment(SwingConstants.CENTER);
+			suggestion.changeAlpha(0.5f);
+			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 			jTextFieldSearch.addActionListener(actionEvent -> {
 				String text = jTextFieldSearch.getText();
 				Medical med;
@@ -332,7 +322,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		if (med.getTotalQuantity() == 0) {
 			StringBuilder message = new StringBuilder()
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.outofstock")) //$NON-NLS-1$
-				.append("\n") //$NON-NLS-1$
+				.append('\n') //$NON-NLS-1$
 				.append(med.getDescription()); //$NON-NLS-1$
 			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, message.toString());
 			return false;
@@ -346,7 +336,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			if (mov.getMedical() == med) {
 				StringBuilder message = new StringBuilder()
 					.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.alreadyinthisform")) //$NON-NLS-1$
-					.append("\n") //$NON-NLS-1$
+					.append('\n') //$NON-NLS-1$
 					.append(med.getDescription()); //$NON-NLS-1$
 				JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, message.toString());
 				return true;
@@ -646,7 +636,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		if (qty > totalQty) {
 			StringBuilder message = new StringBuilder();
 			message.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.thequantityisnotavailable")) //$NON-NLS-1$
-				.append("\n") //$NON-NLS-1$
+				.append('\n') //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty);
 			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, message.toString());
@@ -690,14 +680,14 @@ public class MovStockMultipleDischarging extends JDialog {
 		
 		StringBuilder message = new StringBuilder();
 		message.append(med)
-			.append("\n") //$NON-NLS-1$
+			.append('\n') //$NON-NLS-1$
 			.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 			.append(totalQty); //$NON-NLS-1$
 		
 		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
 		String prodCode = med.getProdCode();
 		if (prodCode != null && !prodCode.equals("")) { //$NON-NLS-1$
-			title.append(" ") //$NON-NLS-1$
+			title.append(' ') //$NON-NLS-1$
 			.append(MessageBundle.getMessage("angal.common.code.txt"))
 			.append(": ") //$NON-NLS-1$
 			.append(prodCode);
