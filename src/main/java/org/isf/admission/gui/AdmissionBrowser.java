@@ -198,7 +198,6 @@ public class AdmissionBrowser extends ModalJFrame {
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 
 	private final OperationRowValidator operationRowValidator = new OperationRowValidator();
@@ -1548,7 +1547,6 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (jAnamnesisButton == null) {
 			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
-			AdmissionBrowser self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
 				if (patient != null) {
 					PatientHistory ph = new PatientHistory();
