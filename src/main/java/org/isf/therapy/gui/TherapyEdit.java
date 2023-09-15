@@ -21,8 +21,6 @@
  */
 package org.isf.therapy.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD;
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -39,7 +37,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -83,7 +80,6 @@ import org.isf.utils.jobjects.JMonthChooser;
 import org.isf.utils.jobjects.JYearChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.time.TimeTools;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.visits.gui.VisitView;
 import org.isf.visits.gui.VisitView.VisitListener;
