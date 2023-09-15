@@ -408,10 +408,6 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		pack();
 	}
 
-	public LocalDateTime getVisitDate() {
-		return visitDate;
-	}
-
 	public Ward getSelectedWard() {
 		Object selectedItem = wardBox.getSelectedItem();
 		if (selectedItem instanceof Ward) {
@@ -420,27 +416,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		return null;
 	}
 
-	public String getServ() {
-		return serviceField.getText();
-	}
-
-	public String getdur() {
-		Object o = jSpinnerDur.getValue();
-		Number n = (Number) o;
-		int i = n.intValue();
-		return String.valueOf(i);
-	}
-
-	public Patient getPatient() {
-		return patientSelected;
-	}
-
 	public Visit getVisit() {
 		return visit;
-	}
-
-	public void setVisit(Visit vsRow) {
-		this.visit = vsRow;
 	}
 
 }
