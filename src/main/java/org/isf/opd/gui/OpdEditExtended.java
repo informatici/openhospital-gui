@@ -69,6 +69,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.EventListenerList;
@@ -1953,7 +1954,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
+		Border b2 = BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(title), BorderFactory
 						.createEmptyBorder(0, 0, 0, 0));
 		c.setBorder(b2);

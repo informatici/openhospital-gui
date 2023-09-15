@@ -94,7 +94,6 @@ import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.operation.gui.OperationRowAdm;
 import org.isf.patient.gui.PatientSummary;
-import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.pregtreattype.manager.PregnantTreatmentTypeBrowserManager;
 import org.isf.pregtreattype.model.PregnantTreatmentType;
@@ -505,8 +504,8 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.CENTER);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -514,8 +513,8 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getDataPanel() {
 		JPanel data = new JPanel();
 		data.setLayout(new BorderLayout());
-		data.add(getPatientDataPanel(), java.awt.BorderLayout.WEST);
-		data.add(getJTabbedPaneAdmission(), java.awt.BorderLayout.CENTER);
+		data.add(getPatientDataPanel(), BorderLayout.WEST);
+		data.add(getJTabbedPaneAdmission(), BorderLayout.CENTER);
 		return data;
 	}
 
@@ -923,7 +922,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (wardBox.getSelectedIndex() <= 0) {
 					yProgTextField.setText("");
 					// This fixes the problem of losing the top border on the date picker because of the combox
-					javax.swing.SwingUtilities.invokeLater(() -> {
+					SwingUtilities.invokeLater(() -> {
 						validate();
 						repaint();
 					});
@@ -977,7 +976,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 				}
 				// This fixes the problem of losing the top border on the date picker because of the combox
-				javax.swing.SwingUtilities.invokeLater(() -> {
+				SwingUtilities.invokeLater(() -> {
 					validate();
 					repaint();
 				});

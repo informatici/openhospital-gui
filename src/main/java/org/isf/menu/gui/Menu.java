@@ -27,6 +27,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import org.isf.generaldata.Version;
 import org.isf.menu.manager.Context;
@@ -112,6 +113,6 @@ public class Menu {
 			System.exit(1);
 		}
 		Context.setApplicationContext(context);
-		javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI());
+		SwingUtilities.invokeLater(() -> createAndShowGUI());
 	}
 }

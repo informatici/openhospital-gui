@@ -24,6 +24,7 @@ package org.isf.xmpp.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -233,7 +234,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 					printMessage(getArea(user, true), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {
 						setVisible(true);
-						setState(java.awt.Frame.NORMAL);
+						setState(Frame.NORMAL);
 						toFront();
 					} else {
 						toFront();
@@ -484,7 +485,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 			printMessage((getArea(user, false)), user, arg1.getBody(), false);
 			if (!this.isVisible()) {
 				this.setVisible(true);
-				this.setState(java.awt.Frame.ICONIFIED);
+				this.setState(Frame.ICONIFIED);
 				this.toFront();
 			} else {
 				this.toFront();
@@ -572,7 +573,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 					printMessage((getArea(user, false)), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {
 						setVisible(true);
-						setState(java.awt.Frame.NORMAL);
+						setState(Frame.NORMAL);
 						toFront();
 					} else {
 						toFront();

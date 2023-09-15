@@ -840,7 +840,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			}
 			wardBox.addItem("");
 			if (wardList != null) {
-				for (org.isf.ward.model.Ward elem : wardList) {
+				for (Ward elem : wardList) {
 					if (!wardSelected.getCode().equals(elem.getCode())) {
 						wardBox.addItem(elem);
 					}
