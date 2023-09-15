@@ -55,6 +55,7 @@ import org.isf.menu.manager.Context;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
+import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
@@ -87,8 +88,8 @@ abstract class OperationRowBase extends JPanel {
 	protected OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	protected OperationRowBrowserManager operationRowBrowserManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
 
-	protected OhTableOperationModel<org.isf.operation.model.OperationRow> modelOhOpeRow;
-	protected List<org.isf.operation.model.OperationRow> oprowData = new ArrayList<>();
+	protected OhTableOperationModel<OperationRow> modelOhOpeRow;
+	protected List<OperationRow> oprowData = new ArrayList<>();
 
 	protected List<String> operationResults = operationBrowserManager.getResultDescriptionList();
 	protected OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
@@ -399,7 +400,7 @@ abstract class OperationRowBase extends JPanel {
 	abstract List<Operation> getOperationCollection() throws OHServiceException;
 
 	public void addToForm() {
-		org.isf.operation.model.OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
+		OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
 		/* ** for combo operation **** */
 		List<Operation> opeList = new ArrayList<>();
 		try {
@@ -441,7 +442,7 @@ abstract class OperationRowBase extends JPanel {
 	}
 
 	public void deleteOpeRow(Component parentComponent, int idRow) {
-		org.isf.operation.model.OperationRow operationRow;
+		OperationRow operationRow;
 		if (idRow < 0) {
 			MessageDialog.error(parentComponent, "angal.common.pleaseselectarow.msg");
 		} else {
@@ -489,11 +490,11 @@ abstract class OperationRowBase extends JPanel {
 		comboOperation.setEnabled(true);
 	}
 
-	public List<org.isf.operation.model.OperationRow> getOprowData() {
+	public List<OperationRow> getOprowData() {
 		return oprowData;
 	}
 
-	public void setOprowData(List<org.isf.operation.model.OperationRow> oprowData) {
+	public void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
 

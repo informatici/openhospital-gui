@@ -25,6 +25,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +40,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -103,28 +106,28 @@ public class PatientSummary {
 	}
 
 	private JPanel getPatientAddressAndCityPanel() {
-		JPanel dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
+		JPanel dataPanel = new JPanel(new GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientAddressPanel(), MessageBundle.getMessage("angal.admission.address.label")));
 		dataPanel.add(setMyBorder(getPatientCityPanel(), MessageBundle.getMessage("angal.admission.city.label")));
 		return dataPanel;
 	}
 
 	private JPanel getPatientBloodAndEcoPanel() {
-		JPanel dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
+		JPanel dataPanel = new JPanel(new GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientBloodTypePanel(), MessageBundle.getMessage("angal.admission.bloodtype.label")));
 		dataPanel.add(setMyBorder(getPatientEcoStatusPanel(), MessageBundle.getMessage("angal.admission.insurance.label")));
 		return dataPanel;
 	}
 
 	private JPanel getPatientMaritalAndProfession() {
-		JPanel dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
+		JPanel dataPanel = new JPanel(new GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientMaritalStatusPanel(), MessageBundle.getMessage("angal.admission.maritalstatus.label")));
 		dataPanel.add(setMyBorder(getPatientProfessionPanel(), MessageBundle.getMessage("angal.admission.profession.label")));
 		return dataPanel;
 	}
 
 	private JPanel getPatientKinAndTelephonePanel() {
-		JPanel dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
+		JPanel dataPanel = new JPanel(new GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientKinPanel(), MessageBundle.getMessage("angal.admission.nextofkin.label")));
 		dataPanel.add(setMyBorder(getPatientTelephonePanel(), MessageBundle.getMessage("angal.admission.telephone.label")));
 		return dataPanel;
@@ -350,8 +353,8 @@ public class PatientSummary {
 	}
 
 	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
+		Border b1 = BorderFactory.createLineBorder(Color.lightGray);
+		Border b2 = BorderFactory.createTitledBorder(b1, title, TitledBorder.LEFT, TitledBorder.TOP);
 		c.setBorder(b2);
 		return c;
 	}

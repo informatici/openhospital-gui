@@ -39,6 +39,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -179,7 +181,7 @@ public class PatientPhotoPanel extends JPanel {
 			buttonBox1.add(jAttachPhotoButton);
 
 			jPhotoPanel.add(externalPanel, BorderLayout.NORTH);
-			jPhotoPanel.add(buttonBox1, java.awt.BorderLayout.CENTER);
+			jPhotoPanel.add(buttonBox1, BorderLayout.CENTER);
 
 			jPhotoPanel.setMinimumSize(new Dimension((int) getPreferredSize().getWidth(), 100));
 		}
@@ -189,8 +191,8 @@ public class PatientPhotoPanel extends JPanel {
 
 	
 	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
+		Border b1 = BorderFactory.createLineBorder(Color.lightGray);
+		Border b2 = BorderFactory.createTitledBorder(b1, title, TitledBorder.LEFT, TitledBorder.TOP);
 
 		c.setBorder(b2);
 		return c;

@@ -97,8 +97,8 @@ public class HospitalBrowser extends ModalJFrame {
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel(new BorderLayout());
-			jContainPanel.add(getJDataPanel(), java.awt.BorderLayout.CENTER);
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContainPanel.add(getJDataPanel(), BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContainPanel;
 	}

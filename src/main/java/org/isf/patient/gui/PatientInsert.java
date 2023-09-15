@@ -46,6 +46,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -197,8 +199,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJDataPanel(), java.awt.BorderLayout.NORTH);
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContainPanel.add(getJDataPanel(), BorderLayout.NORTH);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContainPanel;
 	}
@@ -753,7 +755,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			jFirstName = new JPanel();
 			jFirstName.setLayout(new BorderLayout());
 			jFirstName.add(getJFirstNamePanel(), BorderLayout.WEST);
-			jFirstName.add(getJPanel1(), java.awt.BorderLayout.EAST);
+			jFirstName.add(getJPanel1(), BorderLayout.EAST);
 		}
 		return jFirstName;
 	}
@@ -780,8 +782,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 		if (jSecondName == null) {
 			jSecondName = new JPanel();
 			jSecondName.setLayout(new BorderLayout());
-			jSecondName.add(getJSecondNamePanel(), java.awt.BorderLayout.WEST);
-			jSecondName.add(getJSecondNamePanel1(), java.awt.BorderLayout.EAST);
+			jSecondName.add(getJSecondNamePanel(), BorderLayout.WEST);
+			jSecondName.add(getJSecondNamePanel1(), BorderLayout.EAST);
 		}
 		return jSecondName;
 	}
@@ -795,8 +797,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 		if (jAge == null) {
 			jAge = new JPanel();
 			jAge.setLayout(new BorderLayout());
-			jAge.add(getJAgePanel(), java.awt.BorderLayout.WEST);
-			jAge.add(getJAgePanel1(), java.awt.BorderLayout.EAST);
+			jAge.add(getJAgePanel(), BorderLayout.WEST);
+			jAge.add(getJAgePanel1(), BorderLayout.EAST);
 		}
 		return jAge;
 	}
@@ -862,8 +864,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 		if (jAddress == null) {
 			jAddress = new JPanel();
 			jAddress.setLayout(new BorderLayout());
-			jAddress.add(getJAddressPanel(), java.awt.BorderLayout.WEST);
-			jAddress.add(getJPanel(), java.awt.BorderLayout.EAST);
+			jAddress.add(getJAddressPanel(), BorderLayout.WEST);
+			jAddress.add(getJPanel(), BorderLayout.EAST);
 			
 		}
 		return jAddress;
@@ -878,8 +880,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 		if (jCity == null) {
 			jCity = new JPanel();
 			jCity.setLayout(new BorderLayout());
-			jCity.add(getJCityPanel(), java.awt.BorderLayout.WEST);
-			jCity.add(getJPanel2(), java.awt.BorderLayout.EAST);
+			jCity.add(getJCityPanel(), BorderLayout.WEST);
+			jCity.add(getJPanel2(), BorderLayout.EAST);
 		}
 		return jCity;
 	}
@@ -893,8 +895,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 		if (jNextKin == null) {
 			jNextKin = new JPanel();
 			jNextKin.setLayout(new BorderLayout());
-			jNextKin.add(getJNextKinPanel(), java.awt.BorderLayout.WEST);
-			jNextKin.add(getJPanel3(), java.awt.BorderLayout.EAST);
+			jNextKin.add(getJNextKinPanel(), BorderLayout.WEST);
+			jNextKin.add(getJPanel3(), BorderLayout.EAST);
 		}
 		return jNextKin;
 	}
@@ -908,8 +910,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 		if (jTelephone == null) {
 			jTelephone = new JPanel();
 			jTelephone.setLayout(new BorderLayout());
-			jTelephone.add(getJTelPanel(), java.awt.BorderLayout.WEST);
-			jTelephone.add(getJPanel5(), java.awt.BorderLayout.EAST);
+			jTelephone.add(getJTelPanel(), BorderLayout.WEST);
+			jTelephone.add(getJPanel5(), BorderLayout.EAST);
 		}
 		return jTelephone;
 	}
@@ -938,20 +940,20 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
+		Border b1 = BorderFactory.createLineBorder(Color.lightGray);
 
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title,
-				javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
+		Border b2 = BorderFactory.createTitledBorder(b1, title,
+				TitledBorder.LEFT, TitledBorder.TOP);
 
 		c.setBorder(b2);
 		return c;
 	}
 
 	private JPanel setMyBorderCenter(JPanel c, String title) {
-		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
+		Border b1 = BorderFactory.createLineBorder(Color.lightGray);
 
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title,
-				javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP);
+		Border b2 = BorderFactory.createTitledBorder(b1, title,
+				TitledBorder.CENTER, TitledBorder.TOP);
 
 		c.setBorder(b2);
 		return c;

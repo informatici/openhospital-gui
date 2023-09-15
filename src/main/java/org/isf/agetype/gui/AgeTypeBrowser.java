@@ -87,7 +87,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
 			jContainPanel.add(getJTable(), BorderLayout.CENTER);
 			validate();
 		}

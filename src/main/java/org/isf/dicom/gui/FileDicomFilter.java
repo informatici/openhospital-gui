@@ -23,6 +23,7 @@ package org.isf.dicom.gui;
 
 import java.io.File;
 
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileView;
 
 /**
@@ -31,7 +32,7 @@ import javax.swing.filechooser.FileView;
  * @author Pietro Castellucci
  * @version 1.0.0
  */
-public class FileDicomFilter extends javax.swing.filechooser.FileFilter {
+public class FileDicomFilter extends FileFilter {
 
 	/**
 	 * Whether the given file is accepted by this filter.
