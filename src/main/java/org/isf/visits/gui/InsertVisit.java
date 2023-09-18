@@ -321,6 +321,10 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			buttonOK.addActionListener(actionEvent -> {
 
 				LocalDateTime date = visitDateChooser.getLocalDateTime();
+				if (date == null) {
+					MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseavaliddateandtime.msg");
+					return;
+				}
 				if (date.isBefore(TimeTools.getDateToday0())) {
 					MessageDialog.error(InsertVisit.this, "angal.visit.avisitcannotbescheduledforadatethatispast.msg");
 					return;
