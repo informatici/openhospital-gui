@@ -21,8 +21,6 @@
  */
 package org.isf.opd.gui;
 
-import static org.isf.hospital.model.Hospital.VISIT_END_TIME;
-import static org.isf.hospital.model.Hospital.VISIT_START_TIME;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 
 import java.awt.AWTEvent;
@@ -39,9 +37,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.Time;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -88,8 +84,6 @@ import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
-import org.isf.hospital.manager.HospitalBrowsingManager;
-import org.isf.hospital.model.Hospital;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -288,7 +282,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-	private HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 
 	private List<DiseaseType> types;
 	private List<Disease> diseasesOPD;
@@ -337,7 +330,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		getHospitalHours();
 		try {
 			if (!insert) {
 				opdPatient = opd.getPatient();
@@ -368,7 +360,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		getHospitalHours();
 		try {
 			if (!insert) {
 				opdPatient = opd.getPatient();
@@ -383,21 +374,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		initialize();
-	}
-
-	private void getHospitalHours() {
-		Hospital hospital;
-		LocalTime visitStartTime;
-		LocalTime visitEndTime;
-		try {
-			hospital = hospitalBrowsingManager.getHospital();
-			visitStartTime = hospital.getVisitStartTime().toLocalTime();
-			visitEndTime = hospital.getVisitEndTime().toLocalTime();
-		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-			visitStartTime = Time.valueOf(VISIT_START_TIME).toLocalTime();
-			visitEndTime = Time.valueOf(VISIT_END_TIME).toLocalTime();
-		}
 	}
 
 	private void setPatient(Patient p) {
@@ -1734,7 +1710,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		if (jAnamnesisButton == null) {
 			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
-			OpdEditExtended self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
 				try {
 					PatientHistory ph = new PatientHistory();
