@@ -111,7 +111,10 @@ public class VisitView extends ModalJFrame {
 	private static final int VISIT_BUTTON_WIDTH = 200;
 	private static final int ACTIONS_BUTTON_WIDTH = 240;
 	private static final int ALL_BUTTON_HEIGHT = 30;
-	
+
+	private static final String SELECT_A_WARD = MessageBundle.getMessage("angal.visit.selectaward.txt");
+	private static final String ALL_WARDS = MessageBundle.getMessage("angal.visit.allwards.txt");
+
 	/*
 	 * Attributes
 	 */
@@ -142,7 +145,7 @@ public class VisitView extends ModalJFrame {
 	private JComboBox<Ward> wardBox;
 	private SpringLayout slVisitParamsPanel;
 	
-	public String[] visColumns = { MessageBundle.getMessage("angal.visit.visits") };
+	private String[] visColumns = { MessageBundle.getMessage("angal.visit.visits") };
 
 	/*
 	 * Managers
@@ -164,11 +167,16 @@ public class VisitView extends ModalJFrame {
 
 	private void loadDataForWard(Ward ward) {
 		try {
-			if (ward != null) {
-				visits = visitManager.getVisitsWard(ward.getCode());
-			} else {
+			String description = ward.getDescription();
+			if (description.equals(ALL_WARDS)) {
 				visits = visitManager.getVisitsWard(null);
+				return;
 			}
+			if (description.equals(SELECT_A_WARD)) {
+				visits.clear();
+				return;
+			}
+			visits = visitManager.getVisitsWard(ward.getCode());
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
@@ -788,7 +796,6 @@ public class VisitView extends ModalJFrame {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
 			wardBox = new JComboBox<>();
-			wardBox.addItem(null);
 			List<Ward> wardList;
 			try {
 				wardList = wardBrowserManager.getWards();
@@ -796,14 +803,18 @@ public class VisitView extends ModalJFrame {
 				wardList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			for (Ward ward : wardList) {
-				wardBox.addItem(ward);
-				if (this.ward != null) {
-					if (this.ward.getCode().equalsIgnoreCase(ward.getCode())) {
-						wardBox.setSelectedItem(ward);
+			Ward selectAWard = new Ward("", SELECT_A_WARD, "", "", "", -1, -1, -1, false, false);
+			wardBox.addItem(selectAWard);
+			for (Ward aWard : wardList) {
+				wardBox.addItem(aWard);
+				if (ward != null) {
+					if (ward.getCode().equalsIgnoreCase(aWard.getCode())) {
+						wardBox.setSelectedItem(aWard);
 					}
 				}
 			}
+			Ward allWards = new Ward("", ALL_WARDS, "", "", "", -1, -1, -1, false, false);
+			wardBox.addItem(allWards);
 
 			wardBox.addActionListener(actionEvent -> {
 				
@@ -819,7 +830,7 @@ public class VisitView extends ModalJFrame {
 		}
 
 		wardPanel.add(wardBox);
-		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.visit.selectaward"))); //$NON-NLS-1$
+		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.visit.ward.border")));
 
 		return wardPanel;
 	}
