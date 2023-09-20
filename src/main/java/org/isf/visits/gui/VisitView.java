@@ -113,7 +113,6 @@ public class VisitView extends ModalJFrame {
 	private static final int ALL_BUTTON_HEIGHT = 30;
 
 	private static final String SELECT_A_WARD = MessageBundle.getMessage("angal.visit.selectaward.txt");
-	private static final String ALL_WARDS = MessageBundle.getMessage("angal.visit.allwards.txt");
 
 	/*
 	 * Attributes
@@ -167,16 +166,9 @@ public class VisitView extends ModalJFrame {
 
 	private void loadDataForWard(Ward ward) {
 		try {
-			String description = ward.getDescription();
-			if (description.equals(ALL_WARDS)) {
-				visits = visitManager.getVisitsWard(null);
-				return;
+			if (!ward.getDescription().equals(SELECT_A_WARD)) {
+				visits = visitManager.getVisitsWard(ward.getCode());
 			}
-			if (description.equals(SELECT_A_WARD)) {
-				visits.clear();
-				return;
-			}
-			visits = visitManager.getVisitsWard(ward.getCode());
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
@@ -813,8 +805,6 @@ public class VisitView extends ModalJFrame {
 					}
 				}
 			}
-			Ward allWards = new Ward("", ALL_WARDS, "", "", "", -1, -1, -1, false, false);
-			wardBox.addItem(allWards);
 
 			wardBox.addActionListener(actionEvent -> {
 				
@@ -824,6 +814,10 @@ public class VisitView extends ModalJFrame {
 					ward = (Ward) selectedWard;
 					loadDataForWard(ward);
 					showGui(true);
+				}
+				Ward wardAtZero = wardBox.getItemAt(0);
+				if (wardAtZero.getDescription().equals(SELECT_A_WARD)) {
+					wardBox.removeItem(wardAtZero);
 				}
 				updatePanels();
 			});
