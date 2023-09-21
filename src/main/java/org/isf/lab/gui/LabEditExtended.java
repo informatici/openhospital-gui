@@ -604,7 +604,7 @@ public class LabEditExtended extends ModalJFrame {
 					MessageDialog.error(LabEditExtended.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
-				LocalDateTime examDate = TimeTools.getNow();
+				LocalDateTime examDate;
 				try {
 					examDate = examDateFieldCal.getLocalDateTime();
 				} catch (Exception e1) {
@@ -645,7 +645,6 @@ public class LabEditExtended extends ModalJFrame {
 					try {
 						result = labManager.newLaboratory(lab, labRow);
 					} catch (OHServiceException e1) {
-						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
 						return;
 					}
@@ -653,7 +652,6 @@ public class LabEditExtended extends ModalJFrame {
 					try {
 						result = labManager.updateLaboratory(lab, labRow);
 					} catch (OHServiceException e1) {
-						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
 						return;
 					}

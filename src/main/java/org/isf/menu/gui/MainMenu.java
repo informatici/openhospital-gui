@@ -160,7 +160,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		} catch (Exception e) {
 			singleUser = true; // default for property not found
 			internalPharmacies = false; // default for property not found
-			debug = false; // default for property not found
 		}
 
 		if (singleUser) {

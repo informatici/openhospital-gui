@@ -447,7 +447,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							}
 							break;
 						default:
-							selectedRow = 0;
 							break;
 					}
 					if (bill != null) {

@@ -322,7 +322,7 @@ public class MedicalEdit extends JDialog {
 							}
 						}
 						if (result) {
-							Medical updatedMedical = null;
+							Medical updatedMedical;
 							try {
 								updatedMedical = medicalBrowsingManager.getMedical(oldMedical.getCode());
 							} catch (OHServiceException exception) {

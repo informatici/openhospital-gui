@@ -1290,7 +1290,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 	@Override
 	public void removeAll() {
 
-		DefaultListModel model = new DefaultListModel();
+		DefaultListModel model;
 		for (AgendaDayObject day : days) {
 			if (day.getList() != null) {
 				model = (DefaultListModel) day.getList().getModel();

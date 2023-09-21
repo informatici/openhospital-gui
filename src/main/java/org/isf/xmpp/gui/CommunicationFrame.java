@@ -359,11 +359,10 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 	}
 
 	private JPanel createLeftPanel() {  // contact list panel
-		JScrollPane buddy = new JScrollPane();
 		Dimension size = new Dimension(150, 200);
 
 		leftpanel.setLayout(new BoxLayout(leftpanel, BoxLayout.Y_AXIS));
-		buddy = createBuddyList();
+		JScrollPane buddy = createBuddyList();
 		buddy.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.xmpp.contacts.border")));
 		buddy.setPreferredSize(size);
 		buddy.setMaximumSize(size);

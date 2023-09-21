@@ -80,7 +80,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 	private JSplitPane jSplitPane1;
 
 	private ThumbnailViewGui thumbnail;
-	private int patient = -1;
+	private int patient;
 	private Patient ohPatient;
 	private JFrame myJFrame;
 
