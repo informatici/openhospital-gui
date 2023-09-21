@@ -1241,9 +1241,8 @@ public class WardPharmacy extends ModalJFrame implements
 				return pieces;
 			}
 			if (c == 4) {
-				int packets = 0;
 				if (pcsPerPck != 0) {
-					packets = pieces / pcsPerPck;
+					int packets = pieces / pcsPerPck;
 					return MessageBundle.formatMessage("angal.medicalstockward.packets.fmt", packets);
 				} else {
 					return MessageBundle.getMessage("angal.medicalstockward.pieces");

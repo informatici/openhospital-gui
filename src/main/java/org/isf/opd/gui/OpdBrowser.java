@@ -1157,7 +1157,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				String codeHint = ((JTextField) e.getSource()).getText();
-				int code = 0;
+				int code;
 				try {
 					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
@@ -1191,7 +1191,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				String codeHint = ((JTextField) e.getSource()).getText();
-				int code = 0;
+				int code;
 				try {
 					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
@@ -1221,7 +1221,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				String codeHint = ((JTextField) e.getSource()).getText();
-				int code = 0;
+				int code;
 				try {
 					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {

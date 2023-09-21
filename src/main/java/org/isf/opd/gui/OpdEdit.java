@@ -451,7 +451,7 @@ public class OpdEdit extends JDialog {
 						Disease disease = null;
 						Disease disease2 = null;
 						Disease disease3 = null;
-						Ward ward = null;
+						Ward ward;
 
 						if (newPatientCheckBox.isSelected()) {
 							newPatient = 'N';
