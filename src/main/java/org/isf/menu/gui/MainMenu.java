@@ -64,7 +64,7 @@ import org.isf.session.UserSession;
 import org.isf.sessionaudit.manager.SessionAuditManager;
 import org.isf.sessionaudit.model.SessionAudit;
 import org.isf.sms.service.SmsSender;
-import org.isf.telemetry.constants.TelemetryConst;
+import org.isf.telemetry.constants.TelemetryConstants;
 import org.isf.telemetry.daemon.TelemetryDaemon;
 import org.isf.telemetry.gui.TelemetryEdit;
 import org.isf.telemetry.manager.TelemetryManager;
@@ -350,7 +350,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 			private static final long serialVersionUID = 1L;
 			{
-				put(TelemetryConst.MENU_ID, Boolean.valueOf(GeneralData.TELEMETRYENABLED));
+				put(TelemetryConstants.MENU_ID, Boolean.valueOf(GeneralData.TELEMETRYENABLED));
 			}
 		};
 	}
