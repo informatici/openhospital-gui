@@ -56,7 +56,6 @@ import org.isf.telemetry.envdatacollector.constants.CollectorsConstants;
 import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.telemetry.util.TelemetryUtils;
-import org.isf.utils.ExceptionUtils;
 import org.isf.utils.exception.OHException;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.layout.SpringUtilities;
@@ -210,7 +209,7 @@ public class TelemetryEdit extends ModalJFrame {
 						}
 					} catch (RuntimeException | OHException f) {
 						LOGGER.error("Something strange happened: " + f.getMessage());
-						LOGGER.error(ExceptionUtils.retrieveExceptionStacktrace(f));
+						LOGGER.error(f.getMessage(), f);
 					}
 				} else {
 					Telemetry telemetry = telemetryManager.disable(new HashMap<>());
@@ -328,7 +327,7 @@ public class TelemetryEdit extends ModalJFrame {
 					telemetryUtils.sendTelemetryData(dataToSend, GeneralData.DEBUG);
 				} catch (RuntimeException | OHException sendException) {
 					LOGGER.error("Something strange happened: " + sendException.getMessage());
-					LOGGER.error(ExceptionUtils.retrieveExceptionStacktrace(sendException));
+					LOGGER.error(sendException.getMessage(), sendException);
 				}
 
 				TelemetryDaemon.getTelemetryDaemon().reloadSettings();
