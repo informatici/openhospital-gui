@@ -320,7 +320,7 @@ public class TelemetryEdit extends ModalJFrame {
 				telemetryManager.save(telemetry);
 
 				// send opt-out info before stopping
-				Map<String, Boolean> consentMap = new HashMap<String, Boolean>();
+				Map<String, Boolean> consentMap = new HashMap<>();
 				consentMap.put("TEL_ID", true);
 				try {
 					LOGGER.info("Trying to send a last opt-out message...");
