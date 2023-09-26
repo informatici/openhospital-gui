@@ -52,7 +52,7 @@ import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.telemetry.daemon.TelemetryDaemon;
 import org.isf.telemetry.envdatacollector.AbstractDataCollector;
-import org.isf.telemetry.envdatacollector.constants.CollectorsConst;
+import org.isf.telemetry.envdatacollector.constants.CollectorsConstants;
 import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.telemetry.util.TelemetryUtils;
@@ -225,16 +225,16 @@ public class TelemetryEdit extends ModalJFrame {
 				if (null == telemetry.getSentTimestamp()) {
 					telemetry.setSentTimestamp(LocalDateTime.now());
 				}
-				tempTelemetryData.put(CollectorsConst.TEL_SENT_DATE, TimeTools.formatDateTimeReport(telemetry.getSentTimestamp()));
+				tempTelemetryData.put(CollectorsConstants.TEL_SENT_DATE, TimeTools.formatDateTimeReport(telemetry.getSentTimestamp()));
 				if (null != telemetry.getOptinDate()) {
-					tempTelemetryData.put(CollectorsConst.TEL_OPTIN_DATE, TimeTools.formatDateTimeReport(telemetry.getOptinDate()));
+					tempTelemetryData.put(CollectorsConstants.TEL_OPTIN_DATE, TimeTools.formatDateTimeReport(telemetry.getOptinDate()));
 				} else {
-					tempTelemetryData.remove(CollectorsConst.TEL_OPTIN_DATE);
+					tempTelemetryData.remove(CollectorsConstants.TEL_OPTIN_DATE);
 				}
 				if (null != telemetry.getOptoutDate()) {
-					tempTelemetryData.put(CollectorsConst.TEL_OPTOUT_DATE, TimeTools.formatDateTimeReport(telemetry.getOptoutDate()));
+					tempTelemetryData.put(CollectorsConstants.TEL_OPTOUT_DATE, TimeTools.formatDateTimeReport(telemetry.getOptoutDate()));
 				} else {
-					tempTelemetryData.remove(CollectorsConst.TEL_OPTOUT_DATE);
+					tempTelemetryData.remove(CollectorsConstants.TEL_OPTOUT_DATE);
 				}
 				dataToSend.put("TEL_ID", tempTelemetryData);
 				return dataToSend;
