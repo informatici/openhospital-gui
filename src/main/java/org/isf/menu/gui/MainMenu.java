@@ -345,8 +345,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		setVisible(true);
 	}
 
-	private HashMap<String, Boolean> retrieveActivatedModulesMap() {
-		return new HashMap<String, Boolean>() {
+	private Map<String, Boolean> retrieveActivatedModulesMap() {
+		return new HashMap<>() {
 
 			private static final long serialVersionUID = 1L;
 			{
