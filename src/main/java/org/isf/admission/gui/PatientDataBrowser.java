@@ -325,7 +325,17 @@ public class PatientDataBrowser extends ModalJFrame implements
 						Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 
 						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedadmission.msg");
-						if ((n == JOptionPane.YES_OPTION) && admissionBrowserManager.setDeleted(adm.getId())) {
+						if (n == JOptionPane.YES_OPTION) {
+							try {
+								Admission deletedAdmission = admissionBrowserManager.setDeleted(adm.getId());
+								if (deletedAdmission == null) {
+									MessageDialog.error(this, "angal.admission.theselectedadmissionisnotfound.msg");
+									return;
+								}
+							} catch (OHServiceException ex) {
+								OHServiceExceptionUtil.showMessages(ex);
+								return;
+							}
 							admList.remove(adm);
 							admModel.fireTableDataChanged();
 							admTable.updateUI();
