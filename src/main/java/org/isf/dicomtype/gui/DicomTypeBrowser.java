@@ -148,7 +148,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					dicomType = (DicomType) (model.getValueAt(selectedrow, -1));
+					dicomType = (DicomType) model.getValueAt(selectedrow, -1);
 					DicomTypeEdit newrecord = new DicomTypeEdit(myFrame, dicomType, false);
 					newrecord.addDicomTypeListener(DicomTypeBrowser.this);
 					newrecord.setVisible(true);
@@ -185,23 +185,16 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					DicomType dicomType = (DicomType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					DicomType dicomType = (DicomType) model.getValueAt(jTable.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.dicomtype.delete.fmt.msg", dicomType.getDicomTypeDescription());
-					if ((answer == JOptionPane.YES_OPTION)) {
-
-						boolean deleted;
-
+					if (answer == JOptionPane.YES_OPTION) {
 						try {
-							deleted = dicomTypeBrowserManager.deleteDicomType(dicomType);
-						} catch (OHServiceException e) {
-							deleted = false;
-							OHServiceExceptionUtil.showMessages(e);
-						}
-
-						if (deleted) {
+							dicomTypeBrowserManager.deleteDicomType(dicomType);
 							pDicomType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
 				}
@@ -274,7 +267,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 		pDicomType.set(selectedrow, dicomType);
 		((DicomTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
