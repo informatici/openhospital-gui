@@ -39,11 +39,10 @@ import org.isf.admtype.manager.AdmissionTypeBrowserManager;
 import org.isf.admtype.model.AdmissionType;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
-import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
+import org.isf.utils.tuple.JPAImmutableTriple;
 
 public class AdmissionTypeBrowserEdit extends JDialog {
 
@@ -55,8 +54,8 @@ public class AdmissionTypeBrowserEdit extends JDialog {
         void admissionTypeInserted(AWTEvent e);
     }
 
-    public void addAdmissionTypeListener(LaboratoryTypeListener l) {
-    	admissionTypeListeners.add(LaboratoryTypeListener.class, l);
+    public void addAdmissionTypeListener(LaboratoryTypeListener listener) {
+    	admissionTypeListeners.add(LaboratoryTypeListener.class, listener);
     }
 
     public void removeAdmissionTypeListener(LaboratoryTypeListener listener) {
@@ -198,42 +197,34 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 				if (descriptionTextField.getText().equals(lastdescription)) {
 					dispose();
 				}
-
 				admissionType.setDescription(descriptionTextField.getText());
 				admissionType.setCode(codeTextField.getText());
-				boolean result;
+				JPAImmutableTriple results;
 				if (insert) {      // inserting
-					try {
-						result = admissionTypeBrowserManager.newAdmissionType(admissionType);
-						if (result) {
-							fireAdmissionInserted(admissionType);
-						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
+					results = admissionTypeBrowserManager.newAdmissionType(admissionType);
+					if (results.getResult()) {
+						fireAdmissionInserted((AdmissionType) results.getObject());
+						dispose();
+						return;
 					}
 				} else {                          // updating
 					if (descriptionTextField.getText().equals(lastdescription)) {
 						dispose();
-					} else {
-						try {
-							result = admissionTypeBrowserManager.updateAdmissionType(admissionType);
-							if (result) {
-								fireAdmissionUpdated();
-							}
-							if (!result) {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							} else {
-								dispose();
-							}
-						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
-						}
+						return;
 					}
+					results = admissionTypeBrowserManager.updateAdmissionType(admissionType);
+					if (results.getResult()) {
+						fireAdmissionUpdated();
+						dispose();
+						return;
+					}
+				}
+				for (String error : results.getErrors()) {
+					MessageDialog.errorText(this, error);
+				}
+				if (!lastdescription.isEmpty()) {
+					descriptionTextField.setText(lastdescription);
+					admissionType.setDescription(lastdescription);
 				}
 			});
 		}
@@ -250,7 +241,7 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 			descriptionTextField = new JTextField(20);
 			if (!insert) {
 				descriptionTextField.setText(admissionType.getDescription());
-				lastdescription=admissionType.getDescription();
+				lastdescription = admissionType.getDescription();
 			} 
 		}
 		return descriptionTextField;

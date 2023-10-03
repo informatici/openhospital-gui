@@ -116,7 +116,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 			jNewButton.addActionListener(actionEvent -> {
 				AdmissionType mdsr = new AdmissionType("","");
 				AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame, mdsr, true);
-				newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
+				newrecord.addAdmissionTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -137,9 +137,9 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					admissionType = (AdmissionType) (model.getValueAt(selectedrow, -1));
+					admissionType = (AdmissionType) model.getValueAt(selectedrow, -1);
 					AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame, admissionType, false);
-					newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
+					newrecord.addAdmissionTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});
@@ -174,16 +174,12 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					AdmissionType admType = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					AdmissionType admType = (AdmissionType) model.getValueAt(jTable.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.admtype.delete.fmt.msg", admType.getDescription());
-					try {
-						if ((answer == JOptionPane.YES_OPTION) && (admissionTypeBrowserManager.deleteAdmissionType(admType))) {
-							pAdmissionType.remove(jTable.getSelectedRow());
-							model.fireTableDataChanged();
-							jTable.updateUI();
-						}
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
+					if (answer == JOptionPane.YES_OPTION && admissionTypeBrowserManager.deleteAdmissionType(admType)) {
+						pAdmissionType.remove(jTable.getSelectedRow());
+						model.fireTableDataChanged();
+						jTable.updateUI();
 					}
 				}
 			});
@@ -255,7 +251,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		pAdmissionType.set(selectedrow, admissionType);
 		((AdmissionTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}

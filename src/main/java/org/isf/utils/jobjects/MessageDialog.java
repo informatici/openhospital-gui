@@ -49,6 +49,14 @@ public class MessageDialog {
 				JOptionPane.ERROR_MESSAGE);
 	}
 
+	public static void errorText(Component parentComponent, String message) {
+		JOptionPane.showMessageDialog(
+				parentComponent,
+				message,
+				ERROR_MESSAGE,
+				JOptionPane.ERROR_MESSAGE);
+	}
+
 	public static void warning(Component parentComponent, String messageKey, Object... additionalArgs) {
 		JOptionPane.showMessageDialog(
 				parentComponent,
