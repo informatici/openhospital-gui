@@ -227,11 +227,13 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 							}
 							if (!result) {
 								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+								descriptionTextField.setText(lastdescription);
 							} else {
 								dispose();
 							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
+							descriptionTextField.setText(lastdescription);
 						}
 					}
 				}
