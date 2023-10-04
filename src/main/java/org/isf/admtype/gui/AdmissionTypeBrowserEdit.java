@@ -218,6 +218,10 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 							dispose();
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
+							if (!lastdescription.isBlank()) {
+								descriptionTextField.setText(lastdescription);
+								admissionType.setDescription(lastdescription);
+							}
 						}
 					}
 				}
