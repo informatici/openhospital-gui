@@ -41,7 +41,6 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
@@ -201,18 +200,11 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 
 				admissionType.setDescription(descriptionTextField.getText());
 				admissionType.setCode(codeTextField.getText());
-				boolean result;
 				if (insert) {      // inserting
 					try {
-						result = admissionTypeBrowserManager.newAdmissionType(admissionType);
-						if (result) {
-							fireAdmissionInserted(admissionType);
-						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
+						admissionTypeBrowserManager.newAdmissionType(admissionType);
+						fireAdmissionInserted(admissionType);
+						dispose();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -221,19 +213,15 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = admissionTypeBrowserManager.updateAdmissionType(admissionType);
-							if (result) {
-								fireAdmissionUpdated();
-							}
-							if (!result) {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-								descriptionTextField.setText(lastdescription);
-							} else {
-								dispose();
-							}
+							admissionTypeBrowserManager.updateAdmissionType(admissionType);
+							fireAdmissionUpdated();
+							dispose();
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
-							descriptionTextField.setText(lastdescription);
+							if (!lastdescription.isBlank()) {
+								descriptionTextField.setText(lastdescription);
+								admissionType.setDescription(lastdescription);
+							}
 						}
 					}
 				}
