@@ -203,28 +203,16 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 					diseaseType.setCode(codeTextField.getText());
 					boolean result;
 					if (insert) {      // inserting
-						result = diseaseTypeBrowserManager.newDiseaseType(diseaseType);
-						if (result) {
-							fireDiseaseInserted();
-						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
+						diseaseTypeBrowserManager.newDiseaseType(diseaseType);
+						fireDiseaseInserted();
+						dispose();
 					} else {                          // updating
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							result = diseaseTypeBrowserManager.updateDiseaseType(diseaseType);
-							if (result) {
-								fireDiseaseUpdated();
-							}
-							if (!result) {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							} else {
-								dispose();
-							}
+							diseaseTypeBrowserManager.updateDiseaseType(diseaseType);
+							fireDiseaseUpdated();
+							dispose();
 						}
 					}
 				} catch (OHServiceException ohServiceException) {
