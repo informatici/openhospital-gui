@@ -81,8 +81,8 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 	}
 
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.admtype.admissiontypebrowser.title"));
-		this.setContentPane(getJContainPanel());
+		setTitle(MessageBundle.getMessage("angal.admtype.admissiontypebrowser.title"));
+		setContentPane(getJContainPanel());
 		pack();
 		setLocationRelativeTo(null);
 	}

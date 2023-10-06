@@ -90,10 +90,10 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 		final int pfrmBase = 10;
         final int pfrmWidth = 5;
         final int pfrmHeight = 4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
+        setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2,
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle(MessageBundle.getMessage("angal.dicomtype.dicomtypebrowser.title"));
-		this.setContentPane(getJContainPanel());
+		setTitle(MessageBundle.getMessage("angal.dicomtype.dicomtypebrowser.title"));
+		setContentPane(getJContainPanel());
 
 	}
 	

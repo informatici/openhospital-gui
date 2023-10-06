@@ -414,7 +414,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 		initialize(parentFrame);
 
-		this.addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -441,7 +441,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		setTitle(MessageBundle.getMessage("angal.admission.editadmissionrecord.title"));
 		addAdmissionListener((AdmissionListener) parentParentFrame);
 		addAdmissionListener((AdmissionListener) parentFrame);
-		this.editing = true;
+		editing = true;
 		patient = aPatient;
 		if (Character.toUpperCase(patient.getSex()) == 'F') {
 			enablePregnancy = true;
@@ -472,7 +472,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 		initialize(parentFrame);
 
-		this.addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -492,8 +492,8 @@ public class AdmissionBrowser extends ModalJFrame {
 	}
 
 	private void initialize(JFrame parent) {
-		this.add(getJContentPane(), BorderLayout.CENTER);
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		add(getJContentPane(), BorderLayout.CENTER);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -1550,7 +1550,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (patient != null) {
 					PatientHistory ph = new PatientHistory();
 					ph.setPatientId(patient.getCode());
-					PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
+					PatientHistory patientHistory = Optional.ofNullable(patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
 					PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
 					PatientHistoryEdit dialog = new PatientHistoryEdit(AdmissionBrowser.this, pph, true);
 					dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
