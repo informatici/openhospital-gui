@@ -117,15 +117,15 @@ public class DicomTypeEdit extends JDialog {
 	 */
 	private void initialize() {
 		
-		this.setContentPane(getJContentPane());
+		setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.dicomtype.newdicomtype.title"));
+			setTitle(MessageBundle.getMessage("angal.dicomtype.newdicomtype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.dicomtype.editdicomtype.title"));
+			setTitle(MessageBundle.getMessage("angal.dicomtype.editdicomtype.title"));
 		}
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		this.pack();
-		this.setLocationRelativeTo(null);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		pack();
+		setLocationRelativeTo(null);
 	}
 
 	/**

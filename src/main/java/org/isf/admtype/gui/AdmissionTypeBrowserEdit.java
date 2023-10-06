@@ -116,15 +116,15 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setContentPane(getJContentPane());
+		setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.admtype.newadmissiontype.title"));
+			setTitle(MessageBundle.getMessage("angal.admtype.newadmissiontype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.admtype.editadmissiontype.title"));
+			setTitle(MessageBundle.getMessage("angal.admtype.editadmissiontype.title"));
 		}
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		this.pack();
-		this.setLocationRelativeTo(null);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		pack();
+		setLocationRelativeTo(null);
 	}
 
 	/**

@@ -244,21 +244,21 @@ public class PatientHistoryEdit extends JDialog {
 	public PatientHistoryEdit(PatientPatientHistory path) {
 		super();
 		this.path = path.getPatientHistory();
-		this.pat = path.getPatient();
+		pat = path.getPatient();
 		initComponents();
 	}
 
 	public PatientHistoryEdit(Frame parent, PatientPatientHistory path) {
 		super(parent, true);
 		this.path = path.getPatientHistory();
-		this.pat = path.getPatient();
+		pat = path.getPatient();
 		initComponents();
 	}
 	
 	public PatientHistoryEdit(Frame parent, PatientPatientHistory path, boolean storeData) {
 		super(parent, true);
 		this.path = path.getPatientHistory();
-		this.pat = path.getPatient();
+		pat = path.getPatient();
 		this.storeData = storeData;
 		initComponents();
 	}
@@ -266,7 +266,7 @@ public class PatientHistoryEdit extends JDialog {
 	public PatientHistoryEdit(Dialog parent, PatientPatientHistory path, boolean storeData) {
 		super(parent, true);
 		this.path = path.getPatientHistory();
-		this.pat = path.getPatient();
+		pat = path.getPatient();
 		this.storeData = storeData;
 		initComponents();
 	}
@@ -274,12 +274,12 @@ public class PatientHistoryEdit extends JDialog {
 	public PatientHistoryEdit(Dialog parent, PatientPatientHistory path) {
 		super(parent, true);
 		this.path = path.getPatientHistory();
-		this.pat = path.getPatient();
+		pat = path.getPatient();
 		initComponents();
 	}
 
 	private void initComponents() {
-		this.setTitle(MessageBundle.getMessage("angal.anamnesis.title.txt"));
+		setTitle(MessageBundle.getMessage("angal.anamnesis.title.txt"));
 		setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 		getContentPane().add(getJPanelPatient(), BorderLayout.NORTH);
 		getContentPane().add(getJPanelAnamnesis(), BorderLayout.CENTER);
