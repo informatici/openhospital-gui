@@ -178,7 +178,8 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 					DeliveryResultType resultType = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg", resultType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (deliveryResultTypeBrowserManager.deleteDeliveryResultType(resultType))) {
+						if (answer == JOptionPane.YES_OPTION) {
+							deliveryResultTypeBrowserManager.deleteDeliveryResultType(resultType);
 							pDeliveryResultType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
