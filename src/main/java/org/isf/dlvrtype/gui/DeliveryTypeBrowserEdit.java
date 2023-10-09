@@ -203,32 +203,18 @@ public class DeliveryTypeBrowserEdit extends JDialog {
                     }
                     deliveryType.setDescription(descriptionTextField.getText());
                     deliveryType.setCode(codeTextField.getText());
-                    boolean result;
                     if (insert) {      // inserting
-                        result = deliveryTypeBrowserManager.newDeliveryType(deliveryType);
-                        if (result) {
-                            fireDeliveryInserted();
-                        }
-                        if (!result) {
-                            MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
-                        } else {
-                            dispose();
-                        }
+                        deliveryTypeBrowserManager.newDeliveryType(deliveryType);
+                        fireDeliveryInserted();
+                        dispose();
                     } else {                          // updating
                         if (descriptionTextField.getText().equals(lastdescription)) {
                             dispose();
                         } else {
-                            result = deliveryTypeBrowserManager.updateDeliveryType(deliveryType);
-                            if (result) {
-                                fireDeliveryUpdated();
-                            }
-                            if (!result) {
-                                MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
-                            } else {
-                                dispose();
-                            }
+                            deliveryTypeBrowserManager.updateDeliveryType(deliveryType);
+                            fireDeliveryUpdated();
+                            dispose();
                         }
-
                     }
                 } catch (OHServiceException ohServiceException) {
                     MessageDialog.showExceptions(ohServiceException);

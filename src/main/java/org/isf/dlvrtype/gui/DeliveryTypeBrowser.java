@@ -116,7 +116,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			jNewButton.addActionListener(actionEvent -> {
 				deliveryType = new DeliveryType("", "");
 				DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame, deliveryType, true);
-				newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
+				newrecord.addDeliveryTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -137,9 +137,9 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					deliveryType = (DeliveryType) (model.getValueAt(selectedrow, -1));
+					deliveryType = (DeliveryType) model.getValueAt(selectedrow, -1);
 					DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame, deliveryType, false);
-					newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
+					newrecord.addDeliveryTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});
@@ -174,10 +174,11 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					DeliveryType delType = (DeliveryType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					DeliveryType delType = (DeliveryType) model.getValueAt(jTable.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.dlvrtype.deletedeliverytype.fmt.msg", delType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (deliveryTypeBrowserManager.deleteDeliveryType(delType))) {
+						if (answer == JOptionPane.YES_OPTION) {
+							deliveryTypeBrowserManager.deleteDeliveryType(delType);
 							pDeliveryType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -254,7 +255,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 		pDeliveryType.set(selectedrow, deliveryType);
 		((DeliveryTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
