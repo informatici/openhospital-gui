@@ -209,24 +209,16 @@ public class ExamTypeEdit extends JDialog {
 					examType.setCode(codeTextField.getText());
 
 					if (insert) {     // inserting
-						ExamType newExamType = examTypeBrowserManager.newExamType(examType);
-						if (newExamType != null) {
-							fireExamTypeInserted();
-							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
+						examTypeBrowserManager.newExamType(examType);
+						fireExamTypeInserted();
+						dispose();
 					} else {            // updating
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							ExamType updatedExamType = examTypeBrowserManager.newExamType(examType);
-							if (updatedExamType != null) {
-								fireExamTypeUpdated();
-								dispose();
-							} else {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							}
+							examTypeBrowserManager.newExamType(examType);
+							fireExamTypeUpdated();
+							dispose();
 						}
 					}
 				} catch (OHServiceException ohServiceException) {
