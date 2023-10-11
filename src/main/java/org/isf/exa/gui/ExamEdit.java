@@ -243,7 +243,7 @@ public class ExamEdit extends JDialog {
 					exam.setDefaultResult(defTextField.getText().toUpperCase());
 					exam.setProcedure(procedure);
 
-					boolean result = false;
+					boolean inError = false;
 					if (insert) {
 						try {
 							if (examBrowsingManager.isKeyPresent(exam)) {
@@ -252,29 +252,25 @@ public class ExamEdit extends JDialog {
 							}
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
+							inError = true;
 						}
 						try {
-							result = examBrowsingManager.newExam(exam);
-							if (result) {
-								fireExamInserted();
-							}
+							examBrowsingManager.newExam(exam);
+							fireExamInserted();
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
+							inError = true;
 						}
 					} else {
 						try {
-							Exam updatedExam = examBrowsingManager.updateExam(exam);
-							if (updatedExam != null) {
-								result = true;
-							}
-							if (result) {
-								fireExamUpdated();
-							}
+							examBrowsingManager.updateExam(exam);
+							fireExamUpdated();
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
+							inError = true;
 						}
 					}
-					if (!result) {
+					if (inError) {
 						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					} else {
 						dispose();
@@ -322,9 +318,9 @@ public class ExamEdit extends JDialog {
 		return codeTextField;
 	}
 
-	private JComboBox getProcComboBox() {
+	private JComboBox<String> getProcComboBox() {
 		if (procComboBox == null) {
-			procComboBox = new JComboBox<>();
+			procComboBox = new JComboBox<String>();
 			if (insert) {
 				procComboBox.addItem("1");
 				procComboBox.addItem("2");

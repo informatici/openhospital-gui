@@ -169,11 +169,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 					int answer = MessageDialog.yesNo(null, "angal.exa.deleteexamresult.fmt.msg", row.getDescription());
 					if ((answer == JOptionPane.YES_OPTION)) {
 						try {
-							boolean deleted = examRowBrowsingManager.deleteExamRow(row);
-
-							if (deleted) {
-								examRowDeleted();
-							}
+							examRowBrowsingManager.deleteExamRow(row);
+							examRowDeleted();
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
 						}
