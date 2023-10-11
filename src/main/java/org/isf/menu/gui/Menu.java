@@ -133,25 +133,27 @@ public class Menu {
 		if (currentFont != null) {
 			LOGGER.debug("Current Font: " + currentFont.getFontName() + " " + currentFont.getSize());
 		} else {
-			LOGGER.error("Unable to retrieve the current font from the L&F.");
-			System.exit(1);
+			LOGGER.debug("Unable to retrieve the current font from the L&F.");
+			return;
 		}
 
 		// Check if the desiredFont can display the text
 		if (currentFont.canDisplayUpTo(textToCheck) == -1) {
-			LOGGER.info("The current font supports the provided text.");
+			LOGGER.debug("The current font supports the selected language.");
 		} else {
-			LOGGER.info("The current font does not support the provided text.");
+			LOGGER.debug("The current font does not support the selected language.");
 
 			// Find a font that supports the provided text
 			Font[] availableFonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 			for (Font font : availableFonts) {
 				if (font.canDisplayUpTo(textToCheck) == -1) {
-					LOGGER.info("Found a font that supports the text: " + font.getFontName());
+					LOGGER.debug("Found a font that supports the selected language: " + font.getFontName());
 					setUIFont(new javax.swing.plaf.FontUIResource(font.getFontName(), Font.PLAIN, 12));
-					break;
+					return;
 				}
 			}
+			LOGGER.error("Unable to find a font that supports the selected language.");
+			System.exit(1);
 		}
 	}
 
