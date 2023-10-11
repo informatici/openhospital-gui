@@ -56,10 +56,9 @@ public class Menu {
 	private static void createAndShowGUI() {
 		String newLine = System.lineSeparator();
 		LOGGER.info("{}{}====================={}Starting Open Hospital{}====================={}", newLine, newLine, newLine, newLine, newLine);
-		// setUIFont(new javax.swing.plaf.FontUIResource("Ebrima", Font.BOLD, 12));
-		fontChecker();
 		checkOHVersion();
 		checkJavaVersion();
+		fontChecker();
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "splash.png", null, 3000);
 		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
@@ -137,13 +136,13 @@ public class Menu {
 			return;
 		}
 
-		// Check if the desiredFont can display the text
+		// Check if the currentFont can display the textToCheck
 		if (currentFont.canDisplayUpTo(textToCheck) == -1) {
 			LOGGER.debug("The current font supports the selected language.");
 		} else {
 			LOGGER.debug("The current font does not support the selected language.");
 
-			// Find a font that supports the provided text
+			// Find a font that supports the provided textToCheck
 			Font[] availableFonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 			for (Font font : availableFonts) {
 				if (font.canDisplayUpTo(textToCheck) == -1) {
