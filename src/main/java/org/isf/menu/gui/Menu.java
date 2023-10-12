@@ -21,14 +21,21 @@
  */
 package org.isf.menu.gui;
 
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.io.File;
+import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
+import org.isf.generaldata.GeneralData;
+import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.Version;
 import org.isf.menu.manager.Context;
 import org.isf.utils.jobjects.WaitCursorEventQueue;
@@ -50,9 +57,9 @@ public class Menu {
 	private static void createAndShowGUI() {
 		String newLine = System.lineSeparator();
 		LOGGER.info("{}{}====================={}Starting Open Hospital{}====================={}", newLine, newLine, newLine, newLine, newLine);
-
 		checkOHVersion();
 		checkJavaVersion();
+		fontChecker();
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "splash.png", null, 3000);
 		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
@@ -89,7 +96,7 @@ public class Menu {
 		if (runningVersion == null || requiredVersion == null) {
 			return true;
 		}
-		try(Scanner scannerRunningVersion = new Scanner(runningVersion); Scanner scannerRequiredVersion = new Scanner(requiredVersion)) {
+		try (Scanner scannerRunningVersion = new Scanner(runningVersion); Scanner scannerRequiredVersion = new Scanner(requiredVersion)) {
 			scannerRunningVersion.useDelimiter(DELIMITER);
 			scannerRequiredVersion.useDelimiter(DELIMITER);
 			while (scannerRunningVersion.hasNextInt() && scannerRequiredVersion.hasNextInt()) {
@@ -101,6 +108,52 @@ public class Menu {
 				return running >= required;
 			}
 			return true;
+		}
+	}
+
+	public static void setUIFont(FontUIResource f) {
+		Enumeration<Object> keys = UIManager.getDefaults().keys();
+		while (keys.hasMoreElements()) {
+			Object key = keys.nextElement();
+			Object value = UIManager.get(key);
+			if (value instanceof FontUIResource)
+				UIManager.put(key, f);
+		}
+	}
+
+	public static void fontChecker() {
+
+		GeneralData.initialize();
+		MessageBundle.getBundle();
+		String textToCheck = MessageBundle.getMessage("angal.common.address.txt"); // Any string from bundle to check
+		LOGGER.debug("textToCheck: {}", textToCheck);
+
+		Font currentFont = UIManager.getFont("Label.font");
+
+		if (currentFont != null) {
+			LOGGER.debug("Current Font: {} {}", currentFont.getFontName(), currentFont.getSize());
+		} else {
+			LOGGER.debug("Unable to retrieve the current font from the L&F.");
+			return;
+		}
+
+		// Check if the currentFont can display the textToCheck
+		if (currentFont.canDisplayUpTo(textToCheck) == -1) {
+			LOGGER.debug("The current font supports the selected language.");
+		} else {
+			LOGGER.debug("The current font does not support the selected language.");
+
+			// Find a font that supports the provided textToCheck
+			Font[] availableFonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+			for (Font font : availableFonts) {
+				if (font.canDisplayUpTo(textToCheck) == -1) {
+					LOGGER.debug("Found a font that supports the selected language: {}", font.getFontName());
+					setUIFont(new FontUIResource(font.getFontName(), Font.PLAIN, 12));
+					return;
+				}
+			}
+			LOGGER.error("Unable to find a font that supports the selected language.");
+			System.exit(1);
 		}
 	}
 
