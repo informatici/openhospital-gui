@@ -130,7 +130,7 @@ public class Menu {
 		Font currentFont = UIManager.getFont("Label.font");
 
 		if (currentFont != null) {
-			LOGGER.debug("Current Font: " + currentFont.getFontName() + " " + currentFont.getSize());
+			LOGGER.debug("Current Font: { } { }", currentFont.getFontName(), currentFont.getSize());
 		} else {
 			LOGGER.debug("Unable to retrieve the current font from the L&F.");
 			return;
