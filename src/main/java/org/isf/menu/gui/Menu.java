@@ -146,7 +146,7 @@ public class Menu {
 			Font[] availableFonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 			for (Font font : availableFonts) {
 				if (font.canDisplayUpTo(textToCheck) == -1) {
-					LOGGER.debug("Found a font that supports the selected language: " + font.getFontName());
+					LOGGER.debug("Found a font that supports the selected language: {}", font.getFontName());
 					setUIFont(new javax.swing.plaf.FontUIResource(font.getFontName(), Font.PLAIN, 12));
 					return;
 				}
