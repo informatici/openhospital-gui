@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -110,12 +111,12 @@ public class Menu {
 		}
 	}
 
-	public static void setUIFont(javax.swing.plaf.FontUIResource f) {
+	public static void setUIFont(FontUIResource f) {
 		Enumeration<Object> keys = UIManager.getDefaults().keys();
 		while (keys.hasMoreElements()) {
 			Object key = keys.nextElement();
 			Object value = UIManager.get(key);
-			if (value instanceof javax.swing.plaf.FontUIResource)
+			if (value instanceof FontUIResource)
 				UIManager.put(key, f);
 		}
 	}
@@ -147,7 +148,7 @@ public class Menu {
 			for (Font font : availableFonts) {
 				if (font.canDisplayUpTo(textToCheck) == -1) {
 					LOGGER.debug("Found a font that supports the selected language: {}", font.getFontName());
-					setUIFont(new javax.swing.plaf.FontUIResource(font.getFontName(), Font.PLAIN, 12));
+					setUIFont(new FontUIResource(font.getFontName(), Font.PLAIN, 12));
 					return;
 				}
 			}
