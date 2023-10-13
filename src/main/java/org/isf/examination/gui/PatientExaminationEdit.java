@@ -260,7 +260,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	//TODO: try to use JDOM...
 	private void updateBMI() {
 		double bmi = patex.getBMI();
-		StringBuilder bmiStringBuilder = new StringBuilder();
+		StringBuilder bmiStringBuilder = new StringBuilder(70);
 		bmiStringBuilder.append("<html><body>");
 		bmiStringBuilder.append("<strong>");
 		bmiStringBuilder.append(MessageBundle.getMessage("angal.examination.bmi")).append(':');
@@ -1309,10 +1309,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jButtonDelete.addActionListener(actionEvent -> {
 				int[] row = jTableSummary.getSelectedRows();
 				if (row.length == 0) {
-					MessageDialog.error(PatientExaminationEdit.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
-				int ok = JOptionPane.showConfirmDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.doyouwanttoproceed.msg"));
+				int ok = JOptionPane.showConfirmDialog(this, MessageBundle.getMessage("angal.common.doyouwanttoproceed.msg"));
 				if (ok == JOptionPane.OK_OPTION) {
 					List<PatientExamination> patexList = new ArrayList<>();
 					for (int j : row) {
@@ -1340,7 +1340,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 				//TODO: to provide a more rigorous changes inspections logic
 				if (modified) {
-					int ok = MessageDialog.yesNoCancel(PatientExaminationEdit.this, "angal.examination.savethechanges.msg");
+					int ok = MessageDialog.yesNoCancel(this, "angal.examination.savethechanges.msg");
 					if (ok == JOptionPane.YES_OPTION) {
 						jButtonSave.doClick();
 						dispose();
@@ -2009,23 +2009,18 @@ public class PatientExaminationEdit extends ModalJFrame {
 		@Override
 		public Object getValueAt(int r, int c) {
 			PatientExamination patientExamination = patexList.get(r);
-			StringBuilder pressurStringBuilder = new StringBuilder();
-			pressurStringBuilder.append(patientExamination.getPex_ap_min() == null ? "-" : patientExamination.getPex_ap_min())
-					.append(" / ").append(patientExamination.getPex_ap_max() == null ? "-" : patientExamination.getPex_ap_max());
-			String datetime = DATE_TIME_FORMATTER.format(patientExamination.getPex_date());
-			String diuresis = patientExamination.getPex_diuresis_desc() == null ? "-" : examinationBrowserManager.getDiuresisDescriptionTranslated(patientExamination.getPex_diuresis_desc());
-			String bowel = patientExamination.getPex_bowel_desc() == null ? "-" : examinationBrowserManager.getBowelDescriptionTranslated(patientExamination.getPex_bowel_desc());
-			String ausc = patientExamination.getPex_auscultation() == null ? "-" : examinationBrowserManager.getAuscultationTranslated(patientExamination.getPex_auscultation());
-			String note = patientExamination.getPex_note();
 			if (c == -1) {
 				return patientExamination;
 			} else if (c == 0) {
-				return datetime;
+				return DATE_TIME_FORMATTER.format(patientExamination.getPex_date());
 			} else if (c == 1) {
 				return patientExamination.getPex_height();
 			} else if (c == 2) {
 				return patientExamination.getPex_weight();
 			} else if (c == 3) {
+				StringBuilder pressurStringBuilder = new StringBuilder();
+				pressurStringBuilder.append(patientExamination.getPex_ap_min() == null ? "-" : patientExamination.getPex_ap_min())
+						.append(" / ").append(patientExamination.getPex_ap_max() == null ? "-" : patientExamination.getPex_ap_max());
 				return pressurStringBuilder.toString();
 			} else if (c == 4) {
 				return patientExamination.getPex_hr() == null ? "-" : patientExamination.getPex_hr();
@@ -2040,14 +2035,15 @@ public class PatientExaminationEdit extends ModalJFrame {
 			} else if (c == 9) {
 				return patientExamination.getPex_diuresis() == null ? "-" : patientExamination.getPex_diuresis();
 			} else if (c == 10) {
-				return diuresis;
+				return patientExamination.getPex_diuresis_desc() == null ? "-" : examinationBrowserManager.getDiuresisDescriptionTranslated(patientExamination.getPex_diuresis_desc());
 			} else if (c == 11) {
-				return bowel;
+				return patientExamination.getPex_bowel_desc() == null ? "-" : examinationBrowserManager.getBowelDescriptionTranslated(patientExamination.getPex_bowel_desc());
 			} else if (c == 12) {
-				return ausc;
+				return patientExamination.getPex_auscultation() == null ? "-" : examinationBrowserManager.getAuscultationTranslated(patientExamination.getPex_auscultation());
 			} else if (c == 13) {
+				String note = patientExamination.getPex_note();
 				if (!note.trim().isEmpty()) {
-					final IconButton button = new IconButton(new ImageIcon("rsc/icons/list_button.png"));
+					IconButton button = new IconButton(new ImageIcon("rsc/icons/list_button.png"));
 					button.addActionListener(actionEvent -> {
 						VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
 						noteArea.setText(note);
