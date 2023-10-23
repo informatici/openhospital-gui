@@ -559,7 +559,7 @@ public class LabEdit extends ModalJFrame {
 						fireLabUpdated();
 						dispose();
 					} catch (OHServiceException e1) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						MessageDialog.error(this, "angal.common.datacouldnotbesaved.msg");
 						OHServiceExceptionUtil.showMessages(e1);
 					}
 				}
