@@ -546,28 +546,22 @@ public class LabEdit extends ModalJFrame {
 				} else if (examSelected.getProcedure() == 3) {
 					lab.setResult(examRowTextField.getText());
 				}
-				boolean result;
 				if (insert) {
 					lab.setAge(tmpAge);
 					try {
-						result = labManager.newLaboratory(lab, labRow);
+						labManager.newLaboratory(lab, labRow);
 					} catch (OHServiceException e1) {
-						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
 					}
 				} else {
 					try {
-						result = labManager.updateLaboratory(lab, labRow);
+						labManager.updateLaboratory(lab, labRow);
+						fireLabUpdated();
+						dispose();
 					} catch (OHServiceException e1) {
-						result = false;
+						MessageDialog.error(this, "angal.common.datacouldnotbesaved.msg");
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-				}
-				if (!result) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-				} else {
-					fireLabUpdated();
-					dispose();
 				}
 			});
 		}
