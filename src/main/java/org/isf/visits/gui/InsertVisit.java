@@ -218,10 +218,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		newWardBox.addItem(null);
 		for (Ward aWard : wardList) {
 			newWardBox.addItem(aWard);
-			if (this.ward != null) {
-				if (this.ward.getCode().equalsIgnoreCase(aWard.getCode())) {
-					newWardBox.setSelectedItem(aWard);
-				}
+			if (this.ward != null && this.ward.getCode().equalsIgnoreCase(aWard.getCode())) {
+				newWardBox.setSelectedItem(aWard);
 			}
 		}
 		newWardBox.addActionListener(actionEvent -> {
@@ -322,16 +320,16 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 				LocalDateTime date = visitDateChooser.getLocalDateTime();
 				if (date == null) {
-					MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseavaliddateandtime.msg");
+					MessageDialog.error(this, "angal.visit.pleasechooseavaliddateandtime.msg");
 					return;
 				}
 				if (date.isBefore(TimeTools.getDateToday0())) {
-					MessageDialog.error(InsertVisit.this, "angal.visit.avisitcannotbescheduledforadatethatispast.msg");
+					MessageDialog.error(this, "angal.visit.avisitcannotbescheduledforadatethatispast.msg");
 					return;
 				}
 				Ward selectedWard = getSelectedWard();
 				if (selectedWard == null) {
-					MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseaward.msg");
+					MessageDialog.error(this, "angal.visit.pleasechooseaward.msg");
 					return;
 				}
 
@@ -349,7 +347,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 						visit = thisVisit;
 					}
 				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e, InsertVisit.this);
+					OHServiceExceptionUtil.showMessages(e, this);
 					return;
 				}
 				dispose();
@@ -375,8 +373,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
 			jButtonPickPatient.addActionListener(actionEvent -> {
 
-				SelectPatient sp = new SelectPatient(InsertVisit.this, patientSelected);
-				sp.addSelectionListener(InsertVisit.this);
+				SelectPatient sp = new SelectPatient(this, patientSelected);
+				sp.addSelectionListener(this);
 				sp.pack();
 				sp.setVisible(true);
 
