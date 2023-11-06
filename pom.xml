@@ -19,9 +19,9 @@
 		<oh.version>1.13.0-SNAPSHOT</oh.version>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.framework.version>5.3.29</spring.framework.version>
-		<spring.boot.version>2.7.15</spring.boot.version>
-		<license.maven.plugin.version>4.2</license.maven.plugin.version>
+		<spring.framework.version>5.3.30</spring.framework.version>
+		<spring.boot.version>2.7.17</spring.boot.version>
+		<license.maven.plugin.version>4.3</license.maven.plugin.version>
 	</properties>
 
 	<build>
@@ -193,7 +193,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.6.0</version>
+				<version>3.6.1</version>
 				<executions>
 					<execution>
 						<id>copy-dependencies</id>

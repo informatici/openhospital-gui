@@ -92,8 +92,8 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -178,7 +178,8 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 					DeliveryResultType resultType = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg", resultType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (deliveryResultTypeBrowserManager.deleteDeliveryResultType(resultType))) {
+						if (answer == JOptionPane.YES_OPTION) {
+							deliveryResultTypeBrowserManager.deleteDeliveryResultType(resultType);
 							pDeliveryResultType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();

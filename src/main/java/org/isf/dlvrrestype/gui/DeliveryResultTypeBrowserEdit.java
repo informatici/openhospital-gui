@@ -139,8 +139,8 @@ public class DeliveryResultTypeBrowserEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -202,22 +202,16 @@ public class DeliveryResultTypeBrowserEdit extends JDialog {
 					deliveryresultType.setCode(codeTextField.getText());
 
 					if (insert) {     // inserting
-						if (deliveryResultTypeBrowserManager.newDeliveryResultType(deliveryresultType)) {
-							fireDeliveryResultInserted();
-							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
+						deliveryResultTypeBrowserManager.newDeliveryResultType(deliveryresultType);
+						fireDeliveryResultInserted();
+						dispose();
 					} else {            // updating
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							if (deliveryResultTypeBrowserManager.updateDeliveryResultType(deliveryresultType)) {
-								fireDeliveryResultUpdated();
-								dispose();
-							} else {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							}
+							deliveryResultTypeBrowserManager.updateDeliveryResultType(deliveryresultType);
+							fireDeliveryResultUpdated();
+							dispose();
 						}
 					}
 				} catch (OHServiceException ohServiceException) {

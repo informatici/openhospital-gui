@@ -248,7 +248,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		initialize();
 		Opd newOpd = new Opd(0, ' ', -1, new Disease());
 		OpdEditExtended editrecord = new OpdEditExtended(myFrame, newOpd, patient, true);
-		editrecord.addSurgeryListener(OpdBrowser.this);
+		editrecord.addSurgeryListener(this);
 		editrecord.showAsModal(myFrame);
 		setLocationRelativeTo(null);
 	}
@@ -295,9 +295,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(getJSelectionPanel(), java.awt.BorderLayout.WEST);
-			jContainPanel.add(new JScrollPane(getJTable()),	java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(getJSelectionPanel(), BorderLayout.WEST);
+			jContainPanel.add(new JScrollPane(getJTable()),	BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -316,11 +316,11 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				Opd newOpd = new Opd(0, ' ', -1, new Disease());
 				if (GeneralData.OPDEXTENDED) {
 					OpdEditExtended newrecord = new OpdEditExtended(myFrame, newOpd, true);
-					newrecord.addSurgeryListener(OpdBrowser.this);
+					newrecord.addSurgeryListener(this);
 					newrecord.showAsModal(myFrame);
 				} else {
 					OpdEdit newrecord = new OpdEdit(myFrame, newOpd, true);
-					newrecord.addSurgeryListener(OpdBrowser.this);
+					newrecord.addSurgeryListener(this);
 					newrecord.setLocationRelativeTo(myFrame);
 					newrecord.setVisible(true);
 				}
@@ -340,18 +340,18 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
-					MessageDialog.error(OpdBrowser.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
 				selectedrow = jTable.getSelectedRow();
-				Opd opd = (Opd) (model.getValueAt(selectedrow, -1));
+				Opd opd = (Opd) model.getValueAt(selectedrow, -1);
 				if (GeneralData.OPDEXTENDED) {
 					OpdEditExtended editrecord = new OpdEditExtended(myFrame, opd, false);
-					editrecord.addSurgeryListener(OpdBrowser.this);
+					editrecord.addSurgeryListener(this);
 					editrecord.showAsModal(myFrame);
 				} else {
 					OpdEdit editrecord = new OpdEdit(myFrame, opd, false);
-					editrecord.addSurgeryListener(OpdBrowser.this);
+					editrecord.addSurgeryListener(this);
 					editrecord.setLocationRelativeTo(myFrame);
 					editrecord.setVisible(true);
 				}
@@ -385,10 +385,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
-					MessageDialog.error(OpdBrowser.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
-				Opd opd = (Opd) (model.getValueAt(jTable.getSelectedRow(), -1));
+				Opd opd = (Opd) model.getValueAt(jTable.getSelectedRow(), -1);
 
 				String message;
 				if (GeneralData.OPDEXTENDED) {
@@ -419,7 +419,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				int n = JOptionPane.showConfirmDialog(null, message,
 						MessageBundle.getMessage("angal.messagedialog.question.title"), JOptionPane.YES_NO_OPTION);
 				try {
-					if ((n == JOptionPane.YES_OPTION) && (opdBrowserManager.deleteOpd(opd))) {
+					if (n == JOptionPane.YES_OPTION) {
+						opdBrowserManager.deleteOpd(opd);
 						pSur.remove(pSur.size() - jTable.getSelectedRow() - 1);
 						model.fireTableDataChanged();
 						jTable.updateUI();
@@ -527,9 +528,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (resetButton == null) {
 			resetButton = new JButton(MessageBundle.getMessage("angal.opd.reset.btn"));
 			resetButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.reset.btn.key"));
-			resetButton.addActionListener(actionEvent -> {
-				resetAllFilters();
-			});
+			resetButton.addActionListener(actionEvent -> resetAllFilters());
 		}
 		return resetButton;
 	}
@@ -1041,7 +1040,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		pSur.set(pSur.size() - selectedrow - 1, opd);
 		((OpdBrowsingModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 		rowCounter.setText(rowCounterText + pSur.size());
@@ -1085,12 +1084,12 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				LocalDate dateToDate = dateTo.getDate();
 
 				if (dateFromDate.isAfter(dateToDate)) {
-					MessageDialog.error(OpdBrowser.this, "angal.opd.datefrommustbebefordateto.msg");
+					MessageDialog.error(this, "angal.opd.datefrommustbebefordateto.msg");
 					return;
 				}
 
 				if (ageFrom > ageTo) {
-					MessageDialog.error(OpdBrowser.this, "angal.opd.agefrommustbelowerthanageto.msg");
+					MessageDialog.error(this, "angal.opd.agefrommustbelowerthanageto.msg");
 					jAgeFromTextField.setText(ageTo.toString());
 					ageFrom = ageTo;
 					return;
@@ -1098,7 +1097,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 				//TODO: to retrieve resultset size instead of assuming 1 year as limit for the warning
 				if (TimeTools.getDaysBetweenDates(dateFromDate, dateToDate, true) >= 360) {
-					int ok = JOptionPane.showConfirmDialog(OpdBrowser.this,
+					int ok = JOptionPane.showConfirmDialog(this,
 							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
 							MessageBundle.getMessage("angal.messagedialog.question.title"),
 							JOptionPane.OK_CANCEL_OPTION);
@@ -1157,7 +1156,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				String codeHint = ((JTextField) e.getSource()).getText();
-				int code = 0;
+				int code;
 				try {
 					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
@@ -1191,7 +1190,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				String codeHint = ((JTextField) e.getSource()).getText();
-				int code = 0;
+				int code;
 				try {
 					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
@@ -1221,7 +1220,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				String codeHint = ((JTextField) e.getSource()).getText();
-				int code = 0;
+				int code;
 				try {
 					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {

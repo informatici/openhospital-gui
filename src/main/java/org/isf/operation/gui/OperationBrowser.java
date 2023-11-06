@@ -143,7 +143,6 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				diseaseTypeFilter.addItem(elem);
 			}
 		} catch (OHServiceException e1) {
-			type = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 

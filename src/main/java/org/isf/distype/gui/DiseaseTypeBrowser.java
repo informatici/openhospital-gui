@@ -90,8 +90,8 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -115,7 +115,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 			jNewButton.addActionListener(actionEvent -> {
 				diseaseType = new DiseaseType("", "");
 				DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame, diseaseType, true);
-				newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
+				newrecord.addDiseaseTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -136,9 +136,9 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					diseaseType = (DiseaseType) (model.getValueAt(selectedrow, -1));
+					diseaseType = (DiseaseType) model.getValueAt(selectedrow, -1);
 					DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame, diseaseType, false);
-					newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
+					newrecord.addDiseaseTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});
@@ -173,10 +173,11 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					DiseaseType diseaseType = (DiseaseType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					DiseaseType diseaseType = (DiseaseType) model.getValueAt(jTable.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.distype.deletediseasetype.fmt.msg", diseaseType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (diseaseTypeBrowserManager.deleteDiseaseType(diseaseType))) {
+						if (answer == JOptionPane.YES_OPTION) {
+							diseaseTypeBrowserManager.deleteDiseaseType(diseaseType);
 							pDiseaseType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -253,7 +254,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		pDiseaseType.set(selectedrow, diseaseType);
 		((DiseaseTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}

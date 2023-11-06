@@ -49,6 +49,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.event.EventListenerList;
 
 import org.isf.disease.manager.DiseaseBrowserManager;
@@ -223,8 +224,8 @@ public class OpdEdit extends JDialog {
 		if (principalPanel == null) {
 			principalPanel = new JPanel();
 			principalPanel.setLayout(new BorderLayout());
-			principalPanel.add(getInsertPanel(), java.awt.BorderLayout.NORTH);
-			principalPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
+			principalPanel.add(getInsertPanel(), BorderLayout.NORTH);
+			principalPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
 		}
 		return principalPanel;
 	}
@@ -450,7 +451,7 @@ public class OpdEdit extends JDialog {
 						Disease disease = null;
 						Disease disease2 = null;
 						Disease disease3 = null;
-						Ward ward = null;
+						Ward ward;
 
 						if (newPatientCheckBox.isSelected()) {
 							newPatient = 'N';
@@ -930,7 +931,7 @@ public class OpdEdit extends JDialog {
 	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
+		Border b2 = BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(title), BorderFactory
 						.createEmptyBorder(0, 0, 0, 0));
 		c.setBorder(b2);

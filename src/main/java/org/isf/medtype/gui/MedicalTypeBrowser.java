@@ -91,8 +91,8 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -116,7 +116,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 			jNewButton.addActionListener(actionEvent -> {
 				medicalType = new MedicalType("", "");
 				MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame, medicalType, true);
-				newrecord.addMedicalTypeListener(MedicalTypeBrowser.this);
+				newrecord.addMedicalTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -134,12 +134,12 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
-					MessageDialog.error(MedicalTypeBrowser.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					medicalType = (MedicalType) (model.getValueAt(selectedrow, -1));
+					medicalType = (MedicalType) model.getValueAt(selectedrow, -1);
 					MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame, medicalType, false);
-					newrecord.addMedicalTypeListener(MedicalTypeBrowser.this);
+					newrecord.addMedicalTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});
@@ -172,18 +172,19 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
-					MessageDialog.error(MedicalTypeBrowser.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 				} else {
-					MedicalType medType = (MedicalType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					MedicalType medType = (MedicalType) model.getValueAt(jTable.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.medtype.deletemedicaltype.fmt.msg", medType.getDescription());
-					try {
-						if ((answer == JOptionPane.YES_OPTION) && (medicalTypeBrowserManager.deleteMedicalType(medType))) {
+					if (answer == JOptionPane.YES_OPTION) {
+						try {
+							medicalTypeBrowserManager.deleteMedicalType(medType);
 							pMedicalType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
+						} catch (OHServiceException serviceException) {
+							OHServiceExceptionUtil.showMessages(serviceException);
 						}
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
 			});
@@ -257,7 +258,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 		pMedicalType.set(selectedrow, medicalType);
 		((MedicalTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}

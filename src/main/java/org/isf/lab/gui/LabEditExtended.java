@@ -144,7 +144,6 @@ public class LabEditExtended extends ModalJFrame {
 	private VoLimitedTextField jTextPatientSrc;
 	private Patient labPat;
 	private String lastKey;
-	private String s;
 	private List<Patient> pat;
 
 	private GoodDateTimeSpinnerChooser examDateFieldCal;
@@ -271,7 +270,7 @@ public class LabEditExtended extends ModalJFrame {
 				public void keyReleased(KeyEvent e) {
 				}
 			});
-			patientComboBox = getPatientComboBox(s);
+			patientComboBox = getPatientComboBox();
 			patientComboBox.setBounds(LABEL_WIDTH + 170, 65, 305, 20);
 
 			// add all to the data panel
@@ -369,7 +368,7 @@ public class LabEditExtended extends ModalJFrame {
 			if (!insert) {
 				inPatientCheckBox.setSelected(lab.getInOutPatient().equalsIgnoreCase("I"));
 			}
-			lab.setInOutPatient((inPatientCheckBox.isSelected() ? "I" : "R"));
+			lab.setInOutPatient(inPatientCheckBox.isSelected() ? "I" : "R");
 		}
 		return inPatientCheckBox;
 	}
@@ -377,7 +376,7 @@ public class LabEditExtended extends ModalJFrame {
 	/*
 	 * TODO: Patient Selection like in LabNew
 	 */
-	private PatientComboBox getPatientComboBox(String s) {
+	private PatientComboBox getPatientComboBox() {
 
 		try {
 			if (insert) {
@@ -593,7 +592,7 @@ public class LabEditExtended extends ModalJFrame {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 				if (examComboBox.getSelectedIndex() == 0) {
-					MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseselectanexam.msg");
+					MessageDialog.error(this, "angal.lab.pleaseselectanexam.msg");
 					return;
 				}
 				String matSelected = (String) matComboBox.getSelectedItem();
@@ -601,18 +600,18 @@ public class LabEditExtended extends ModalJFrame {
 				try {
 					labPat = (Patient) patientComboBox.getSelectedItem();
 				} catch (ClassCastException e2) {
-					MessageDialog.error(LabEditExtended.this, "angal.common.pleaseselectapatient.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
-				LocalDateTime examDate = TimeTools.getNow();
+				LocalDateTime examDate;
 				try {
 					examDate = examDateFieldCal.getLocalDateTime();
 				} catch (Exception e1) {
-					MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseinsertavalidexamdate.msg");
+					MessageDialog.error(this, "angal.lab.pleaseinsertavalidexamdate.msg");
 					return;
 				}
 				if (examSelected.getProcedure() == 3 && examTextField.getText().isEmpty()) {
-					MessageDialog.error(LabEditExtended.this, "angal.labnew.pleaseinsertavalidvalue");
+					MessageDialog.error(this, "angal.labnew.pleaseinsertavalidvalue");
 					return;
 				}
 				List<String> labRow = new ArrayList<>();
@@ -621,7 +620,7 @@ public class LabEditExtended extends ModalJFrame {
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
 				lab.setNote(noteTextArea.getText());
-				lab.setInOutPatient((inPatientCheckBox.isSelected() ? "I" : "O"));
+				lab.setInOutPatient(inPatientCheckBox.isSelected() ? "I" : "O");
 				lab.setPatient(labPat);
 				lab.setPatName(labPat.getName());
 				lab.setSex(String.valueOf(labPat.getSex()));
@@ -639,30 +638,22 @@ public class LabEditExtended extends ModalJFrame {
 				} else if (examSelected.getProcedure() == 3) {
 					lab.setResult(examTextField.getText());
 				}
-				boolean result;
 				if (insert) {
 					lab.setAge(labPat.getAge());
 					try {
-						result = labManager.newLaboratory(lab, labRow);
+						labManager.newLaboratory(lab, labRow);
 					} catch (OHServiceException e1) {
-						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
-						return;
 					}
 				} else {
 					try {
-						result = labManager.updateLaboratory(lab, labRow);
+						labManager.updateLaboratory(lab, labRow);
+						fireLabUpdated();
+						dispose();
 					} catch (OHServiceException e1) {
-						result = false;
+						MessageDialog.error(this, "angal.common.datacouldnotbesaved.msg");
 						OHServiceExceptionUtil.showMessages(e1);
-						return;
 					}
-				}
-				if (!result) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-				} else {
-					fireLabUpdated();
-					dispose();
 				}
 			});
 		}

@@ -118,7 +118,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		pMedicals.set(selectedrow, medical);
 		((MedicalBrowsingModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1) {
+		if (table.getRowCount() > 0 && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 		repaint();
@@ -305,7 +305,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			dateOptions.add(MessageBundle.getMessage("angal.common.date.txt"));
 
 			Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
-			String dateOption = (String) MessageDialog.inputDialog(MedicalBrowser.this,
+			String dateOption = (String) MessageDialog.inputDialog(this,
 					icon,
 					dateOptions.toArray(),
 					dateOptions.get(0),
@@ -319,7 +319,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			lotOptions.add(MessageBundle.getMessage("angal.medicals.onlyquantity"));
 			lotOptions.add(MessageBundle.getMessage("angal.medicals.withlot"));
 
-			String lotOption = (String) MessageDialog.inputDialog(MedicalBrowser.this,
+			String lotOption = (String) MessageDialog.inputDialog(this,
 					icon,
 					lotOptions.toArray(),
 					lotOptions.get(0),
@@ -374,7 +374,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 
 				GoodDateChooser dateChooser = new GoodDateChooser(LocalDate.now(), true, false);
-				int r = JOptionPane.showConfirmDialog(MedicalBrowser.this,
+				int r = JOptionPane.showConfirmDialog(this,
 						dateChooser,
 						MessageBundle.getMessage("angal.common.date.txt"),
 						JOptionPane.OK_CANCEL_OPTION,
@@ -395,12 +395,12 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		buttonStockCard.setMnemonic(MessageBundle.getMnemonic("angal.common.stockcard.btn.key"));
 		buttonStockCard.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
+				MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (model.getValueAt(selectedrow, -1));
+				medical = (Medical) model.getValueAt(selectedrow, -1);
 				// Select Dates
-				GoodFromDateToDateChooser dataRange = new GoodFromDateToDateChooser(MedicalBrowser.this);
+				GoodFromDateToDateChooser dataRange = new GoodFromDateToDateChooser(this);
 				dataRange.setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
 				dataRange.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dataRange.setVisible(true);
@@ -427,7 +427,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			File defaultFileName = new File(fileName);
 			JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFileName);
 
-			int iRetVal = fcExcel.showSaveDialog(MedicalBrowser.this);
+			int iRetVal = fcExcel.showSaveDialog(this);
 			if (iRetVal == JFileChooser.APPROVE_OPTION) {
 				File exportFile = fcExcel.getSelectedFile();
 				if (!exportFile.getName().endsWith(".xls") && !exportFile.getName().endsWith(".xlsx")) {
@@ -445,7 +445,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 						xlsExport.exportTableToExcelOLD(table, exportFile);
 					}
 				} catch (IOException exc) {
-					JOptionPane.showMessageDialog(MedicalBrowser.this,
+					JOptionPane.showMessageDialog(this,
 							exc.getMessage(),
 							MessageBundle.getMessage("angal.messagedialog.error.title"),
 							JOptionPane.PLAIN_MESSAGE);
@@ -472,23 +472,19 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
+				MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (model.getValueAt(selectedrow, -1));
-				int answer = MessageDialog.yesNo(MedicalBrowser.this, "angal.medicals.deletemedical.fmt.msg", medical.getDescription());
+				medical = (Medical) model.getValueAt(selectedrow, -1);
+				int answer = MessageDialog.yesNo(this, "angal.medicals.deletemedical.fmt.msg", medical.getDescription());
 				if (answer == JOptionPane.YES_OPTION) {
-					boolean deleted;
 					try {
-						deleted = medicalBrowsingManager.deleteMedical(medical);
-					} catch (OHServiceException e) {
-						deleted = false;
-						OHServiceExceptionUtil.showMessages(e);
-					}
-					if (deleted) {
+						medicalBrowsingManager.deleteMedical(medical);
 						pMedicals.remove(selectedrow);
 						model.fireTableDataChanged();
 						table.updateUI();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
 			}
@@ -501,12 +497,12 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
+				MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				medical = (Medical) (model.getValueAt(selectedrow, -1));
+				medical = (Medical) model.getValueAt(selectedrow, -1);
 				MedicalEdit editrecord = new MedicalEdit(medical, false, me);
-				editrecord.addMedicalListener(MedicalBrowser.this);
+				editrecord.addMedicalListener(this);
 				editrecord.setVisible(true);
 			}
 		});
@@ -520,7 +516,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			// medical will reference the new record
 			medical = new Medical(null, new MedicalType("", ""), "", "", 0, 0, 0, 0, 0);
 			MedicalEdit newrecord = new MedicalEdit(medical, true, me);
-			newrecord.addMedicalListener(MedicalBrowser.this);
+			newrecord.addMedicalListener(this);
 			newrecord.setVisible(true);
 		});
 		return buttonNew;
@@ -565,7 +561,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		options.add(MessageBundle.getMessage("angal.medicals.othermonth"));
 
 		Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
-		String option = (String) MessageDialog.inputDialog(MedicalBrowser.this,
+		String option = (String) MessageDialog.inputDialog(this,
 				icon,
 				options.toArray(),
 				options.get(0),
@@ -611,7 +607,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			LocalDate monthYear;
 			icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 			JMonthYearChooser monthYearChooser = new JMonthYearChooser();
-			int r = JOptionPane.showConfirmDialog(MedicalBrowser.this,
+			int r = JOptionPane.showConfirmDialog(this,
 					monthYearChooser,
 					MessageBundle.getMessage("angal.billbrowser.month.txt"),
 					JOptionPane.OK_CANCEL_OPTION,
@@ -671,7 +667,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 						s = s.trim();
 						String[] tokens = s.split(" ");
 
-						if (!s.equals("")) {
+						if (!s.isEmpty()) {
 							String description = med.getProdCode() + med.getDescription();
 							int a = 0;
 							for (String value : tokens) {
@@ -783,7 +779,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			cell.setForeground(Color.BLACK);
 			Medical med = pMedicals.get(row);
 			double actualQty = med.getInitialqty() + med.getInqty() - med.getOutqty();
-			if ((Boolean) table.getValueAt(row, 6)) {
+			if ((boolean) table.getValueAt(row, 6)) {
 				cell.setForeground(Color.GRAY); // out of stock
 			}
 			if (med.getMinqty() != 0 && actualQty <= med.getMinqty()) {

@@ -99,8 +99,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -124,7 +124,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 			jNewButton.addActionListener(actionEvent -> {
 				vaccineType = new VaccineType("", "");
 				VaccineTypeEdit newrecord = new VaccineTypeEdit(myFrame, vaccineType, true);
-				newrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
+				newrecord.addVaccineTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -145,9 +145,9 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					vaccineType = (VaccineType) (model.getValueAt(selectedrow, -1));
+					vaccineType = (VaccineType) model.getValueAt(selectedrow, -1);
 					VaccineTypeEdit editrecord = new VaccineTypeEdit(myFrame, vaccineType, false);
-					editrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
+					editrecord.addVaccineTypeListener(this);
 					editrecord.setVisible(true);
 				}
 			});
@@ -182,10 +182,11 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					VaccineType vacType = (VaccineType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					VaccineType vacType = (VaccineType) model.getValueAt(jTable.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.vactype.deletevaccinetype.fmt.msg", vacType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (vaccineTypeBrowserManager.deleteVaccineType(vacType))) {
+						if (answer == JOptionPane.YES_OPTION) {
+							vaccineTypeBrowserManager.deleteVaccineType(vacType);
 							pVaccineType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -263,7 +264,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		pVaccineType.set(selectedrow, vaccineType);
 		((VaccineTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}

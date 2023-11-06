@@ -41,7 +41,6 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
@@ -139,8 +138,8 @@ public class DischargeTypeBrowserEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -199,37 +198,24 @@ public class DischargeTypeBrowserEdit extends JDialog {
 
 				dischargeType.setDescription(descriptionTextField.getText());
 				dischargeType.setCode(codeTextField.getText());
-				boolean result;
 				if (insert) {      // inserting
 					try {
-						result = dischargeTypeBrowserManager.newDischargeType(dischargeType);
-						if (result) {
-							fireDischargeInserted(dischargeType);
-						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
+						dischargeTypeBrowserManager.newDischargeType(dischargeType);
+						fireDischargeInserted(dischargeType);
+						dispose();
+					} catch (OHServiceException serviceException) {
+						OHServiceExceptionUtil.showMessages(serviceException, this);
 					}
 				} else {                          // updating
 					if (descriptionTextField.getText().equals(lastdescription)) {
 						dispose();
 					} else {
 						try {
-							result = dischargeTypeBrowserManager.updateDischargeType(dischargeType);
-							if (result) {
-								fireDischargeUpdated();
-							}
-							if (!result) {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							} else {
-								dispose();
-							}
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
+							dischargeTypeBrowserManager.updateDischargeType(dischargeType);
+							fireDischargeUpdated();
+							dispose();
+						} catch (OHServiceException serviceException) {
+							OHServiceExceptionUtil.showMessages(serviceException, this);
 						}
 					}
 				}

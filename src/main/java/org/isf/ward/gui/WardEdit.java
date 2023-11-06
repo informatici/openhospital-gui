@@ -159,8 +159,8 @@ public class WardEdit extends JDialog {
 			jContentPane = new JPanel();
 			jContentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.CENTER);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}

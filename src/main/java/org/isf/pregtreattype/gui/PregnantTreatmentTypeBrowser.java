@@ -93,8 +93,8 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -118,7 +118,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 			jNewButton.addActionListener(actionEvent -> {
 				pregnantTreatmentType = new PregnantTreatmentType("", "");
 				PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame, pregnantTreatmentType, true);
-				newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
+				newrecord.addPregnantTreatmentTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -139,9 +139,9 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					pregnantTreatmentType = (PregnantTreatmentType) (model.getValueAt(selectedrow, -1));
+					pregnantTreatmentType = (PregnantTreatmentType) model.getValueAt(selectedrow, -1);
 					PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame, pregnantTreatmentType, false);
-					newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
+					newrecord.addPregnantTreatmentTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});
@@ -176,10 +176,11 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					PregnantTreatmentType preTreatmentType = (PregnantTreatmentType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					PregnantTreatmentType preTreatmentType = (PregnantTreatmentType) model.getValueAt(jTable.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.preagtreattype.deletetreatmenttype.fmt.msg", preTreatmentType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (pregnantTreatmentTypeBrowserManager.deletePregnantTreatmentType(preTreatmentType))) {
+						if (answer == JOptionPane.YES_OPTION) {
+							pregnantTreatmentTypeBrowserManager.deletePregnantTreatmentType(preTreatmentType);
 							pPregnantTreatmentType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -256,7 +257,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		pPregnantTreatmentType.set(selectedrow, pregnantTreatmentType);
 		((PregnantTreatmentTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}

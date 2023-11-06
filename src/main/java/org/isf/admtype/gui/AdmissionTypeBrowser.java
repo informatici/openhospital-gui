@@ -81,8 +81,8 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 	}
 
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.admtype.admissiontypebrowser.title"));
-		this.setContentPane(getJContainPanel());
+		setTitle(MessageBundle.getMessage("angal.admtype.admissiontypebrowser.title"));
+		setContentPane(getJContainPanel());
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -91,8 +91,8 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -177,10 +177,16 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 					AdmissionType admType = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.admtype.delete.fmt.msg", admType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (admissionTypeBrowserManager.deleteAdmissionType(admType))) {
-							pAdmissionType.remove(jTable.getSelectedRow());
-							model.fireTableDataChanged();
-							jTable.updateUI();
+						if (answer == JOptionPane.YES_OPTION) {
+							String admTypeCode = admType.getCode();
+							admissionTypeBrowserManager.deleteAdmissionType(admType);
+							if (!admissionTypeBrowserManager.isCodePresent(admTypeCode)) {
+								pAdmissionType.remove(jTable.getSelectedRow());
+								model.fireTableDataChanged();
+								jTable.updateUI();
+							} else {
+								MessageDialog.error(null, "angal.admtype.admissiontypenotfound.fmt.msg", admType.getDescription());
+							}
 						}
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);

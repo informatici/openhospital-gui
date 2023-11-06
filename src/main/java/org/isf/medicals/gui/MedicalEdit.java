@@ -23,6 +23,8 @@ package org.isf.medicals.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.EventListener;
 import java.util.List;
 
@@ -164,8 +166,8 @@ public class MedicalEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.CENTER);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -237,9 +239,9 @@ public class MedicalEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
+			okButton.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					boolean result = false;
 					if (insert) { // inserting
 						Medical newMedical = null;
@@ -320,7 +322,7 @@ public class MedicalEdit extends JDialog {
 							}
 						}
 						if (result) {
-							Medical updatedMedical = null;
+							Medical updatedMedical;
 							try {
 								updatedMedical = medicalBrowsingManager.getMedical(oldMedical.getCode());
 							} catch (OHServiceException exception) {

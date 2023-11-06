@@ -387,7 +387,7 @@ public class ReportLauncher extends ModalJFrame {
 	}
 
 	public static Date convertToDateUsingInstant(LocalDate date) {
-		return java.util.Date.from(date.atStartOfDay()
+		return Date.from(date.atStartOfDay()
 						.atZone(ZoneId.systemDefault())
 						.toInstant());
 	}

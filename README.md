@@ -7,7 +7,7 @@ An alternative user interface based on React and currently still work-in-progres
 
 ## How to build
 
-To build this project you'll need Java JDK 8+ and Maven. 
+To build this project you'll need Java JDK 11+ and Maven (or using the provided Maven Wrapper `mvnw`)
 Additionally, you'll need to build and install locally the [Core component][openhospital-core] of Open Hospital.
 Once you do that, to build this project just issue:
 

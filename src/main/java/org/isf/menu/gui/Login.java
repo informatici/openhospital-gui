@@ -210,14 +210,18 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				dispose();
 				return;
 			}
-			if (user.isAccountLocked()) {
-				MessageDialog.error(this, "angal.login.accountislocked.msg");
-				return;
-			}
 			LOGGER.warn("Login failed: {}", MessageBundle.getMessage("angal.login.passwordisincorrectpleaseretry.msg"));
 			MessageDialog.error(this, "angal.login.passwordisincorrectpleaseretry.msg");
 			pwd.setText("");
 			pwd.grabFocus();
+			// Can't lock an account that doesn't exist
+			if (user == null) {
+				return;
+			}
+			if (user.isAccountLocked()) {
+				MessageDialog.error(this, "angal.login.accountislocked.msg");
+				return;
+			}
 			userBrowsingManager.increaseFailedAttempts(user);
 			if (GeneralData.PASSWORDTRIES != 0) {
 				user.setFailedAttempts(user.getFailedAttempts() + 1);

@@ -58,6 +58,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.EventListenerList;
 
 import org.isf.agetype.manager.AgeTypeBrowserManager;
@@ -367,7 +369,7 @@ public class PatientInsertExtended extends JDialog {
 			jMainPanel = new JPanel();
 			jMainPanel.setLayout(new BorderLayout());
 			jMainPanel.add(getJDataPanel(), BorderLayout.CENTER);
-			jMainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jMainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jMainPanel;
 	}
@@ -1190,7 +1192,7 @@ public class PatientInsertExtended extends JDialog {
 			jFirstName = new JPanel();
 			jFirstName.setLayout(new BorderLayout());
 			jFirstName.add(getJFirstNamePanel(), BorderLayout.WEST);
-			jFirstName.add(getJFirstNameFieldPanel(), java.awt.BorderLayout.EAST);
+			jFirstName.add(getJFirstNameFieldPanel(), BorderLayout.EAST);
 		}
 		return jFirstName;
 	}
@@ -1217,8 +1219,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jSecondName == null) {
 			jSecondName = new JPanel();
 			jSecondName.setLayout(new BorderLayout());
-			jSecondName.add(getJSecondNamePanel(), java.awt.BorderLayout.WEST);
-			jSecondName.add(getJSecondNamePanel1(), java.awt.BorderLayout.EAST);
+			jSecondName.add(getJSecondNamePanel(), BorderLayout.WEST);
+			jSecondName.add(getJSecondNamePanel1(), BorderLayout.EAST);
 		}
 		return jSecondName;
 	}
@@ -1628,8 +1630,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jAddress == null) {
 			jAddress = new JPanel();
 			jAddress.setLayout(new BorderLayout());
-			jAddress.add(getJAddressLabelPanel(), java.awt.BorderLayout.WEST);
-			jAddress.add(getJAddressFieldPanel(), java.awt.BorderLayout.EAST);
+			jAddress.add(getJAddressLabelPanel(), BorderLayout.WEST);
+			jAddress.add(getJAddressFieldPanel(), BorderLayout.EAST);
 
 		}
 		return jAddress;
@@ -1644,8 +1646,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jTaxCodePanel == null) {
 			jTaxCodePanel = new JPanel();
 			jTaxCodePanel.setLayout(new BorderLayout());
-			jTaxCodePanel.add(getJTaxCodeLabelPanel(), java.awt.BorderLayout.WEST);
-			jTaxCodePanel.add(getJTaxCodeFieldPanel(), java.awt.BorderLayout.EAST);
+			jTaxCodePanel.add(getJTaxCodeLabelPanel(), BorderLayout.WEST);
+			jTaxCodePanel.add(getJTaxCodeFieldPanel(), BorderLayout.EAST);
 
 		}
 		return jTaxCodePanel;
@@ -1660,8 +1662,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jCity == null) {
 			jCity = new JPanel();
 			jCity.setLayout(new BorderLayout());
-			jCity.add(getJCityLabelPanel(), java.awt.BorderLayout.WEST);
-			jCity.add(getJCityFieldPanel(), java.awt.BorderLayout.EAST);
+			jCity.add(getJCityLabelPanel(), BorderLayout.WEST);
+			jCity.add(getJCityFieldPanel(), BorderLayout.EAST);
 		}
 		return jCity;
 	}
@@ -1675,8 +1677,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jNextKin == null) {
 			jNextKin = new JPanel();
 			jNextKin.setLayout(new BorderLayout());
-			jNextKin.add(getJNextKinLabelPanel(), java.awt.BorderLayout.WEST);
-			jNextKin.add(getJNextKinFieldPanel(), java.awt.BorderLayout.EAST);
+			jNextKin.add(getJNextKinLabelPanel(), BorderLayout.WEST);
+			jNextKin.add(getJNextKinFieldPanel(), BorderLayout.EAST);
 		}
 		return jNextKin;
 	}
@@ -1690,8 +1692,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jTelephone == null) {
 			jTelephone = new JPanel();
 			jTelephone.setLayout(new BorderLayout());
-			jTelephone.add(getJTelPanel(), java.awt.BorderLayout.WEST);
-			jTelephone.add(getJTelephoneFieldPanel(), java.awt.BorderLayout.EAST);
+			jTelephone.add(getJTelPanel(), BorderLayout.WEST);
+			jTelephone.add(getJTelephoneFieldPanel(), BorderLayout.EAST);
 		}
 		return jTelephone;
 	}
@@ -2067,15 +2069,15 @@ public class PatientInsertExtended extends JDialog {
 	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
+		Border b1 = BorderFactory.createLineBorder(Color.lightGray);
+		Border b2 = BorderFactory.createTitledBorder(b1, title, TitledBorder.LEFT, TitledBorder.TOP);
 		c.setBorder(b2);
 		return c;
 	}
 
 	private JPanel setMyBorderCenter(JPanel c, String title) {
-		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP);
+		Border b1 = BorderFactory.createLineBorder(Color.lightGray);
+		Border b2 = BorderFactory.createTitledBorder(b1, title, TitledBorder.CENTER, TitledBorder.TOP);
 		c.setBorder(b2);
 		return c;
 	}

@@ -75,7 +75,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		pVaccine.set(selectedrow, vaccine);
 		((VaccineBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1) {
+		if (table.getRowCount() > 0 && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
@@ -138,8 +138,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContentPane.add(getJScrollPane(), java.awt.BorderLayout.CENTER);
+			jContentPane.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContentPane.add(getJScrollPane(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -211,9 +211,9 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					vaccine = (Vaccine) (model.getValueAt(table.getSelectedRow(), -1));
-					VaccineEdit editrecord = new VaccineEdit(VaccineBrowser.this, vaccine, false);
-					editrecord.addVaccineListener(VaccineBrowser.this);
+					vaccine = (Vaccine) model.getValueAt(table.getSelectedRow(), -1);
+					VaccineEdit editrecord = new VaccineEdit(this, vaccine, false);
+					editrecord.addVaccineListener(this);
 					editrecord.setVisible(true);
 				}
 			});
@@ -232,8 +232,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
 				vaccine = new Vaccine(null, "", new VaccineType("", ""));    //operation will reference the new record
-				VaccineEdit newrecord = new VaccineEdit(VaccineBrowser.this, vaccine, true);
-				newrecord.addVaccineListener(VaccineBrowser.this);
+				VaccineEdit newrecord = new VaccineEdit(this, vaccine, true);
+				newrecord.addVaccineListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -253,10 +253,11 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					Vaccine vaccine = (Vaccine) (model.getValueAt(table.getSelectedRow(), -1));
+					Vaccine vaccine = (Vaccine) model.getValueAt(table.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.vaccine.deletevaccine.fmt.msg", vaccine.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (vaccineBrowserManager.deleteVaccine(vaccine))) {
+						if (answer == JOptionPane.YES_OPTION) {
+							vaccineBrowserManager.deleteVaccine(vaccine);
 							pVaccine.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();

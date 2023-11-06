@@ -94,7 +94,6 @@ import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.operation.gui.OperationRowAdm;
 import org.isf.patient.gui.PatientSummary;
-import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.pregtreattype.manager.PregnantTreatmentTypeBrowserManager;
 import org.isf.pregtreattype.model.PregnantTreatmentType;
@@ -415,7 +414,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 		initialize(parentFrame);
 
-		this.addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -442,7 +441,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		setTitle(MessageBundle.getMessage("angal.admission.editadmissionrecord.title"));
 		addAdmissionListener((AdmissionListener) parentParentFrame);
 		addAdmissionListener((AdmissionListener) parentFrame);
-		this.editing = true;
+		editing = true;
 		patient = aPatient;
 		if (Character.toUpperCase(patient.getSex()) == 'F') {
 			enablePregnancy = true;
@@ -473,7 +472,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 		initialize(parentFrame);
 
-		this.addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -493,8 +492,8 @@ public class AdmissionBrowser extends ModalJFrame {
 	}
 
 	private void initialize(JFrame parent) {
-		this.add(getJContentPane(), BorderLayout.CENTER);
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		add(getJContentPane(), BorderLayout.CENTER);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -505,8 +504,8 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.CENTER);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -514,8 +513,8 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getDataPanel() {
 		JPanel data = new JPanel();
 		data.setLayout(new BorderLayout());
-		data.add(getPatientDataPanel(), java.awt.BorderLayout.WEST);
-		data.add(getJTabbedPaneAdmission(), java.awt.BorderLayout.CENTER);
+		data.add(getPatientDataPanel(), BorderLayout.WEST);
+		data.add(getJTabbedPaneAdmission(), BorderLayout.CENTER);
 		return data;
 	}
 
@@ -923,7 +922,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (wardBox.getSelectedIndex() <= 0) {
 					yProgTextField.setText("");
 					// This fixes the problem of losing the top border on the date picker because of the combox
-					javax.swing.SwingUtilities.invokeLater(() -> {
+					SwingUtilities.invokeLater(() -> {
 						validate();
 						repaint();
 					});
@@ -977,7 +976,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 				}
 				// This fixes the problem of losing the top border on the date picker because of the combox
-				javax.swing.SwingUtilities.invokeLater(() -> {
+				SwingUtilities.invokeLater(() -> {
 					validate();
 					repaint();
 				});
@@ -1551,7 +1550,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (patient != null) {
 					PatientHistory ph = new PatientHistory();
 					ph.setPatientId(patient.getCode());
-					PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
+					PatientHistory patientHistory = Optional.ofNullable(patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
 					PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
 					PatientHistoryEdit dialog = new PatientHistoryEdit(AdmissionBrowser.this, pph, true);
 					dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

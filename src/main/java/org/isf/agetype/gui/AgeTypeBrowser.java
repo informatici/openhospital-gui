@@ -77,17 +77,17 @@ public class AgeTypeBrowser extends ModalJFrame {
 	}
 
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.agetype.agetypebrowser.title"));
-		this.setContentPane(getJContainPanel());
-		this.pack();
-		this.setLocationRelativeTo(null);
+		setTitle(MessageBundle.getMessage("angal.agetype.agetypebrowser.title"));
+		setContentPane(getJContainPanel());
+		pack();
+		setLocationRelativeTo(null);
 	}
 
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
 			jContainPanel.add(getJTable(), BorderLayout.CENTER);
 			validate();
 		}

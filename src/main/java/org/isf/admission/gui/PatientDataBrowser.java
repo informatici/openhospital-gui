@@ -173,8 +173,8 @@ public class PatientDataBrowser extends ModalJFrame implements
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getPatientDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getPatientDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -319,35 +319,46 @@ public class PatientDataBrowser extends ModalJFrame implements
 				int selectedRow = admTable.getSelectedRow();
 				Object selectedObj = sorter.getValueAt(selectedRow, -1);
 
-				try {
-					if (selectedObj instanceof Admission) {
+				if (selectedObj instanceof Admission) {
 
-						Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
+					Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 
-						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedadmission.msg");
-						if ((n == JOptionPane.YES_OPTION) && admissionBrowserManager.setDeleted(adm.getId())) {
-							admList.remove(adm);
-							admModel.fireTableDataChanged();
-							admTable.updateUI();
-							sorter.sortByColumn(0, false);
-							if (adm.getAdmitted() == 1) {
-								fireDeleteAdmissionUpdated(adm);
+					int n = MessageDialog.yesNo(null, "angal.admission.deleteselectedadmission.msg");
+					if (n == JOptionPane.YES_OPTION) {
+						try {
+							Admission deletedAdmission = admissionBrowserManager.setDeleted(adm.getId());
+							if (deletedAdmission == null) {
+								MessageDialog.error(this, "angal.admission.theselectedadmissionisnotfound.msg");
+								return;
 							}
-							PatientDataBrowser.this.requestFocus();
+						} catch (OHServiceException ex) {
+							OHServiceExceptionUtil.showMessages(ex);
+							return;
 						}
-					} else {
-						Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
+						admList.remove(adm);
+						admModel.fireTableDataChanged();
+						admTable.updateUI();
+						sorter.sortByColumn(0, false);
+						if (adm.getAdmitted() == 1) {
+							fireDeleteAdmissionUpdated(adm);
+						}
+						PatientDataBrowser.this.requestFocus();
+					}
+				} else {
+					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 
-						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedopd.msg");
-						if ((n == JOptionPane.YES_OPTION) && (opdBrowserManager.deleteOpd(opd))) {
+					int n = MessageDialog.yesNo(null, "angal.admission.deleteselectedopd.msg");
+					if (n == JOptionPane.YES_OPTION) {
+						try {
+							opdBrowserManager.deleteOpd(opd);
 							opdList.remove(opd);
 							admModel.fireTableDataChanged();
 							admTable.updateUI();
 							sorter.sortByColumn(0, false);
+						} catch (OHServiceException serviceException) {
+							OHServiceExceptionUtil.showMessages(serviceException);
 						}
 					}
-				} catch (OHServiceException ex) {
-					OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 		}
@@ -515,9 +526,9 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				} else {
 					int z = row - admList.size();
 					String status = String.valueOf(opdList.get(z).getNewPatient());
-					return (status.compareTo("R") == 0
+					return status.compareTo("R") == 0
 							? MessageBundle.getMessage("angal.opd.reattendance.txt")
-							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
+							: MessageBundle.getMessage("angal.opd.newattendance.txt");
 				}
 			}
 			return null;

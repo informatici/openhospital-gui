@@ -57,6 +57,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -698,7 +699,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			buttonPanel.add(getButtonAdmission());
 		}
 		if (MainMenu.checkUserGrants("btnadmedit")) {
-			buttonPanel.add(this.getJAnamnesisButton());
+			buttonPanel.add(getJAnamnesisButton());
 		}
 		if (MainMenu.checkUserGrants("btnadmexamination")) {
 			buttonPanel.add(getButtonExamination());
@@ -1171,7 +1172,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	}
 
 	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(title), BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		Border b2 = BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(title), BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		c.setBorder(b2);
 		return c;
 	}
