@@ -23,6 +23,7 @@ package org.isf.telemetry.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Label;
@@ -36,8 +37,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -76,22 +79,26 @@ public class TelemetryEdit extends ModalJFrame {
 	private static final String KEY_TELEMETRY_INFO = "angal.telemetry.info";
 	private static final String KEY_TELEMETRY_BODY = "angal.telemetry.body";
 	private static final String KEY_TELEMETRY_BUTTON_LABEL_CONFIRM = "angal.telemetry.button.label.confirm";
-	private static final String KEY_TELEMETRY_BUTTON_LABEL_ASK_LATER = "angal.telemetry.button.label.ask.later";
-	private static final String KEY_TELEMETRY_BUTTON_LABEL_ASK_NEVER = "angal.telemetry.button.label.ask.never";
+	private static final String KEY_TELEMETRY_BUTTON_LABEL_ASK_LATER = "angal.telemetry.button.label.askmelater";
+	private static final String KEY_TELEMETRY_BUTTON_LABEL_DISABLE_NEVER_ASK = "angal.telemetry.button.label.disableandneveraskagain";
+	private static final String KEY_TELEMETRY_BUTTON_LABEL_DISABLE = "angal.telemetry.button.label.disable";
+	private static final String KEY_TELEMETRY_BUTTON_LABEL_CLOSE = "angal.common.cancel.btn";
 	private static final String KEY_TELEMETRY_CONFIRMATION_DIALOG_MESSAGE = "angal.telemetry.confirmation.dialog.message";
 
 	private EventListenerList telemetryListeners = new EventListenerList();
 	private JPanel panel;
 	private TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
 	private TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
+	private boolean firstTime = false;
 
 	public TelemetryEdit() {
 		super();
 		init();
 	}
 
-	public TelemetryEdit(MainMenu parent) {
+	public TelemetryEdit(MainMenu parent, boolean askMeLater) {
 		super();
+		this.firstTime = askMeLater;
 		init();
 		super.showAsModal(parent);
 	}
@@ -104,14 +111,18 @@ public class TelemetryEdit extends ModalJFrame {
 		List<CheckBoxWrapper> checkboxes = buildPermissionCheckboxes(Context.getApplicationContext(), settings);
 		JButton confirmButton = buildConfirmButton(checkboxes);
 		JButton askMeLaterButton = buildAskMeLaterButton();
-		JButton neverAskButton = buildNeverAskButton();
-		this.panel = this.makePanel(checkboxes, confirmButton, askMeLaterButton, neverAskButton);
+		JButton disableNeverAskButton = buildDisableNeverAskButton();
+		JButton disableButton = buildDisableButton();
+		JButton closeButton = buildCloseButton();
+		boolean enabled = telemetry != null && telemetry.getOptoutDate() == null;
+		this.panel = this.makePanel(checkboxes, confirmButton, askMeLaterButton, disableNeverAskButton, disableButton, closeButton,
+						enabled);
 		add(this.panel);
 		pack();
 
 		setTitle(MessageBundle.getMessage(KEY_TELEMETRY_TITLE));
 		setResizable(false);
-		setSize(new Dimension(700, 400));
+		setSize(new Dimension(850, 400));
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
@@ -137,10 +148,22 @@ public class TelemetryEdit extends ModalJFrame {
 		return cancelButton;
 	}
 
-	private JButton buildNeverAskButton() {
-		JButton cancelButton = new JButton(MessageBundle.getMessage(KEY_TELEMETRY_BUTTON_LABEL_ASK_NEVER));
-		cancelButton.addActionListener(buildNeverAskButtonActionListener(telemetryManager));
+	private JButton buildDisableNeverAskButton() {
+		JButton cancelButton = new JButton(MessageBundle.getMessage(KEY_TELEMETRY_BUTTON_LABEL_DISABLE_NEVER_ASK));
+		cancelButton.addActionListener(buildDisableNeverAskButtonActionListener(telemetryManager));
 		return cancelButton;
+	}
+
+	private JButton buildDisableButton() {
+		JButton disableButton = new JButton(MessageBundle.getMessage(KEY_TELEMETRY_BUTTON_LABEL_DISABLE));
+		disableButton.addActionListener(buildDisableNeverAskButtonActionListener(telemetryManager));
+		return disableButton;
+	}
+
+	private JButton buildCloseButton() {
+		JButton closeButton = new JButton(MessageBundle.getMessage(KEY_TELEMETRY_BUTTON_LABEL_CLOSE));
+		closeButton.addActionListener(closeButtonActionListener(telemetryManager));
+		return closeButton;
 	}
 
 	/**
@@ -311,7 +334,17 @@ public class TelemetryEdit extends ModalJFrame {
 
 	}
 
-	private ActionListener buildNeverAskButtonActionListener(TelemetryManager telemetryManager) {
+	private ActionListener closeButtonActionListener(TelemetryManager telemetryManager) {
+		return new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		};
+
+	}
+
+	private ActionListener buildDisableNeverAskButtonActionListener(TelemetryManager telemetryManager) {
 		return new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -339,10 +372,11 @@ public class TelemetryEdit extends ModalJFrame {
 	}
 
 	public JPanel makePanel(List<CheckBoxWrapper> checkboxes, JButton confirmButton, JButton askMeLaterButton,
-					JButton neverAskButton) {
+					JButton disableNeverAskButton, JButton disableButton, JButton closeButton, boolean enabled) {
 
 		JPanel panel = new JPanel(new SpringLayout());
 
+		panel.add(buildJLabelEnabled(enabled));
 		panel.add(makeTextArea(KEY_TELEMETRY_ABOUT));
 		panel.add(makeTextArea(KEY_TELEMETRY_INFO));
 		panel.add(makeTextArea(KEY_TELEMETRY_BODY));
@@ -351,18 +385,33 @@ public class TelemetryEdit extends ModalJFrame {
 			panel.add(chb.getCheckbox());
 		});
 
-		SpringUtilities.makeCompactGrid(panel, checkboxes.size() + 3, 1, 5, 5, 5, 5);
+		SpringUtilities.makeCompactGrid(panel, checkboxes.size() + 4, 1, 5, 5, 5, 5);
 
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new FlowLayout());
 		buttons.add(confirmButton);
-		buttons.add(askMeLaterButton);
-		buttons.add(neverAskButton);
+		if (firstTime) {
+			buttons.add(askMeLaterButton);
+			buttons.add(disableNeverAskButton);
+		} else {
+			if (enabled) {
+				buttons.add(disableButton);
+			} else {
+				buttons.add(closeButton);
+			}
+		}
 
 		setLayout(new BorderLayout(10, 10));
 		add(panel, BorderLayout.NORTH);
 		add(buttons, BorderLayout.SOUTH);
 		return panel;
+	}
+
+	private Component buildJLabelEnabled(boolean enabled) {
+		JLabel jLabelEnabled = new JLabel(MessageBundle.getMessage("angal.telemetry.enabled"));
+		jLabelEnabled.setIcon(new ImageIcon("rsc/icons/ok_dialog.png"));
+		jLabelEnabled.setEnabled(enabled);
+		return jLabelEnabled;
 	}
 
 	private JTextArea makeTextArea(String keyCode) {

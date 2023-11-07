@@ -366,7 +366,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// active = false => do nothing
 		if (settings == null || settings.getActive() == null) {
 			// show telemetry popup
-			new TelemetryEdit(this);
+			new TelemetryEdit(this, true);
 		}
 		// start telemetry daemon
 		this.telemetryDaemon = TelemetryDaemon.getTelemetryDaemon();
