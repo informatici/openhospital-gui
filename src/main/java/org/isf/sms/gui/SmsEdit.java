@@ -93,7 +93,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	}
 	
 	private void initialize() {
-		maxLength = smsManager.getMaxLength();
+		maxLength = SmsManager.MAX_LENGHT;
 	}
 
 	private void initComponents() {
@@ -163,8 +163,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jPatientButton = new JButton();
 			jPatientButton.setIcon(new ImageIcon("./rsc/icons/other_button.png")); //$NON-NLS-1$
 			jPatientButton.addActionListener(actionEvent -> {
-				SelectPatient sp = new SelectPatient(SmsEdit.this, "");
-				sp.addSelectionListener(SmsEdit.this);
+				SelectPatient sp = new SelectPatient(this, "");
+				sp.addSelectionListener(this);
 				sp.pack();
 				sp.setVisible(true);
 			});
@@ -260,12 +260,12 @@ public class SmsEdit extends JDialog implements SelectionListener {
 								.append(MessageBundle.getMessage("angal.sms.doyouwanttosplitinmoremessages"))
 								.append(" (").append(textParts).append(")?");
 
-						int ok = JOptionPane.showConfirmDialog(SmsEdit.this, message.toString());
+						int ok = JOptionPane.showConfirmDialog(this, message.toString());
 						if (ok == JOptionPane.YES_OPTION) {
 							try {
 								smsManager.saveOrUpdate(smsToSend, true);
 							} catch (OHServiceException e2) {
-								OHServiceExceptionUtil.showMessages(e2, SmsEdit.this);
+								OHServiceExceptionUtil.showMessages(e2, this);
 								return;
 							}
 
@@ -273,7 +273,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 							return;
 						}
 					} else {
-						OHServiceExceptionUtil.showMessages(e1, SmsEdit.this);
+						OHServiceExceptionUtil.showMessages(e1, this);
 						return;
 					}
 				}
