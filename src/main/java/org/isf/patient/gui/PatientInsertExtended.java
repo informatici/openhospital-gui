@@ -548,7 +548,7 @@ public class PatientInsertExtended extends JDialog {
 							if (justSave) {
 								insert = false;
 								justSave = false;
-                                this.requestFocus();
+								this.requestFocus();
 							} else {
 								dispose();
 							}
