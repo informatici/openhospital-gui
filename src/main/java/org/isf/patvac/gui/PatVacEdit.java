@@ -414,7 +414,7 @@ public class PatVacEdit extends JDialog {
 				for (VaccineType elem : types) {
 					vaccineTypeComboBox.addItem(elem);
 					if (!insert && elem.getCode() != null) {
-						if (elem.getCode().equalsIgnoreCase((patVac.getVaccine().getVaccineType().getCode()))) {
+						if (elem.getCode().equalsIgnoreCase(patVac.getVaccine().getVaccineType().getCode())) {
 							vaccineTypeSel = elem;
 						}
 					}
@@ -458,7 +458,7 @@ public class PatVacEdit extends JDialog {
 		if (allVac != null) {
 			for (Vaccine elem : allVac) {
 				if (!insert && elem.getCode() != null) {
-					if (elem.getCode().equalsIgnoreCase((patVac.getVaccine().getCode()))) {
+					if (elem.getCode().equalsIgnoreCase(patVac.getVaccine().getCode())) {
 						vaccineSel = elem;
 					}
 				}
@@ -726,34 +726,17 @@ public class PatVacEdit extends JDialog {
 				patVac.setPatient(selectedPatient);
 				patVac.setLock(0);
 
-				boolean result = false;
 				// handling db insert/update
-				if (insert) {
-					try {
-						PatientVaccine insertedPatientVaccine = patVacManager.newPatientVaccine(patVac);
-						if (insertedPatientVaccine != null) {
-							result = true;
-						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
-						return;
+				try {
+					if (insert) {
+						patVacManager.newPatientVaccine(patVac);
+					} else {
+						patVacManager.updatePatientVaccine(patVac);
 					}
-				} else {
-					try {
-						PatientVaccine updatedPatientVaccine = patVacManager.updatePatientVaccine(patVac);
-						if (updatedPatientVaccine != null) {
-							result = true;
-						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
-						return;
-					}
-				}
-
-				if (!result) {
-					MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
-				} else {
 					dispose();
+				} catch (OHServiceException e1) {
+					MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
+					OHServiceExceptionUtil.showMessages(e1);
 				}
 			});
 		}
