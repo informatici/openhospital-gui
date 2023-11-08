@@ -415,7 +415,7 @@ public class PatientInsertExtended extends JDialog {
 					patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(patientHistory);
 				}
 				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
-				PatientHistoryEdit dialog = new PatientHistoryEdit(PatientInsertExtended.this, pph, false);
+				PatientHistoryEdit dialog = new PatientHistoryEdit(this, pph, false);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.pack();
 				dialog.setLocationRelativeTo(null);
@@ -442,15 +442,15 @@ public class PatientInsertExtended extends JDialog {
 				String secondName = jSecondNameTextField.getText().trim();
 
 				if (firstName.equals("")) {
-					MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertfirstname.msg");
+					MessageDialog.error(this, "angal.patient.insertfirstname.msg");
 					return;
 				}
 				if (secondName.equals("")) {
-					MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertsecondname.msg");
+					MessageDialog.error(this, "angal.patient.insertsecondname.msg");
 					return;
 				}
 				if (!checkAge()) {
-					MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertage");
+					MessageDialog.error(this, "angal.patient.insertage");
 					return;
 				}
 				if (insert) {
@@ -484,7 +484,7 @@ public class PatientInsertExtended extends JDialog {
 						} else if (radiom.isSelected()) {
 							patient.setSex('M');
 						} else {
-							MessageDialog.info(PatientInsertExtended.this, "angal.patient.pleaseselectasex.msg");
+							MessageDialog.info(this, "angal.patient.pleaseselectasex.msg");
 							return;
 						}
 						patient.setTaxCode(jTaxCodeTextField.getText().trim());
@@ -548,7 +548,7 @@ public class PatientInsertExtended extends JDialog {
 							if (justSave) {
 								insert = false;
 								justSave = false;
-								PatientInsertExtended.this.requestFocus();
+								this.requestFocus();
 							} else {
 								dispose();
 							}
@@ -570,7 +570,7 @@ public class PatientInsertExtended extends JDialog {
 					} else if (radiom.isSelected()) {
 						patient.setSex('M');
 					} else {
-						MessageDialog.info(PatientInsertExtended.this, "angal.patient.pleaseselectasex.msg");
+						MessageDialog.info(this, "angal.patient.pleaseselectasex.msg");
 						return;
 					}
 					patient.setTaxCode(jTaxCodeTextField.getText().trim());
@@ -633,7 +633,7 @@ public class PatientInsertExtended extends JDialog {
 						}
 						firePatientUpdated(patient);
 						dispose();
-					} catch (final OHServiceException ex) {
+					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
@@ -668,7 +668,7 @@ public class PatientInsertExtended extends JDialog {
 				}
 				birthDate = LocalDate.now().minusYears(years).minusMonths(months).minusDays(days);
 			} catch (NumberFormatException ex1) {
-				MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertvalidage.msg");
+				MessageDialog.error(this, "angal.patient.insertvalidage.msg");
 				return false;
 			}
 		} else if (jAgeTypeBirthDate.isSelected()) {
@@ -2163,7 +2163,7 @@ public class PatientInsertExtended extends JDialog {
 
 			try {
 				PatientProfilePhoto photo = this.patientBrowserManager.retrievePatientProfilePhoto(patient);
-				final Image image = photo != null ? photo.getPhotoAsImage() : null;
+				Image image = photo != null ? photo.getPhotoAsImage() : null;
 				Image scaledImage = image != null ? ImageUtil.scaleImage(image, GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH) : null;
 				photoPanel = new PatientPhotoPanel(this, patient.getCode(), scaledImage);
 
@@ -2263,7 +2263,7 @@ public class PatientInsertExtended extends JDialog {
 		return jMotherNameTextField;
 	}
 
-	public void setPatientPhoto(final BufferedImage photo) {
+	public void setPatientPhoto(BufferedImage photo) {
 		if (photo != null) {
 			PatientProfilePhoto patientProfilePhoto = new PatientProfilePhoto();
 			patientProfilePhoto.setPhoto(ImageUtil.imageToByte(photo));
