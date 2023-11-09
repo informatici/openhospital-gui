@@ -133,7 +133,7 @@ public class PatientSummary {
 		return dataPanel;
 	}
 
-	final int insetSize = 5;
+	static final int insetSize = 5;
 
 	private JPanel getPatientCard() {
 		JPanel cardPanel = new JPanel();
@@ -313,14 +313,14 @@ public class PatientSummary {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisdead"));
 		}
 		// added
-			labelBfr.append((patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getMotherName() + ")<BR>"));
+			labelBfr.append(patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getMotherName() + ")<BR>");
 		if (patient.getFather() == 'A') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisalive"));
 		} else if (patient.getFather() == 'D') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisdead"));
 		}
 		// added
-		labelBfr.append((patient.getFatherName() == null || patient.getFatherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getFatherName() + ")<BR>"));
+		labelBfr.append(patient.getFatherName() == null || patient.getFatherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getFatherName() + ")<BR>");
 		if (patient.getParentTogether() == 'Y') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.parentslivetoghether"));
 		} else if (patient.getParentTogether() == 'N') {

@@ -373,7 +373,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		}
 		if (jTablePatient.getRowCount() == 1) {
 
-			final Patient selectedPatient = (Patient) jTablePatient.getValueAt(0, -1);
+			Patient selectedPatient = (Patient) jTablePatient.getValueAt(0, -1);
 			patient = reloadSelectedPatient(selectedPatient.getCode());
 			updatePatientSummary();
 		}
@@ -447,7 +447,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			listSelectionModel.addListSelectionListener(selectionEvent -> {
 				if (!selectionEvent.getValueIsAdjusting()) {
 					int index = jTablePatient.getSelectedRow();
-					final Patient selectedPatient = (Patient) jTablePatient.getValueAt(index, -1);
+					Patient selectedPatient = (Patient) jTablePatient.getValueAt(index, -1);
 					patient = reloadSelectedPatient(selectedPatient.getCode());
 					updatePatientSummary();
 				}
@@ -564,12 +564,12 @@ public class SelectPatient extends JDialog implements PatientListener {
 		buttonNew.addActionListener(actionEvent -> {
 
 			if (GeneralData.PATIENTEXTENDED) {
-				PatientInsertExtended newrecord = new PatientInsertExtended(SelectPatient.this, new Patient(), true);
-				newrecord.addPatientListener(SelectPatient.this);
+				PatientInsertExtended newrecord = new PatientInsertExtended(this, new Patient(), true);
+				newrecord.addPatientListener(this);
 				newrecord.setVisible(true);
 			} else {
-				PatientInsert newrecord = new PatientInsert(SelectPatient.this, new Patient(), true);
-				newrecord.addPatientListener((PatientInsert.PatientListener) SelectPatient.this);
+				PatientInsert newrecord = new PatientInsert(this, new Patient(), true);
+				newrecord.addPatientListener((PatientInsert.PatientListener) this);
 				newrecord.setVisible(true);
 			}
 
