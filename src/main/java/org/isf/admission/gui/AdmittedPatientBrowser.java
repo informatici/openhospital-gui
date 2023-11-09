@@ -1112,16 +1112,12 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 
 	private void searchPatient() {
 		boolean isFilteredList = patientClassBox.getSelectedIndex() > 0 || //
-                dateChoosers[0].getDate() != null && //
-                                dateChoosers[1].getDate() != null
-						|| //
-                dateChoosers[2].getDate() != null && //
-                                dateChoosers[3].getDate() != null
-						|| //
-						!patientAgeFromTextField.getText().isEmpty() || //
-						!patientAgeToTextField.getText().isEmpty() || //
-						patientSexBox.getSelectedIndex() > 0 || //
-						!searchString.getText().isEmpty();
+				dateChoosers[0].getDate() != null && dateChoosers[1].getDate() != null || //
+				dateChoosers[2].getDate() != null && dateChoosers[3].getDate() != null || //
+				!patientAgeFromTextField.getText().isEmpty() || //
+				!patientAgeToTextField.getText().isEmpty() || //
+				patientSexBox.getSelectedIndex() > 0 || //
+				!searchString.getText().isEmpty();
 		if (!isFilteredList) {
 			int ok = MessageDialog.okCancel(this, "angal.common.thiscouldretrievealargeamountofdataproceed.msg");
 			if (ok != JOptionPane.OK_OPTION) {
