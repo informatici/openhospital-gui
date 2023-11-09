@@ -133,18 +133,18 @@ public class PatientSummary {
 		return dataPanel;
 	}
 
-	static final int insetSize = 5;
+	static final int INTSETSIZE = 5;
 
 	private JPanel getPatientCard() {
 		JPanel cardPanel = new JPanel();
 		cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.X_AXIS));
 		cardPanel.setBackground(Color.WHITE);
-		cardPanel.setBorder(BorderFactory.createEmptyBorder(insetSize, insetSize, insetSize, insetSize));
+		cardPanel.setBorder(BorderFactory.createEmptyBorder(INTSETSIZE, INTSETSIZE, INTSETSIZE, INTSETSIZE));
 		
 		JPanel patientData = new JPanel();
 		patientData.setLayout(new BoxLayout(patientData, BoxLayout.Y_AXIS));
 		patientData.setBackground(Color.WHITE);
-		patientData.setBorder(BorderFactory.createEmptyBorder(insetSize, insetSize, insetSize, insetSize));
+		patientData.setBorder(BorderFactory.createEmptyBorder(INTSETSIZE, INTSETSIZE, INTSETSIZE, INTSETSIZE));
 		
 		if (patient == null) {
 			patient = new Patient();
@@ -174,7 +174,7 @@ public class PatientSummary {
 		}
 		
 		patientData.add(patientCode);
-		patientData.add(Box.createVerticalStrut(insetSize));
+		patientData.add(Box.createVerticalStrut(INTSETSIZE));
 		patientData.add(patientName);
 		patientData.add(patientAge);
 		patientData.add(patientSex);
@@ -182,7 +182,7 @@ public class PatientSummary {
 		patientData.add(patientTOB);
 		
 		cardPanel.add(patientPhoto);
-		cardPanel.add(Box.createHorizontalStrut(insetSize));
+		cardPanel.add(Box.createHorizontalStrut(INTSETSIZE));
 		cardPanel.add(patientData);
 		return cardPanel;
 	}
@@ -199,7 +199,7 @@ public class PatientSummary {
 
 	private JPanel getPatientTaxCodePanel() {
 		JLabel l = new JLabel(patient.getTaxCode() + ' ');
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
@@ -211,7 +211,7 @@ public class PatientSummary {
 		} else {
 			l = new JLabel(patient.getNextKin());
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
@@ -223,7 +223,7 @@ public class PatientSummary {
 		} else {
 			l = new JLabel(patient.getTelephone());
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
@@ -235,7 +235,7 @@ public class PatientSummary {
 		} else {
 			l = new JLabel(patient.getAddress());
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
@@ -247,7 +247,7 @@ public class PatientSummary {
 		} else {
 			l = new JLabel(patient.getCity());
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
@@ -261,7 +261,7 @@ public class PatientSummary {
 		} else {
 			l = new JLabel(c); // Added - Bundle is not necessary here
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
@@ -276,7 +276,7 @@ public class PatientSummary {
 		} else {
 			l = new JLabel(" ");
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
@@ -288,7 +288,7 @@ public class PatientSummary {
 		} else {
 			l = new JLabel(patientBrowserManager.getMaritalTranslated(patient.getMaritalStatus()));
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
@@ -300,7 +300,7 @@ public class PatientSummary {
 		} else {
 			l = new JLabel(patientBrowserManager.getProfessionTranslated(patient.getProfession()));
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
@@ -330,7 +330,7 @@ public class PatientSummary {
 		}
 		labelBfr.append("</html>");
 		JLabel l = new JLabel(labelBfr.toString());
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, INTSETSIZE, INTSETSIZE));
 		lP.add(l);
 		return lP;
 	}
