@@ -441,11 +441,11 @@ public class PatientInsertExtended extends JDialog {
 				String firstName = jFirstNameTextField.getText().trim();
 				String secondName = jSecondNameTextField.getText().trim();
 
-				if (firstName.equals("")) {
+				if (firstName.isEmpty()) {
 					MessageDialog.error(this, "angal.patient.insertfirstname.msg");
 					return;
 				}
-				if (secondName.equals("")) {
+				if (secondName.isEmpty()) {
 					MessageDialog.error(this, "angal.patient.insertsecondname.msg");
 					return;
 				}
