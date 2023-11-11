@@ -340,7 +340,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 			if (n == 0) {
 				try {
-					DicomManagerFactory.getManager().deleteSerie(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
+					DicomManagerFactory.getManager().deleteSeries(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 				}
