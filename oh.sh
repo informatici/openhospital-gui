@@ -143,8 +143,8 @@ OH_API_PID="../tmp/oh-api.pid"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-MYSQL_VERSION="10.6.14"
-MYSQL32_VERSION="10.5.21"
+MYSQL_VERSION="10.6.15"
+MYSQL32_VERSION="10.5.22"
 PACKAGE_TYPE="systemd" 
 
 ######## define system and software architecture
@@ -184,7 +184,7 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 #JAVA_DIR="jdk-11.0.11+9-jre"
 
 ### JRE 11 - zulu distribution
-JAVA_DISTRO="zulu11.64.19-ca-jre11.0.19-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
 
@@ -962,7 +962,7 @@ function start_api_server {
 	fi
 	
 	########## WORKAROUND to kill existing API server process ##################
-	########## TO BE REMOVED IN NEXT RELEASE
+	########## TO BE REMOVED IN NEXT RELEASES
 	##########
 	# check for stale PID files
 	if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
@@ -980,9 +980,6 @@ function start_api_server {
 	echo ""
 	echo "Connect to http://$OH_UI_URL for dashboard"
 	echo ""
-	
-	#$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
-	#$JAVA_BIN -client -Xms64m -Xmx1024m -cp "bin/openhospital-api-0.1.0.jar:rsc:static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$LOG_FILE 2>&1
 	
 	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
 	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &
@@ -1385,7 +1382,7 @@ function parse_user_input {
 			killall java
 		fi
 		########## WORKAROUND to kill existing API server process ##################
-		########## TO BE REMOVED IN NEXT RELEASE
+		########## TO BE REMOVED IN NEXT RELEASES
 		##########
 		# check for stale PID files
 		if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
