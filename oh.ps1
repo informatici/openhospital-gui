@@ -516,21 +516,6 @@ function check_language {
 	}
 }
 
-#        done
-#        echo ""
-#        echo "Invalid language option [$OH_LANGUAGE]: setting to en"
-#        OH_LANGUAGE=en
-
-
-#	if ($script:OH_LANGUAGE_LIST -contains "$OH_LANGUAGE") {
-#		# set localized database creation script
-#		$script:DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
-#	}
-#	else {
-#		Write-Host "Invalid language option: $OH_LANGUAGE. Exiting." -ForegroundColor Red
-#		Read-Host; exit 1
-#	}
-
 ###################################################################
 function set_language {
 	# set localized database creation script
@@ -1341,6 +1326,8 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		}
 		###################################################
 		"l"	{ # set language 
+			Write-Host ""
+			Write-Host "Available languages: [$OH_LANGUAGE_LIST_INFO]"
 			$script:OH_LANGUAGE = Read-Host "Select language: $OH_LANGUAGE_LIST (default is en)"
 			check_language;
 			set_language;

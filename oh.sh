@@ -1191,6 +1191,9 @@ function parse_user_input {
 			OH_LANGUAGE="$OPTARG"
 			option="Z";
 		else
+			echo ""
+			echo "Available languages: [${OH_LANGUAGE_LIST_INFO[*]}]"
+			echo ""
 			read -n 2 -p "Please select language [${OH_LANGUAGE_LIST[*]}]: " OH_LANGUAGE
 		fi
 		check_language;
