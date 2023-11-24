@@ -149,7 +149,7 @@ public class PricesBrowser extends ModalJFrame {
 				try {
 					printManager.print("PriceList", priceListManager.convertPrice(listSelected, priceArray), 0);
 				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e, PricesBrowser.this);
+					OHServiceExceptionUtil.showMessages(e, this);
 				}
 			});
 		}
@@ -230,14 +230,8 @@ public class PricesBrowser extends ModalJFrame {
 				if (option == 0) {
 
 					List<Price> updateList = convertTreeToArray();
-					boolean updated = false;
 					try {
-						updated = priceListManager.updatePrices(listSelected, updateList);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-					}
-
-					if (updated) {
+						priceListManager.updatePrices(listSelected, updateList);
 						MessageDialog.info(null, "angal.priceslist.listsaved");
 						updateFromDB();
 						PriceNode root = getTreeContent();
@@ -247,8 +241,9 @@ public class PricesBrowser extends ModalJFrame {
 						jTreeTable.getTree().expandRow(1);
 						validate();
 						repaint();
-					} else {
+					} catch (OHServiceException e) {
 						MessageDialog.error(null, "angal.priceslist.listcouldnotbesaved");
+						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
 			});
