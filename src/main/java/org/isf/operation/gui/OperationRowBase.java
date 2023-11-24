@@ -433,7 +433,7 @@ abstract class OperationRowBase extends JPanel {
 		/* ***** resultat **** */
 		int index = 0;
 		for (int i = 0; i < operationResults.size(); i++) {
-			if (opeRow.getOpResult() != null && (operationBrowserManager.getResultDescriptionKey(operationResults.get(i))).equals(opeRow.getOpResult())) {
+			if (opeRow.getOpResult() != null && operationBrowserManager.getResultDescriptionKey(operationResults.get(i)).equals(opeRow.getOpResult())) {
 				index = i;
 			}
 		}
@@ -451,22 +451,17 @@ abstract class OperationRowBase extends JPanel {
 			if (answer == JOptionPane.YES_OPTION) {
 				int idOpe = operationRow.getId();
 				if (idOpe > 0) {
-					boolean result;
 					try {
-						result = operationRowBrowserManager.deleteOperationRow(operationRow);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-						return;
-					}
-					if (result) {
+						operationRowBrowserManager.deleteOperationRow(operationRow);
 						MessageDialog.info(parentComponent, "angal.operationrowlist.successdel");
 						oprowData.remove(idRow);
 						modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 						tableData.setModel(modelOhOpeRow);
 						tableData.repaint();
 						clearForm();
-					} else {
+					} catch (OHServiceException e) {
 						MessageDialog.error(parentComponent, "angal.operationrowlist.errosdel");
+						OHServiceExceptionUtil.showMessages(e);
 					}
 				} else {
 					MessageDialog.info(parentComponent, "angal.operationrowlist.successdel");

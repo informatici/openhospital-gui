@@ -250,10 +250,10 @@ public class PatientInsert extends JDialog implements ActionListener {
 				LocalDate bdate = LocalDate.now();
 
 				if (insert) {
-					if (jFirstNameTextField.getText().equals("")) {
+					if (jFirstNameTextField.getText().isEmpty()) {
 						MessageDialog.error(null, "angal.patient.insertfirstname.msg");
 					} else {
-						if (jSecondNameTextField.getText().equals("")) {
+						if (jSecondNameTextField.getText().isEmpty()) {
 							MessageDialog.error(null, "angal.patient.insertsecondname.msg");
 						} else {
 							if (age == -1) {
@@ -317,7 +317,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 					}
 				} else { //Update
 					String name = jFirstNameTextField.getText() + ' ' + jSecondNameTextField.getText();
-					if (!(patient.getName().equals(name))) {
+					if (!patient.getName().equals(name)) {
 						try {
 							if (patientBrowserManager.isNamePresent(name)) {
 								switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
@@ -408,7 +408,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			public void focusLost(FocusEvent e) {
 				try {				
 					age = Integer.parseInt(ageField.getText());
-					if ((age < 0)||(age > 120)) {
+					if (age < 0 || age > 120) {
 						ageField.setText("0");
 						MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 					}
@@ -983,8 +983,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getJNotePanel() {
-		if (jNoteScrollPane == null && (jNotePanel == null)) {
-			JScrollPane jNoteScrollPane = new JScrollPane(getJTextArea());
+		if (jNoteScrollPane == null && jNotePanel == null) {
+			jNoteScrollPane = new JScrollPane(getJTextArea());
 
 			jNoteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			jNoteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
