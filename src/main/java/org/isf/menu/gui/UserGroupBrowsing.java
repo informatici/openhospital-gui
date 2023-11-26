@@ -35,6 +35,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.gui.GroupEdit.GroupListener;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.UserGroup;
@@ -43,7 +44,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
-public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupListener {
+public class UserGroupBrowsing extends ModalJFrame implements GroupListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +63,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		pGroup.set(selectedrow, group);
 		((UserGroupBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1) {
+		if (table.getRowCount() > 0 && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
@@ -119,7 +120,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				group = (UserGroup) (model.getValueAt(table.getSelectedRow(), -1));
+				group = (UserGroup) model.getValueAt(table.getSelectedRow(), -1);
 				new GroupEdit(myFrame, group, false);
 			}
 		});
@@ -131,7 +132,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
-				UserGroup userGroup = (UserGroup) (model.getValueAt(table.getSelectedRow(), -1));
+				UserGroup userGroup = (UserGroup) model.getValueAt(table.getSelectedRow(), -1);
 				new PrivilegeTree(myFrame, userGroup);
 			}
 		});
@@ -143,10 +144,11 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
-				UserGroup userGroup = (UserGroup) (model.getValueAt(table.getSelectedRow(), -1));
+				UserGroup userGroup = (UserGroup) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.groupsbrowser.deletegroup.fmt.msg", userGroup.getCode());
 				try {
-					if ((answer == JOptionPane.YES_OPTION) && (userBrowsingManager.deleteGroup(userGroup))) {
+					if (answer == JOptionPane.YES_OPTION) {
+						userBrowsingManager.deleteGroup(userGroup);
 						pGroup.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();

@@ -276,7 +276,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				User selectedUser = (User) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.userbrowser.deleteuser.fmt.msg", selectedUser.getUserName());
 				try {
-					if ((JOptionPane.YES_OPTION == answer) && userBrowsingManager.deleteUser(selectedUser)) {
+					if (answer == JOptionPane.YES_OPTION) {
+						userBrowsingManager.deleteUser(selectedUser);
 						userList.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
