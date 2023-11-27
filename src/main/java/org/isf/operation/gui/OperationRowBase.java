@@ -36,6 +36,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -80,9 +81,6 @@ abstract class OperationRowBase extends JPanel {
 	protected JButton searchOperationButton;
 	protected JComboBox<String> comboResult;
 	protected JTextArea textAreaRemark;
-	
-	protected List<Operation> operationsOPD;
-	protected List<Operation> operationsAll;
 
 	protected OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	protected OperationRowBrowserManager operationRowBrowserManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
@@ -154,7 +152,7 @@ abstract class OperationRowBase extends JPanel {
 		searchOperationButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 		searchOperationButton.addActionListener(new ActionListener() {
 
-			List<Operation> operationsOPD;
+			List<Operation> operationsOPD = new LinkedList<>();
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -165,8 +163,7 @@ abstract class OperationRowBase extends JPanel {
 				}
 				comboOperation.removeAllItems();
 				comboOperation.addItem(null);
-				for (Operation ope : getSearchOperationsResults(searchOperationTextField.getText(),
-								operationsOPD == null ? operationsAll : operationsOPD)) {
+				for (Operation ope : getSearchOperationsResults(searchOperationTextField.getText(), operationsOPD)) {
 					comboOperation.addItem(ope);
 				}
 
