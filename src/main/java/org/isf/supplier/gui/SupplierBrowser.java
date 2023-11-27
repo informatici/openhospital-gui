@@ -68,7 +68,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		pSupplier.set(selectedrow, supplier);
 		((SupplierBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1) {
+		if (table.getRowCount() > 0 && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
@@ -121,8 +121,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		this.setTitle(MessageBundle.getMessage("angal.supplier.suppliersbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		int pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		int pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
+		int pfrmBordX = (screensize.width - screensize.width / pfrmBase * pfrmWidth) / 2;
+		int pfrmBordY = (screensize.height - screensize.height / pfrmBase * pfrmHeight) / 2;
 		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 	}
@@ -172,9 +172,9 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					supplier = (Supplier) (model.getValueAt(table.getSelectedRow(), -1));
+					supplier = (Supplier) model.getValueAt(table.getSelectedRow(), -1);
 					SupplierEdit editrecord = new SupplierEdit(myFrame, supplier, false);
-					editrecord.addSupplierListener(SupplierBrowser.this);
+					editrecord.addSupplierListener(this);
 					editrecord.setVisible(true);
 				}
 			});
@@ -194,7 +194,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 			jNewButton.addActionListener(actionEvent -> {
 				supplier = new Supplier();    //operation will reference the new record
 				SupplierEdit newrecord = new SupplierEdit(myFrame, supplier, true);
-				newrecord.addSupplierListener(SupplierBrowser.this);
+				newrecord.addSupplierListener(this);
 				newrecord.setVisible(true);
 			});
 		}

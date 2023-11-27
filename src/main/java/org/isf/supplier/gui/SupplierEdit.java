@@ -135,8 +135,8 @@ public class SupplierEdit extends JDialog {
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		int pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		int pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
+		int pfrmBordX = (screensize.width - screensize.width / pfrmBase * pfrmWidth) / 2;
+		int pfrmBordY = (screensize.height - screensize.height / pfrmBase * pfrmHeight) / 2;
 		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
@@ -262,32 +262,24 @@ public class SupplierEdit extends JDialog {
 				} else {
 					supplier.setSupDeleted('N');
 				}
-				boolean result = false;
 				if (insert) {	// inserting
 					try {
 						Supplier insertedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
-						if (insertedSupplier != null) {
-							fireSupplierInserted();
-							result = true;
-						}
+						fireSupplierInserted();
+						dispose();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				} else {	// updating
 					try {
 						Supplier updatedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
-						if (updatedSupplier != null) {
-							fireSupplierUpdated();
-							result = true;
-						}
+						fireSupplierUpdated();
+						dispose();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
-				}
-				if (!result) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-				} else {
-					dispose();
 				}
 			});
 		}

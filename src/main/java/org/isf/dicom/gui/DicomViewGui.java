@@ -125,7 +125,7 @@ public class DicomViewGui extends JPanel {
 
 		if (patID >= 0) {
 			try {
-				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
+				frames = DicomManagerFactory.getManager().getSeriesDetail(patID, serieNumber);
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -150,7 +150,7 @@ public class DicomViewGui extends JPanel {
 
 		if (patID >= 0) {
 			try {
-				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
+				frames = DicomManagerFactory.getManager().getSeriesDetail(patID, serieNumber);
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
