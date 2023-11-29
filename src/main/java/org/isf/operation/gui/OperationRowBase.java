@@ -152,10 +152,9 @@ abstract class OperationRowBase extends JPanel {
 		searchOperationButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 		searchOperationButton.addActionListener(new ActionListener() {
 
-			List<Operation> operationsOPD = new LinkedList<>();
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				List<Operation> operationsOPD = new LinkedList<>();
 				try {
 					operationsOPD = operationBrowserManager.getOperation();
 				} catch (OHServiceException ex) {
