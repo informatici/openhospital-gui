@@ -98,13 +98,13 @@ $global:ProgressPreference= 'SilentlyContinue'
 ##################### OH general configuration ####################
 
 # -> OH_PATH is the directory where Open Hospital files are located
-# OH_PATH="c:\Users\OH\OpenHospital\oh-1.14"
+# OH_PATH="c:\Users\OH\OpenHospital\oh-1.13"
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #$script:OH_MODE="PORTABLE"
 
 # language setting - default set to en
-$script:OH_LANGUAGE_LIST= @("al", "ar", "de", "en","es","fr","it","pt")
+$script:OH_LANGUAGE_LIST= @("al","ar","de","en","es","fr","it","pt")
 $script:OH_LANGUAGE_LIST_INFO=("albanian","arabic","german","english","spanish","french","italian","portuguese")
 #$script:OH_LANGUAGE="en" # default
 
