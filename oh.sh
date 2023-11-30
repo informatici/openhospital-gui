@@ -43,14 +43,14 @@ WRITE_CONFIG_FILES="off"
 ############## OH general configuration - change at your own risk :-) ##############
 
 # OH_PATH is the directory where Open Hospital files are located
-# OH_PATH=/usr/local/OpenHospital/oh-1.13
+# OH_PATH=/usr/local/OpenHospital/oh-1.14
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #OH_MODE="PORTABLE" 
 
 # language setting - default set to en
-OH_LANGUAGE_LIST=("al" "ar" "de" "en" "es" "fr" "it" "pt")
-OH_LANGUAGE_LIST_INFO=("albanian" "arabic" "german" "english" "spanish" "french" "italian" "portuguese")
+OH_LANGUAGE_LIST=("ar" "de" "en" "es" "fr" "it" "pt" "sq")
+OH_LANGUAGE_LIST_INFO=("arabic" "german" "english" "spanish" "french" "italian" "portuguese" "albanian")
 
 # single / multiuser - set "yes" for single user configuration
 #OH_SINGLE_USER="no"
@@ -213,7 +213,7 @@ function script_menu {
 	echo "   -C    set OH in CLIENT mode"
 	echo "   -P    set OH in PORTABLE mode"
 	echo "   -S    set OH in SERVER mode (portable)"
-	echo "   -l    [ ${OH_LANGUAGE_LIST[*]} ] -> set language"
+	echo "   -l    set language -> [ ${OH_LANGUAGE_LIST[*]} ]"
 	echo "   -E    toggle EXPERT MODE - show advanced options"
 	echo "   -h    show help"
 	echo "   -q    quit"
@@ -458,7 +458,7 @@ function check_language {
 	for lang in "${OH_LANGUAGE_LIST[@]}"; do
 		if [[ $lang == $OH_LANGUAGE ]]; then
 			echo ""
-			echo "Language $OH_LANGUAGE is supported"
+			echo "Language set to $OH_LANGUAGE"
 			return 0;
 		fi
 	done
@@ -528,11 +528,11 @@ desktop_path=$(xdg-user-dir DESKTOP)
 echo "[Desktop Entry]
 	Type=Application
 	# The version of the Desktop Entry Specification
-	Version=1.13.0
+	Version=1.14.0
 	# The name of the application
 	Name=OpenHospital
 	# A comment which will be used as a tooltip
-	Comment=Open Hospital 1.13 shortcut
+	Comment=Open Hospital 1.14 shortcut
 	# The path to the folder in which the executable is run
 	Path=$OH_PATH
 	# The executable of the application, possibly with arguments

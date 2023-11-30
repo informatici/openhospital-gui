@@ -98,14 +98,14 @@ $global:ProgressPreference= 'SilentlyContinue'
 ##################### OH general configuration ####################
 
 # -> OH_PATH is the directory where Open Hospital files are located
-# OH_PATH="c:\Users\OH\OpenHospital\oh-1.13"
+# OH_PATH="c:\Users\OH\OpenHospital\oh-1.14"
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #$script:OH_MODE="PORTABLE"
 
 # language setting - default set to en
-$script:OH_LANGUAGE_LIST= @("al","ar","de","en","es","fr","it","pt")
-$script:OH_LANGUAGE_LIST_INFO=("albanian","arabic","german","english","spanish","french","italian","portuguese")
+$script:OH_LANGUAGE_LIST= @("ar","de","en","es","fr","it","pt","sq")
+$script:OH_LANGUAGE_LIST_INFO=("arabic","german","english","spanish","french","italian","portuguese", "albanian")
 #$script:OH_LANGUAGE="en" # default
 
 # single / multiuser - set "yes" for single user configuration
@@ -274,7 +274,7 @@ function script_menu {
 	Write-Host "   C    set OH in CLIENT mode"
 	Write-Host "   P    set OH in PORTABLE mode"
 	Write-Host "   S    set OH in SERVER mode (portable)"
-	Write-Host "   l    $OH_LANGUAGE_LIST -> set language"
+	Write-Host "   l    set language -> $OH_LANGUAGE_LIST"
 	Write-Host "   E    toggle EXPERT MODE - show advanced options"
 	Write-Host "   h    show help"
 	Write-Host "   q    quit"
@@ -505,7 +505,7 @@ function check_language {
         foreach ($lang in $OH_LANGUAGE_LIST) {
 	if ($script:OH_LANGUAGE_LIST -contains "$OH_LANGUAGE") {
 		Write-Host ""
-		Write-Host "Language $OH_LANGUAGE is supported"
+		Write-Host "Language set to $OH_LANGUAGE"
 		return;
 	}
 	
