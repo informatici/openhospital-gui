@@ -234,7 +234,6 @@ public class UserEdit extends JDialog {
 				}
 				user.setUserName(userName);
 				user.setDesc(descriptionTextField.getText());
-				boolean result = false;
 				if (insert) {
 					char[] password = pwdTextField.getPassword();
 					char[] repeatPassword = pwd2TextField.getPassword();
@@ -283,12 +282,12 @@ public class UserEdit extends JDialog {
 					user.setPasswd(hashed);
 					user.setUserGroupName((UserGroup) userGroupComboBox.getSelectedItem());
 					try {
-						result = userBrowsingManager.newUser(user);
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
-					}
-					if (result) {
+						userBrowsingManager.newUser(user);
 						fireUserInserted(user);
+						dispose();
+					} catch (OHServiceException e1) {
+						MessageDialog.info(null, "angal.common.datacouldnotbesaved.msg");
+						OHServiceExceptionUtil.showMessages(e1);
 					}
 					Arrays.fill(password, '0');
 					Arrays.fill(repeatPassword, '0');
@@ -300,19 +299,13 @@ public class UserEdit extends JDialog {
 						} else if (!user.isAccountLocked() && accountLocked.isSelected()) {
 							userBrowsingManager.lockUser(user);
 						}
-						result = userBrowsingManager.updateUser(user);
+						userBrowsingManager.updateUser(user);
+						fireUserUpdated();
+						dispose();
 					} catch (OHServiceException e1) {
+						MessageDialog.info(null, "angal.common.datacouldnotbesaved.msg");
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-					if (result) {
-						fireUserUpdated();
-					}
-				}
-
-				if (!result) {
-					MessageDialog.info(null, "angal.common.datacouldnotbesaved.msg");
-				} else {
-					dispose();
 				}
 			});
 		}
