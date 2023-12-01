@@ -18,7 +18,7 @@ INTERNALVIEWER=yes
 SMSENABLED=no
 VIDEOMODULEENABLED=yes
 XMPPMODULEENABLED=no
-PARAMSURL=params.open-hospital.org
+PARAMSURL=https://conf.open-hospital.org/conf.json
 
 # application settings
 ENHANCEDSEARCH=no
