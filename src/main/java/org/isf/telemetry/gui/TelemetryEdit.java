@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,6 +46,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.GeneralData;
@@ -60,6 +60,7 @@ import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.telemetry.util.TelemetryUtils;
 import org.isf.utils.exception.OHException;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.TimeTools;
@@ -78,7 +79,8 @@ public class TelemetryEdit extends ModalJFrame {
 	private static final String KEY_TELEMETRY_ABOUT = "angal.telemetry.about";
 	private static final String KEY_TELEMETRY_INFO = "angal.telemetry.info";
 	private static final String KEY_TELEMETRY_BODY = "angal.telemetry.body";
-	private static final String KEY_TELEMETRY_BUTTON_LABEL_CONFIRM = "angal.telemetry.button.label.confirm";
+	private static final String KEY_TELEMETRY_CHECKBOX = "angal.telemetry.checkbox.label";
+	private static final String KEY_TELEMETRY_BUTTON_LABEL_CONFIRM_AND_SEND = "angal.telemetry.button.label.confirmandsend";
 	private static final String KEY_TELEMETRY_BUTTON_LABEL_ASK_LATER = "angal.telemetry.button.label.askmelater";
 	private static final String KEY_TELEMETRY_BUTTON_LABEL_DISABLE_NEVER_ASK = "angal.telemetry.button.label.disableandneveraskagain";
 	private static final String KEY_TELEMETRY_BUTTON_LABEL_DISABLE = "angal.telemetry.button.label.disable";
@@ -90,6 +92,8 @@ public class TelemetryEdit extends ModalJFrame {
 	private TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
 	private TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
 	private boolean firstTime = false;
+
+	private JCheckBox agreementCheckbox;
 
 	public TelemetryEdit() {
 		super();
@@ -137,7 +141,7 @@ public class TelemetryEdit extends ModalJFrame {
 	}
 
 	private JButton buildConfirmButton(List<CheckBoxWrapper> checkboxes) {
-		JButton confirmButton = new JButton(MessageBundle.getMessage(KEY_TELEMETRY_BUTTON_LABEL_CONFIRM));
+		JButton confirmButton = new JButton(MessageBundle.getMessage(KEY_TELEMETRY_BUTTON_LABEL_CONFIRM_AND_SEND));
 		confirmButton.addActionListener(buildConfirmationActionListener(checkboxes, telemetryManager, telemetryUtils));
 		return confirmButton;
 	}
@@ -214,6 +218,13 @@ public class TelemetryEdit extends ModalJFrame {
 		return new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+
+				if (!agreementCheckbox.isSelected()) {
+					MessageDialog.info(TelemetryEdit.this,
+									MessageBundle.formatMessage("angal.telemetry.fmt.confirm.pleaseselecttoproceed",
+													MessageBundle.getMessage(KEY_TELEMETRY_CHECKBOX)));
+					return;
+				}
 				Map<String, Boolean> consentMap = buildConsentData(checkboxes);
 				if (this.isReallyEnabled(consentMap)) {
 					try {
@@ -384,11 +395,12 @@ public class TelemetryEdit extends ModalJFrame {
 		checkboxes.forEach(chb -> {
 			panel.add(chb.getCheckbox());
 		});
+		panel.add(buildCheckBoxAgreement(enabled));
 
-		SpringUtilities.makeCompactGrid(panel, checkboxes.size() + 4, 1, 5, 5, 5, 5);
+		SpringUtilities.makeCompactGrid(panel, checkboxes.size() + 5, 1, 5, 5, 5, 5);
 
 		JPanel buttons = new JPanel();
-		buttons.setLayout(new FlowLayout());
+		// buttons.setLayout(new FlowLayout());
 		buttons.add(confirmButton);
 		if (firstTime) {
 			buttons.add(askMeLaterButton);
@@ -407,10 +419,19 @@ public class TelemetryEdit extends ModalJFrame {
 		return panel;
 	}
 
+	private JCheckBox buildCheckBoxAgreement(boolean enabled) {
+		if (agreementCheckbox == null) {
+			agreementCheckbox = new JCheckBox(MessageBundle.getMessage(KEY_TELEMETRY_CHECKBOX));
+			agreementCheckbox.setSelected(enabled);
+		}
+		return agreementCheckbox;
+	}
+
 	private Component buildJLabelEnabled(boolean enabled) {
 		JLabel jLabelEnabled = new JLabel(MessageBundle.getMessage("angal.telemetry.enabled"));
 		jLabelEnabled.setIcon(new ImageIcon("rsc/icons/ok_dialog.png"));
 		jLabelEnabled.setEnabled(enabled);
+		jLabelEnabled.setHorizontalAlignment(SwingConstants.RIGHT);
 		return jLabelEnabled;
 	}
 
