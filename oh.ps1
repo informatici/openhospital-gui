@@ -105,7 +105,7 @@ $global:ProgressPreference= 'SilentlyContinue'
 
 # language setting - default set to en
 $script:OH_LANGUAGE_LIST= @("ar","de","en","es","fr","it","pt","sq")
-$script:OH_LANGUAGE_LIST_INFO=("arabic","german","english","spanish","french","italian","portuguese", "albanian")
+$script:OH_LANGUAGE_LIST_INFO=("arabic","german","english","spanish","french","italian","portuguese","albanian")
 #$script:OH_LANGUAGE="en" # default
 
 # single / multiuser - set "yes" for single user configuration
