@@ -307,7 +307,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 					lab.setLabDate(newDate);
 					lab.setInOutPatient(inOut);
 					lab.setPatient(patientSelected);
-					lab.setStatus(LaboratoryStatus.DONE.toString());
+					lab.setStatus(LaboratoryStatus.done.toString());
 					int procedure = lab.getExam().getProcedure();
 					if ((procedure == 1 || procedure == 3) && lab.getResult().isEmpty()) {
 						MessageDialog.error(LabNew.this, "angal.labnew.pleaseinsertavalidvalue");
