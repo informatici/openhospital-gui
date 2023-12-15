@@ -188,11 +188,6 @@ WHERE PAT_ID = $P{patientID}]]>
 		<property name="com.jaspersoft.studio.field.label" value="PAT_PROFILE_PHOTO_ID"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
 	</field>
-	<field name="COLUMN_34" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="PAT_PROFILE_PHOTO_ID"/>
-		<property name="com.jaspersoft.studio.field.label" value="PAT_PROFILE_PHOTO_ID"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient_profile_photo"/>
-	</field>
 	<field name="PAT_PHOTO" class="byte[]">
 		<property name="com.jaspersoft.studio.field.name" value="PAT_PHOTO"/>
 		<property name="com.jaspersoft.studio.field.label" value="PAT_PHOTO"/>
