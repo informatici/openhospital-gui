@@ -15,6 +15,9 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="examId" class="java.lang.Integer"/>
+	<parameter name="PATIENT_PHOTO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT *
 FROM OH_PATIENT
@@ -390,6 +393,9 @@ WHERE PEX_ID = $P{examId}]]>
 				<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
 				<subreportParameter name="patientID">
 					<subreportParameterExpression><![CDATA[$F{PAT_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PATIENT_PHOTO">
+					<subreportParameterExpression><![CDATA[$P{PATIENT_PHOTO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_patsubreport.jasper"]]></subreportExpression>
