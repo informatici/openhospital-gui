@@ -229,7 +229,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 			chat.addMessageListener((chat1, message) -> {
 				if (message.getType() == Message.Type.chat) {
 					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
-					LOGGER.debug("GUI: {}", CommunicationFrame.this);
+					LOGGER.debug("GUI: {}", this);
 					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf('@'));
 					printMessage(getArea(user, true), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {
@@ -466,7 +466,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 
 	public void sendMessage(String textMessage, String to, boolean visualize) {
 
-		interaction.sendMessage(CommunicationFrame.this, textMessage, to, visualize);
+		interaction.sendMessage(this, textMessage, to, visualize);
 		if (visualize) {
 			printMessage(getArea(getSelectedUser(), false), MessageBundle.getMessage("angal.xmpp.me.txt"), textMessage, visualize);
 		}
@@ -529,7 +529,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 
 			chooser.setAcceptAllFileFilterUsed(false);
 
-			if (chooser.showOpenDialog(CommunicationFrame.this) == JFileChooser.APPROVE_OPTION) {
+			if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 				LOGGER.debug("getCurrentDirectory(): {}", chooser.getCurrentDirectory());
 				LOGGER.debug("getSelectedFile() : {}", chooser.getSelectedFile());
 			} else {
@@ -567,7 +567,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 			chat.addMessageListener((chat1, message) -> {
 				if (message.getType() == Message.Type.chat) {
 					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
-					LOGGER.debug("GUI: {}", CommunicationFrame.this);
+					LOGGER.debug("GUI: {}", this);
 					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf('@'));
 					printMessage((getArea(user, false)), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {

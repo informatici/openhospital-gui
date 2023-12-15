@@ -117,7 +117,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jNewButton.addActionListener(actionEvent -> {
 				DischargeType mdsr = new DischargeType("", "");
 				DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame, mdsr, true);
-				newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
+				newrecord.addDischargeTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -140,7 +140,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 					selectedrow = jTable.getSelectedRow();
 					dischargeType = (DischargeType) model.getValueAt(selectedrow, -1);
 					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame, dischargeType, false);
-					newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
+					newrecord.addDischargeTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});

@@ -117,7 +117,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 			jNewButton.addActionListener(actionEvent -> {
 				deliveryresultType = new DeliveryResultType("", "");
 				DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame, deliveryresultType, true);
-				newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
+				newrecord.addDeliveryResultTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -140,7 +140,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 					selectedrow = jTable.getSelectedRow();
 					deliveryresultType = (DeliveryResultType) (model.getValueAt(selectedrow, -1));
 					DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame, deliveryresultType, false);
-					newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
+					newrecord.addDeliveryResultTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});

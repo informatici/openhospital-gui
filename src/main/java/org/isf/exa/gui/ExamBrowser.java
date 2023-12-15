@@ -174,7 +174,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		jButtonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
+				MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 				return;
 			}
 			selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
@@ -204,7 +204,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			jButtonNew.addActionListener(actionEvent -> {
 				exam = new Exam("", "", new ExamType("", ""), 0, "");
 				ExamEdit newrecord = new ExamEdit(myFrame, exam, true);
-				newrecord.addExamListener(ExamBrowser.this);
+				newrecord.addExamListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -217,12 +217,12 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jButtonEdit.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					exam = (Exam) model.getValueAt(selectedrow, -1);
 					ExamEdit editrecord = new ExamEdit(myFrame, exam, false);
-					editrecord.addExamListener(ExamBrowser.this);
+					editrecord.addExamListener(this);
 					editrecord.setVisible(true);
 				}
 			});
@@ -236,7 +236,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			jButtonShow.setMnemonic(MessageBundle.getMnemonic("angal.exa.results.btn.key"));
 			jButtonShow.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					exam = (Exam) model.getValueAt(selectedrow, -1);

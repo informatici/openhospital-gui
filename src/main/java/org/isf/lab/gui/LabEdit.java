@@ -531,7 +531,7 @@ public class LabEdit extends ModalJFrame {
 				try {
 					tmpAge = Integer.parseInt(ageTextField.getText());
 				} catch (Exception ex) {
-					MessageDialog.error(LabEdit.this, "angal.lab.insertvalidage.msg");
+					MessageDialog.error(this, "angal.lab.insertvalidage.msg");
 				}
 				lab.setSex(sexTextField.getText().toUpperCase());
 

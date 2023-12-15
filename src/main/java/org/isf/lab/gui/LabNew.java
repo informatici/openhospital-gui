@@ -296,7 +296,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 				try {
 					newDate = jCalendarDate.getLocalDateTime();
 				} catch (Exception e1) {
-					MessageDialog.error(LabNew.this, "angal.lab.pleaseinsertavalidexamdate.msg");
+					MessageDialog.error(this, "angal.lab.pleaseinsertavalidexamdate.msg");
 					return;
 				}
 				RememberDates.setLastLabExamDate(newDate);
@@ -310,7 +310,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 					lab.setStatus(LaboratoryStatus.done.toString());
 					int procedure = lab.getExam().getProcedure();
 					if ((procedure == 1 || procedure == 3) && lab.getResult().isEmpty()) {
-						MessageDialog.error(LabNew.this, "angal.labnew.pleaseinsertavalidvalue");
+						MessageDialog.error(this, "angal.labnew.pleaseinsertavalidvalue");
 						// select the first exam with the missing value
 						jTableExams.setRowSelectionInterval(row, row);
 						return;
@@ -579,8 +579,8 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.associateapatientwiththisexam")); //$NON-NLS-1$
 			jButtonPickPatient.addActionListener(actionEvent -> {
-				SelectPatient sp = new SelectPatient(LabNew.this, patientSelected);
-				sp.addSelectionListener(LabNew.this);
+				SelectPatient sp = new SelectPatient(this, patientSelected);
+				sp.addSelectionListener(this);
 				sp.pack();
 				sp.setVisible(true);
 			});
@@ -764,7 +764,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 
 					for (Laboratory labItem : examItems) {
 						if (labItem.getExam() == exa) {
-							MessageDialog.error(LabNew.this, "angal.labnew.thisexamisalreadypresent");
+							MessageDialog.error(this, "angal.labnew.thisexamisalreadypresent");
 							alreadyIn = true;
 						}
 					}
@@ -805,7 +805,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 
 				int selectedRow = jTableExams.getSelectedRow();
 				if (selectedRow < 0) {
-					MessageDialog.error(LabNew.this, "angal.lab.pleaseselectanexam.msg");
+					MessageDialog.error(this, "angal.lab.pleaseselectanexam.msg");
 				} else {
 					examItems.remove(selectedRow);
 					jPanelResults.removeAll();

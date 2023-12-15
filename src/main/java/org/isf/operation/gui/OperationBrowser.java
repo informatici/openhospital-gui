@@ -163,7 +163,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		buttonNew.addActionListener(actionEvent -> {
 			operation = new Operation(null, "", new OperationType("", ""), 0); // operation will reference the new record
 			OperationEdit newrecord = new OperationEdit(myFrame, operation, true);
-			newrecord.addOperationListener(OperationBrowser.this);
+			newrecord.addOperationListener(this);
 			newrecord.setVisible(true);
 		});
 		buttonPanel.add(buttonNew);
@@ -177,7 +177,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				selectedrow = table.getSelectedRow();
 				operation = (Operation) (model.getValueAt(table.getSelectedRow(), -1));
 				OperationEdit editrecord = new OperationEdit(myFrame, operation, false);
-				editrecord.addOperationListener(OperationBrowser.this);
+				editrecord.addOperationListener(this);
 				editrecord.setVisible(true);
 			}
 		});

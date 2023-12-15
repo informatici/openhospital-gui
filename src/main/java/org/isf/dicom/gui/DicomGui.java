@@ -272,7 +272,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 					try {
 						numfiles = SourceFiles.countFiles(selectedFile, patient);
 					} catch (OHDicomException e1) {
-						OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+						OHServiceExceptionUtil.showMessages(e1, this);
 						return;
 					}
 					if (numfiles == 1) {
@@ -282,12 +282,12 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 				} else {
 					try {
 						if (!SourceFiles.checkSize(file)) {
-							MessageDialog.error(DicomGui.this, "angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty.fmt.msg",
+							MessageDialog.error(this, "angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty.fmt.msg",
 									DicomManagerFactory.getMaxDicomSize());
 							return;
 						}
 					} catch (OHDicomException e1) {
-						OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+						OHServiceExceptionUtil.showMessages(e1, this);
 						return;
 					}
 				}
@@ -298,7 +298,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 				//shows settings to the user for validation/modification
 				List<Date> dates = FileTools.getTimestampFromName(file);
 
-				ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
+				ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(this, numfiles, dummyFileDicom, dates);
 				preLoadDialog.setVisible(true);
 
 				if (!preLoadDialog.isSave()) {
@@ -334,7 +334,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 			Object[] options = { MessageBundle.getMessage("angal.dicom.delete.yes"), MessageBundle.getMessage("angal.dicom.delete.no") };
 
-			int n = JOptionPane.showOptionDialog(DicomGui.this, MessageBundle.getMessage("angal.dicom.delete.request"),
+			int n = JOptionPane.showOptionDialog(this, MessageBundle.getMessage("angal.dicom.delete.request"),
 					MessageBundle.getMessage("angal.dicom.delete.title"),
 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "");
 
