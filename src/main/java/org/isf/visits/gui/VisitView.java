@@ -94,7 +94,7 @@ public class VisitView extends ModalJFrame {
 	}
 
 	private void fireVisitsUpdated() {
-		AWTEvent event = new AWTEvent(VisitView.this, AWTEvent.RESERVED_ID_MAX + 1) {
+		AWTEvent event = new AWTEvent(this, AWTEvent.RESERVED_ID_MAX + 1) {
 
 			private static final long serialVersionUID = 1L;
 		};
@@ -315,7 +315,7 @@ public class VisitView extends ModalJFrame {
 			addFirstVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addFirstVisitButton.addActionListener(actionEvent -> {
 
-				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateFirst, getWard(), patient, true);
+				InsertVisit newVsRow = new InsertVisit(this, dateFirst, getWard(), patient, true);
 				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
@@ -336,11 +336,11 @@ public class VisitView extends ModalJFrame {
 
 				int row = jTableFirst.getSelectedRow();
 				if (row < 0) {
-					MessageDialog.info(VisitView.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.info(this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
 				Visit visit = (Visit) jTableFirst.getModel().getValueAt(row, -1);
-				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
+				int ok = MessageDialog.okCancel(this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
 					try {
 						visitManager.deleteVisit(visit);
@@ -364,7 +364,7 @@ public class VisitView extends ModalJFrame {
 			addSecondVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addSecondVisitButton.addActionListener(actionEvent -> {
 
-				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateSecond, getWard(), patient, true);
+				InsertVisit newVsRow = new InsertVisit(this, dateSecond, getWard(), patient, true);
 				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
@@ -385,11 +385,11 @@ public class VisitView extends ModalJFrame {
 
 				int row = jTableSecond.getSelectedRow();
 				if (row < 0) {
-					MessageDialog.info(VisitView.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.info(this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
 				Visit visit = (Visit) jTableSecond.getModel().getValueAt(row, -1);
-				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
+				int ok = MessageDialog.okCancel(this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
 					try {
 						visitManager.deleteVisit(visit);

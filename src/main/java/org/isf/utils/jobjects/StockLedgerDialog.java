@@ -102,7 +102,7 @@ public class StockLedgerDialog extends JDialog {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(actionEvent -> {
-				int n = JOptionPane.showConfirmDialog(StockLedgerDialog.this,
+				int n = JOptionPane.showConfirmDialog(this,
 						MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
 						MessageBundle.getMessage("angal.messagedialog.question.title"),
 						JOptionPane.OK_CANCEL_OPTION);

@@ -66,11 +66,11 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 	@Override
 	public void addToGrid() {
 		if ((this.textDate.getLocalDateTime() == null) || (this.comboOperation.getSelectedItem() == null)) {
-			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateope");
+			MessageDialog.error(this, "angal.operationrowedit.warningdateope");
 			return;
 		}
 		if ((myAdmission != null) && (myAdmission.getAdmDate().isAfter(this.textDate.getLocalDateTime()))) {
-			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateafter");
+			MessageDialog.error(this, "angal.operationrowedit.warningdateafter");
 			return;
 		}
 

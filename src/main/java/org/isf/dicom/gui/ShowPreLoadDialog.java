@@ -190,7 +190,7 @@ class ShowPreLoadDialog extends JDialog {
 					dicomTypeComboBox.addItem(dicomType);
 				}
 			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e, ShowPreLoadDialog.this);
+				OHServiceExceptionUtil.showMessages(e, this);
 			}
 			dicomTypeComboBox.addItemListener(e -> {
 				if (e.getStateChange() == ItemEvent.SELECTED) {

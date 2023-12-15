@@ -324,7 +324,7 @@ public class MovStockMultipleDischarging extends JDialog {
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.outofstock")) //$NON-NLS-1$
 				.append('\n') //$NON-NLS-1$
 				.append(med.getDescription()); //$NON-NLS-1$
-			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, message.toString());
+			JOptionPane.showMessageDialog(this, message.toString());
 			return false;
 		}
 		return true;
@@ -338,7 +338,7 @@ public class MovStockMultipleDischarging extends JDialog {
 					.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.alreadyinthisform")) //$NON-NLS-1$
 					.append('\n') //$NON-NLS-1$
 					.append(med.getDescription()); //$NON-NLS-1$
-				JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, message.toString());
+				JOptionPane.showMessageDialog(this, message.toString());
 				return true;
 			}
 		}
@@ -527,7 +527,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			JPanel panel = new JPanel();
 			panel.add(new JScrollPane(medTable));
 			
-			int ok = JOptionPane.showConfirmDialog(MovStockMultipleDischarging.this, 
+			int ok = JOptionPane.showConfirmDialog(this,
 					panel, 
 					MessageBundle.getMessage("angal.medicalstock.multipledischarging.chooseamedical"), //$NON-NLS-1$ 
 					JOptionPane.YES_NO_OPTION); 
@@ -556,7 +556,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
 			
 			do {
-				int ok = JOptionPane.showConfirmDialog(MovStockMultipleDischarging.this, 
+				int ok = JOptionPane.showConfirmDialog(this,
 						panel, 
 						MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$ 
 						JOptionPane.OK_CANCEL_OPTION);
@@ -585,7 +585,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private boolean checkQuantityInLot(Lot lot, double qty) {
 		double lotQty = lot.getMainStoreQuantity();
 		if (qty > lotQty) {
-			MessageDialog.error(MovStockMultipleDischarging.this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.msg");
+			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.msg");
 			return false;
 		} 
 		return true;
@@ -639,7 +639,7 @@ public class MovStockMultipleDischarging extends JDialog {
 				.append('\n') //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty);
-			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, message.toString());
+			JOptionPane.showMessageDialog(this, message.toString());
 			return false;
 		}
 		
@@ -650,7 +650,7 @@ public class MovStockMultipleDischarging extends JDialog {
 				.append(criticalLevel)
 				.append(") ") //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.proceed")); //$NON-NLS-1$
-			int ok = JOptionPane.showConfirmDialog(MovStockMultipleDischarging.this, message.toString());
+			int ok = JOptionPane.showConfirmDialog(this, message.toString());
 			
 			if (ok != JOptionPane.OK_OPTION) {
 				return false;
@@ -696,7 +696,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		}
 		int qty = 0;
 		do {
-			String quantity = JOptionPane.showInputDialog(MovStockMultipleDischarging.this, 
+			String quantity = JOptionPane.showInputDialog(this,
 					message.toString(), 
 					title.toString(),
 					JOptionPane.QUESTION_MESSAGE);
@@ -713,7 +713,7 @@ public class MovStockMultipleDischarging extends JDialog {
 						qty = 0;
 					}
 				} catch (NumberFormatException nfe) {
-					MessageDialog.error(MovStockMultipleDischarging.this, "angal.medicalstock.multipledischarging.pleaseinsertavalidvalue");
+					MessageDialog.error(this, "angal.medicalstock.multipledischarging.pleaseinsertavalidvalue");
 					qty = 0;
 				}
 			} else {
@@ -897,14 +897,14 @@ public class MovStockMultipleDischarging extends JDialog {
 		
 		List<Movement> movements = model.getMovements();
 		if (movements.isEmpty()) {
-			MessageDialog.error(MovStockMultipleDischarging.this, "angal.medicalstock.multipledischarging.noelementtosave");
+			MessageDialog.error(this, "angal.medicalstock.multipledischarging.noelementtosave");
 			return false;
 		}
 		
 		// Check destination
 		Object ward = jComboBoxDestination.getSelectedItem();
 		if (ward instanceof String) {
-			MessageDialog.error(MovStockMultipleDischarging.this, "angal.medicalstock.multipledischarging.pleaseselectaward.msg");
+			MessageDialog.error(this, "angal.medicalstock.multipledischarging.pleaseselectaward.msg");
 			return false;
 		}
 		

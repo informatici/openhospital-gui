@@ -141,7 +141,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 			newButton.addActionListener(actionEvent -> {
 				examRow = new ExamRow();
 				ExamRowEdit newrecord = new ExamRowEdit(myFrame, examRow, exam);
-				newrecord.addExamListener(ExamShow.this);
+				newrecord.addExamListener(this);
 				newrecord.setVisible(true);
 			});
 		}

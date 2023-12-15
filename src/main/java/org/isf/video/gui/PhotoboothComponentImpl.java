@@ -148,19 +148,19 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         webcamResolutionChangeListener = propertyChangeEvent -> {
             final Object newValue = propertyChangeEvent.getNewValue();
             if (newValue instanceof Dimension) {
-                PhotoboothComponentImpl.this.stopWebcam();
+                this.stopWebcam();
 
                 LOGGER.info("Changing webcam dimension to {}", newValue);
                 webcam.setViewSize((Dimension) newValue);
-                PhotoboothComponentImpl.this.getStreamingPanel().setPreferredSize((Dimension) newValue);
-                PhotoboothComponentImpl.this.getStreamingPanel().setMinimumSize((Dimension) newValue);
-                PhotoboothComponentImpl.this.getSnapshotPanel().setPreferredSize((Dimension) newValue);
-                PhotoboothComponentImpl.this.getSnapshotPanel().setMinimumSize((Dimension) newValue);
+                this.getStreamingPanel().setPreferredSize((Dimension) newValue);
+                this.getStreamingPanel().setMinimumSize((Dimension) newValue);
+                this.getSnapshotPanel().setPreferredSize((Dimension) newValue);
+                this.getSnapshotPanel().setMinimumSize((Dimension) newValue);
 
                 LOGGER.info("Closing webcam before attaching to panel.");
                 webcam.close();
                 webcamPanel = new WebcamPanel(webcam);
-                PhotoboothComponentImpl.this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
+                this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
                 owner.pack();
                 owner.repaint();
                 owner.validate();
@@ -171,7 +171,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         webcamChangeListener = propertyChangeEvent -> {
             final Object newValue = propertyChangeEvent.getNewValue();
             if (newValue instanceof Webcam) {
-                PhotoboothComponentImpl.this.stopWebcam();
+                this.stopWebcam();
 
                 webcam = (Webcam) newValue;
                 LOGGER.info("Webcam changed to {}", webcam.getName());
@@ -189,14 +189,14 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                 LOGGER.info("Changing resolution to {}", photoboothPanelPresentationModel.getResolution());
                 webcam.setViewSize(photoboothPanelPresentationModel.getResolution());
 
-                PhotoboothComponentImpl.this.getStreamingPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
-                PhotoboothComponentImpl.this.getStreamingPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
-                PhotoboothComponentImpl.this.getSnapshotPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
-                PhotoboothComponentImpl.this.getSnapshotPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
+                this.getStreamingPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
+                this.getStreamingPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
+                this.getSnapshotPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
+                this.getSnapshotPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
 
                 LOGGER.info("Attaching webcam {} to panel", webcam.getName());
                 webcamPanel = new WebcamPanel(webcam);
-                PhotoboothComponentImpl.this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
+                this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
                 owner.pack();
                 owner.repaint();
                 owner.validate();
@@ -233,8 +233,8 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         getOkButton().setAction(okAction);
 
         getCancelButton().addActionListener(actionEvent -> {
-            PhotoboothComponentImpl.this.presentationModel().triggerFlush();
-            PhotoboothComponentImpl.this.cleanup();
+            this.presentationModel().triggerFlush();
+            this.cleanup();
             owner.dispose();
         });
 
@@ -248,10 +248,10 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
             cropping = new Cropping(resizedImage);
             okAction.setEnabled(true);
             SwingUtilities.invokeLater(() -> {
-                PhotoboothComponentImpl.this.getSnapshotPanel().removeAll();
-                PhotoboothComponentImpl.this.getSnapshotPanel().add(cropping, CC.xy(1, 1));
-                PhotoboothComponentImpl.this.getPhotoBoothPanel().repaint();
-                PhotoboothComponentImpl.this.getPhotoBoothPanel().revalidate();
+                this.getSnapshotPanel().removeAll();
+                this.getSnapshotPanel().add(cropping, CC.xy(1, 1));
+                this.getPhotoBoothPanel().repaint();
+                this.getPhotoBoothPanel().revalidate();
             });
         });
     }
