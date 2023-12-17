@@ -82,13 +82,13 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	}
 	
 	//TODO: replace with mapping mnemonic / translation in OperationBrowserManager
-	public static String OPD = MessageBundle.getMessage("angal.admission.opd.txt").toUpperCase();
-	public static String ADMISSION = MessageBundle.getMessage("angal.admission.admission.txt").toUpperCase();
-	public static String OPD_ADMISSION = OPD + " / " + ADMISSION;
+	public static final String OPD = MessageBundle.getMessage("angal.admission.opd.txt").toUpperCase();
+	public static final String ADMISSION = MessageBundle.getMessage("angal.admission.admission.txt").toUpperCase();
+	public static final String OPD_ADMISSION = OPD + " / " + ADMISSION;
 
-	private int pfrmBase = 8;
-	private int pfrmWidth = 5;
-	private int pfrmHeight = 5;
+	private static final int pfrmBase = 8;
+	private static final int pfrmWidth = 5;
+	private static final int pfrmHeight = 5;
 	private int selectedrow;
 	private JComboBox<OperationType> diseaseTypeFilter;
 	private List<Operation> pOperation;
