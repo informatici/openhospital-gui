@@ -56,7 +56,7 @@ public class HelpViewer extends JDialog {
 				Desktop.getDesktop().open(file);
 			} catch (IOException | IllegalArgumentException e) {
 				// Either system viewer or file is not found
-				int answer = MessageDialog.yesNo(HelpViewer.this, "angal.help.userguidenotfound.msg");
+				int answer = MessageDialog.yesNo(this, "angal.help.userguidenotfound.msg");
 				if (answer == JOptionPane.NO_OPTION) {
 					return;
 				}
@@ -72,10 +72,10 @@ public class HelpViewer extends JDialog {
 				Runtime rt = Runtime.getRuntime();
 				rt.exec(GeneralData.VIEWER + ' ' + file);
 			} catch (IOException e) {
-				MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfoundoruserguidenotfound.msg");
+				MessageDialog.error(this, "angal.help.pdfviewernotfoundoruserguidenotfound.msg");
 			}
 		} else { //abort operation
-			MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfound.msg");
+			MessageDialog.error(this, "angal.help.pdfviewernotfound.msg");
 		}
 	}
 

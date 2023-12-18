@@ -127,7 +127,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jNewButton.addActionListener(actionEvent -> {
 				DicomType dicomType = new DicomType("", "");
 				DicomTypeEdit newrecord = new DicomTypeEdit(myFrame, dicomType, true);
-				newrecord.addDicomTypeListener(DicomTypeBrowser.this);
+				newrecord.addDicomTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -150,7 +150,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 					selectedrow = jTable.getSelectedRow();
 					dicomType = (DicomType) model.getValueAt(selectedrow, -1);
 					DicomTypeEdit newrecord = new DicomTypeEdit(myFrame, dicomType, false);
-					newrecord.addDicomTypeListener(DicomTypeBrowser.this);
+					newrecord.addDicomTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});

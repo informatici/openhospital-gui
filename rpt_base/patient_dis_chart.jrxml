@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
+<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_dis_chart" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_dis_chart" whenResourceMissingType="Key" uuid="c59d52e6-c1a0-4f7a-974e-117321f8a121">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -18,6 +18,9 @@
 	<parameter name="patientID" class="java.lang.String"/>
 	<parameter name="LOGO_PATH" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./rsc/images/logo.jpg"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PATIENT_PHOTO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT ADM_ID,
@@ -82,6 +85,12 @@ where adm.ADM_DELETED = 'N'
 			<subreport isUsingCache="true">
 				<reportElement key="subreport-1" x="0" y="114" width="535" height="55" uuid="f3227a9f-3645-467f-bd8f-b0334ceb3186"/>
 				<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
+				<subreportParameter name="patientID">
+					<subreportParameterExpression><![CDATA[$P{patientID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PATIENT_PHOTO">
+					<subreportParameterExpression><![CDATA[$P{PATIENT_PHOTO}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_patsubreport.jasper"]]></subreportExpression>
 			</subreport>

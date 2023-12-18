@@ -62,7 +62,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 	@Override
 	public void addToGrid() {
 		if ((this.textDate.getLocalDateTime() == null) || (this.comboOperation.getSelectedItem() == null)) {
-			MessageDialog.error(OperationRowOpd.this, "angal.operationrowedit.warningdateope");
+			MessageDialog.error(this, "angal.operationrowedit.warningdateope");
 			return;
 		}
 

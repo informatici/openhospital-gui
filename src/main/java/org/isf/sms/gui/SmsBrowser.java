@@ -232,7 +232,7 @@ public class SmsBrowser extends ModalJFrame {
 		textArea.setWrapStyleWord(true);
 		textArea.setLineWrap(true);
 		textArea.setText(sms.getSmsText());
-		JOptionPane.showMessageDialog(SmsBrowser.this, textArea);
+		JOptionPane.showMessageDialog(this, textArea);
 	}
 
 	private JPanel getJButtonPanel() {
@@ -251,7 +251,7 @@ public class SmsBrowser extends ModalJFrame {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				new SmsEdit(SmsBrowser.this);
+				new SmsEdit(this);
 				updateModel(dateFrom, dateTo);
 				updateGUI();
 			});
@@ -280,7 +280,7 @@ public class SmsBrowser extends ModalJFrame {
 					try {
 						smsManager.delete(smsList);
 					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1, SmsBrowser.this);
+						OHServiceExceptionUtil.showMessages(e1, this);
 					}
 					updateModel(dateFrom, dateTo);
 					updateGUI();
@@ -294,7 +294,7 @@ public class SmsBrowser extends ModalJFrame {
 		try {
 			smsList = smsManager.getAll(from, to);
 		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e, SmsBrowser.this);
+			OHServiceExceptionUtil.showMessages(e, this);
 		}
 	}
 	

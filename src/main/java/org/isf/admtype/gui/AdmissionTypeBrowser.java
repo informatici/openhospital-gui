@@ -116,7 +116,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 			jNewButton.addActionListener(actionEvent -> {
 				AdmissionType mdsr = new AdmissionType("","");
 				AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame, mdsr, true);
-				newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
+				newrecord.addAdmissionTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -139,7 +139,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 					selectedrow = jTable.getSelectedRow();
 					admissionType = (AdmissionType) (model.getValueAt(selectedrow, -1));
 					AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame, admissionType, false);
-					newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
+					newrecord.addAdmissionTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});

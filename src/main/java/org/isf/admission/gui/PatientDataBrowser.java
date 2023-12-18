@@ -287,17 +287,17 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 				if (selectedObj instanceof Admission) {
 					Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
-					new AdmissionBrowser(PatientDataBrowser.this, admittedPatientWindow, patient, ad);
+					new AdmissionBrowser(this, admittedPatientWindow, patient, ad);
 				} else {
 
 					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 					if (GeneralData.OPDEXTENDED) {
-						OpdEditExtended newrecord = new OpdEditExtended(PatientDataBrowser.this, opd, false);
-						newrecord.addSurgeryListener(PatientDataBrowser.this);
-						newrecord.showAsModal(PatientDataBrowser.this);
+						OpdEditExtended newrecord = new OpdEditExtended(this, opd, false);
+						newrecord.addSurgeryListener(this);
+						newrecord.showAsModal(this);
 					} else {
-						OpdEdit newrecord = new OpdEdit(PatientDataBrowser.this, opd, false);
-						newrecord.addSurgeryListener(PatientDataBrowser.this);
+						OpdEdit newrecord = new OpdEdit(this, opd, false);
+						newrecord.addSurgeryListener(this);
 						newrecord.setVisible(true);
 					}
 				}
@@ -342,7 +342,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 						if (adm.getAdmitted() == 1) {
 							fireDeleteAdmissionUpdated(adm);
 						}
-						PatientDataBrowser.this.requestFocus();
+                        this.requestFocus();
 					}
 				} else {
 					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
@@ -380,7 +380,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 				if (selectedObj instanceof Admission) {
 					Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
 					if (ad.getType().equalsIgnoreCase("M")) {
-						new MalnutritionBrowser(PatientDataBrowser.this, ad);
+						new MalnutritionBrowser(this, ad);
 					}
 					else {
 						MessageDialog.info(null, "angal.admission.theselectedadmissionhasnoconcernwithmalnutrition.msg");

@@ -159,7 +159,7 @@ public class TherapyEntryForm extends JDialog {
 			this.medArray = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e) {
 			this.medArray = new ArrayList<>();
-			OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
+			OHServiceExceptionUtil.showMessages(e, this);
 		}
 		this.therapy = th;
 		this.patID = patID;
@@ -695,18 +695,18 @@ public class TherapyEntryForm extends JDialog {
 				 */
 				LocalDateTime startDate = therapyStartdate.getDateStartOfDay();
 				if (startDate.isBefore(TimeTools.getDateToday0())) {
-					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.atherapycannotbedefinedforadatethatispast.msg");
+					MessageDialog.error(this, "angal.therapy.atherapycannotbedefinedforadatethatispast.msg");
 					return;
 				}
 				LocalDateTime endDate = therapyEndDate;
 				Medical medical = (Medical) medicalsList.getSelectedValue();
 				if (medical == null) {
-					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.selectapharmaceutical");
+					MessageDialog.error(this, "angal.therapy.selectapharmaceutical");
 					return;
 				}
 				Double qty = (Double) jSpinnerQty.getValue();
 				if (qty == 0.) {
-					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero.msg");
+					MessageDialog.error(this, "angal.therapy.pleaseinsertaquantitygreaterthanzero.msg");
 					return;
 				}
 				int therapyID = inserting ? 0 : therapy.getTherapyID();
@@ -720,7 +720,7 @@ public class TherapyEntryForm extends JDialog {
 				try {
 					thRow = therapyManager.getTherapyRow(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
 				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
+					OHServiceExceptionUtil.showMessages(e, this);
 				}
 				setVisible(false);
 

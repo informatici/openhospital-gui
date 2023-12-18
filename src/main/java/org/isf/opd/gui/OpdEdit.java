@@ -329,7 +329,7 @@ public class OpdEdit extends JDialog {
 				if (opd.getDisease() != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease().getCode().equals(elem.getCode())) {
-							MessageDialog.warning(OpdEdit.this,"angal.opd.disease1mayhavebeencancelled.msg");
+							MessageDialog.warning(this,"angal.opd.disease1mayhavebeencancelled.msg");
 							diseaseBox.addItem(elem);
 							diseaseBox.setSelectedItem(elem);
 						}
@@ -369,7 +369,7 @@ public class OpdEdit extends JDialog {
 				if (diseasesAll != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease2().getCode().equals(elem.getCode())) {
-							MessageDialog.warning(OpdEdit.this, "angal.opd.disease2mayhavebeencancelled.msg");
+							MessageDialog.warning(this, "angal.opd.disease2mayhavebeencancelled.msg");
 							diseaseBox2.addItem(elem);
 							diseaseBox2.setSelectedItem(elem);
 						}
@@ -409,7 +409,7 @@ public class OpdEdit extends JDialog {
 				if (diseasesAll != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease3().getCode().equals(elem.getCode())) {
-							MessageDialog.warning(OpdEdit.this, "angal.opd.disease3mayhavebeencancelled.msg");
+							MessageDialog.warning(this, "angal.opd.disease3mayhavebeencancelled.msg");
 							diseaseBox3.addItem(elem);
 							diseaseBox3.setSelectedItem(elem);
 						}
@@ -486,7 +486,7 @@ public class OpdEdit extends JDialog {
 						// visit date
 						LocalDateTime localDateTime = opdDateField.getLocalDateTime();
 						if (localDateTime == null) {
-							MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertattendancedate.msg");
+							MessageDialog.error(this, "angal.opd.pleaseinsertattendancedate.msg");
 							return;
 						}
 						visitDate = localDateTime;

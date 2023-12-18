@@ -247,7 +247,7 @@ public class ExamEdit extends JDialog {
 					if (insert) {
 						try {
 							if (examBrowsingManager.isKeyPresent(exam)) {
-								MessageDialog.error(ExamEdit.this, "angal.exa.changethecodebecauseisalreadyinuse");
+								MessageDialog.error(this, "angal.exa.changethecodebecauseisalreadyinuse");
 								return;
 							}
 						} catch (OHServiceException e1) {

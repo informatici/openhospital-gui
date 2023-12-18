@@ -557,7 +557,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 					new GenericReportOpd(opd.getCode(), opd.getPatient().getCode(), GeneralData.OPDCHART);
 				} else {
-					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.pleaseselectanopd.msg");
+					MessageDialog.error(this, "angal.admission.patientfolder.pleaseselectanopd.msg");
 				}
 			});
 		}
@@ -581,12 +581,12 @@ public class PatientFolderBrowser extends ModalJFrame
 
 					Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 					if (adm.getDisDate() == null) {
-						MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.thepatientisnotyetdischarged.msg");
+						MessageDialog.error(this, "angal.admission.patientfolder.thepatientisnotyetdischarged.msg");
 						return;
 					}
 					new GenericReportDischarge(adm.getId(), adm.getPatient().getCode(), GeneralData.DISCHART);
 				} else {
-					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
+					MessageDialog.error(this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
 				}
 			});
 		}
@@ -611,7 +611,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 					new GenericReportAdmission(adm.getId(), adm.getPatient().getCode(), GeneralData.ADMCHART);
 				} else {
-					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
+					MessageDialog.error(this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
 				}
 			});
 		}
@@ -624,10 +624,10 @@ public class PatientFolderBrowser extends ModalJFrame
 			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
 			launchReportButton.addActionListener(actionEvent -> {
 				if (fromDate == null) {
-					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.nodatatoshow.msg");
+					MessageDialog.error(this, "angal.admission.patientfolder.nodatatoshow.msg");
 					return;
 				}
-				new PatientFolderReportModal(PatientFolderBrowser.this, patient.getCode(), fromDate.toLocalDate(), LocalDate.now(), "ALL");
+				new PatientFolderReportModal(this, patient.getCode(), fromDate.toLocalDate(), LocalDate.now(), "ALL");
 			});
 		}
 		return launchReportButton;
@@ -638,7 +638,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			dicomButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.dicom.btn"));
 			dicomButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.dicom.btn.key"));
 			dicomButton.addActionListener(actionEvent -> {
-				DicomGui dg = new DicomGui(patient, PatientFolderBrowser.this);
+				DicomGui dg = new DicomGui(patient, this);
 				dg.showAsModal(this);
 			});
 		}
