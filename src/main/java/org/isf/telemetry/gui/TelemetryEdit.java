@@ -243,7 +243,7 @@ public class TelemetryEdit extends ModalJFrame {
 						}
 					} catch (RuntimeException | OHException f) {
 						LOGGER.error("Something strange happened: " + f.getMessage());
-						LOGGER.error(f.getMessage(), f);
+						LOGGER.debug(f.getMessage(), f);
 					}
 				} else {
 					Telemetry telemetry = telemetryManager.disable(new HashMap<>());
