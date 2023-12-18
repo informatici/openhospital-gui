@@ -214,7 +214,6 @@ public class TelemetryEdit extends ModalJFrame {
 	 */
 	private ActionListener buildConfirmationActionListener(List<CheckBoxWrapper> checkboxes,
 					TelemetryManager telemetryManager, TelemetryUtils telemetryUtils) {
-		JPanel panel = this.panel;
 		return new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
