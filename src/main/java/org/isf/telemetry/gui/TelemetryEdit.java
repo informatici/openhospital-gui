@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -75,6 +76,8 @@ public class TelemetryEdit extends ModalJFrame {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TelemetryEdit.class);
 
+	private static final String HTML_BODY_P_UNDERLINE_OPEN = "<html><body><p><u>";
+	private static final String HTML_BODY_P_UNDERLINE_CLOSE = "</u></p></body></html>";
 	private static final String KEY_TELEMETRY_TITLE = "angal.telemetry.title";
 	private static final String KEY_TELEMETRY_ABOUT = "angal.telemetry.about.txt";
 	private static final String KEY_TELEMETRY_INFO = "angal.telemetry.info";
@@ -88,7 +91,6 @@ public class TelemetryEdit extends ModalJFrame {
 	private static final String KEY_TELEMETRY_CONFIRMATION_DIALOG_MESSAGE = "angal.telemetry.confirmation.dialog.message";
 
 	private EventListenerList telemetryListeners = new EventListenerList();
-	private JPanel panel;
 	private TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
 	private TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
 	private boolean firstTime = false;
@@ -119,15 +121,16 @@ public class TelemetryEdit extends ModalJFrame {
 		JButton disableButton = buildDisableButton();
 		JButton closeButton = buildCloseButton();
 		boolean enabled = telemetry != null && telemetry.getOptoutDate() == null;
-		this.panel = this.makePanel(checkboxes, confirmButton, askMeLaterButton, disableNeverAskButton, disableButton, closeButton,
+		JPanel panel = this.makePanel(checkboxes, confirmButton, askMeLaterButton, disableNeverAskButton, disableButton, closeButton,
 						enabled);
-		add(this.panel);
+		add(panel);
 		pack();
 
 		setTitle(MessageBundle.getMessage(KEY_TELEMETRY_TITLE));
 		setResizable(false);
-		setSize(new Dimension(850, 400));
+		// setSize(new Dimension(600, 400));
 		setLocationRelativeTo(null);
+		pack();
 		setVisible(true);
 	}
 
@@ -288,18 +291,17 @@ public class TelemetryEdit extends ModalJFrame {
 				Object[] cols = { "Key", "Value" };
 				JTable table = new JTable(rows, cols);
 				table.setSize(new Dimension(450, 200));
-				String message = MessageBundle.getMessage(KEY_TELEMETRY_CONFIRMATION_DIALOG_MESSAGE);
 
-				Label lb = new Label(message);
-				JScrollPane scrollableTable = new JScrollPane(table);
+				Label confirmMessage = new Label(MessageBundle.getMessage(KEY_TELEMETRY_CONFIRMATION_DIALOG_MESSAGE));
+				JScrollPane scrollTable = new JScrollPane(table);
 
 				JPanel buttonPane = new JPanel();
-				buttonPane.add(lb);
-				buttonPane.add(scrollableTable);
+				buttonPane.add(confirmMessage);
+				buttonPane.add(scrollTable);
 
 				String title = MessageBundle.getMessage(KEY_TELEMETRY_TITLE);
 
-				int result = JOptionPane.showConfirmDialog(panel, buttonPane, title, JOptionPane.YES_NO_OPTION,
+				int result = JOptionPane.showConfirmDialog(TelemetryEdit.this, buttonPane, title, JOptionPane.YES_NO_OPTION,
 								JOptionPane.OK_CANCEL_OPTION);
 				LOGGER.debug("Dialog result: {}", result);
 				return result;
@@ -390,16 +392,15 @@ public class TelemetryEdit extends ModalJFrame {
 		panel.add(makeTextArea(KEY_TELEMETRY_ABOUT));
 		panel.add(makeTextArea(KEY_TELEMETRY_INFO));
 		panel.add(makeTextArea(KEY_TELEMETRY_BODY));
-
 		checkboxes.forEach(chb -> {
 			panel.add(chb.getCheckbox());
 		});
 		panel.add(buildCheckBoxAgreement(enabled));
+		panel.add(Box.createRigidArea(new Dimension(50, 50))); // workaround to resolve tightest pack()
 
-		SpringUtilities.makeCompactGrid(panel, checkboxes.size() + 5, 1, 5, 5, 5, 5);
+		SpringUtilities.makeCompactGrid(panel, panel.getComponentCount(), 1, 5, 5, 5, 5);
 
 		JPanel buttons = new JPanel();
-		// buttons.setLayout(new FlowLayout());
 		buttons.add(confirmButton);
 		if (firstTime) {
 			buttons.add(askMeLaterButton);
@@ -420,7 +421,10 @@ public class TelemetryEdit extends ModalJFrame {
 
 	private JCheckBox buildCheckBoxAgreement(boolean enabled) {
 		if (agreementCheckbox == null) {
-			agreementCheckbox = new JCheckBox(MessageBundle.getMessage(KEY_TELEMETRY_CHECKBOX));
+			StringBuilder agreementText = new StringBuilder(HTML_BODY_P_UNDERLINE_OPEN)
+							.append(MessageBundle.getMessage(KEY_TELEMETRY_CHECKBOX))
+							.append(HTML_BODY_P_UNDERLINE_CLOSE);
+			agreementCheckbox = new JCheckBox(agreementText.toString());
 			agreementCheckbox.setSelected(enabled);
 		}
 		return agreementCheckbox;
