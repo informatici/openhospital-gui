@@ -76,7 +76,7 @@ public class TelemetryEdit extends ModalJFrame {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TelemetryEdit.class);
 
 	private static final String KEY_TELEMETRY_TITLE = "angal.telemetry.title";
-	private static final String KEY_TELEMETRY_ABOUT = "angal.telemetry.about";
+	private static final String KEY_TELEMETRY_ABOUT = "angal.telemetry.about.txt";
 	private static final String KEY_TELEMETRY_INFO = "angal.telemetry.info";
 	private static final String KEY_TELEMETRY_BODY = "angal.telemetry.body";
 	private static final String KEY_TELEMETRY_CHECKBOX = "angal.telemetry.checkbox.label";
