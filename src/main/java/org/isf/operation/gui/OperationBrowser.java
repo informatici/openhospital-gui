@@ -191,14 +191,15 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			} else {
 				Operation operation = (Operation) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg", operation.getDescription());
-				try {
-					if ((answer == JOptionPane.YES_OPTION) && (operationBrowserManager.deleteOperation(operation))) {
+				if (answer == JOptionPane.YES_OPTION) {
+					try {
+						operationBrowserManager.deleteOperation(operation);
 						pOperation.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
 					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
 				}
 			}
 		});
