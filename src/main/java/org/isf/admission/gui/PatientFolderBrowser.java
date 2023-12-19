@@ -88,7 +88,6 @@ import org.isf.utils.table.TableSorter;
 import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
-import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -700,11 +699,6 @@ public class PatientFolderBrowser extends ModalJFrame
 			}
 			try {
 				disease = diseaseBrowserManager.getDiseaseAll();
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			}
-			try {
-				List<Ward> ward = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
