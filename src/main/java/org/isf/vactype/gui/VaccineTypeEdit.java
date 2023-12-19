@@ -46,12 +46,7 @@ import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
 /**
- * ------------------------------------------
  * VaccineTypeEdit - Edit/new a vaccine type
- * -----------------------------------------
- * modification history
- * 19/10/2011 - Cla - version is now 1.0
- * ------------------------------------------
  */
 public class VaccineTypeEdit extends JDialog {
 

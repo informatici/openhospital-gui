@@ -75,6 +75,7 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
+import org.isf.opd.gui.OpdEditExtended.SurgeryListener;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.patient.model.Patient;
@@ -89,28 +90,9 @@ import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
 /**
- * ------------------------------------------
  * OpdBrowser - list all OPD. Let the user select an opd to edit or delete
- * -----------------------------------------
- * modification history
- * 11/12/2005 - Vero, Rick  - first beta version
- * 07/11/2006 - ross - renamed from Surgery
- *                   - changed confirm delete message
- * 			         - version is now 1.0
- *    12/2007 - isf bari - multilanguage version
- * 			         - version is now 1.2
- * 21/06/2008 - ross - fixed getFilterButton method, need compare to translated string "female" to get correct filter
- *                   - displayed visitdate in the grid instead of opdDate (=system date)
- *                   - fixed "todate" bug (in case of 31/12: 31/12/2008 became 1/1/2008)
- * 			         - version is now 1.2.1
- * 09/01/2009 - fabrizio - Column full name appears only in OPD extended. Better formatting of OPD date.
- *                         Age column justified to the right. Cosmetic changed to code style.
- * 13/02/2009 - alex - fixed variable visibility in filtering mechanism
- * 06/02/2020 - alex - added search field for diseases
- *                   - version is now 1.2.2
- * ------------------------------------------
  */
-public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, OpdEditExtended.SurgeryListener {
+public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, SurgeryListener {
 
 	private static final long serialVersionUID = 2372745781159245861L;
 

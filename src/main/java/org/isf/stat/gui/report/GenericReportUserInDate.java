@@ -33,14 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * --------------------------------------------------------
  * GenericReportUserInDate
  *  - launch a particular user report
  * 	- the class expects initialization through dadata, adata, user, report name (without .jasper)
- * ---------------------------------------------------------
- * modification history
- * 06/12/2011 - first version
- * -----------------------------------------------------------------
  */
 public class GenericReportUserInDate extends DisplayReport {
 

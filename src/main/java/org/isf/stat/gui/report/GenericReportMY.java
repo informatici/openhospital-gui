@@ -35,13 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * --------------------------------------------------------
- * GenericReportLauncerMY - launch all the reports that have as parameters year and month
- * 							the class expects initialization through year, month, report name (without .jasper)
- * ---------------------------------------------------------
- * modification history
- * 11/11/2006 - first version
- * -----------------------------------------------------------------*/
+ * GenericReportMY - launch all the reports that have as parameters year and month
+ * 				     the class expects initialization through year, month, report name (without .jasper)
+-*/
 public class GenericReportMY extends DisplayReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportMY.class);

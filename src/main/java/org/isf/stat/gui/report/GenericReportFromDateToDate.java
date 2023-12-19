@@ -38,14 +38,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * --------------------------------------------------------
  * GenericReportFromDateToDate
  *  - launch all reports that have "from date" "to date" as parameters
  * 	- the class expects initialization through dadata, adata, name of the report (without .jasper)
- * ---------------------------------------------------------
- * modification history
- * 09/06/2007 - first version
- * -----------------------------------------------------------------
  */
 public class GenericReportFromDateToDate extends DisplayReport {
 

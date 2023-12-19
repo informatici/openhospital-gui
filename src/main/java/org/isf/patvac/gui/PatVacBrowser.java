@@ -71,15 +71,7 @@ import org.isf.vactype.model.VaccineType;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * ------------------------------------------
  * PatVacBrowser - list all patient's vaccines
- * -----------------------------------------
- * modification history
- * 25/08/2011 - claudia - first beta version
- * 25/10/2011 - claudia - modify selection section
- * 14/11/2011 - claudia - eliminated @override tag
- *                      - inserted ENHANCEDSEARCH functionality on search
- * ------------------------------------------
  */
 public class PatVacBrowser extends ModalJFrame {
 
