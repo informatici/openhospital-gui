@@ -86,6 +86,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	public static final String ADMIN_STR = "admin";
 	private boolean flag_Xmpp;
 	private boolean flag_Sms;
+	private boolean flag_Telemetry;
 	private TelemetryDaemon telemetryDaemon;
 	// used to understand if a module is enabled
 	private Map<String, Boolean> activableModules;
@@ -169,6 +170,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				Thread thread = new Thread(new SmsSender());
 				thread.start();
 			}
+			flag_Telemetry = GeneralData.TELEMETRYENABLED;
+			if (flag_Telemetry) {
+				runTelemetry();
+			}
 		} catch (Exception e) {
 			singleUser = true; // default for property not found
 			internalPharmacies = false; // default for property not found
@@ -196,10 +201,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				// Login failed
 				actionExit(2);
 			}
-		}
-
-		if (GeneralData.TELEMETRYENABLED) {
-			runTelemetry();
 		}
 
 		MDC.put("OHUser", myUser.getUserName());
@@ -289,6 +290,17 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				myMenu.remove(umi);
 			}
 		}
+		if (!flag_Telemetry) { // remove Telemetry Manager if not enabled
+			List<UserMenuItem> junkMenu = new ArrayList<>();
+			for (UserMenuItem umi : myMenu) {
+				if ("telemetry".equalsIgnoreCase(umi.getCode())) {
+					junkMenu.add(umi);
+				}
+			}
+			for (UserMenuItem umi : junkMenu) {
+				myMenu.remove(umi);
+			}
+		}
 
 		// if not internalPharmacies mode remove "medicalsward" menu
 		if (!internalPharmacies) {
@@ -370,7 +382,12 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 		// start telemetry daemon
 		this.telemetryDaemon = TelemetryDaemon.getTelemetryDaemon();
-		telemetryDaemon.start();
+		if (telemetryDaemon.isInitialized()) {
+			telemetryDaemon.start();
+		} else {
+			flag_Telemetry = false;
+		}
+
 	}
 
 	private void actionExit(int status) {
