@@ -80,19 +80,7 @@ import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 
 /**
- * ------------------------------------------
  * LabEdit - Add/edit a laboratory exam
- * -----------------------------------------
- * modification history
- * 02/03/2006 - Davide - first beta version
- * 03/11/2006 - ross - changed title, enlarged window
- *                   - changed note from textfield to textarea
- * 			         - version is now 1.0
- * 08/11/2006 - ross - added age, sex, exam date, material
- *                   - added editing capability
- * 18/08/2008 - Teo  - Add scroll capabilities at note JTextArea
- * 13/02/2009 - Alex - add calendar
- * ------------------------------------------
  */
 public class LabEdit extends ModalJFrame {
 
@@ -322,7 +310,7 @@ public class LabEdit extends ModalJFrame {
 			if (!insert) {
 				inPatientCheckBox.setSelected(lab.getInOutPatient().equalsIgnoreCase("I"));
 			}
-			lab.setInOutPatient((inPatientCheckBox.isSelected() ? "I" : "R"));
+			lab.setInOutPatient(inPatientCheckBox.isSelected() ? "I" : "R");
 		}
 		return inPatientCheckBox;
 	}
@@ -522,7 +510,7 @@ public class LabEdit extends ModalJFrame {
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
 				lab.setNote(noteTextArea.getText());
-				lab.setInOutPatient((inPatientCheckBox.isSelected() ? "I" : "O"));
+				lab.setInOutPatient(inPatientCheckBox.isSelected() ? "I" : "O");
 				lab.setPatient(patSelected);
 				lab.setPatName(patTextField.getText());
 				// lab.setStatus(LaboratoryStatus.DONE.toString()); status remains unchanged

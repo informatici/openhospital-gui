@@ -55,6 +55,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.admission.gui.AdmissionBrowser.AdmissionListener;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.dicom.gui.DicomGui;
@@ -73,7 +74,7 @@ import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.operation.gui.OperationList;
 import org.isf.patient.gui.PatientInsert;
-import org.isf.patient.gui.PatientInsertExtended;
+import org.isf.patient.gui.PatientInsertExtended.PatientListener;
 import org.isf.patient.gui.PatientSummary;
 import org.isf.patient.model.Patient;
 import org.isf.stat.gui.report.GenericReportAdmission;
@@ -93,23 +94,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class shows patient data and the list of admissions and lab exams.
- * <p>
- * last release  jun-14-08
- * @author chiara
- *
- * ----------------------------------------------------------
- * modification history
- * ====================
- * 14/06/08 - chiara - first version
- * <p>
- * 30/06/08 - fabrizio - implemented automatic selection of exams within the admission period
- * 05/09/08 - alessandro - second version:
- * 						 - same PatientSummary than PatientDataBrowser
- * 						 - includes OPD in the table
- * -----------------------------------------------------------
  */
 public class PatientFolderBrowser extends ModalJFrame
-		implements PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener {
+		implements PatientInsert.PatientListener, PatientListener, AdmissionListener {
 
 	private static final long serialVersionUID = -3427327158197856822L;
 

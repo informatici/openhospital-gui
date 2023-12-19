@@ -63,6 +63,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.accounting.gui.PatientBillEdit;
+import org.isf.admission.gui.AdmissionBrowser.AdmissionListener;
+import org.isf.admission.gui.PatientDataBrowser.DeleteAdmissionListener;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.admission.model.AdmittedPatient;
@@ -90,6 +92,7 @@ import org.isf.opd.gui.OpdEditExtended;
 import org.isf.opd.model.Opd;
 import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsertExtended;
+import org.isf.patient.gui.PatientInsertExtended.PatientListener;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.therapy.gui.TherapyEdit;
@@ -114,31 +117,9 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
  * add a new patient, edit or delete an existing patient record
  * view extended data of a selected patient
  * add an admission record (or modify existing admission record, or set a discharge) of a selected patient
- * <p>
- * release 2.2 oct-23-06
- *
- * @author flavio
- * ----------------------------------------------------------
- * modification history
- * ====================
- * 23/10/06 - flavio - lastKey reset
- * 10/11/06 - ross - removed from the list the deleted patients
- *                   the list is now in alphabetical  order (modified IoOperations)
- * 12/08/08 - alessandro - Patient Extended
- * 01/01/09 - Fabrizio   - The OPD button is conditioned to the extended functionality of OPD.
- *                         Reorganized imports.
- * 13/02/09 - Alex - Search Key extended to patient code & notes
- * 29/05/09 - Alex - fixed mnemonic keys for Admission, OPD and PatientSheet
- * 14/10/09 - Alex - optimized searchkey algorithm and cosmetic changes to the code
- * 02/12/09 - Alex - search field get focus at begin and after Patient delete/update
- * 03/12/09 - Alex - added new button for merging double registered patients histories
- * 05/12/09 - Alex - fixed exception on filter after saving admission
- * 06/12/09 - Alex - fixed exception on filter after saving admission (ALL FILTERS)
- * 06/12/09 - Alex - Cosmetic changes to GUI
- * -----------------------------------------------------------
  */
-public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert.PatientListener, PatientInsertExtended.PatientListener,
-				AdmissionBrowser.AdmissionListener, PatientDataBrowser.DeleteAdmissionListener {
+public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert.PatientListener, PatientListener,
+				AdmissionListener, DeleteAdmissionListener {
 
 	private static final long serialVersionUID = 1L;
 
