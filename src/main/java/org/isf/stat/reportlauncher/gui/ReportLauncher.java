@@ -72,15 +72,8 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
- * --------------------------------------------------------
  * ReportLauncher - launch all the reports that have as parameters year and month
  * 					the class expects the initialization through year, month, name of the report (without .jasper)
- * ---------------------------------------------------------
- * modification history
- * 01/01/2006 - rick - first version. launches HMIS1081 and HMIS1081
- * 11/11/2006 - ross - rendered generic (ad angal)
- * 16/11/2014 - eppesuig - show WAIT_CURSOR during generateReport()
- * -----------------------------------------------------------------
  */
 public class ReportLauncher extends ModalJFrame {
 
@@ -245,7 +238,7 @@ public class ReportLauncher extends ModalJFrame {
 				for (File f : jasperFilesInFolder) {
 					try {
 						Properties props = ConfigurationProperties.loadPropertiesFile(
-										f.getName().replace(".jasper", '_' + (new Locale(GeneralData.LANGUAGE)).getLanguage() + ".properties"), LOGGER);
+										f.getName().replace(".jasper", '_' + new Locale(GeneralData.LANGUAGE).getLanguage() + ".properties"), LOGGER);
 
 						if (props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
 							reportNameFileMap.put(props.getProperty("jTitle"), f);
@@ -411,7 +404,7 @@ public class ReportLauncher extends ModalJFrame {
 				}
 			} else {
 				int month = jMonthComboBox.getSelectedIndex() + 1;
-				int year = (Integer.parseInt((String) jYearComboBox.getSelectedItem()));
+				int year = Integer.parseInt((String) jYearComboBox.getSelectedItem());
 
 				new GenericReportMY(month, year,
 								folderNameFileNameMap.get("rpt_stat").contains(

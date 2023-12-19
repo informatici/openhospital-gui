@@ -50,11 +50,6 @@ import org.isf.vactype.model.VaccineType;
 
 /**
  * This class allow vaccines edits and inserts
- *
- * @author Eva
- *
- * modification history
- *  20/10/2011 - Cla - insert vaccinetype managment
  */
 public class VaccineEdit extends JDialog {
 

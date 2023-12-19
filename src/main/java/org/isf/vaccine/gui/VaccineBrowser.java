@@ -42,6 +42,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.vaccine.gui.VaccineEdit.VaccineListener;
 import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
@@ -50,13 +51,8 @@ import org.isf.vactype.model.VaccineType;
 /**
  * This class shows a list of vaccines.
  * It is possible to edit-insert-delete records
- *
- * @author Eva
- * 
- * modification history
- * 20/10/2011 - Cla - insert vaccinetype managment
  */
-public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineListener {
+public class VaccineBrowser extends ModalJFrame implements VaccineListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
