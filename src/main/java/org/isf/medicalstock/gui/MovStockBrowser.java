@@ -102,16 +102,8 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * ------------------------------------------
  * MovStockBrowser - list medicals movement. let the user search for movements
  * 					  and insert a new movements
- * -----------------------------------------
- * modification history
- * 30/03/2006 - Theo - first beta version
- * 03/11/2006 - ross - changed title, removed delete all button
- *                   - corrected an error in datetextfield class (the month displayed in the filter was -1
- * 			         - version is now  1.0
- * ------------------------------------------
  */
 public class MovStockBrowser extends ModalJFrame {
 

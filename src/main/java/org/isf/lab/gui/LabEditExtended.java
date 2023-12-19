@@ -80,11 +80,8 @@ import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 
-/** ------------------------------------------
+/**
  * LabEditExtended - Add/edit a laboratory exam
- * -----------------------------------------
- * modification history
- * ------------------------------------------
  */
 public class LabEditExtended extends ModalJFrame {
 

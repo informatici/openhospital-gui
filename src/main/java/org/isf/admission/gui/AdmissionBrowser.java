@@ -47,6 +47,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -118,26 +119,6 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 /**
  * This class shows essential patient data and allows to create an admission
  * record or modify an existing one.
- * <p>
- * release 2.5 nov-10-06
- *
- * @author flavio
- * ----------------------------------------------------------
- * modification history
- * ====================
- * 23/10/06 - flavio - borders set to not resizable
- *                     changed Disease IN (/OUT) into Dignosis IN (/OUT)
- * <p>
- * 10/11/06 - ross - added RememberDate for admission Date
- * 				   - only diseses with flag In Patient (IPD) are displayed
- *                 - on Insert. in edit all are displayed
- *                 - the correct way should be to display the IPD + the one aready registered
- * 18/08/08 - Alex/Andrea - Calendar added
- * 13/02/09 - Alex - Cosmetic changes to UI
- * 10/01/11 - Claudia - insert ward beds availability
- * 01/01/11 - Alex - GUI and code reengineering
- * 29/12/11 - Nicola - insert alert IN/OUT patient for communication module
- * -----------------------------------------------------------
  */
 public class AdmissionBrowser extends ModalJFrame {
 
@@ -618,7 +599,7 @@ public class AdmissionBrowser extends ModalJFrame {
 							.addGroup(layout.createParallelGroup(LEADING)
 											.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 											.addComponent(getDeliveryTypePanel()))
-							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+							.addGroup(layout.createParallelGroup(Alignment.TRAILING)
 											.addComponent(getTreatmentPanel())
 											.addComponent(getDeliveryResultTypePanel())
 											.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
@@ -1638,7 +1619,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					MessageDialog.error(this, "angal.admission.pleaseselectavalidward.msg");
 					return;
 				}
-				admission.setWard((Ward) (wardBox.getSelectedItem()));
+				admission.setWard((Ward) wardBox.getSelectedItem());
 				if (admission.getWard().getCode().equalsIgnoreCase("M")) {
 					isPregnancy = true;
 				}
