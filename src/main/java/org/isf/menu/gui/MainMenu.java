@@ -170,10 +170,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				Thread thread = new Thread(new SmsSender());
 				thread.start();
 			}
-			flag_Telemetry = GeneralData.TELEMETRYENABLED;
-			if (flag_Telemetry) {
-				runTelemetry();
-			}
 		} catch (Exception e) {
 			singleUser = true; // default for property not found
 			internalPharmacies = false; // default for property not found
@@ -201,6 +197,11 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				// Login failed
 				actionExit(2);
 			}
+		}
+
+		flag_Telemetry = GeneralData.TELEMETRYENABLED;
+		if (flag_Telemetry) {
+			runTelemetry();
 		}
 
 		MDC.put("OHUser", myUser.getUserName());
