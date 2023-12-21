@@ -33,7 +33,9 @@ import org.isf.menu.gui.MainMenu;
 import org.isf.sessionaudit.model.UserSession;
 
 public class RestartUserSession extends UserSession {
-
+	
+	private static final int LOGIN_FAILED = 2;
+	
 	public static void restartSession() {
 		List<Window> windows = Arrays.asList(Window.getWindows());
 		Runnable waitRunner = () -> {
