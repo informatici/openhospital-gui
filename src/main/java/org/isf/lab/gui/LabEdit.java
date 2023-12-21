@@ -368,8 +368,6 @@ public class LabEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			examComboBox = ExamComboBox.withExamsAndExamFromLaboratorySelected(exams, lab, insert);
-			examSelected = examComboBox.getSelectedExam().orElse(null);
-
 			examComboBox.addActionListener(actionEvent -> examComboBox.getSelectedExam().ifPresent(exam -> {
 				examSelected = exam;
 
@@ -604,7 +602,7 @@ public class LabEdit extends ModalJFrame {
 
 		if (insert) {
 			if (null != eRows) {
-				eRows.forEach(r -> resultPanel.add(ExamRowSubPanel.forExamRow(r)));
+				eRows.forEach(r -> innerPanel.add(ExamRowSubPanel.forExamRow(r)));
 			}
 		} else {
 			List<LaboratoryRow> lRows;
