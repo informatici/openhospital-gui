@@ -36,8 +36,8 @@ import javax.swing.SwingUtilities;
 import org.isf.generaldata.GeneralData;
 import org.isf.session.LogoutEventListener;
 import org.isf.session.SessionRefreshTimerRunnable;
-import org.isf.session.UserSession;
-import org.isf.utils.jobjects.DelayTimer;
+import org.isf.sessionaudit.model.UserSession;
+import org.isf.utils.time.DelayTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

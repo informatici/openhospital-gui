@@ -25,14 +25,15 @@ import java.awt.AWTEvent;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 
-import org.isf.utils.jobjects.DelayTimerCallback;
+import org.isf.sessionaudit.model.UserSession;
+import org.isf.utils.time.DelayTimerCallback;
 
 public class LogoutEventListener implements DelayTimerCallback, AWTEventListener {
 
 	@Override
 	public void trigger() {
 		if (UserSession.isLoggedIn()) {
-			UserSession.restartSession();
+			RestartUserSession.restartSession();
 		}
 	}
 
