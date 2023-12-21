@@ -35,8 +35,8 @@ import javax.swing.SwingUtilities;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.session.LogoutEventListener;
+import org.isf.session.RestartUserSession;
 import org.isf.session.SessionRefreshTimerRunnable;
-import org.isf.sessionaudit.model.UserSession;
 import org.isf.utils.time.DelayTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,11 +93,11 @@ class SplashWindow3 extends JWindow {
 
 	private void startLogoutTimer(MainMenu mainMenu) {
 		new Thread(new SessionRefreshTimerRunnable()).start();
-		if (UserSession.getTimer() != null) {
-			UserSession.getTimer().quit();
+		if (RestartUserSession.getTimer() != null) {
+			RestartUserSession.getTimer().quit();
 		}
-		UserSession.setTimer(new DelayTimer(new LogoutEventListener(), GeneralData.SESSIONTIMEOUT * 1000 * 60));
-		UserSession.getTimer().startTimer();
+		RestartUserSession.setTimer(new DelayTimer(new LogoutEventListener(), GeneralData.SESSIONTIMEOUT * 1000 * 60));
+		RestartUserSession.getTimer().startTimer();
 	}
 
 }
