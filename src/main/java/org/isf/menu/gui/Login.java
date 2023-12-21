@@ -49,7 +49,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
-import org.isf.sessionaudit.model.UserSession;
+import org.isf.session.RestartUserSession;
 import org.isf.utils.db.BCrypt;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -206,7 +206,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				}
 				fireLoginInserted(user);
 				removeLoginListener(parent);
-				UserSession.setUser(user);
+				RestartUserSession.setUser(user);
 				dispose();
 				return;
 			}
