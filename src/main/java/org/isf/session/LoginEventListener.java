@@ -32,8 +32,8 @@ public class LoginEventListener implements Login.LoginListener {
 	public void loginInserted(AWTEvent e) {
 		if (e.getSource() instanceof User) {
 			User myUser = (User) e.getSource();
-			UserSession.setUser(myUser);
-			UserSession.getTimer().startTimer();
+			RestartUserSession.setUser(myUser);
+			RestartUserSession.getTimer().startTimer();
 		}
 
 	}
