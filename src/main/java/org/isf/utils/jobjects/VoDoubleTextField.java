@@ -35,9 +35,9 @@ import javax.swing.text.PlainDocument;
 public class VoDoubleTextField extends JTextField {
 
 	private static final long serialVersionUID = 1L;
-    private static final Pattern ALPHA_NUMERIC_PATTERN = Pattern.compile("^[a-zA-Z0-9]*$");
+	private static final Pattern ALPHA_NUMERIC_PATTERN = Pattern.compile("^[a-zA-Z0-9]*$");
 
-    /**
+	/**
 	 * @param defval - default value
 	 * @param columns - number of columns to show
 	 */

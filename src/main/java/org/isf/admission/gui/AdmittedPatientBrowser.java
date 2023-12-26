@@ -125,9 +125,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	private static final long serialVersionUID = 1L;
 
 	private static final int PANEL_WIDTH = 240;
-    private static final Pattern DIGIT_PATTERN = Pattern.compile("\\d+");
+	private static final Pattern DIGIT_PATTERN = Pattern.compile("\\d+");
 
-    private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
+	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 
 	private String[] patientClassItems = { MessageBundle.getMessage("angal.common.all.txt"), MessageBundle.getMessage("angal.admission.admitted.txt"),
 			MessageBundle.getMessage("angal.admission.notadmitted.txt") };

@@ -66,9 +66,9 @@ import org.isf.utils.time.TimeTools;
 public class SmsEdit extends JDialog implements SelectionListener {
 
 	private static final long serialVersionUID = 1L;
-    private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
+	private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
 
-    private JPanel jCenterPanel;
+	private JPanel jCenterPanel;
 	private JPanel jButtonPanel;
 	private JPanel jNorthPanel;
 	private JTextField jNumberTextField;
