@@ -77,7 +77,7 @@ public class UserSession {
 			try {
 				SwingUtilities.invokeAndWait(() -> {
 
-					UserSession.removeUser();
+					removeUser();
 
 					JFrame tmpJFrame = new JFrame();
 
@@ -87,7 +87,7 @@ public class UserSession {
 
 					new Login(tmpJFrame);
 
-					if (!UserSession.isLoggedIn()) {
+					if (!isLoggedIn()) {
 						System.exit(LOGIN_FAILED);
 					}
 
