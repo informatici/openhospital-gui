@@ -23,10 +23,10 @@ package org.isf.session;
 
 import java.awt.AWTEvent;
 
-import org.isf.menu.gui.Login;
+import org.isf.menu.gui.Login.LoginListener;
 import org.isf.menu.model.User;
 
-public class LoginEventListener implements Login.LoginListener {
+public class LoginEventListener implements LoginListener {
 
 	@Override
 	public void loginInserted(AWTEvent e) {

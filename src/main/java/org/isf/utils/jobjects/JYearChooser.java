@@ -34,7 +34,7 @@ public class JYearChooser extends JSpinner {
 		SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
 		spinnerDateModel.setCalendarField(Calendar.YEAR);
 		setModel(spinnerDateModel);
-		setEditor(new JSpinner.DateEditor(this, "yyyy"));
+		setEditor(new DateEditor(this, "yyyy"));
 		setPreferredSize(new Dimension(60, getPreferredSize().height));
 	}
 

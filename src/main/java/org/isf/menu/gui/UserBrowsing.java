@@ -40,6 +40,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.gui.UserEdit.UserListener;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
@@ -50,7 +51,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
-public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
+public class UserBrowsing extends ModalJFrame implements UserListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String ALL_STR = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();

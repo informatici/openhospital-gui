@@ -42,6 +42,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.ward.gui.WardEdit.WardListener;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
@@ -53,7 +54,7 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
  * 
  * @author Rick
  */
-public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
+public class WardBrowser extends ModalJFrame implements WardListener {
 
 	private static final long serialVersionUID = 1L;
 
