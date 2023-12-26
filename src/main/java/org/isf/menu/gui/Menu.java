@@ -118,7 +118,7 @@ public class Menu {
 			Object value = UIManager.get(key);
 			if (value instanceof FontUIResource) {
 				UIManager.put(key, f);
-            }
+			}
 		}
 	}
 
