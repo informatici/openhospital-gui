@@ -31,6 +31,7 @@ import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -65,8 +66,9 @@ import org.isf.utils.time.TimeTools;
 public class SmsEdit extends JDialog implements SelectionListener {
 
 	private static final long serialVersionUID = 1L;
+    private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
 
-	private JPanel jCenterPanel;
+    private JPanel jCenterPanel;
 	private JPanel jButtonPanel;
 	private JPanel jNorthPanel;
 	private JTextField jNumberTextField;
@@ -231,7 +233,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jOkButton.addActionListener(actionEvent -> {
-				String number = jNumberTextField.getText().replaceAll(" ", "").trim();
+				String number = SPACE_PATTERN.matcher(jNumberTextField.getText()).replaceAll("").trim();
 				String text = jTextArea.getText();
 				LocalDateTime schedDate = jSchedDateChooser.getLocalDateTime();
 				if (schedDate == null) {
