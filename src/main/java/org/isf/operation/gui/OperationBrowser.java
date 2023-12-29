@@ -42,6 +42,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.operation.gui.OperationEdit.OperationListener;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.opetype.manager.OperationTypeBrowserManager;
@@ -57,7 +58,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Rick, Vero, Pupo
  */
-public class OperationBrowser extends ModalJFrame implements OperationEdit.OperationListener {
+public class OperationBrowser extends ModalJFrame implements OperationListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();

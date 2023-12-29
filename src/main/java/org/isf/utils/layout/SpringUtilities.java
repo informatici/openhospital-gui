@@ -26,6 +26,7 @@ import java.awt.Container;
 
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
+import javax.swing.SpringLayout.Constraints;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class SpringUtilities {
 		// all static methods; no constructor needed
 	}
 
-	private static SpringLayout.Constraints getConstraintsForCell(int row, int col, Container parent, int cols) {
+	private static Constraints getConstraintsForCell(int row, int col, Container parent, int cols) {
 		SpringLayout layout = (SpringLayout) parent.getLayout();
 		Component c = parent.getComponent(row * cols + col);
 		return layout.getConstraints(c);
@@ -76,7 +77,7 @@ public class SpringUtilities {
 				width = Spring.max(width, getConstraintsForCell(r, c, parent, cols).getWidth());
 			}
 			for (int r = 0; r < rows; r++) {
-				SpringLayout.Constraints constraints = getConstraintsForCell(r, c, parent, cols);
+				Constraints constraints = getConstraintsForCell(r, c, parent, cols);
 				constraints.setX(x);
 				constraints.setWidth(width);
 			}
@@ -91,7 +92,7 @@ public class SpringUtilities {
 				height = Spring.max(height, getConstraintsForCell(r, c, parent, cols).getHeight());
 			}
 			for (int c = 0; c < cols; c++) {
-				SpringLayout.Constraints constraints = getConstraintsForCell(r, c, parent, cols);
+				Constraints constraints = getConstraintsForCell(r, c, parent, cols);
 				constraints.setY(y);
 				constraints.setHeight(height);
 			}
@@ -103,7 +104,7 @@ public class SpringUtilities {
 		}
 
 		// Set the parent's size.
-		SpringLayout.Constraints pCons = layout.getConstraints(parent);
+		Constraints pCons = layout.getConstraints(parent);
 		pCons.setConstraint(SpringLayout.SOUTH, y);
 		pCons.setConstraint(SpringLayout.EAST, x);
 	}

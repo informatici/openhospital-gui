@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -124,6 +125,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	private static final long serialVersionUID = 1L;
 
 	private static final int PANEL_WIDTH = 240;
+	private static final Pattern DIGIT_PATTERN = Pattern.compile("\\d+");
 
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 
@@ -1189,7 +1191,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 
 				// lower age limit
 				String ageLimit = patientAgeFromTextField.getText();
-				if (ageLimit.matches("\\d+")) {
+				if (DIGIT_PATTERN.matcher(ageLimit).matches()) {
 					if (!(ap.getPatient().getAge() >= Integer.parseInt(ageLimit))) {
 						continue;
 					}
@@ -1197,7 +1199,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 
 				// upper age limit
 				ageLimit = patientAgeToTextField.getText();
-				if (ageLimit.matches("\\d+")) {
+				if (DIGIT_PATTERN.matcher(ageLimit).matches()) {
 					if (!(ap.getPatient().getAge() <= Integer.parseInt(ageLimit))) {
 						continue;
 					}
