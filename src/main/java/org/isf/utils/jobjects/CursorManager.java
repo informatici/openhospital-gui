@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import org.isf.utils.time.DelayTimer;
+
 class CursorManager {
 
 	private final DelayTimer waitTimer;

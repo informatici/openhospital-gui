@@ -60,7 +60,7 @@ import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
 import org.isf.menu.model.UserGroup;
 import org.isf.menu.model.UserMenuItem;
-import org.isf.session.UserSession;
+import org.isf.session.RestartUserSession;
 import org.isf.sessionaudit.manager.SessionAuditManager;
 import org.isf.sessionaudit.model.SessionAudit;
 import org.isf.sms.service.SmsSender;
@@ -449,7 +449,7 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 			if (!singleUser) {
 				button[k].addActionListener(actionEvent -> {
 					updateSessionAudit();
-					UserSession.restartSession();
+					RestartUserSession.restartSession();
 				});
 			} else {
 				button[k].addActionListener(actionEvent -> actionExit(0));
