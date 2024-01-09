@@ -31,6 +31,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -219,6 +221,9 @@ public class MovStockBrowser extends ModalJFrame {
 		}
 		if (MainMenu.checkUserGrants("btnpharmstockdischarge")) {
 			buttonPanel.add(getDischargeButton());
+		}
+		if (MainMenu.checkUserGrants("btnpharmstockdischarge")) {
+			buttonPanel.add(getDeleteButton());
 		}
 		buttonPanel.add(getExportToExcelButton());
 		buttonPanel.add(getStockCardButton());
@@ -932,6 +937,44 @@ public class MovStockBrowser extends ModalJFrame {
 		return dischargeButton;
 	}
 
+	/**
+	 * this method creates the button that delete the last movement 
+	 * 
+	 * @return
+	 */
+	private JButton getDeleteButton() {
+		JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete"));
+		deleteButton.setMnemonic(KeyEvent.VK_D);
+		deleteButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if (movTable.getSelectedRow() > -1) {
+					MovBrowserManager manager = new MovBrowserManager();
+					Movement movement = (Movement) (model.getValueAt(movTable.getSelectedRow(), -1));
+					int n = JOptionPane
+							.showConfirmDialog(null,
+									MessageBundle.getMessage("angal.common.delete") + " \""
+											+ movement.getRefNo() + "\" ?",
+									MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+					
+					/*if ((n == JOptionPane.YES_OPTION) && (manager.deleteMedical(m))) {
+						pMedicals.remove(table.getSelectedRow());
+						model.fireTableDataChanged();
+						table.updateUI();
+					}*/
+				} else {
+					JOptionPane.showMessageDialog(MovStockBrowser.this,
+									MessageBundle.getMessage("angal.medstockmovtype.pleaseselectarow"), 
+									MessageBundle.getMessage("angal.medicalstock.stockmovementbrowser"), 
+									JOptionPane.INFORMATION_MESSAGE);
+							return;
+				}
+			
+			}
+		});
+		return deleteButton;
+	}
+	
 	private JButton getExportToExcelButton() {
 		JButton exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
 		exportToExcel.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.exporttoexcel.btn.key"));
