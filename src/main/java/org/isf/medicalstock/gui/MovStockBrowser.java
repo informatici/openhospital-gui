@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -953,7 +953,7 @@ public class MovStockBrowser extends ModalJFrame {
 					Movement movement = (Movement) (model.getValueAt(movTable.getSelectedRow(), -1));
 					int n = JOptionPane
 							.showConfirmDialog(null,
-									MessageBundle.getMessage("angal.common.delete") + " \""
+									MessageBundle.getMessage("angal.medicalstock.deleteselectedmovement.msg") + " \""
 											+ movement.getRefNo() + "\" ?",
 									MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
 					
@@ -964,8 +964,8 @@ public class MovStockBrowser extends ModalJFrame {
 					}*/
 				} else {
 					JOptionPane.showMessageDialog(MovStockBrowser.this,
-									MessageBundle.getMessage("angal.medstockmovtype.pleaseselectarow"), 
-									MessageBundle.getMessage("angal.medicalstock.stockmovementbrowser"), 
+									MessageBundle.getMessage("angal.common.pleaseselectarow.msg"), 
+									MessageBundle.getMessage("angal.medicalstock.stockmovementbrowser.title"), 
 									JOptionPane.INFORMATION_MESSAGE);
 							return;
 				}
