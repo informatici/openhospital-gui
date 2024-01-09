@@ -24,16 +24,24 @@
 
 #######################  OH configuration  #########################
 # path and directories
+TMP_DIR="tmp"
+LOG_DIR="data/log"
+DICOM_DIR="data/dicom_storage"
+PHOTO_DIR="data/photo"
+BACKUP_DIR="data/dump"
+
 OH_DIR="."
 OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
-PHOTO_DIR="data/photo"
-BACKUP_DIR="data/dump"
-LOG_DIR="data/log"
 SQL_DIR="sql"
 SQL_EXTRA_DIR="sql/extra"
-TMP_DIR="tmp"
+API_SERVER="off"
+WRITE_CONFIG_FILES="on"
+
+# OH jar bin files
+OH_GUI_JAR="OH-gui.jar"
+OH_API_JAR="openhospital-api-0.1.0.jar"
 
 # OH configuration files
 OH_SETTINGS="settings.properties"
@@ -47,6 +55,18 @@ HELP_FILE="OH-readme.txt"
 LOG_FILE="startup.log"
 OH_LOG_FILE="openhospital.log"
 API_LOG_FILE="api.log"
+
+# imaging / dicom
+DICOM_MAX_SIZE="4M"
+DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
+DICOM_DIR="data/dicom_storage"
+
+# set escaped path (/ in place of \)
+OH_PATH_ESCAPED=$(echo $OH_PATH | sed -e 's/\//\\\//g')
+DICOM_DIR_ESCAPED=$(echo $DICOM_DIR | sed -e 's/\//\\\//g')
+PHOTO_DIR_ESCAPED=$(echo $PHOTO_DIR | sed -e 's/\//\\\//g')
+LOG_DIR_ESCAPED=$(echo $LOG_DIR | sed -e 's/\//\\\//g')
+TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
 
 ##################### Java configuration #######################
 JAVA_URL="https://cdn.azul.com/zulu/bin"
@@ -172,36 +192,37 @@ function set_log_level {
 ###################################################################
 function java_check {
 # check if JAVA_BIN is already set and it exists
-echo "check java $OH_DIR/$JAVA_DIR/bin/java"
+echo ""
+echo "is java installed?"
 if [ -e "$OH_DIR/$JAVA_DIR/bin/java" ]; then
 	JAVA_BIN="$OH_DIR/$JAVA_DIR/bin/java"
 fi
 
 # if JAVA_BIN is not found download JRE
 if [ ! -x "$JAVA_BIN" ]; then
+	echo ">no"
 	if [ ! -f "./$JAVA_DISTRO.$EXT" ]; then
-		echo "Warning - JAVA not found. Do you want to download it?"
+		echo "  Warning - JAVA not found. Do you want to download it?"
 		get_confirmation;
 		# download java binaries
-		echo "Download $JAVA_DISTRO..."
+		echo "  Download $JAVA_DISTRO..."
         echo curl -o $OH_DIR/$JAVA_DISTRO.$EXT $JAVA_URL/$JAVA_DISTRO.$EXT		
 
 		curl -o $OH_DIR/$JAVA_DISTRO.$EXT $JAVA_URL/$JAVA_DISTRO.$EXT		
 	fi
-	echo "Unpacking $JAVA_DISTRO..."
+	echo "  Unpacking $JAVA_DISTRO..."
 	tar xf ./$JAVA_DISTRO.$EXT -C ./
 	if [ $? -ne 0 ]; then
-		echo "Error unpacking Java. Exiting."
+		echo "  Error unpacking Java. Exiting."
 		exit 1
 	fi
-	echo "JAVA unpacked successfully!"
-	echo "Removing downloaded file..."
+	echo "  JAVA unpacked successfully!"
+	echo "  Removing downloaded file..."
 	rm ./$JAVA_DISTRO.$EXT
-	echo "Done!"
+	echo "  Done!"
 fi
 
-echo "JAVA found!"
-echo "Using $JAVA_BIN"
+echo ">Using $JAVA_BIN"
 }
 ###################################################################
 function java_lib_setup {
@@ -238,159 +259,19 @@ function java_lib_setup {
 	done
 }
 
-
 ###################################################################
-function parse_user_input {
-	case $1 in
-        #A)	# toggle API server
-        #E)	# toggle EXPERT_MODE features
-        ###################################################
-	    C)	# start in CLIENT mode
-		OH_MODE="CLIENT"
-		DEMO_DATA="off"
-		set_oh_mode;
-		echo ""
-		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
-		;;
-        ###################################################
-	    P)	# start in PORTABLE mode
-		OH_MODE="PORTABLE"
-		set_oh_mode;
-		echo ""
-		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
-		;;
-        ###################################################
-	    S)	# start in SERVER mode
-		OH_MODE="SERVER"
-		set_oh_mode;
-		echo ""
-		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
-		;;
-        ###################################################
-	    d)	# toggle debug mode 
-		case "$LOG_LEVEL" in
-			*INFO*)
-				LOG_LEVEL="DEBUG";
-			;;
-			*DEBUG*)
-				LOG_LEVEL="INFO";
-			;;
-		esac
-		# create config files if not present
-		#write_config_files;
-		set_log_level;
-		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
-		;;
-        #D)	# demo mode
-        ###################################################
-	    G)	# set up GSM
-		echo ""
-		echo "Setting up GSM..."
-		java_check;
-		java_lib_setup;
-		$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
-		echo "Done!"
-		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
-		;;  
-		###################################################
-		h)	# help
-			if (( $2==0 )); then
-				script_menu;
-				exit 0;
-			fi
-			cat $HELP_FILE | less;
-			;;
-		###################################################
-		i)	# initialize/install OH database
-			# set mode to CLIENT
-			#OH_MODE="CLIENT"
-			echo ""
-			echo "*************************************************************"
-			echo "***             Database installation wizard              ***"
-			echo "*************************************************************"
-			echo ""
-			echo "Current database settings are:"
-			echo ""
-			echo " Database Server -> $DATABASE_SERVER"
-			echo " TCP port -> $DATABASE_PORT" 
-			echo " Database name -> $DATABASE_NAME"
-			echo " Database user -> $DATABASE_USER"
-			echo " Database password -> $DATABASE_PASSWORD"
-			echo ""
-			echo "-> To change this values select [m] option from main menu <-"
-			echo ""
-			echo "Do you want to initialize/install the [$DATABASE_NAME] database?"
-			echo ""
-			get_confirmation 1;
-			initialize_dir_structure;
-			set_language;
-			install_db;
-			echo "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server?"
-			read -p "Press [y] to confirm: " choice
-			if [ "$choice" = "y" ]; then
-				# ask user for root database password
-				read -p "Please insert the MariaDB / MySQL database root password [$DATABASE_ROOT_USER@$DATABASE_SERVER] -> " -s DATABASE_ROOT_PW
-				echo ""				
-				create_db;
-			fi
-			# ask user for database password
-			read -p "Please insert the MariaDB / MySQL database password for user [$DATABASE_USER@$DATABASE_SERVER] -> " -s DATABASE_PASSWORD
-			echo ""
-			echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER]?"
-			get_confirmation 1;
-			test_db_connection;
-			import_db;
-			echo "Done!"
-			if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
-			;;
-		###################################################
-		l)	# set language
-			echo ""
-			#WRITE_CONFIG_FILES="on"
-			if (( $2==0 )); then
-				OH_LANGUAGE="$OPTARG"
-				option="Z";
-			else
-				read -n 2 -p "Please select language [$OH_LANGUAGE_LIST]: " OH_LANGUAGE
-			fi
-			set_language;
-			if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
-			;;
-		###################################################
-        #m)	# configure OH database connection manually
-        #e)	# export/save database
-        #r)	# restore database
-        #s)	# save / write config files
-        #t)	# test database connection
-        #u)	# create Desktop shortcut
-        #v)	# display software version and configuration
-        #X)	# kill processes / clean installation
-		q)	# quit
-			echo "";
-			echo "Quit pressed. Exiting.";
-			exit 0
-			;;
-		###################################################
-		Q)	# quit
-			echo "";
-			echo "Quit pressed. Exiting.";
-			exit 0
-			;;
-		#: )	# for -l option. If no lang argument is given, shows error
-        ###################################################
-		V )	# Check for latest OH version
-			echo "";
-			check_latest_oh_version;
-			if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
-			;;
-		###################################################
-		"Z" )	# Z key
-        #?)	# default
-			option="Z";
-			echo "";
-			echo "Starting Open Hospital...";
-			;;
-	esac
+function write_api_config_file {
+	######## application.properties setup - OH API server	
+	SET_FILE=$OHDIR/rsc/$API_SETTINGS
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f SET_FILE ]; then
+		[ -f $SET_FILE ] && mv -f $SET_FILE $SET_FILE.old		
+		# generate OH API token and save to settings file		
+		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
+
+		echo "Writing OH API configuration file -> $API_SETTINGS..."
+		sed -i '' -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" -e "s&OH_API_PID&"$OH_API_PID"&g" $SET_FILE.dist
+		cp -f $SET_FILE.dist $SET_FILE	
+	fi
 }
 
 ###################################################################
@@ -495,13 +376,13 @@ function install_db {
 function test_db_connection {
     # test if mysql client is available			
     echo "Testing database connection..."	
-    echo "$DATABASE_USER $DATABASE_PASSWORD $DATABASE_SERVER $DATABASE_PORT"        
-    DBTEST=`mysql $USER`;
-    
-    if [ $DBTEST -eq 0 ];then
-        echo "Database connection successfully established!"
+	
+
+	CMD="exit"		
+    if mysql -u $USER -h$DATABASE_SERVER -p$DATABASE_ROOT_PW -e "$CMD">/dev/null 2>&1; then
+        echo ">Database connection successfully established!"
     else
-        echo "Error: can't connect to database! Exiting."
+        echo "!Error: can't connect to database! Exiting."
         exit 2
     fi	 
 }
@@ -509,49 +390,56 @@ function test_db_connection {
 ###################################################################
 function import_db {
     start_db;
-
-    SCRIPTDIR="../openhospital-core/$SQL_DIR"
+	
+    SCRIPTDIR="../../../openhospital-core/$SQL_DIR"
     SCRIPT="$DB_CREATE_SQL"
 
-	echo " >Checking for SQL creation script... $SCRIPT in $SCRIPTDIR"
-	# check for database creation script
-	if [ -f "$SCRIPTDIR/$SCRIPT" ]>/dev/null; then
-		echo "  >Using SQL file $SCRIPT..."
-	else
-		echo "  >Error: No SQL file found! Exiting."
-		stop_db;
-		exit 2
-	fi
-
-	# create OH database structure
-	echo "  >Importing database [$DATABASE_NAME] with user [$DATABASE_USER@$DATABASE_SERVER]..."    
-
-    cd "$SCRIPTDIR"
-    CURRPATH=`pwd`
-    mysql --local-infile=1 -u $USER $DATABASE_NAME < $SCRIPT
-	if [ $? -ne 0 ]; then
-		echo "  >Error: Database not imported! Exiting."
-		stop_db;
-		cd "$CURRENT_DIR"
-		exit 2
-	fi
 	
-	cd "$CURRPATH"
-    echo " >db successfully imported"
+	TABLE_NAME="version"		
+	if mysql -u $USER -h$DATABASE_SERVER -p$DATABASE_ROOT_PW -e "DESCRIBE $DATABASE_NAME.$TABLE_NAME;"; then	
+		echo " >db already imported"
+	else
+		echo " >Checking for SQL creation script... $SCRIPT in $SCRIPTDIR"
+		# check for database creation script
+		if [ -f "$SCRIPTDIR/$SCRIPT" ]>/dev/null; then
+			echo "  >Using SQL file $SCRIPT..."
+		else
+			echo "  >Error: No SQL file found! Exiting."
+			stop_db;
+			exit 2
+		fi
+
+		# create OH database structure
+		echo "  >Importing database [$DATABASE_NAME] with user [$DATABASE_USER@$DATABASE_SERVER]..."    
+
+		CURRPATH=`pwd`
+		cd "$SCRIPTDIR"
+		mysql --local-infile=1 -u $USER $DATABASE_NAME < $SCRIPT
+		if [ $? -ne 0 ]; then
+			echo "  >Error: Database not imported! Exiting."
+			stop_db;
+			cd "$CURRENT_DIR"
+			exit 2
+		fi
+		
+		cd "$CURRPATH"
+		echo " >db successfully imported"
+	fi
 }
 
 ###################################################################
 function create_db {
-    echo "create db..." 
+    echo "is needed to create db?" 
 
     if brew list | grep -q mariadb >/dev/null; then
-        echo " >mariadb running"
+        echo " >mariadb running"		
     else
         install_db;     
         brew services start mariadb >/dev/null;
     fi
     
     CMD="USE $DATABASE_NAME"
+	echo " (connection test: mysql -u $USER -h$DATABASE_SERVER -p$DATABASE_ROOT_PW -e "$CMD")"
     if mysql -u $USER -h$DATABASE_SERVER -p$DATABASE_ROOT_PW -e "$CMD">/dev/null 2>&1; then    
         echo " >db connection ok"
     else 
@@ -591,6 +479,53 @@ function remove_db {
     rm -rf /opt/homebrew/var/maria*
 }
 
+###################################################################
+function write_config_files {
+	# set up configuration files
+	echo "Checking for OH configuration files..."
+	######## DICOM setup
+	IMAGING_FILE=$OH_DIR/rsc/$IMAGING_SETTINGS
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $IMAGING_FILE ]; then
+		[ -f $IMAGING_FILE ] && mv -f $IMAGING_FILE $IMAGING_FILE.old
+		echo ">Writing OH configuration file -> $IMAGING_SETTINGS..."
+		cp $IMAGING_FILE.dist $IMAGING_FILE
+		sed -i '' -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
+		-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" $IMAGING_FILE		
+	fi
+	######## $LOG4J_SETTINGS setup
+	LOG4J_FILE=$OH_DIR/rsc/$LOG4J_SETTINGS
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $LOG4J_FILE ]; then
+		OH_LOG_DEST="$OH_DIR/$LOG_DIR/$OH_LOG_FILE"
+		[ -f $LOG4J_FILE ] && mv -f $LOG4J_FILE $LOG4J_FILE.old
+		echo ">Writing OH configuration file -> $LOG4J_SETTINGS..."
+		cp $LOG4J_FILE.dist $LOG4J_FILE
+		sed -i '' -e "s/DBSERVER/$DATABASE_SERVER/g" -e "s/DBPORT/$DATABASE_PORT/" -e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
+		-e "s/DBNAME/$DATABASE_NAME/g" -e "s/LOG_LEVEL/$LOG_LEVEL/g" -e "s+LOG_DEST+$OH_LOG_DEST+g" \
+		$LOG4J_FILE		
+	fi
+	######## $DATABASE_SETTINGS setup 
+	DB_FILE=$OH_DIR/rsc/$DATABASE_SETTINGS
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $DB_FILE ]; then
+		[ -f $DB_FILE ] && mv -f $DB_FILE $DB_FILE.old
+		echo ">Writing OH database configuration file -> $DATABASE_SETTINGS..."
+		cp $DB_FILE.dist $DB_FILE
+		sed -i '' -e "s/DBSERVER/$DATABASE_SERVER/g" -e "s/DBPORT/$DATABASE_PORT/g" -e "s/DBNAME/$DATABASE_NAME/g" \
+		-e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
+		$DB_FILE	
+	fi
+	######## $OH_SETTINGS setup
+	SETTINGS_FILE=$OH_DIR/rsc/$OH_SETTINGS
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $SETTINGS_FILE ]; then
+		[ -f  $SETTINGS_FILE ] && mv -f $SETTINGS_FILE $SETTINGS_FILE.old
+		echo ">Writing OH configuration file -> $OH_SETTINGS..."
+		cp $SETTINGS_FILE.dist $SETTINGS_FILE
+		sed -i '' -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
+		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
+		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
+		$SETTINGS_FILE	
+	fi
+}
+
 function read_settings {
     CURRENT_DIR=$PWD
 
@@ -606,12 +541,194 @@ function read_settings {
     ARCH=`uname -m`
 	}
 
+###################################################################
+function start_gui {
+	echo "Starting Open Hospital GUI..."
+	# OH GUI launch	
+	$JAVA_BIN -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.menu.gui.Menu >> ./$LOG_DIR/$LOG_FILE 2>&1
+
+	if [ $? -ne 0 ]; then
+		echo "An error occurred while starting Open Hospital. Exiting."
+		shutdown_database;
+		cd "$CURRENT_DIR"
+		exit 4
+	fi
+}
+###################################################################
+function parse_user_input {
+	case $1 in
+	###################################################
+	A)	# toggle API server			
+		case "$API_SERVER" in
+			*on*)
+				API_SERVER="off";
+			;;
+			*off*)
+				API_SERVER="on";
+			;;
+		esac
+		#
+		echo ""
+		write_api_config_file;
+		if (( $2==0 )); then API_SERVER="on"; fi
+		echo "Press any key to continue"; 
+		read;
+		;;
+	#E)	# toggle EXPERT_MODE features
+	###################################################
+	C)	# start in CLIENT mode
+		OH_MODE="CLIENT"
+		DEMO_DATA="off"
+		set_oh_mode;
+		echo ""
+		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
+		;;
+	###################################################
+	P)	# start in PORTABLE mode
+		OH_MODE="PORTABLE"
+		set_oh_mode;
+		echo ""
+		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
+		;;
+	###################################################
+	S)	# start in SERVER mode
+		OH_MODE="SERVER"
+		set_oh_mode;
+		echo ""
+		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
+		;;
+	###################################################
+	d)	# toggle debug mode 
+		case "$LOG_LEVEL" in
+			*INFO*)
+				LOG_LEVEL="DEBUG";
+			;;
+			*DEBUG*)
+				LOG_LEVEL="INFO";
+			;;
+		esac
+		# create config files if not present
+		#write_config_files;
+		set_log_level;
+		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
+		;;
+	#D)	# demo mode
+	###################################################
+	G)	# set up GSM
+		echo ""
+		echo "Setting up GSM..."
+		java_check;
+		java_lib_setup;
+		$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
+		echo "Done!"
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+		;;  
+	###################################################
+	h)	# help
+		if (( $2==0 )); then
+			script_menu;
+			exit 0;
+		fi
+		cat $HELP_FILE | less;
+		;;
+	###################################################
+	i)	# initialize/install OH database
+		# set mode to CLIENT
+		#OH_MODE="CLIENT"
+		echo ""
+		echo "*************************************************************"
+		echo "***             Database installation wizard              ***"
+		echo "*************************************************************"
+		echo ""
+		echo "Current database settings are:"
+		echo ""
+		echo " Database Server -> $DATABASE_SERVER"
+		echo " TCP port -> $DATABASE_PORT" 
+		echo " Database name -> $DATABASE_NAME"
+		echo " Database user -> $DATABASE_USER"
+		echo " Database password -> $DATABASE_PASSWORD"
+		echo ""
+		echo "-> To change this values select [m] option from main menu <-"
+		echo ""
+		echo "Do you want to initialize/install the [$DATABASE_NAME] database?"
+		echo ""
+		get_confirmation 1;
+		initialize_dir_structure;
+		set_language;
+		install_db;
+		echo "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server?"
+		read -p "Press [y] to confirm: " choice
+		if [ "$choice" = "y" ]; then
+			# ask user for root database password
+			read -p "Please insert the MariaDB / MySQL database root password [$DATABASE_ROOT_USER@$DATABASE_SERVER] -> " -s DATABASE_ROOT_PW
+			echo ""				
+			create_db;
+		fi
+		# ask user for database password
+		read -p "Please insert the MariaDB / MySQL database password for user [$DATABASE_USER@$DATABASE_SERVER] -> " -s DATABASE_PASSWORD
+		echo ""
+		echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER]?"
+		get_confirmation 1;
+		test_db_connection;
+		import_db;
+		echo "Done!"
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+		;;
+	###################################################
+	l)	# set language
+		echo ""
+		#WRITE_CONFIG_FILES="on"
+		if (( $2==0 )); then
+			OH_LANGUAGE="$OPTARG"
+			option="Z";
+		else
+			read -n 2 -p "Please select language [$OH_LANGUAGE_LIST]: " OH_LANGUAGE
+		fi
+		set_language;
+		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
+		;;
+	###################################################
+	#m)	# configure OH database connection manually
+	#e)	# export/save database
+	#r)	# restore database
+	#s)	# save / write config files
+	#t)	# test database connection
+	#u)	# create Desktop shortcut
+	#v)	# display software version and configuration
+	#X)	# kill processes / clean installation
+	q)	# quit
+		echo "";
+		echo "Quit pressed. Exiting.";
+		exit 0
+		;;
+	###################################################
+	Q)	# quit
+		echo "";
+		echo "Quit pressed. Exiting.";
+		exit 0
+		;;
+	#: )	# for -l option. If no lang argument is given, shows error
+	###################################################
+	V )	# Check for latest OH version
+		echo "";
+		check_latest_oh_version;
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+		;;
+	###################################################
+	"Z" )	# Z key
+	#?)	# default
+		option="Z";
+		echo "";
+		echo "Starting Open Hospital...";
+		;;
+	esac
+}
+
+
 read_settings;
  
 #remove_db;
 #import_db;
-java_check
-exit 1;
 
 # reset in case getopts has been used previously in the shell
 OPTIND=1 
@@ -629,3 +746,108 @@ else # If no arguments are passed via command line, show the interactive menu
 	interactive_menu;
 fi
 
+
+function demo_mode(){
+	echo "is a demo mode?"
+	# check for demo mode
+	if [ "$DEMO_DATA" = "on" ]; then
+		# exit if OH is configured in CLIENT mode
+		if [[ "$OH_MODE" = "CLIENT" ]]; then
+			echo "Error - OH_MODE set to $OH_MODE mode. Cannot run with Demo data. Exiting."
+			exit 1;
+		fi
+
+		# set database name to demo
+		DATABASE_NAME=$DEMO_DATABASE
+
+		if [ -f ./$SQL_DIR/$DB_DEMO ]; then
+			echo "Found SQL demo database, starting OH with Demo data..."
+			DB_CREATE_SQL=$DB_DEMO
+		else
+			echo "Error: no $DB_DEMO found! Exiting."
+			exit 1
+		fi
+		set_db_name;
+	else
+		echo ">no"
+	fi
+}
+######################## OH start ########################
+echo ""
+demo_mode;
+
+# display running configuration
+echo ""
+echo "Write config files is set to $WRITE_CONFIG_FILES"
+echo "Starting Open Hospital in $OH_MODE mode..."
+echo "OH_PATH is set to $OH_PATH"
+
+# display OH settings
+echo "OH language is set to $OH_LANGUAGE";
+
+# check for java
+java_check;
+
+# setup java lib
+java_lib_setup;
+
+# create directories
+initialize_dir_structure;
+
+######## Database setup
+# start MariaDB/MySQL database server and create database
+if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
+	import_db;
+fi
+
+test_db_connection;
+
+# check for API server
+if [ "$API_SERVER" = "on" ]; then
+	start_api_server;
+fi
+
+# check for UI interface
+if [ "$UI_INTERFACE" = "on" ]; then
+	start_ui;
+fi
+
+# if SERVER mode is selected, wait for CTRL-C input to exit
+if [ "$OH_MODE" = "SERVER" ]; then
+	echo "Open Hospital - SERVER mode started"
+
+	# show MariaDB/MySQL server running configuration
+	echo "***************************************"
+	echo "* Database server listening on:"
+	echo ""
+	cat ./$CONF_DIR/$MYSQL_CONF_FILE | grep bind-address
+	cat ./$CONF_DIR/$MYSQL_CONF_FILE | grep port | head -1
+	echo ""
+	echo "***************************************"
+	echo "Database server ready for connections..."
+	echo "Press Ctrl + C to exit"
+	while true; do
+		trap ctrl_c INT
+		function ctrl_c() {
+			echo "Exiting Open Hospital..."
+			shutdown_database;		
+			cd "$CURRENT_DIR"
+			exit 0
+		}
+	done
+else
+	######## Open Hospital GUI startup - only for CLIENT or PORTABLE mode
+
+	# generate config files if not existent
+	write_config_files;
+
+	# start OH gui
+	start_gui;
+
+	# Close and exit
+	echo "Exiting Open Hospital..."
+	shutdown_database;
+
+	# go back to starting directory
+	cd "$CURRENT_DIR"
+fi
