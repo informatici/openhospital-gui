@@ -1476,7 +1476,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				} else {
 					savePatientExamaination();
 				}
-			}else{
+			} else {
 				JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.examination.nonzero.msg"), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
