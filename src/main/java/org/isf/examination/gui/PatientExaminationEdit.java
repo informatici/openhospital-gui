@@ -1465,16 +1465,32 @@ public class PatientExaminationEdit extends ModalJFrame {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 
-			try {
-				examinationBrowserManager.saveOrUpdate(patex);
-				modified = false;
-			} catch (OHServiceException ohServiceException) {
-				MessageDialog.showExceptions(ohServiceException);
+			if (patex.getPex_weight() != 0 && patex.getPex_height() != 0) {
+				if (patex.getPex_weight() == ExaminationParameters.WEIGHT_MIN || patex.getPex_weight() == ExaminationParameters.WEIGHT_MAX || patex.getPex_height() == ExaminationParameters.HEIGHT_MIN || patex.getPex_height() == ExaminationParameters.HEIGHT_MAX) {
+					int response = JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.patient.examination.defaultvalue.msg"), "Confirm", JOptionPane.YES_NO_OPTION);
+					if (response == JOptionPane.YES_OPTION) {
+						savePatientExamaination();
+					}
+				} else {
+					savePatientExamaination();
+				}
+			}else{
+				JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.examination.nonzero.msg"), "Error", JOptionPane.ERROR_MESSAGE);
 			}
-			JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
-			model.reloadData();
 		}
 	}
+
+	private void savePatientExamaination(){
+		try {
+			examinationBrowserManager.saveOrUpdate(patex);
+			modified = false;
+		} catch (OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
+		}
+		JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
+		model.reloadData();
+	}
+
 
 	private Action getActionSavePatientExamination() {
 		if (actionSavePatientExamination == null) {
