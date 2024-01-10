@@ -1464,9 +1464,11 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			double weight = patex.getPex_weight();
+			int height = patex.getPex_height();
 
-			if (patex.getPex_weight() != 0 && patex.getPex_height() != 0) {
-				if (patex.getPex_weight() == ExaminationParameters.WEIGHT_MIN || patex.getPex_weight() == ExaminationParameters.WEIGHT_MAX || patex.getPex_height() == ExaminationParameters.HEIGHT_MIN || patex.getPex_height() == ExaminationParameters.HEIGHT_MAX) {
+			if (weight != 0 && height != 0) {
+				if (weight == ExaminationParameters.WEIGHT_MIN || weight == ExaminationParameters.WEIGHT_MAX || height == ExaminationParameters.HEIGHT_MIN || height == ExaminationParameters.HEIGHT_MAX) {
 					int response = JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.patient.examination.defaultvalue.msg"), "Confirm", JOptionPane.YES_NO_OPTION);
 					if (response == JOptionPane.YES_OPTION) {
 						savePatientExamaination();
