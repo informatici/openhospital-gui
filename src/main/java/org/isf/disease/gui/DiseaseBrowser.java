@@ -51,15 +51,9 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
- * ------------------------------------------
  * DiseaseBrowser - This class shows a list of diseases.
  * 					It is possible to filter data with a selection combo box
  * 					and edit-insert-delete records
- * -----------------------------------------
- * modification history
- * 25-gen-2006 - Rick, Vero, Pupo - first beta version
- * 03/11/2006 - ross - version is now 1.0
- * ------------------------------------------
  */
 public class DiseaseBrowser extends ModalJFrame implements DiseaseListener {
 

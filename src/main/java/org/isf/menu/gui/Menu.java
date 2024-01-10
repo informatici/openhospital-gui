@@ -116,8 +116,9 @@ public class Menu {
 		while (keys.hasMoreElements()) {
 			Object key = keys.nextElement();
 			Object value = UIManager.get(key);
-			if (value instanceof FontUIResource)
+			if (value instanceof FontUIResource) {
 				UIManager.put(key, f);
+			}
 		}
 	}
 

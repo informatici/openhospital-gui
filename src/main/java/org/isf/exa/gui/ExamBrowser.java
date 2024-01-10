@@ -51,15 +51,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
- * ------------------------------------------
  * ExamBrowser - list all exams. Let the user select an exam to edit
- * -----------------------------------------
- * modification history
- * 11/12/2005 - bob  - first beta version
- * 03/11/2006 - ross - changed button Show into Results
- * 			         - version is now 1.0
- * 10/11/2006 - ross - corrected exam deletion, before it was never deleted
- * ------------------------------------------
  */
 public class ExamBrowser extends ModalJFrame implements ExamListener {
 

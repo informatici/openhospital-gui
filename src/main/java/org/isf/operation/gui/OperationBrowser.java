@@ -42,6 +42,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.operation.gui.OperationEdit.OperationListener;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.opetype.manager.OperationTypeBrowserManager;
@@ -57,7 +58,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Rick, Vero, Pupo
  */
-public class OperationBrowser extends ModalJFrame implements OperationEdit.OperationListener {
+public class OperationBrowser extends ModalJFrame implements OperationListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
@@ -191,14 +192,15 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			} else {
 				Operation operation = (Operation) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg", operation.getDescription());
-				try {
-					if ((answer == JOptionPane.YES_OPTION) && (operationBrowserManager.deleteOperation(operation))) {
+				if (answer == JOptionPane.YES_OPTION) {
+					try {
+						operationBrowserManager.deleteOperation(operation);
 						pOperation.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
 					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
 				}
 			}
 		});

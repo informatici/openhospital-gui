@@ -45,6 +45,7 @@ import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JPopupMenu.Separator;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextPane;
@@ -257,7 +258,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 		final JPopupMenu popUpMenu = new JPopupMenu();
 		JMenuItem sendFile;
 		popUpMenu.add(sendFile = new JMenuItem(MessageBundle.getMessage("angal.xmpp.sendfile.txt")));
-		popUpMenu.add(new JPopupMenu.Separator());
+		popUpMenu.add(new Separator());
 		JMenuItem getInfo;
 		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo.txt")));
 		final JFileChooser fileChooser = new JFileChooser();

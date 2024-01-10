@@ -37,6 +37,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.supplier.gui.SupplierEdit.SupplierListener;
 import org.isf.supplier.manager.SupplierBrowserManager;
 import org.isf.supplier.model.Supplier;
 import org.isf.utils.exception.OHServiceException;
@@ -50,7 +51,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  * 
  * @author Mwithi
  */
-public class SupplierBrowser extends ModalJFrame implements SupplierEdit.SupplierListener {
+public class SupplierBrowser extends ModalJFrame implements SupplierListener {
 
 	private static final long serialVersionUID = 1L;
 

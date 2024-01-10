@@ -81,6 +81,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovBrowserManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
+import org.isf.medicalstockward.gui.WardPharmacyRectify.MovementWardListeners;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
@@ -113,7 +114,7 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 public class WardPharmacy extends ModalJFrame implements
 		WardPharmacyEdit.MovementWardListeners,
 		WardPharmacyNew.MovementWardListeners,
-		WardPharmacyRectify.MovementWardListeners {
+		MovementWardListeners {
 
 	@Override
 	public void movementInserted(AWTEvent e) {

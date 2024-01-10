@@ -45,13 +45,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
- * ------------------------------
  * ExamRowEdit - add/edit Exams Result
- * ----------------------------------
- * modification history
- * 3/11/2006 - enlarged the form width
- * 			 - version is now 1.0
- * ------------------------------
  */
 public class ExamRowEdit extends JDialog {
 

@@ -53,15 +53,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
- * ------------------------------------------
  * DiseaseEdit - Add/edit a Disease
- * -----------------------------------------
- * modification history
- * 25/01/2006 - Rick, Vero, Pupo - first beta version
- * 03/11/2006 - ross - added flags OPD / IPD
- * 			         - changed title, version is now 1.0
- * 09/06/2007 - ross - when updating, now the user can change the "dis type" also
- * ------------------------------------------
  */
 public class DiseaseEdit extends JDialog {
 	

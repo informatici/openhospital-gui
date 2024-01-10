@@ -28,8 +28,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -151,29 +149,25 @@ abstract class OperationRowBase extends JPanel {
 		gbc_labelOperation.gridx = 2;
 		gbc_labelOperation.gridy = 0;
 		searchOperationButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-		searchOperationButton.addActionListener(new ActionListener() {
+		searchOperationButton.addActionListener(actionEvent -> {
+			List<Operation> operationsOPD = new LinkedList<>();
+			try {
+				operationsOPD = operationBrowserManager.getOperation();
+			} catch (OHServiceException ex) {
+				OHServiceExceptionUtil.showMessages(ex);
+			}
+			comboOperation.removeAllItems();
+			comboOperation.addItem(null);
+			for (Operation ope : getSearchOperationsResults(searchOperationTextField.getText(), operationsOPD)) {
+				comboOperation.addItem(ope);
+			}
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				List<Operation> operationsOPD = new LinkedList<>();
-				try {
-					operationsOPD = operationBrowserManager.getOperation();
-				} catch (OHServiceException ex) {
-					OHServiceExceptionUtil.showMessages(ex);
-				}
-				comboOperation.removeAllItems();
-				comboOperation.addItem(null);
-				for (Operation ope : getSearchOperationsResults(searchOperationTextField.getText(), operationsOPD)) {
-					comboOperation.addItem(ope);
-				}
-
-				if (comboOperation.getItemCount() >= 2) {
-					comboOperation.setSelectedIndex(1);
-				}
-				comboOperation.requestFocus();
-				if (comboOperation.getItemCount() > 2) {
-					comboOperation.showPopup();
-				}
+			if (comboOperation.getItemCount() >= 2) {
+				comboOperation.setSelectedIndex(1);
+			}
+			comboOperation.requestFocus();
+			if (comboOperation.getItemCount() > 2) {
+				comboOperation.showPopup();
 			}
 		});
 		panelForm.add(searchOperationButton, gbc_searchOperationButton);

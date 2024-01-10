@@ -44,12 +44,7 @@ import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
 /**
- * ------------------------------------------
  * VaccineTypeBrowser - list all vaccine types. let the user select an vaccine type to edit
- * -----------------------------------------
- * modification history
- * 19/10/2011 - Cla - version is now 1.0
- * ------------------------------------------
  */
 public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListener {
 

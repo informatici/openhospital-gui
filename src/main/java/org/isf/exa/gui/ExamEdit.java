@@ -51,14 +51,7 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
 /**
- * ------------------------------------------
  * ExamEdit - add/edit an exam
- * -----------------------------------------
- * modification history
- * 03/11/2006 - ross - Enlarged Description from 50 to 100
- *                   - removed toupper for the description
- * 			         - version is now 1.0
- * ------------------------------------------
  */
 public class ExamEdit extends JDialog {
 
@@ -231,7 +224,7 @@ public class ExamEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				if ((codeTextField.getText().trim().equals("")) || (descriptionTextField.getText().trim().equals(""))) {
+				if (codeTextField.getText().trim().equals("") || descriptionTextField.getText().trim().equals("")) {
 					MessageDialog.error(null, "angal.exa.pleaseinsertcodeoranddescription");
 				} else {
 					int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
@@ -320,7 +313,7 @@ public class ExamEdit extends JDialog {
 
 	private JComboBox<String> getProcComboBox() {
 		if (procComboBox == null) {
-			procComboBox = new JComboBox<String>();
+			procComboBox = new JComboBox<>();
 			if (insert) {
 				procComboBox.addItem("1");
 				procComboBox.addItem("2");

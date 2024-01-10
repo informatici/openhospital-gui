@@ -45,13 +45,7 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
 /**
- * ------------------------------------------
  * ExamTypeEdit - inset/edit an exam type.
- * -----------------------------------------
- * modification history
- * ??/??/2005 - first beta version (former name ExamTypeBrowserEdit)
- * 03/11/2006 - ross - version is now 1.0
- * ------------------------------------------
  */
 public class ExamTypeEdit extends JDialog {
 

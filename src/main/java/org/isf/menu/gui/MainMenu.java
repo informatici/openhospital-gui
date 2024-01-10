@@ -55,12 +55,14 @@ import javax.swing.WindowConstants;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.gui.Login.LoginListener;
+import org.isf.menu.gui.SubMenu.CommandListener;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
 import org.isf.menu.model.UserGroup;
 import org.isf.menu.model.UserMenuItem;
-import org.isf.session.UserSession;
+import org.isf.session.RestartUserSession;
 import org.isf.sessionaudit.manager.SessionAuditManager;
 import org.isf.sessionaudit.model.SessionAudit;
 import org.isf.sms.service.SmsSender;
@@ -80,7 +82,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener {
+public class MainMenu extends JFrame implements ActionListener, LoginListener, CommandListener {
 
 	private static final long serialVersionUID = 7620582079916035164L;
 	public static final String ADMIN_STR = "admin";
@@ -513,7 +515,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			if (!singleUser) {
 				button[k].addActionListener(actionEvent -> {
 					updateSessionAudit();
-					UserSession.restartSession();
+					RestartUserSession.restartSession();
 				});
 			} else {
 				button[k].addActionListener(actionEvent -> actionExit(0));

@@ -66,14 +66,7 @@ import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
 /**
- * ------------------------------------------
  * PatVacEdit - edit (new/update) a patient's vaccine
- * -----------------------------------------
- * modification history
- * 25/08/2011 - claudia - first beta version
- * 04/11/2011 - claudia modify vaccine date check on OK button
- * 14/11/2011 - claudia inserted search condition on patient based on ENHANCEDSEARCH property
- * ------------------------------------------
  */
 public class PatVacEdit extends JDialog {
 
