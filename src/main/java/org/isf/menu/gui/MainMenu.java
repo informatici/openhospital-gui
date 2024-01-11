@@ -35,8 +35,10 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.swing.BorderFactory;
@@ -64,6 +66,11 @@ import org.isf.session.RestartUserSession;
 import org.isf.sessionaudit.manager.SessionAuditManager;
 import org.isf.sessionaudit.model.SessionAudit;
 import org.isf.sms.service.SmsSender;
+import org.isf.telemetry.constants.TelemetryConstants;
+import org.isf.telemetry.daemon.TelemetryDaemon;
+import org.isf.telemetry.gui.TelemetryEdit;
+import org.isf.telemetry.manager.TelemetryManager;
+import org.isf.telemetry.model.Telemetry;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -81,6 +88,11 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 	public static final String ADMIN_STR = "admin";
 	private boolean flag_Xmpp;
 	private boolean flag_Sms;
+	private boolean flag_Telemetry;
+	private TelemetryDaemon telemetryDaemon;
+	// used to understand if a module is enabled
+	private Map<String, Boolean> activableModules;
+
 	private SessionAuditManager sessionAuditManager = Context.getApplicationContext().getBean(SessionAuditManager.class);
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
 	private Integer sessionAuditId;
@@ -139,6 +151,7 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 		myUser = myUserIn;
 		MainMenu myFrame = this;
 		GeneralData.initialize();
+		this.activableModules = retrieveActivatedModulesMap();
 		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); // for all fixed options YES_NO_CANCEL in dialogs
 		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
@@ -187,6 +200,12 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 				actionExit(2);
 			}
 		}
+
+		flag_Telemetry = GeneralData.TELEMETRYENABLED;
+		if (flag_Telemetry) {
+			runTelemetry();
+		}
+
 		MDC.put("OHUser", myUser.getUserName());
 		MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
 		try {
@@ -212,7 +231,7 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 				}
 				new CommunicationFrame();
 				/*
-				 * Interaction communication= new Interaction(); communication.incomingChat(); communication.receiveFile();
+				 * Interaction communication = new Interaction(); communication.incomingChat(); communication.receiveFile();
 				 */
 			} catch (XMPPException e) {
 				String message = e.getMessage();
@@ -274,6 +293,17 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 				myMenu.remove(umi);
 			}
 		}
+		if (!flag_Telemetry) { // remove Telemetry Manager if not enabled
+			List<UserMenuItem> junkMenu = new ArrayList<>();
+			for (UserMenuItem umi : myMenu) {
+				if ("telemetry".equalsIgnoreCase(umi.getCode())) {
+					junkMenu.add(umi);
+				}
+			}
+			for (UserMenuItem umi : junkMenu) {
+				myMenu.remove(umi);
+			}
+		}
 
 		// if not internalPharmacies mode remove "medicalsward" menu
 		if (!internalPharmacies) {
@@ -291,7 +321,9 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 		// remove disabled buttons
 		List<UserMenuItem> junkMenu = new ArrayList<>();
 		for (UserMenuItem umi : myMenu) {
-			if (!umi.isActive()) {
+			// if is not active or it is a module that is not enabled (there is no point in
+			// showing a menu item)
+			if (!umi.isActive() || isMenuItemNotEnabled(umi.getCode())) {
 				junkMenu.add(umi);
 			}
 		}
@@ -325,6 +357,40 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 		});
 
 		setVisible(true);
+	}
+
+	private Map<String, Boolean> retrieveActivatedModulesMap() {
+		return new HashMap<>() {
+
+			private static final long serialVersionUID = 1L;
+			{
+				put(TelemetryConstants.MENU_ID, Boolean.valueOf(GeneralData.TELEMETRYENABLED));
+			}
+		};
+	}
+
+	private boolean isMenuItemNotEnabled(String menuCode) {
+		return this.activableModules.containsKey(menuCode) && !activableModules.get(menuCode).booleanValue();
+	}
+
+	private void runTelemetry() {
+		TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
+		Telemetry settings = telemetryManager.retrieveSettings();
+		// active = null => show popup
+		// active = true => start daemon
+		// active = false => do nothing
+		if (settings == null || settings.getActive() == null) {
+			// show telemetry popup
+			new TelemetryEdit(this, true);
+		}
+		// start telemetry daemon
+		this.telemetryDaemon = TelemetryDaemon.getTelemetryDaemon();
+		if (telemetryDaemon.isInitialized()) {
+			telemetryDaemon.start();
+		} else {
+			flag_Telemetry = false;
+		}
+
 	}
 
 	private void actionExit(int status) {
