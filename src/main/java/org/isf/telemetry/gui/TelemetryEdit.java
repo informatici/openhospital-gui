@@ -244,7 +244,7 @@ public class TelemetryEdit extends ModalJFrame {
 							return;
 						}
 					} catch (RuntimeException | OHException f) {
-						LOGGER.error("Something strange happened: " + f.getMessage());
+                                                LOGGER.error("Something strange happened: {}", f.getMessage());
 						LOGGER.debug(f.getMessage(), f);
 					}
 				} else {
@@ -371,7 +371,7 @@ public class TelemetryEdit extends ModalJFrame {
 					Map<String, Map<String, String>> dataToSend = telemetryUtils.retrieveDataToSend(consentMap);
 					telemetryUtils.sendTelemetryData(dataToSend, GeneralData.DEBUG);
 				} catch (RuntimeException | OHException sendException) {
-					LOGGER.error("Something strange happened: " + sendException.getMessage());
+                                        LOGGER.error("Something strange happened: {}", sendException.getMessage());
 					LOGGER.error(sendException.getMessage(), sendException);
 				}
 
