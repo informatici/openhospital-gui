@@ -211,7 +211,7 @@ public class TelemetryEdit extends ModalJFrame {
 	 * Action for confirmation button: inserts for the first time in the telemetry
 	 * table or updates the existing row
 	 * 
-	 * @param permissions
+	 * @param checkboxes
 	 * @param telemetryManager
 	 * @return
 	 */
@@ -244,7 +244,7 @@ public class TelemetryEdit extends ModalJFrame {
 							return;
 						}
 					} catch (RuntimeException | OHException f) {
-						LOGGER.error("Something strange happened: " + f.getMessage());
+                                                LOGGER.error("Something strange happened: {}", f.getMessage());
 						LOGGER.debug(f.getMessage(), f);
 					}
 				} else {
