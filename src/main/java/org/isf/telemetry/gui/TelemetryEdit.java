@@ -337,50 +337,34 @@ public class TelemetryEdit extends ModalJFrame {
 	}
 
 	private ActionListener buildAskMeLaterButtonActionListener(TelemetryManager telemetryManager) {
-		return new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		};
-
+		return actionEvent -> dispose();
 	}
 
 	private ActionListener closeButtonActionListener(TelemetryManager telemetryManager) {
-		return new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		};
-
+		return actionEvent -> dispose();
 	}
 
 	private ActionListener buildDisableNeverAskButtonActionListener(TelemetryManager telemetryManager) {
-		return new ActionListener() {
+		return actionEvent -> {
+			Telemetry telemetry = telemetryManager.disable(new HashMap<>());
+			telemetryManager.save(telemetry);
 
-			public void actionPerformed(ActionEvent e) {
-				Telemetry telemetry = telemetryManager.disable(new HashMap<>());
-				telemetryManager.save(telemetry);
-
-				// send opt-out info before stopping
-				Map<String, Boolean> consentMap = new HashMap<>();
-				consentMap.put("TEL_ID", true);
-				try {
-					LOGGER.info("Trying to send a last opt-out message...");
-					Map<String, Map<String, String>> dataToSend = telemetryUtils.retrieveDataToSend(consentMap);
-					telemetryUtils.sendTelemetryData(dataToSend, GeneralData.DEBUG);
-				} catch (RuntimeException | OHException sendException) {
-                                        LOGGER.error("Something strange happened: {}", sendException.getMessage());
-					LOGGER.error(sendException.getMessage(), sendException);
-				}
-
-				TelemetryDaemon.getTelemetryDaemon().reloadSettings();
-				TelemetryDaemon.getTelemetryDaemon().stop();
-				dispose();
+			// send opt-out info before stopping
+			Map<String, Boolean> consentMap = new HashMap<>();
+			consentMap.put("TEL_ID", true);
+			try {
+				LOGGER.info("Trying to send a last opt-out message...");
+				Map<String, Map<String, String>> dataToSend = telemetryUtils.retrieveDataToSend(consentMap);
+				telemetryUtils.sendTelemetryData(dataToSend, GeneralData.DEBUG);
+			} catch (RuntimeException | OHException sendException) {
+				LOGGER.error("Something strange happened: {}", sendException.getMessage());
+				LOGGER.error(sendException.getMessage(), sendException);
 			}
-		};
 
+			TelemetryDaemon.getTelemetryDaemon().reloadSettings();
+			TelemetryDaemon.getTelemetryDaemon().stop();
+			dispose();
+		};
 	}
 
 	public JPanel makePanel(List<CheckBoxWrapper> checkboxes, JButton confirmButton, JButton askMeLaterButton,
