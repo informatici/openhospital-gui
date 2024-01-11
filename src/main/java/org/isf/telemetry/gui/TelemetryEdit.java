@@ -365,8 +365,9 @@ public class TelemetryEdit extends ModalJFrame {
             	    TelemetryDaemon.getTelemetryDaemon().stop();
             	    dispose();
        	        }
-        };
-
+            };
+        }
+	
 	public JPanel makePanel(List<CheckBoxWrapper> checkboxes, JButton confirmButton, JButton askMeLaterButton,
 					JButton disableNeverAskButton, JButton disableButton, JButton closeButton, boolean enabled) {
 
