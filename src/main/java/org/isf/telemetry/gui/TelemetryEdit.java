@@ -337,15 +337,15 @@ public class TelemetryEdit extends ModalJFrame {
 	}
 
 	private ActionListener buildAskMeLaterButtonActionListener(TelemetryManager telemetryManager) {
-		return e -> dispose();
+		return actionEvent -> dispose();
 	}
 
 	private ActionListener closeButtonActionListener(TelemetryManager telemetryManager) {
-		return e -> dispose();
+		return actionEvent -> dispose();
 	}
 
 	private ActionListener buildDisableNeverAskButtonActionListener(TelemetryManager telemetryManager) {
-		return e -> {
+		return actionEvent -> {
             Telemetry telemetry = telemetryManager.disable(new HashMap<>());
             telemetryManager.save(telemetry);
 
