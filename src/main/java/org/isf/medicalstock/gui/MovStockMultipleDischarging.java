@@ -140,7 +140,7 @@ public class MovStockMultipleDischarging extends JDialog {
 					.getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
-	private boolean isAutomaticLot() {
+	private boolean isAutomaticLotOut() {
 		return GeneralData.AUTOMATICLOT_OUT;
 	}
 
@@ -270,7 +270,7 @@ public class MovStockMultipleDischarging extends JDialog {
 
 				if (med != null) {
 
-					if (isAutomaticLot() && isMedicalPresent(med)) {
+					if (isAutomaticLotOut() && isMedicalPresent(med)) {
 						return;
 					}
 
@@ -299,7 +299,7 @@ public class MovStockMultipleDischarging extends JDialog {
 						return;
 					}
 					Lot lot;
-					if (!isAutomaticLot()) {
+					if (!isAutomaticLotOut()) {
 						lot = chooseLot(lots, qty);
 						if (lot == null) {
 							return;
@@ -895,7 +895,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			}
 
 			newTotalQty = totalQty - usedQty;
-			if (!isAutomaticLot() && !checkQuantityInLot(movement.getLot(), qty)) {
+			if (!isAutomaticLotOut() && !checkQuantityInLot(movement.getLot(), qty)) {
 				return false;
 			}
 			return checkQuantity(med, newTotalQty, qty);
