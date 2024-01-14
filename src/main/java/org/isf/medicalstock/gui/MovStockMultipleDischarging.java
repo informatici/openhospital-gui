@@ -119,8 +119,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private boolean[] columnResizable = { false, true, false, false, false, false, false, false };
 	private boolean[] columnVisible = { true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_OUT, !GeneralData.AUTOMATICLOT_OUT };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
-			SwingConstants.CENTER, SwingConstants.CENTER,
-			SwingConstants.CENTER };
+			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER };
 	private boolean[] columnBold = { false, false, false, false, false, true, false, false };
 	private Map<String, Medical> medicalMap;
 	private List<Integer> units;
@@ -296,8 +295,7 @@ public class MovStockMultipleDischarging extends JDialog {
 					}
 					if (lots.isEmpty()) {
 						LOGGER.error("No lots found for medical {} and quantity {}", med.getDescription(), qty);
-						JOptionPane.showMessageDialog(MovStockMultipleDischarging.this,
-										MessageBundle.getMessage("angal.sql.anunexpectederroroccurredpleasecheckthelogs.msg"));
+						MessageDialog.error(this, "angal.sql.anunexpectederroroccurredpleasecheckthelogs.msg");
 						return;
 					}
 					Lot lot;
