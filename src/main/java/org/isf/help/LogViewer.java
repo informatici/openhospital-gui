@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package org.isf.utils.log;
+package org.isf.help;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,7 @@ import java.io.IOException;
 import javax.swing.JDialog;
 
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.log.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
