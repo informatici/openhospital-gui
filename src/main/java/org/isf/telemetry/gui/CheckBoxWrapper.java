@@ -19,45 +19,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package org.isf.video.gui;
+package org.isf.telemetry.gui;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
+import javax.swing.JCheckBox;
 
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
+public class CheckBoxWrapper {
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+	private String id;
+	private Integer order;
+	private JCheckBox checkbox;
 
-public class PhotoPreviewPanel extends JPanel	{
-
-	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(PhotoPreviewPanel.class);
-
-	private Image img;
-	
-	public PhotoPreviewPanel(String path)	{
-		try	{
-			img = ImageIO.read(new File(path));
-		}
-		catch (IOException ioe)	{
-			LOGGER.error("Path: {}", path);
-			LOGGER.error(ioe.getMessage(), ioe);
-		}
-		
-		setPreferredSize(new Dimension(img.getWidth(null), img.getHeight(null)));
+	public String getId() {
+		return id;
 	}
-	
-	//override paint method of panel
-	@Override
-	public void paint(Graphics g)	{
-		//draw the image
-		if (img != null)	{
-			g.drawImage(img, 0, 0, this);
-		}
+
+	public void setId(String id) {
+		this.id = id;
 	}
+
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
+	}
+
+	public JCheckBox getCheckbox() {
+		return checkbox;
+	}
+
+	public void setCheckbox(JCheckBox checkbox) {
+		this.checkbox = checkbox;
+	}
+
 }
