@@ -88,8 +88,10 @@ import org.isf.stat.gui.report.GenericReportPharmaceuticalStockCard;
 import org.isf.supplier.manager.SupplierBrowserManager;
 import org.isf.supplier.model.Supplier;
 import org.isf.utils.excel.ExcelExporter;
+import org.isf.utils.exception.OHDataValidationException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -955,7 +957,13 @@ public class MovStockBrowser extends ModalJFrame {
 					
 			if (n == JOptionPane.YES_OPTION) {
 				try {
-					movBrowserManager.deleteLastMovement();
+					Movement lastMovement = movBrowserManager.getLastMovement();
+					if (lastMovement == null) {
+						MessageDialog.info(null, MessageBundle.getMessage("angal.medicalstock.lastmovementnotfound.msg"));
+						return ;
+					} else {
+						movBrowserManager.deleteLastMovement(lastMovement);
+					}
 				} catch (OHServiceException e1) {
 					OHServiceExceptionUtil.showMessages(e1);
 					return ;
