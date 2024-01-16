@@ -159,8 +159,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private boolean isMale;
 	private boolean modified;
 
-	private static final String PATH_FEMALE_GENDER = "rsc/images/woman-132x300.jpg";
-	private static final String PATH_MALE_GENDER = "rsc/images/man-132x300.jpg";
+	private static final String PATH_FEMALE_GENDER = "rsc/images/woman-132x300.png";
+	private static final String PATH_MALE_GENDER = "rsc/images/man-132x300.png";
 
 	private final String[] columnNames = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
