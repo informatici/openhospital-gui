@@ -223,8 +223,9 @@ public class MovStockBrowser extends ModalJFrame {
 			buttonPanel.add(getDischargeButton());
 		}
 		if (MainMenu.checkUserGrants("btnpharmstockdischarge")) {
-			buttonPanel.add(getDeleteButton());
+			buttonPanel.add(getDeleteLastMovementButton());
 		}
+		
 		buttonPanel.add(getExportToExcelButton());
 		buttonPanel.add(getStockCardButton());
 		buttonPanel.add(getStockLedgerButton());
@@ -936,43 +937,36 @@ public class MovStockBrowser extends ModalJFrame {
 		});
 		return dischargeButton;
 	}
-
+	
 	/**
-	 * this method creates the button that delete the last movement 
+	 * this method creates the button that delete the last charge movement 
 	 * 
 	 * @return
 	 */
-	private JButton getDeleteButton() {
-		JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete"));
-		deleteButton.setMnemonic(KeyEvent.VK_D);
-		deleteButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				if (movTable.getSelectedRow() > -1) {
-					MovBrowserManager manager = new MovBrowserManager();
-					Movement movement = (Movement) (model.getValueAt(movTable.getSelectedRow(), -1));
-					int n = JOptionPane
-							.showConfirmDialog(null,
-									MessageBundle.getMessage("angal.medicalstock.deleteselectedmovement.msg") + " \""
-											+ movement.getRefNo() + "\" ?",
-									MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+	private JButton getDeleteLastMovementButton() {
+		JButton deleteMovementButton = new JButton(MessageBundle.getMessage("angal.medicalstock.delete.btn"));
+		deleteMovementButton.setMnemonic(KeyEvent.VK_D);
+		deleteMovementButton.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			int n = JOptionPane
+					.showConfirmDialog(null,
+								MessageBundle.getMessage("angal.medicalstock.deletemovement.msg"),
+								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
 					
-					/*if ((n == JOptionPane.YES_OPTION) && (manager.deleteMedical(m))) {
-						pMedicals.remove(table.getSelectedRow());
-						model.fireTableDataChanged();
-						table.updateUI();
-					}*/
-				} else {
-					JOptionPane.showMessageDialog(MovStockBrowser.this,
-									MessageBundle.getMessage("angal.common.pleaseselectarow.msg"), 
-									MessageBundle.getMessage("angal.medicalstock.stockmovementbrowser.title"), 
-									JOptionPane.INFORMATION_MESSAGE);
-							return;
+			if (n == JOptionPane.YES_OPTION) {
+				try {
+					movBrowserManager.deleteLastMovement();
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+					return ;
 				}
-			
+				MessageDialog.info(null, MessageBundle.getMessage("angal.medicalstock.deletemovementsuccess.msg"));
+				filterButton.doClick();
 			}
+			
+		}
 		});
-		return deleteButton;
+		return deleteMovementButton;
 	}
 	
 	private JButton getExportToExcelButton() {
