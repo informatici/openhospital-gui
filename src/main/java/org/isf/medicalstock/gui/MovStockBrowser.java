@@ -960,7 +960,7 @@ public class MovStockBrowser extends ModalJFrame {
 					Movement lastMovement = movBrowserManager.getLastMovement();
 					if (lastMovement == null) {
 						MessageDialog.info(null, MessageBundle.getMessage("angal.medicalstock.lastmovementnotfound.msg"));
-						return ;
+						return;
 					} else {
 						movBrowserManager.deleteLastMovement(lastMovement);
 					}
