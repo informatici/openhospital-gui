@@ -88,10 +88,8 @@ import org.isf.stat.gui.report.GenericReportPharmaceuticalStockCard;
 import org.isf.supplier.manager.SupplierBrowserManager;
 import org.isf.supplier.model.Supplier;
 import org.isf.utils.excel.ExcelExporter;
-import org.isf.utils.exception.OHDataValidationException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -224,7 +222,7 @@ public class MovStockBrowser extends ModalJFrame {
 		if (MainMenu.checkUserGrants("btnpharmstockdischarge")) {
 			buttonPanel.add(getDischargeButton());
 		}
-		if (MainMenu.checkUserGrants("btnpharmstockdischarge")) {
+		if (MainMenu.checkUserGrants("btnpharmstockcmovdelete")) {
 			buttonPanel.add(getDeleteLastMovementButton());
 		}
 		
@@ -946,20 +944,18 @@ public class MovStockBrowser extends ModalJFrame {
 	 * @return
 	 */
 	private JButton getDeleteLastMovementButton() {
-		JButton deleteMovementButton = new JButton(MessageBundle.getMessage("angal.medicalstock.delete.btn"));
+		JButton deleteMovementButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteMovementButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		deleteMovementButton.setMnemonic(KeyEvent.VK_D);
 		deleteMovementButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			int n = JOptionPane
-					.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.medicalstock.deletemovement.msg"),
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+			int n = MessageDialog.yesNo(null,"angal.medicalstock.deletemovement.msg");
 					
-			if (n == JOptionPane.YES_OPTION) {
+			if (n == 0) {
 				try {
 					Movement lastMovement = movBrowserManager.getLastMovement();
 					if (lastMovement == null) {
-						MessageDialog.info(null, MessageBundle.getMessage("angal.medicalstock.lastmovementnotfound.msg"));
+						MessageDialog.info(null, "angal.medicalstock.lastmovementnotfound.msg");
 						return ;
 					} else {
 						movBrowserManager.deleteLastMovement(lastMovement);
@@ -968,7 +964,7 @@ public class MovStockBrowser extends ModalJFrame {
 					OHServiceExceptionUtil.showMessages(e1);
 					return ;
 				}
-				MessageDialog.info(null, MessageBundle.getMessage("angal.medicalstock.deletemovementsuccess.msg"));
+				MessageDialog.info(null, "angal.medicalstock.deletemovementsuccess.msg");
 				filterButton.doClick();
 			}
 			
