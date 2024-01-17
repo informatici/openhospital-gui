@@ -962,7 +962,7 @@ public class MovStockBrowser extends ModalJFrame {
 					}
 				} catch (OHServiceException e1) {
 					OHServiceExceptionUtil.showMessages(e1);
-					return ;
+					return;
 				}
 				MessageDialog.info(null, "angal.medicalstock.deletemovementsuccess.msg");
 				filterButton.doClick();
