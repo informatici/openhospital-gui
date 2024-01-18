@@ -939,7 +939,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 	
 	/**
-	 * this method creates the button that delete the last charge movement 
+	 * This method creates the button that delete the last stock {@link Movement)
 	 * 
 	 * @return
 	 */
