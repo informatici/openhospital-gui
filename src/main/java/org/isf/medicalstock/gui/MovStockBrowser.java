@@ -939,7 +939,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 	
 	/**
-	 * this method creates the button that delete the last charge movement 
+	 * This method creates the button that delete the last stock {@link Movement)
 	 * 
 	 * @return
 	 */
@@ -947,7 +947,7 @@ public class MovStockBrowser extends ModalJFrame {
 		JButton deleteMovementButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		deleteMovementButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		deleteMovementButton.setMnemonic(KeyEvent.VK_D);
-		deleteMovementButton.addActionListener(new ActionListener() {
+		deleteMovementButton.addActionListener(actionEvent -> {
 		public void actionPerformed(ActionEvent e) {
 			int n = MessageDialog.yesNo(null,"angal.medicalstock.deletemovement.msg");
 					
