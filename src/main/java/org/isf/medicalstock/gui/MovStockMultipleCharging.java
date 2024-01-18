@@ -38,6 +38,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -412,7 +413,7 @@ public class MovStockMultipleCharging extends JDialog {
 					Lot lot;
 					boolean isNewLot = false;
 					if (isAutomaticLotIn()) {
-						LocalDateTime preparationDate = TimeTools.getNow();
+						LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
 						LocalDateTime expiringDate = askExpiringDate();
 						lot = new Lot("", preparationDate, expiringDate); //$NON-NLS-1$
 						// Cost
