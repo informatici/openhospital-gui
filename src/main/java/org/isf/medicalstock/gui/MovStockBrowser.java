@@ -947,27 +947,38 @@ public class MovStockBrowser extends ModalJFrame {
 		deleteMovementButton.setMnemonic(KeyEvent.VK_D);
 		deleteMovementButton.addActionListener(actionEvent -> {
 
-			int n = MessageDialog.yesNo(null, "angal.medicalstock.deletemovement.msg");
-
-			if (n == 0) {
-				try {
-					Movement lastMovement = movBrowserManager.getLastMovement();
-					if (lastMovement == null) {
-						MessageDialog.info(null, "angal.medicalstock.lastmovementnotfound.msg");
-						return;
-					} else {
+			if (movTable.getSelectedRowCount() > 1) {
+				MessageDialog.warning(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
+				return;
+			}
+			int selectedRow = movTable.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.warning(this, "angal.medicalstock.pleaseselectamovement.msg");
+				return;
+			}
+			Movement selectedMovement = (Movement) movTable.getValueAt(selectedRow, -1);
+			try {
+				Movement lastMovement = movBrowserManager.getLastMovement();
+				if (lastMovement.getCode() == selectedMovement.getCode()) {
+					int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
+					if (delete == JOptionPane.YES_OPTION) {
 						movBrowserManager.deleteLastMovement(lastMovement);
+					} else {
+						return;
 					}
-				} catch (OHServiceException e1) {
-					OHServiceExceptionUtil.showMessages(e1);
+				} else {
+					MessageDialog.warning(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
 					return;
 				}
-				MessageDialog.info(null, "angal.medicalstock.deletemovementsuccess.msg");
-				filterButton.doClick();
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
+				return;
 			}
-
+			MessageDialog.info(this, "angal.medicalstock.deletemovementsuccess.msg");
+			filterButton.doClick();
 		});
 		return deleteMovementButton;
+
 	}
 
 	private JButton getExportToExcelButton() {
