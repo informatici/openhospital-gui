@@ -31,8 +31,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -225,7 +223,7 @@ public class MovStockBrowser extends ModalJFrame {
 		if (MainMenu.checkUserGrants("btnpharmstockcmovdelete")) {
 			buttonPanel.add(getDeleteLastMovementButton());
 		}
-		
+
 		buttonPanel.add(getExportToExcelButton());
 		buttonPanel.add(getStockCardButton());
 		buttonPanel.add(getStockLedgerButton());
@@ -937,7 +935,7 @@ public class MovStockBrowser extends ModalJFrame {
 		});
 		return dischargeButton;
 	}
-	
+
 	/**
 	 * This method creates the button that delete the last stock {@link Movement)
 	 * 
@@ -948,15 +946,15 @@ public class MovStockBrowser extends ModalJFrame {
 		deleteMovementButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		deleteMovementButton.setMnemonic(KeyEvent.VK_D);
 		deleteMovementButton.addActionListener(actionEvent -> {
-		public void actionPerformed(ActionEvent e) {
-			int n = MessageDialog.yesNo(null,"angal.medicalstock.deletemovement.msg");
-					
+
+			int n = MessageDialog.yesNo(null, "angal.medicalstock.deletemovement.msg");
+
 			if (n == 0) {
 				try {
 					Movement lastMovement = movBrowserManager.getLastMovement();
 					if (lastMovement == null) {
 						MessageDialog.info(null, "angal.medicalstock.lastmovementnotfound.msg");
-						return ;
+						return;
 					} else {
 						movBrowserManager.deleteLastMovement(lastMovement);
 					}
@@ -967,12 +965,11 @@ public class MovStockBrowser extends ModalJFrame {
 				MessageDialog.info(null, "angal.medicalstock.deletemovementsuccess.msg");
 				filterButton.doClick();
 			}
-			
-		}
+
 		});
 		return deleteMovementButton;
 	}
-	
+
 	private JButton getExportToExcelButton() {
 		JButton exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
 		exportToExcel.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.exporttoexcel.btn.key"));
