@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -31,6 +31,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -220,6 +222,10 @@ public class MovStockBrowser extends ModalJFrame {
 		if (MainMenu.checkUserGrants("btnpharmstockdischarge")) {
 			buttonPanel.add(getDischargeButton());
 		}
+		if (MainMenu.checkUserGrants("btnpharmstockcmovdelete")) {
+			buttonPanel.add(getDeleteLastMovementButton());
+		}
+		
 		buttonPanel.add(getExportToExcelButton());
 		buttonPanel.add(getStockCardButton());
 		buttonPanel.add(getStockLedgerButton());
@@ -931,7 +937,42 @@ public class MovStockBrowser extends ModalJFrame {
 		});
 		return dischargeButton;
 	}
-
+	
+	/**
+	 * This method creates the button that delete the last stock {@link Movement)
+	 * 
+	 * @return
+	 */
+	private JButton getDeleteLastMovementButton() {
+		JButton deleteMovementButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteMovementButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+		deleteMovementButton.setMnemonic(KeyEvent.VK_D);
+		deleteMovementButton.addActionListener(actionEvent -> {
+		public void actionPerformed(ActionEvent e) {
+			int n = MessageDialog.yesNo(null,"angal.medicalstock.deletemovement.msg");
+					
+			if (n == 0) {
+				try {
+					Movement lastMovement = movBrowserManager.getLastMovement();
+					if (lastMovement == null) {
+						MessageDialog.info(null, "angal.medicalstock.lastmovementnotfound.msg");
+						return ;
+					} else {
+						movBrowserManager.deleteLastMovement(lastMovement);
+					}
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+					return;
+				}
+				MessageDialog.info(null, "angal.medicalstock.deletemovementsuccess.msg");
+				filterButton.doClick();
+			}
+			
+		}
+		});
+		return deleteMovementButton;
+	}
+	
 	private JButton getExportToExcelButton() {
 		JButton exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
 		exportToExcel.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.exporttoexcel.btn.key"));
