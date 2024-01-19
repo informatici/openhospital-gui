@@ -1469,7 +1469,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 			if (weight != 0 && height != 0) {
 				if (weight == ExaminationParameters.WEIGHT_MIN || weight == ExaminationParameters.WEIGHT_MAX || height == ExaminationParameters.HEIGHT_MIN || height == ExaminationParameters.HEIGHT_MAX) {
-					int response = JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.patient.examination.defaultvalue.msg"), "Confirm", JOptionPane.YES_NO_OPTION);
+					int response = MessageDialog.yesNo(null, MessageBundle.getMessage("angal.patient.examination.minmaxvalues.msg"));
 					if (response == JOptionPane.YES_OPTION) {
 						savePatientExamaination();
 					}
@@ -1477,7 +1477,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					savePatientExamaination();
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.examination.nonzero.msg"), "Error", JOptionPane.ERROR_MESSAGE);
+				MessageDialog.error(null, MessageBundle.getMessage("angal.patient.examination.nonzero.msg"));
 			}
 		}
 	}
