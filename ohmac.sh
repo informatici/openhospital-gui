@@ -30,7 +30,7 @@ DICOM_DIR="data/dicom_storage"
 PHOTO_DIR="data/photo"
 BACKUP_DIR="data/dump"
 
-OH_DIR="."
+OH_DIR="oh"
 OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
@@ -154,8 +154,8 @@ function set_oh_mode {
 		echo "Configuring OH mode..."
 		######## $OH_SETTINGS OH mode configuration
 		echo "Setting OH mode to $OH_MODE in OH configuration file -> $OH_SETTINGS..."        
-        sed -e "s/^MODE=.*/MODE=$OH_MODE/" -i '' $OH_DIR/rsc/$OH_SETTINGS
-		#sed -e "/^"MODE="/c\"MODE=$OH_MODE"" -i $OH_DIR/rsc/$OH_SETTINGS
+        sed -e "s/^MODE=.*/MODE=$OH_MODE/" -i '' ./$OH_DIR/rsc/$OH_SETTINGS
+		#sed -e "/^"MODE="/c\"MODE=$OH_MODE"" -i ./$OH_DIR/rsc/$OH_SETTINGS
 	else 
 		echo ""
 		echo ""
@@ -166,16 +166,16 @@ function set_oh_mode {
 
 ###################################################################
 function set_log_level {
-	if [ -f $OH_DIR/rsc/$LOG4J_SETTINGS ]; then
+	if [ -f ./$OH_DIR/rsc/$LOG4J_SETTINGS ]; then
 		echo ""        
 		######## $LOG4J_SETTINGS log_level configuration
-		echo "Setting log level to $LOG_LEVEL in OH configuration file -> $OH_DIR/rsc/$LOG4J_SETTINGS..."
+		echo "Setting log level to $LOG_LEVEL in OH configuration file -> ./$OH_DIR/rsc/$LOG4J_SETTINGS..."
 		case "$LOG_LEVEL" in
 			*INFO*)
-				sed -e "s/DEBUG/$LOG_LEVEL/g" -i '' "$OH_DIR/rsc/$LOG4J_SETTINGS"
+				sed -e "s/DEBUG/$LOG_LEVEL/g" -i '' "./$OH_DIR/rsc/$LOG4J_SETTINGS"
 			;;
 			*DEBUG*)
-				sed -e "s/INFO/$LOG_LEVEL/g" -i '' "$OH_DIR/rsc/$LOG4J_SETTINGS" 
+				sed -e "s/INFO/$LOG_LEVEL/g" -i '' "./$OH_DIR/rsc/$LOG4J_SETTINGS" 
 			;;
 			*)
 				echo "Invalid log level: $LOG_LEVEL. Exiting."
@@ -194,8 +194,8 @@ function java_check {
 # check if JAVA_BIN is already set and it exists
 echo ""
 echo "is java installed?"
-if [ -e "$OH_DIR/$JAVA_DIR/bin/java" ]; then
-	JAVA_BIN="$OH_DIR/$JAVA_DIR/bin/java"
+if [ -e "./$OH_DIR/$JAVA_DIR/bin/java" ]; then
+	JAVA_BIN="./$OH_DIR/$JAVA_DIR/bin/java"
 fi
 
 # if JAVA_BIN is not found download JRE
@@ -206,19 +206,19 @@ if [ ! -x "$JAVA_BIN" ]; then
 		get_confirmation;
 		# download java binaries
 		echo "  Download $JAVA_DISTRO..."
-        echo curl -o $OH_DIR/$JAVA_DISTRO.$EXT $JAVA_URL/$JAVA_DISTRO.$EXT		
+        echo curl -o ./$OH_DIR/$JAVA_DISTRO.$EXT $JAVA_URL/$JAVA_DISTRO.$EXT		
 
-		curl -o $OH_DIR/$JAVA_DISTRO.$EXT $JAVA_URL/$JAVA_DISTRO.$EXT		
+		curl -o ./$OH_DIR/$JAVA_DISTRO.$EXT $JAVA_URL/$JAVA_DISTRO.$EXT		
 	fi
 	echo "  Unpacking $JAVA_DISTRO..."
-	tar xf ./$JAVA_DISTRO.$EXT -C ./
+	tar xf ./$OH_DIR/$JAVA_DISTRO.$EXT -C ./$OH_DIR
 	if [ $? -ne 0 ]; then
 		echo "  Error unpacking Java. Exiting."
 		exit 1
 	fi
 	echo "  JAVA unpacked successfully!"
 	echo "  Removing downloaded file..."
-	rm ./$JAVA_DISTRO.$EXT
+	rm ./$OH_DIR/$JAVA_DISTRO.$EXT
 	echo "  Done!"
 fi
 
@@ -229,13 +229,13 @@ function java_lib_setup {
 	# NATIVE LIB setup
 	case $JAVA_ARCH in
         arm64)
-        NATIVE_LIB_PATH="$OH_DIR/lib/native/Linux/arm64"
+        NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/arm64"
         ;;
 		64)
-		NATIVE_LIB_PATH="$OH_DIR/lib/native/Linux/amd64"
+		NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/amd64"
 		;;
 		32)
-		NATIVE_LIB_PATH="$OH_DIR/lib/native/Linux/i386"
+		NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/i386"
 		;;
 	esac
 
@@ -252,7 +252,7 @@ function java_lib_setup {
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/lib
 
 	# include all jar files under lib/
-	DIRLIBS=$OH_DIR/lib/*.jar
+	DIRLIBS=./$OH_DIR/lib/*.jar
 	for i in ${DIRLIBS}
 	do
 		OH_CLASSPATH="$i":$OH_CLASSPATH
@@ -391,11 +391,12 @@ function test_db_connection {
 function import_db {
     start_db;
 	
-    SCRIPTDIR="../../../openhospital-core/$SQL_DIR"
+    SCRIPTDIR="./$SQL_DIR"
     SCRIPT="$DB_CREATE_SQL"
 
 	
-	TABLE_NAME="version"		
+	TABLE_NAME="OH_VERSION"		
+	echo mysql -u $USER -h$DATABASE_SERVER -p$DATABASE_ROOT_PW -e "DESCRIBE $DATABASE_NAME.$TABLE_NAME;"
 	if mysql -u $USER -h$DATABASE_SERVER -p$DATABASE_ROOT_PW -e "DESCRIBE $DATABASE_NAME.$TABLE_NAME;"; then	
 		echo " >db already imported"
 	else
@@ -432,7 +433,7 @@ function create_db {
     echo "is needed to create db?" 
 
     if brew list | grep -q mariadb >/dev/null; then
-        echo " >mariadb running"		
+        echo " >mariadb running"			
     else
         install_db;     
         brew services start mariadb >/dev/null;
@@ -448,6 +449,7 @@ function create_db {
         mysql -u $USER -e "CREATE USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON *.* TO '$DATABASE_USER'@'$DATABASE_SERVER' WITH GRANT OPTION; FLUSH PRIVILEGES;"        
         mysql -u $USER -e "ALTER USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_ROOT_PW';"    
         mysql -u $USER -e "CREATE DATABASE $DATABASE_NAME CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'$DATABASE_SERVER';"
+		mysql -u $USER -e "ALTER USER '$DATABASE_USER'@'$DATABASE_SERVER' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON *.* TO '$DATABASE_USER'@'$DATABASE_SERVER' WITH GRANT OPTION; FLUSH PRIVILEGES;"        
 
         if [ $? -ne 0 ]; then
             echo "Error: Database user creation failed! Exiting."
@@ -484,7 +486,7 @@ function write_config_files {
 	# set up configuration files
 	echo "Checking for OH configuration files..."
 	######## DICOM setup
-	IMAGING_FILE=$OH_DIR/rsc/$IMAGING_SETTINGS
+	IMAGING_FILE=./$OH_DIR/rsc/$IMAGING_SETTINGS
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $IMAGING_FILE ]; then
 		[ -f $IMAGING_FILE ] && mv -f $IMAGING_FILE $IMAGING_FILE.old
 		echo ">Writing OH configuration file -> $IMAGING_SETTINGS..."
@@ -493,9 +495,9 @@ function write_config_files {
 		-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" $IMAGING_FILE		
 	fi
 	######## $LOG4J_SETTINGS setup
-	LOG4J_FILE=$OH_DIR/rsc/$LOG4J_SETTINGS
+	LOG4J_FILE=./$OH_DIR/rsc/$LOG4J_SETTINGS
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $LOG4J_FILE ]; then
-		OH_LOG_DEST="$OH_DIR/$LOG_DIR/$OH_LOG_FILE"
+		OH_LOG_DEST="./$OH_DIR/$LOG_DIR/$OH_LOG_FILE"
 		[ -f $LOG4J_FILE ] && mv -f $LOG4J_FILE $LOG4J_FILE.old
 		echo ">Writing OH configuration file -> $LOG4J_SETTINGS..."
 		cp $LOG4J_FILE.dist $LOG4J_FILE
@@ -504,7 +506,7 @@ function write_config_files {
 		$LOG4J_FILE		
 	fi
 	######## $DATABASE_SETTINGS setup 
-	DB_FILE=$OH_DIR/rsc/$DATABASE_SETTINGS
+	DB_FILE=./$OH_DIR/rsc/$DATABASE_SETTINGS
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $DB_FILE ]; then
 		[ -f $DB_FILE ] && mv -f $DB_FILE $DB_FILE.old
 		echo ">Writing OH database configuration file -> $DATABASE_SETTINGS..."
@@ -514,7 +516,7 @@ function write_config_files {
 		$DB_FILE	
 	fi
 	######## $OH_SETTINGS setup
-	SETTINGS_FILE=$OH_DIR/rsc/$OH_SETTINGS
+	SETTINGS_FILE=./$OH_DIR/rsc/$OH_SETTINGS
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $SETTINGS_FILE ]; then
 		[ -f  $SETTINGS_FILE ] && mv -f $SETTINGS_FILE $SETTINGS_FILE.old
 		echo ">Writing OH configuration file -> $OH_SETTINGS..."
@@ -528,12 +530,12 @@ function write_config_files {
 
 function read_settings {
     CURRENT_DIR=$PWD
-
+	echo "./$OH_DIR/rsc/version.properties"
 	# check and read OH version file
 	if [ -f ./$OH_DIR/rsc/version.properties ]; then
 		source "./$OH_DIR/rsc/version.properties"
 		OH_VERSION=$VER_MAJOR.$VER_MINOR.$VER_RELEASE
-	else 
+	else 		
 		echo "Error: Open Hospital non found! Exiting."
 		exit 1;
 	fi
@@ -545,7 +547,8 @@ function read_settings {
 function start_gui {
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch	
-	$JAVA_BIN -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.menu.gui.Menu >> ./$LOG_DIR/$LOG_FILE 2>&1
+	
+	$JAVA_BIN -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.menu.gui.Menu >> $OH_DIR/$LOG_DIR/$LOG_FILE 2>&1
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."
