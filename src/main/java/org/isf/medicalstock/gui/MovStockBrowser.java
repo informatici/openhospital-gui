@@ -31,8 +31,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -225,7 +223,7 @@ public class MovStockBrowser extends ModalJFrame {
 		if (MainMenu.checkUserGrants("btnpharmstockcmovdelete")) {
 			buttonPanel.add(getDeleteLastMovementButton());
 		}
-		
+
 		buttonPanel.add(getExportToExcelButton());
 		buttonPanel.add(getStockCardButton());
 		buttonPanel.add(getStockLedgerButton());
@@ -937,7 +935,7 @@ public class MovStockBrowser extends ModalJFrame {
 		});
 		return dischargeButton;
 	}
-	
+
 	/**
 	 * This method creates the button that delete the last stock {@link Movement)
 	 * 
@@ -947,6 +945,7 @@ public class MovStockBrowser extends ModalJFrame {
 		JButton deleteMovementButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		deleteMovementButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		deleteMovementButton.addActionListener(actionEvent -> {
+<<<<<<< HEAD
 			int n = MessageDialog.yesNo(null,"angal.medicalstock.deletemovement.msg");
 					
 			if (n == 0) {
@@ -956,19 +955,46 @@ public class MovStockBrowser extends ModalJFrame {
 						MessageDialog.info(null, "angal.medicalstock.lastmovementnotfound.msg");
 						return ;
 					} else {
+=======
+
+			if (movTable.getSelectedRowCount() > 1) {
+				MessageDialog.warning(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
+				return;
+			}
+			int selectedRow = movTable.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.warning(this, "angal.medicalstock.pleaseselectamovement.msg");
+				return;
+			}
+			Movement selectedMovement = (Movement) movTable.getValueAt(selectedRow, -1);
+			try {
+				Movement lastMovement = movBrowserManager.getLastMovement();
+				if (lastMovement.getCode() == selectedMovement.getCode()) {
+					int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
+					if (delete == JOptionPane.YES_OPTION) {
+>>>>>>> a216fdf6a9b151a7765522fa35663558a818f216
 						movBrowserManager.deleteLastMovement(lastMovement);
+					} else {
+						return;
 					}
-				} catch (OHServiceException e1) {
-					OHServiceExceptionUtil.showMessages(e1);
+				} else {
+					MessageDialog.warning(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
 					return;
 				}
-				MessageDialog.info(null, "angal.medicalstock.deletemovementsuccess.msg");
-				filterButton.doClick();
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
+				return;
 			}
+<<<<<<< HEAD
+=======
+			MessageDialog.info(this, "angal.medicalstock.deletemovementsuccess.msg");
+			filterButton.doClick();
+>>>>>>> a216fdf6a9b151a7765522fa35663558a818f216
 		});
 		return deleteMovementButton;
+
 	}
-	
+
 	private JButton getExportToExcelButton() {
 		JButton exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
 		exportToExcel.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.exporttoexcel.btn.key"));
