@@ -946,9 +946,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton getDeleteLastMovementButton() {
 		JButton deleteMovementButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		deleteMovementButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		deleteMovementButton.setMnemonic(KeyEvent.VK_D);
 		deleteMovementButton.addActionListener(actionEvent -> {
-		public void actionPerformed(ActionEvent e) {
 			int n = MessageDialog.yesNo(null,"angal.medicalstock.deletemovement.msg");
 					
 			if (n == 0) {
@@ -967,8 +965,6 @@ public class MovStockBrowser extends ModalJFrame {
 				MessageDialog.info(null, "angal.medicalstock.deletemovementsuccess.msg");
 				filterButton.doClick();
 			}
-			
-		}
 		});
 		return deleteMovementButton;
 	}
