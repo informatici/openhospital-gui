@@ -1464,17 +1464,35 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			double weight = patex.getPex_weight();
+			int height = patex.getPex_height();
 
-			try {
-				examinationBrowserManager.saveOrUpdate(patex);
-				modified = false;
-			} catch (OHServiceException ohServiceException) {
-				MessageDialog.showExceptions(ohServiceException);
+			if (weight != 0 && height != 0) {
+				if (weight == ExaminationParameters.WEIGHT_MIN || weight == ExaminationParameters.WEIGHT_MAX || height == ExaminationParameters.HEIGHT_MIN || height == ExaminationParameters.HEIGHT_MAX) {
+					int response = MessageDialog.yesNo(null, MessageBundle.getMessage("angal.patient.examination.minmaxvalues.msg"));
+					if (response == JOptionPane.YES_OPTION) {
+						savePatientExamaination();
+					}
+				} else {
+					savePatientExamaination();
+				}
+			} else {
+				MessageDialog.error(null, MessageBundle.getMessage("angal.patient.examination.nonzero.msg"));
 			}
-			JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
-			model.reloadData();
 		}
 	}
+
+	private void savePatientExamaination(){
+		try {
+			examinationBrowserManager.saveOrUpdate(patex);
+			modified = false;
+		} catch (OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
+		}
+		JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
+		model.reloadData();
+	}
+
 
 	private Action getActionSavePatientExamination() {
 		if (actionSavePatientExamination == null) {
