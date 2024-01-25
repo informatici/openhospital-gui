@@ -43,7 +43,7 @@ WRITE_CONFIG_FILES="off"
 ############## OH general configuration - change at your own risk :-) ##############
 
 # OH_PATH is the directory where Open Hospital files are located
-# OH_PATH=/usr/local/OpenHospital/oh-1.13
+# OH_PATH=/usr/local/OpenHospital/oh-1.14
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #OH_MODE="PORTABLE" 
@@ -177,14 +177,13 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ######## JAVA Software
 ######## JAVA 64bit - default architecture
+### JRE 17 - openjdk distribution
+#JAVA_URL="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9.1"
+#JAVA_DISTRO="OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9"
+#JAVA_DIR="jdk-17.0.9_9-jre"
 
-### JRE 11 - openjdk distribution
-#JAVA_URL="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.11%2B9"
-#JAVA_DISTRO="OpenJDK11U-jre_x64_linux_hotspot_11.0.11_9"
-#JAVA_DIR="jdk-11.0.11+9-jre"
-
-### JRE 11 - zulu distribution
-JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-linux_$JAVA_PACKAGE_ARCH"
+### JRE 17 - zulu distribution
+JAVA_DISTRO="zulu17.46.19-ca-jre17.0.9-win_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
 
@@ -521,11 +520,11 @@ desktop_path=$(xdg-user-dir DESKTOP)
 echo "[Desktop Entry]
 	Type=Application
 	# The version of the Desktop Entry Specification
-	Version=1.13.0
+	Version=1.14.0
 	# The name of the application
 	Name=OpenHospital
 	# A comment which will be used as a tooltip
-	Comment=Open Hospital 1.13 shortcut
+	Comment=Open Hospital 1.14 shortcut
 	# The path to the folder in which the executable is run
 	Path=$OH_PATH
 	# The executable of the application, possibly with arguments

@@ -98,7 +98,7 @@ $global:ProgressPreference= 'SilentlyContinue'
 ##################### OH general configuration ####################
 
 # -> OH_PATH is the directory where Open Hospital files are located
-# OH_PATH="c:\Users\OH\OpenHospital\oh-1.13"
+# OH_PATH="c:\Users\OH\OpenHospital\oh-1.14"
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #$script:OH_MODE="PORTABLE"
@@ -236,18 +236,19 @@ $script:MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ######## JAVA Software
 ######## JAVA 64bit - default architecture
-### JRE 11 - openjdk
-#$script:JAVA_URL="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.11%2B9/"
-#$script:JAVA_DISTRO="OpenJDK11U-jre_x64_windows_hotspot_11.0.11_9"
-#$script:JAVA_DIR="jdk-11.0.11+9-jre"
+### JRE 17 - openjdk
+# https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9.1/OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9.zip
+#$script:JAVA_URL="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9.1/"
+#$script:JAVA_DISTRO="OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9"
+#$script:JAVA_DIR="jdk-17.0.9_9-jre"
 
-### JRE 11 - zulu distribution
+### JRE 17 - zulu distribution
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
-$script:JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-win_$JAVA_PACKAGE_ARCH"
+$script:JAVA_DISTRO="zulu17.46.19-ca-jre17.0.9-win_$JAVA_PACKAGE_ARCH"
 
-# workaround for JRE 11 - 32bit
+# workaround for JRE 17 - 32bit
 #	if ( $JAVA_ARCH -eq "32" ) {
-#	$script:JAVA_DISTRO="zulu11.58.25-ca-jre11.0.16.1-win_$JAVA_PACKAGE_ARCH"
+#	$script:JAVA_DISTRO="zulu17.46.19-ca-jre17.0.9-win_$JAVA_PACKAGE_ARCH"
 #}
 
 $script:JAVA_DIR=$JAVA_DISTRO
