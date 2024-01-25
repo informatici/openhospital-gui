@@ -213,7 +213,7 @@ function script_menu {
 	echo "   -C    set OH in CLIENT mode"
 	echo "   -P    set OH in PORTABLE mode"
 	echo "   -S    set OH in SERVER mode (portable)"
-	echo "   -l    set language -> [ ${OH_LANGUAGE_LIST[*]} ]"
+	echo "   -l    set OH language -> [ ${OH_LANGUAGE_LIST[*]} ]"
 	echo "   -E    toggle EXPERT MODE - show advanced options"
 	echo "   -h    show help"
 	echo "   -q    quit"
