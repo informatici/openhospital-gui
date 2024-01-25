@@ -332,7 +332,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					options.add(MessageBundle.getMessage("angal.billbrowser.patientstatement.txt"));
 				}
 				Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png");
-				String option = (String) MessageDialog.inputDialog(BillBrowser.this,
+				String option = (String) MessageDialog.inputDialog(this,
 						icon,
 						options.toArray(),
 						options.get(0),
@@ -393,7 +393,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					int month;
 					JMonthChooser monthChooser = new JMonthChooser();
 
-					int r = JOptionPane.showConfirmDialog(BillBrowser.this,
+					int r = JOptionPane.showConfirmDialog(this,
 							monthChooser,
 							MessageBundle.getMessage("angal.billbrowser.month.txt"),
 							JOptionPane.OK_CANCEL_OPTION,
@@ -453,7 +453,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						patient = bill.getBillPatient();
 					}
 					if (patient == null) {
-						MessageDialog.error(BillBrowser.this, "angal.common.pleaseselectapatient.msg");
+						MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 						return;
 					}
 					new GenericReportPatient(patient.getCode(), GeneralData.PATIENTBILLSTATEMENT);
@@ -465,7 +465,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				options.add(MessageBundle.getMessage("angal.billbrowser.fullreportallbills.txt"));
 
 				icon = new ImageIcon("rsc/icons/list_dialog.png");
-				option = (String) MessageDialog.inputDialog(BillBrowser.this,
+				option = (String) MessageDialog.inputDialog(this,
 						icon,
 						options.toArray(),
 						options.get(0),
@@ -504,11 +504,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private boolean isOnlyOneSelected(JTable table) {
 		int rowsSelected = table.getSelectedRowCount();
 		if (rowsSelected > 1) {
-			MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectonlyonebill.msg");
+			MessageDialog.error(this, "angal.billbrowser.pleaseselectonlyonebill.msg");
 			return false;
 		}
 		if (rowsSelected == 0) {
-			MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectabill.msg");
+			MessageDialog.error(this, "angal.billbrowser.pleaseselectabill.msg");
 			return false;
 		}
 		return true;
@@ -526,11 +526,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					int rowSelected = jTableBills.getSelectedRow();
 					Bill editBill = (Bill) jTableBills.getValueAt(rowSelected, -1);
 					if (MainMenu.checkUserGrants("editclosedbills") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
-						PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
-						pbe.addPatientBillListener(BillBrowser.this);
+						PatientBillEdit pbe = new PatientBillEdit(this, editBill, false);
+						pbe.addPatientBillListener(this);
 						pbe.setVisible(true);
 					} else {
-						MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill.msg");
+						MessageDialog.error(this, "angal.billbrowser.youcannoteditaclosedbill.msg");
 						return;
 					}
 				}
@@ -540,8 +540,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					}
 					int rowSelected = jTablePending.getSelectedRow();
 					Bill editBill = (Bill) jTablePending.getValueAt(rowSelected, -1);
-					PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
-					pbe.addPatientBillListener(BillBrowser.this);
+					PatientBillEdit pbe = new PatientBillEdit(this, editBill, false);
+					pbe.addPatientBillListener(this);
 					pbe.setVisible(true);
 				}
 				if (jScrollPaneClosed.isShowing()) {
@@ -551,11 +551,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					int rowSelected = jTableClosed.getSelectedRow();
 					Bill editBill = (Bill) jTableClosed.getValueAt(rowSelected, -1);
 					if (user.equals("admin")) { //$NON-NLS-1$
-						PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
-						pbe.addPatientBillListener(BillBrowser.this);
+						PatientBillEdit pbe = new PatientBillEdit(this, editBill, false);
+						pbe.addPatientBillListener(this);
 						pbe.setVisible(true);
 					} else {
-						MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill.msg");
+						MessageDialog.error(this, "angal.billbrowser.youcannoteditaclosedbill.msg");
 					}
 				}
 			});
@@ -577,17 +577,17 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							if (editBill.getStatus().equals("C")) { //$NON-NLS-1$
 								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
 							} else if (editBill.getStatus().equals("D")) {
-								MessageDialog.error(BillBrowser.this, "angal.billbrowser.thebilldeleted.msg");
+								MessageDialog.error(this, "angal.billbrowser.thebilldeleted.msg");
 								return;
 							} else if (editBill.getStatus().equals("O") && GeneralData.ALLOWPRINTOPENEDBILL) {
 								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
 							} else {
-								MessageDialog.error(BillBrowser.this, "angal.billbrowser.thebillisstillopen.msg");
+								MessageDialog.error(this, "angal.billbrowser.thebillisstillopen.msg");
 								return;
 							}
 						} else if (rowsSelected > 1) {
 							if (patientParent == null) {
-								MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectonlyonebill.msg");
+								MessageDialog.error(this, "angal.billbrowser.pleaseselectonlyonebill.msg");
 								return;
 							}
 							Bill billTemp;
@@ -615,13 +615,13 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							if (editBill.getStatus().equals("O") && GeneralData.ALLOWPRINTOPENEDBILL) {
 								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
 							} else {
-								PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
-								pbe.addPatientBillListener(BillBrowser.this);
+								PatientBillEdit pbe = new PatientBillEdit(this, editBill, false);
+								pbe.addPatientBillListener(this);
 								pbe.setVisible(true);
 							}
 						} else if (rowsSelected > 1) {
 							if (patientParent == null) {
-								MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectonlyonebill.msg");
+								MessageDialog.error(this, "angal.billbrowser.pleaseselectonlyonebill.msg");
 								return;
 							} else if (GeneralData.ALLOWPRINTOPENEDBILL) {
 								Bill billTemp;
@@ -637,7 +637,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 								new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList, fromDate, toDate, true,
 										true);
 							} else {
-								MessageDialog.error(BillBrowser.this, "angal.billbrowser.thebillisstillopen.msg");
+								MessageDialog.error(this, "angal.billbrowser.thebillisstillopen.msg");
 								return;
 							}
 						} else {
@@ -651,13 +651,13 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							Bill editBill = (Bill) jTableClosed.getValueAt(rowSelected, -1);
 							new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
 						} else if (rowsSelected > 1) {
-							MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectonlyonebill.msg");
+							MessageDialog.error(this, "angal.billbrowser.pleaseselectonlyonebill.msg");
 						} else {
 							throw new Exception();
 						}
 					}
 				} catch (Exception ex) {
-					MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectabill.msg");
+					MessageDialog.error(this, "angal.billbrowser.pleaseselectabill.msg");
 				}
 			});
 		}
@@ -686,8 +686,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.billbrowser.newbill.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.newbill.btn.key"));
 			jButtonNew.addActionListener(actionEvent -> {
-				PatientBillEdit newBill = new PatientBillEdit(BillBrowser.this, new Bill(), true);
-				newBill.addPatientBillListener(BillBrowser.this);
+				PatientBillEdit newBill = new PatientBillEdit(this, new Bill(), true);
+				newBill.addPatientBillListener(this);
 				newBill.setVisible(true);
 			});
 		}

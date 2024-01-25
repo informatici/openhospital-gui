@@ -325,21 +325,13 @@ public class WardPharmacyEdit extends JDialog {
 				movSelected.setQuantity((Double)jSpinnerQty.getValue());
 				movSelected.setUnits((String)jComboBoxType.getSelectedItem());
 
-				boolean result;
 				try {
-					result = movWardBrowserManager.updateMovementWard(movSelected);
-				} catch (OHServiceException e1) {
-					result = false;
-					OHServiceExceptionUtil.showMessages(e1);
-				}
-				if (result) {
+					movWardBrowserManager.updateMovementWard(movSelected);
 					fireMovementWardUpdated();
-				}
-				if (!result) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-				}
-				else {
 					dispose();
+				} catch (OHServiceException e1) {
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					OHServiceExceptionUtil.showMessages(e1);
 				}
 			});
 		}
@@ -369,8 +361,8 @@ public class WardPharmacyEdit extends JDialog {
 
 	private JSpinner getJSpinnerQty() {
 		if (jSpinnerQty == null) {
-			Double startQty = 0.;
-			Double minQty = 0.;
+			Double startQty = 0.0;
+			Double minQty = 0.0;
 			Double stepQty = 0.5;
 			jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty, minQty, maxQty, stepQty));
 			jSpinnerQty.setPreferredSize(new Dimension(50, 20));
@@ -489,7 +481,7 @@ public class WardPharmacyEdit extends JDialog {
 				public void focusLost(FocusEvent e) {
 					try {
 						movSelectedWeight = Float.parseFloat(jWeightTextField.getText());
-						if ((movSelectedWeight < 0)) {
+						if (movSelectedWeight < 0) {
 							MessageDialog.error(null, "angal.medicalstockward.insertavalidweight");
 							movSelectedWeight = 0;
 						}
@@ -522,7 +514,7 @@ public class WardPharmacyEdit extends JDialog {
 				public void focusLost(FocusEvent e) {
 					try {
 						movSelectedAge = Integer.parseInt(jAgeTextField.getText());
-						if ((movSelectedAge < 0) || (movSelectedAge > 200)) {
+						if (movSelectedAge < 0 || movSelectedAge > 200) {
 							MessageDialog.error(null, "angal.medicalstockwardedit.insertvalidage");
 							movSelectedAge = 0;
 						}

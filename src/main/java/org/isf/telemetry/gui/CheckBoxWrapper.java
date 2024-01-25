@@ -19,10 +19,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package org.isf.utils.jobjects;
+package org.isf.telemetry.gui;
 
-public interface DelayTimerCallback {
+import javax.swing.JCheckBox;
 
-	void trigger();
+public class CheckBoxWrapper {
+
+	private String id;
+	private Integer order;
+	private JCheckBox checkbox;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
+	}
+
+	public JCheckBox getCheckbox() {
+		return checkbox;
+	}
+
+	public void setCheckbox(JCheckBox checkbox) {
+		this.checkbox = checkbox;
+	}
 
 }

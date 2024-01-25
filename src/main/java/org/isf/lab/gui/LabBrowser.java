@@ -68,17 +68,7 @@ import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.TimeTools;
 
 /**
- * ------------------------------------------
  * LabBrowser - list all labs
- * -----------------------------------------
- * modification history
- * 02/03/2006 - theo, Davide - first beta version
- * 08/11/2006 - ross - changed button Show into Results
- *                     fixed the exam deletion
- * 					   version is now 1.0
- * 04/01/2009 - ross - do not use roll, use add(week,-1)!
- *                     roll does not change the year!
- * ------------------------------------------
  */
 public class LabBrowser extends ModalJFrame implements LabListener, LabEditListener, LabEditExtendedListener {
 

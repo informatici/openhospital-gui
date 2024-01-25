@@ -48,8 +48,8 @@ public class SessionRefreshTimerRunnable implements Runnable {
 				double y = point.getY();
 
 				if (x != this.x || y != this.y) {
-					if (UserSession.getTimer() != null) {
-						UserSession.getTimer().startTimer();
+					if (RestartUserSession.getTimer() != null) {
+						RestartUserSession.getTimer().startTimer();
 						LOGGER.trace("Mouse moved. Session refreshed.");
 					}
 					this.x = x;

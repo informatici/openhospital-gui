@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -19,45 +19,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package org.isf.video.gui;
+package org.isf.help;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
+import javax.swing.JDialog;
 
+import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.log.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PhotoPreviewPanel extends JPanel	{
+/**
+ * 
+ */
+public class LogViewer extends JDialog {
 
-	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(PhotoPreviewPanel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LogViewer.class);
 
-	private Image img;
-	
-	public PhotoPreviewPanel(String path)	{
-		try	{
-			img = ImageIO.read(new File(path));
+	private String logfile = LogUtil.getLogFileAbsolutePath();
+
+	public LogViewer() {
+		try {
+			LOGGER.debug("Opening location for: {}", logfile);
+			LogUtil.openLogFileLocation();
+		} catch (IOException e) {
+			MessageDialog.error(this, "angal.log.foldererror.fmt.msg", new File(logfile).getParent());
 		}
-		catch (IOException ioe)	{
-			LOGGER.error("Path: {}", path);
-			LOGGER.error(ioe.getMessage(), ioe);
-		}
-		
-		setPreferredSize(new Dimension(img.getWidth(null), img.getHeight(null)));
+
 	}
-	
-	//override paint method of panel
-	@Override
-	public void paint(Graphics g)	{
-		//draw the image
-		if (img != null)	{
-			g.drawImage(img, 0, 0, this);
-		}
-	}
+
 }

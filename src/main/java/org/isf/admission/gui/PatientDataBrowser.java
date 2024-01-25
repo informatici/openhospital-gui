@@ -46,6 +46,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.admission.gui.AdmissionBrowser.AdmissionListener;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.disease.manager.DiseaseBrowserManager;
@@ -56,11 +57,12 @@ import org.isf.malnutrition.gui.MalnutritionBrowser;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.opd.gui.OpdEdit;
+import org.isf.opd.gui.OpdEdit.SurgeryListener;
 import org.isf.opd.gui.OpdEditExtended;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.patient.gui.PatientInsert;
-import org.isf.patient.gui.PatientInsertExtended;
+import org.isf.patient.gui.PatientInsertExtended.PatientListener;
 import org.isf.patient.gui.PatientSummary;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
@@ -71,21 +73,9 @@ import org.isf.utils.table.TableSorter;
 
 /**
  * This class shows and allows to modify all patient data and all patient admissions.
- * <p>
- * last release  oct-23-06
- * @author flavio
- * ----------------------------------------------------
- * (org.isf.admission.gui)PatientDataBrowser
- * ---------------------------------------------------
- * modification history
- * 08/09/2008 - alex - added OPD in the table
- * 					 - modified EDIT and DELETE methods to match the selection
- * 					 - fixed record elimination in the view port
- * 					 - modified some panels in GUI
- * ------------------------------------------
  */
 public class PatientDataBrowser extends ModalJFrame implements 
-				PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener, OpdEditExtended.SurgeryListener, OpdEdit.SurgeryListener {
+				PatientInsert.PatientListener, PatientListener, AdmissionListener, OpdEditExtended.SurgeryListener, SurgeryListener {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
@@ -287,17 +277,17 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 				if (selectedObj instanceof Admission) {
 					Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
-					new AdmissionBrowser(PatientDataBrowser.this, admittedPatientWindow, patient, ad);
+					new AdmissionBrowser(this, admittedPatientWindow, patient, ad);
 				} else {
 
 					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 					if (GeneralData.OPDEXTENDED) {
-						OpdEditExtended newrecord = new OpdEditExtended(PatientDataBrowser.this, opd, false);
-						newrecord.addSurgeryListener(PatientDataBrowser.this);
-						newrecord.showAsModal(PatientDataBrowser.this);
+						OpdEditExtended newrecord = new OpdEditExtended(this, opd, false);
+						newrecord.addSurgeryListener(this);
+						newrecord.showAsModal(this);
 					} else {
-						OpdEdit newrecord = new OpdEdit(PatientDataBrowser.this, opd, false);
-						newrecord.addSurgeryListener(PatientDataBrowser.this);
+						OpdEdit newrecord = new OpdEdit(this, opd, false);
+						newrecord.addSurgeryListener(this);
 						newrecord.setVisible(true);
 					}
 				}
@@ -342,7 +332,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 						if (adm.getAdmitted() == 1) {
 							fireDeleteAdmissionUpdated(adm);
 						}
-						PatientDataBrowser.this.requestFocus();
+                        this.requestFocus();
 					}
 				} else {
 					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
@@ -380,7 +370,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 				if (selectedObj instanceof Admission) {
 					Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
 					if (ad.getType().equalsIgnoreCase("M")) {
-						new MalnutritionBrowser(PatientDataBrowser.this, ad);
+						new MalnutritionBrowser(this, ad);
 					}
 					else {
 						MessageDialog.info(null, "angal.admission.theselectedadmissionhasnoconcernwithmalnutrition.msg");

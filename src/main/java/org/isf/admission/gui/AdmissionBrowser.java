@@ -47,6 +47,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -118,26 +119,6 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 /**
  * This class shows essential patient data and allows to create an admission
  * record or modify an existing one.
- * <p>
- * release 2.5 nov-10-06
- *
- * @author flavio
- * ----------------------------------------------------------
- * modification history
- * ====================
- * 23/10/06 - flavio - borders set to not resizable
- *                     changed Disease IN (/OUT) into Dignosis IN (/OUT)
- * <p>
- * 10/11/06 - ross - added RememberDate for admission Date
- * 				   - only diseses with flag In Patient (IPD) are displayed
- *                 - on Insert. in edit all are displayed
- *                 - the correct way should be to display the IPD + the one aready registered
- * 18/08/08 - Alex/Andrea - Calendar added
- * 13/02/09 - Alex - Cosmetic changes to UI
- * 10/01/11 - Claudia - insert ward beds availability
- * 01/01/11 - Alex - GUI and code reengineering
- * 29/12/11 - Nicola - insert alert IN/OUT patient for communication module
- * -----------------------------------------------------------
  */
 public class AdmissionBrowser extends ModalJFrame {
 
@@ -618,7 +599,7 @@ public class AdmissionBrowser extends ModalJFrame {
 							.addGroup(layout.createParallelGroup(LEADING)
 											.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 											.addComponent(getDeliveryTypePanel()))
-							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+							.addGroup(layout.createParallelGroup(Alignment.TRAILING)
 											.addComponent(getTreatmentPanel())
 											.addComponent(getDeliveryResultTypePanel())
 											.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
@@ -950,7 +931,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						}
 						int freeBeds = nBeds - usedBeds;
 						if (freeBeds <= 0) {
-							MessageDialog.info(AdmissionBrowser.this, "angal.admission.wardwithnobedsavailable.msg");
+							MessageDialog.info(this, "angal.admission.wardwithnobedsavailable.msg");
 						}
 					}
 				}
@@ -1552,7 +1533,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					ph.setPatientId(patient.getCode());
 					PatientHistory patientHistory = Optional.ofNullable(patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
 					PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
-					PatientHistoryEdit dialog = new PatientHistoryEdit(AdmissionBrowser.this, pph, true);
+					PatientHistoryEdit dialog = new PatientHistoryEdit(this, pph, true);
 					dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 					dialog.pack();
 					dialog.setLocationRelativeTo(null);
@@ -1587,11 +1568,11 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				GenderPatientExamination gpatex = new GenderPatientExamination(patex, patient.getSex() == 'M');
 
-				PatientExaminationEdit dialog = new PatientExaminationEdit(AdmissionBrowser.this, gpatex);
+				PatientExaminationEdit dialog = new PatientExaminationEdit(this, gpatex);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.pack();
 				dialog.setLocationRelativeTo(null);
-				dialog.showAsModal(AdmissionBrowser.this);
+				dialog.showAsModal(this);
 			});
 		}
 		return jButtonExamination;
@@ -1635,17 +1616,17 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				// get ward id (not null)
 				if (wardBox.getSelectedIndex() == 0 || wardBox.getSelectedItem() == null) {
-					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavalidward.msg");
+					MessageDialog.error(this, "angal.admission.pleaseselectavalidward.msg");
 					return;
 				}
-				admission.setWard((Ward) (wardBox.getSelectedItem()));
+				admission.setWard((Ward) wardBox.getSelectedItem());
 				if (admission.getWard().getCode().equalsIgnoreCase("M")) {
 					isPregnancy = true;
 				}
 
 				// get disease in id ( it can be null)
 				if (diseaseInBox.getSelectedIndex() == 0 || diseaseInBox.getSelectedItem() == null) {
-					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavaliddiseasein.msg");
+					MessageDialog.error(this, "angal.admission.pleaseselectavaliddiseasein.msg");
 					return;
 				}
 				try {
@@ -1698,7 +1679,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				dateIn = dateInFieldCal.getLocalDateTime();
 				if (dateIn == null) {
-					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseinsertavalidadmissiondate.msg");
+					MessageDialog.error(this, "angal.admission.pleaseinsertavalidadmissiondate.msg");
 					return;
 				}
 				admission.setAdmDate(dateIn);
@@ -1706,7 +1687,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				// get admission type (not null)
 				if (admTypeBox.getSelectedIndex() == 0) {
-					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavalidadmissiontype.msg");
+					MessageDialog.error(this, "angal.admission.pleaseselectavalidadmissiontype.msg");
 					return;
 				}
 				admission.setAdmType(admTypeList.get(admTypeBox.getSelectedIndex() - 1));
@@ -1725,13 +1706,13 @@ public class AdmissionBrowser extends ModalJFrame {
 				// if isDischarge, null value not allowed
 				if (disTypeBox.getSelectedIndex() == 0) {
 					if (isDischarge) {
-						MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavaliddischargetype.msg");
+						MessageDialog.error(this, "angal.admission.pleaseselectavaliddischargetype.msg");
 						return;
 					}
 					admission.setDisType(null);
 				} else {
 					if (dateOut == null) {
-						MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseinsertadischargedate.msg");
+						MessageDialog.error(this, "angal.admission.pleaseinsertadischargedate.msg");
 						return;
 					}
 					if (isDischarge) {
@@ -1760,7 +1741,7 @@ public class AdmissionBrowser extends ModalJFrame {
 							admission.setWeight(f);
 						}
 					} catch (Exception ex) {
-						MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseinsertavalidweightvalue.msg");
+						MessageDialog.error(this, "angal.admission.pleaseinsertavalidweightvalue.msg");
 						return;
 					}
 

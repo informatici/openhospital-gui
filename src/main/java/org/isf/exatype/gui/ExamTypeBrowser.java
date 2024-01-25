@@ -44,13 +44,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
- * ------------------------------------------
  * ExamTypeBrowser - list all exam types. Let the user select an exam type to edit
- * -----------------------------------------
- * modification history
- * ??/??/2005 - first beta version
- * 03/11/2006 - ross - version is now 1.0
- * ------------------------------------------
  */
 public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 

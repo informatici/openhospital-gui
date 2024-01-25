@@ -91,6 +91,7 @@ import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.operation.gui.OperationRowOpd;
 import org.isf.patient.gui.PatientInsert;
+import org.isf.patient.gui.PatientInsert.PatientListener;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
@@ -112,41 +113,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * ------------------------------------------
  * OpdEditExtended - add/edit an OPD registration
- * -----------------------------------------
- * modification history
- * 11/12/2005 - Vero, Rick  - first beta version
- * 07/11/2006 - ross - renamed from Surgery
- *                   - added visit date, disease 2, disease 3
- *                   - disease is not mandatory if re-attendance
- * 			         - version is now 1.0
- * 28/05/2008 - ross - added referral to / referral from check boxes
- * 12/06/2008 - ross - added patient data
- * 					 - fixed error on checking "male"/"female" option: should check after translation
- * 					 - version is not a resource into the bundle, is locale to the form
- *                   - form rearranged in x,y coordinates
- * 			         - version is now 1.1
- * 26/08/2008 - teo  - added patient chooser
- * 01/09/2008 - alex - added constructor for call from Admission
- * 					 - set Patient oriented OPD
- * 					 - history management for the patients
- * 					 - version now is 1.2
- * 01/01/2009 - Fabrizio - modified age fields back to Integer type
- * 13/02/2009 - Alex - added possibility to edit patient through EditButton
- * 					   added Edit.png icon
- * 					   fixed a bug on the first element in the comboBox
- * 13/02/2009 - Alex - added trash button for resetting searchfield
- * 03/13/2009 - Alex - lastOpdVisit appears at the bottom
- * 					   added control on duplicated diseases
- * 					   added re-attendance checkbox for a clear view
- * 					   new/re-attendance managed freely
- * 07/13/2009 - Alex - note field for the visit recall last visit note when start OPD from
- *  				   Admission and added Note even in Last OPD Visit
- *	  				   Extended patient search to patient code
- * ------------------------------------------
- * */
-public class OpdEditExtended extends ModalJFrame implements PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener {
+ */
+public class OpdEditExtended extends ModalJFrame implements PatientInsertExtended.PatientListener, PatientListener, ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -1184,7 +1153,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				if (opd.getDisease() != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease().getCode().equals(elem.getCode())) {
-							MessageDialog.warning(OpdEditExtended.this, "angal.opd.disease1mayhavebeencancelled.msg");
+							MessageDialog.warning(this, "angal.opd.disease1mayhavebeencancelled.msg");
 							diseaseBox1.addItem(elem);
 							diseaseBox1.setSelectedItem(elem);
 						}
@@ -1218,7 +1187,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				for (Disease elem : diseasesAll) {
 					
 					if (opd.getDisease2().getCode().equals(elem.getCode())) {
-						MessageDialog.warning(OpdEditExtended.this, "angal.opd.disease2mayhavebeencancelled.msg");
+						MessageDialog.warning(this, "angal.opd.disease2mayhavebeencancelled.msg");
 						diseaseBox2.addItem(elem);
 						diseaseBox2.setSelectedItem(elem);
 					}
@@ -1370,12 +1339,12 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				if (jComboPatResult.getSelectedItem() != null) {
 					if (jComboPatResult.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.opd.enteranewpatient.txt")) == 0) {
 						if (GeneralData.PATIENTEXTENDED) {
-							PatientInsertExtended newrecord = new PatientInsertExtended(OpdEditExtended.this, new Patient(), true);
-							newrecord.addPatientListener(OpdEditExtended.this);
+							PatientInsertExtended newrecord = new PatientInsertExtended(this, new Patient(), true);
+							newrecord.addPatientListener(this);
 							newrecord.setVisible(true);
 						} else {
-							PatientInsert newrecord = new PatientInsert(OpdEditExtended.this, new Patient(), true);
-							newrecord.addPatientListener(OpdEditExtended.this);
+							PatientInsert newrecord = new PatientInsert(this, new Patient(), true);
+							newrecord.addPatientListener(this);
 							newrecord.setVisible(true);
 						}
 
@@ -1403,12 +1372,12 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			jPatientEditButton.addActionListener(actionEvent -> {
 				if (opdPatient != null) {
 					if (GeneralData.PATIENTEXTENDED) {
-						PatientInsertExtended editrecord = new PatientInsertExtended(OpdEditExtended.this, opdPatient, false);
-						editrecord.addPatientListener(OpdEditExtended.this);
+						PatientInsertExtended editrecord = new PatientInsertExtended(this, opdPatient, false);
+						editrecord.addPatientListener(this);
 						editrecord.setVisible(true);
 					} else {
-						PatientInsert editrecord = new PatientInsert(OpdEditExtended.this, opdPatient, false);
-						editrecord.addPatientListener(OpdEditExtended.this);
+						PatientInsert editrecord = new PatientInsert(this, opdPatient, false);
+						editrecord.addPatientListener(this);
 						editrecord.setVisible(true);
 					}
 				}
@@ -1442,7 +1411,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			if (opd.getDisease3()!=null) {	
 				for (Disease elem : diseasesAll) {
 					if (opd.getDisease3().getCode().equals(elem.getCode())) {
-						MessageDialog.warning(OpdEditExtended.this, "angal.opd.disease3mayhavebeencancelled.msg");
+						MessageDialog.warning(this, "angal.opd.disease3mayhavebeencancelled.msg");
 						diseaseBox3.addItem(elem);
 						diseaseBox3.setSelectedItem(elem);
 					}
@@ -1456,8 +1425,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		if (jTabbedPaneOpd == null) {
 			jTabbedPaneOpd = new JTabbedPane();
 			jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.common.patient.txt"), getJPanelPatient());
-			if ((insert && MainMenu.checkUserGrants("btnopdnewoperation"))
-					|| (!insert && MainMenu.checkUserGrants("btnopdeditoperation"))) {
+			if (insert && MainMenu.checkUserGrants("btnopdnewoperation")
+					|| !insert && MainMenu.checkUserGrants("btnopdeditoperation")) {
 				jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.admission.operation"), getMultiOperationTab());
 			}
 			jTabbedPaneOpd.setPreferredSize(new Dimension(200, 400));
@@ -1677,7 +1646,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			
 			jButtonExamination.addActionListener(actionEvent -> {
 				if (opdPatient == null) {
-					MessageDialog.error(OpdEditExtended.this,"angal.common.pleaseselectapatient.msg");
+					MessageDialog.error(this,"angal.common.pleaseselectapatient.msg");
 					return;
 				}
 
@@ -1696,11 +1665,11 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 				GenderPatientExamination gpatex = new GenderPatientExamination(patex, opdPatient.getSex() == 'M');
 
-				PatientExaminationEdit dialog = new PatientExaminationEdit(OpdEditExtended.this, gpatex);
+				PatientExaminationEdit dialog = new PatientExaminationEdit(this, gpatex);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.pack();
 				dialog.setLocationRelativeTo(null);
-				dialog.showAsModal(OpdEditExtended.this);
+				dialog.showAsModal(this);
 			});
 		}
 		return jButtonExamination;
@@ -1717,7 +1686,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 					Patient patient = this.patientBrowserManager.getPatientById(opdPatient.getCode());
 					PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(opdPatient.getCode())).orElse(ph);
 					PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
-					PatientHistoryEdit dialog = new PatientHistoryEdit(OpdEditExtended.this, pph, true);
+					PatientHistoryEdit dialog = new PatientHistoryEdit(this, pph, true);
 					dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 					dialog.pack();
 					dialog.setLocationRelativeTo(null);
@@ -1755,7 +1724,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 					try {
 						opdProgYear = Integer.parseInt(jOpdNumField.getText());
 						if (opdBrowserManager.isExistOpdNum(opdProgYear, visitDateOpd.getYear())) {
-							MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumberalreadyexist.msg");
+							MessageDialog.error(this, "angal.opd.opdnumberalreadyexist.msg");
 							if (insert) {
 								jOpdNumField.setText(String.valueOf(getOpdProgYear(visitDateOpd)));
 							}
@@ -1763,7 +1732,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 							return;
 						}
 					} catch (NumberFormatException e) {
-						MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumbermustbeanumber.msg");
+						MessageDialog.error(this, "angal.opd.opdnumbermustbeanumber.msg");
 						jOpdNumField.requestFocusInWindow();
 						return;
 					} catch (OHServiceException e) {
@@ -1798,15 +1767,15 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				}
 				// disease
 				if (diseaseBox1.getSelectedIndex() > 0) {
-					disease = ((Disease) diseaseBox1.getSelectedItem());
+					disease = (Disease) diseaseBox1.getSelectedItem();
 				}
 				// disease2
 				if (diseaseBox2.getSelectedIndex() > 0) {
-					disease2 = ((Disease) diseaseBox2.getSelectedItem());
+					disease2 = (Disease) diseaseBox2.getSelectedItem();
 				}
 				// disease3
 				if (diseaseBox3.getSelectedIndex() > 0) {
-					disease3 = ((Disease) diseaseBox3.getSelectedItem());
+					disease3 = (Disease) diseaseBox3.getSelectedItem();
 				}
 
 				// nextVisit - the presence of opdNextVisitDate drives the management of the visit linked to the OPD
@@ -1815,16 +1784,16 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				LocalDateTime nextVisitDateTime = opdNextVisitDate.getLocalDateTimePermissive();
 				if (nextVisitDateTime != null) {
 					if (nextVisitDateTime.getMinute() == 0 && nextVisitDateTime.getHour() == 0) {
-						MessageDialog.error(OpdEditExtended.this, "angal.opd.pleasechooseavalidtimeforthenextvisit.msg");
+						MessageDialog.error(this, "angal.opd.pleasechooseavalidtimeforthenextvisit.msg");
 						return;
 					}
 					if (nextVisitDateTime.isBefore(visitDateOpd)) {
-						MessageDialog.error(OpdEditExtended.this, "angal.opd.cannotsetadateinthepastfornextvisit.msg");
+						MessageDialog.error(this, "angal.opd.cannotsetadateinthepastfornextvisit.msg");
 						return;
 					}
 					Ward ward = (Ward) nextVisitWardBox.getSelectedItem();
 					if (ward == null) {
-						MessageDialog.error(OpdEditExtended.this, "angal.opd.pleasechooseawardforthenextvisit.msg");
+						MessageDialog.error(this, "angal.opd.pleasechooseawardforthenextvisit.msg");
 						return;
 					}
 					isNextVisit = true;
@@ -1870,8 +1839,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 							dispose();
 						} else {
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							return;
-						}
+                        }
 					} else { // Update
 						if (isNextVisit) {
 							nextVisit = visitManager.updateVisit(nextVisit);
@@ -1881,7 +1849,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 						}
 						Opd updatedOpd = opdBrowserManager.updateOpd(opd);
 						if (updatedOpd == null) {
-							MessageDialog.error(OpdEditExtended.this, "angal.common.datacouldnotbesaved.msg");
+							MessageDialog.error(this, "angal.common.datacouldnotbesaved.msg");
 						} else {
 							fireSurgeryUpdated(updatedOpd);
 							// can't delete the visit info until the OPD is updated

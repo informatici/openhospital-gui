@@ -54,13 +54,6 @@ import org.isf.utils.layout.SpringUtilities;
 
 /**
  * This class allows operations edits and inserts
- *
- * @author Rick, Vero, Pupo
- * ----------------------------------------------------------
- * modification history
- * ====================
- * 13/02/09 - Alex - added Major/Minor control
- * -----------------------------------------------------------
  */
 public class OperationEdit extends JDialog {
 

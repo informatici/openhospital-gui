@@ -389,41 +389,41 @@ public class WardEdit extends JDialog {
 				try {
 					beds = Integer.parseInt(bedsTextField.getText());
 				} catch (NumberFormatException f) {
-					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidbedsnumber");
+					MessageDialog.error(this, "angal.ward.insertavalidbedsnumber");
 					return;
 				}
 				if (beds < 0) {
-					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidbedsnumber");
+					MessageDialog.error(this, "angal.ward.insertavalidbedsnumber");
 					return;
 				}
 				try {
 					nurs = Integer.parseInt(nursTextField.getText());
 				} catch (NumberFormatException f) {
-					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidnursesnumber");
+					MessageDialog.error(this, "angal.ward.insertavalidnursesnumber");
 					return;
 				}
 				if (nurs < 0) {
-					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidnursesnumber");
+					MessageDialog.error(this, "angal.ward.insertavalidnursesnumber");
 					return;
 				}
 				try {
 					docs = Integer.parseInt(docsTextField.getText());
 				} catch (NumberFormatException f) {
-					MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddoctorsnumber");
+					MessageDialog.error(this, "angal.ward.insertavaliddoctorsnumber");
 					return;
 				}
 				if (docs < 0) {
-					MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddoctorsnumber");
+					MessageDialog.error(this, "angal.ward.insertavaliddoctorsnumber");
 					return;
 				}
 				try {
 					duration = Integer.parseInt(durationTextField.getText());
 				} catch (NumberFormatException f) {
-					MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddurationvalue.msg");
+					MessageDialog.error(this, "angal.ward.insertavaliddurationvalue.msg");
 					return;
 				}
 				if (duration <= 0) {
-					MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddurationvalue.msg");
+					MessageDialog.error(this, "angal.ward.insertavaliddurationvalue.msg");
 					return;
 				}
 				ward.setDescription(descriptionTextField.getText());

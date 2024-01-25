@@ -48,6 +48,9 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.patient.model.PatientProfilePhoto;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
@@ -64,7 +67,7 @@ public class PatientSummary {
 	private static final String UNKNOWN = MessageBundle.getMessage("angal.common.unknown.txt");
 
 	private Patient patient;
-	
+
 	private int maximumWidth = 350;
 	private int borderThickness = 10;
 
@@ -95,10 +98,10 @@ public class PatientSummary {
 		dataPanel.add(getPatientKinAndTelephonePanel());
 		dataPanel.add(getPatientBloodAndEcoPanel());
 		dataPanel.add(getPatientMaritalAndProfession());
-		
+
 		p.add(dataPanel, BorderLayout.CENTER);
 		p.add(setMyBorder(getPatientNotePanel(), MessageBundle.getMessage("angal.admission.patientnotes.label")), BorderLayout.SOUTH);
-		
+
 		Dimension dim = p.getPreferredSize();
 		p.setMaximumSize(new Dimension(maximumWidth, dim.height));
 
@@ -140,12 +143,12 @@ public class PatientSummary {
 		cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.X_AXIS));
 		cardPanel.setBackground(Color.WHITE);
 		cardPanel.setBorder(BorderFactory.createEmptyBorder(INSETSIZE, INSETSIZE, INSETSIZE, INSETSIZE));
-		
+
 		JPanel patientData = new JPanel();
 		patientData.setLayout(new BoxLayout(patientData, BoxLayout.Y_AXIS));
 		patientData.setBackground(Color.WHITE);
 		patientData.setBorder(BorderFactory.createEmptyBorder(INSETSIZE, INSETSIZE, INSETSIZE, INSETSIZE));
-		
+
 		if (patient == null) {
 			patient = new Patient();
 		}
@@ -160,10 +163,18 @@ public class PatientSummary {
 		JLabel patientAge = new JLabel(MessageBundle.getMessage("angal.common.age.txt") + ": " + TimeTools.getFormattedAge(patient.getBirthDate()));
 		JLabel patientSex = new JLabel(MessageBundle.getMessage("angal.common.sex.txt") + ": " + patient.getSex());
 		JLabel patientTOB = new JLabel(MessageBundle.getMessage("angal.patient.tobm") + ": " + filtra(patient.getBloodType()));
-		
+
 		JLabel patientPhoto = new JLabel();
-		if (patient.getPatientProfilePhoto() != null && patient.getPatientProfilePhoto().getPhotoAsImage() != null) {
-			patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(patient.getPatientProfilePhoto().getPhotoAsImage(), GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH)));
+		PatientProfilePhoto photo = null;
+		try {
+			photo = this.patientBrowserManager.retrievePatientProfilePhoto(patient);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
+
+		if (photo != null && photo.getPhotoAsImage() != null) {
+			patientPhoto.setIcon(
+							new ImageIcon(ImageUtil.scaleImage(photo.getPhotoAsImage(), GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH)));
 		} else {
 			try {
 				Image noPhotoImage = ImageIO.read(new File("rsc/images/nophoto.png"));
@@ -172,7 +183,7 @@ public class PatientSummary {
 				LOGGER.error("rsc/images/nophoto.png is missing...");
 			}
 		}
-		
+
 		patientData.add(patientCode);
 		patientData.add(Box.createVerticalStrut(INSETSIZE));
 		patientData.add(patientName);
@@ -180,7 +191,7 @@ public class PatientSummary {
 		patientData.add(patientSex);
 		patientData.add(Box.createVerticalGlue());
 		patientData.add(patientTOB);
-		
+
 		cardPanel.add(patientPhoto);
 		cardPanel.add(Box.createHorizontalStrut(INSETSIZE));
 		cardPanel.add(patientData);
@@ -227,7 +238,7 @@ public class PatientSummary {
 		lP.add(l);
 		return lP;
 	}
-	
+
 	private JPanel getPatientAddressPanel() {
 		JLabel l;
 		if (patient.getAddress() == null || patient.getAddress().equalsIgnoreCase("")) {
@@ -283,7 +294,8 @@ public class PatientSummary {
 
 	private JPanel getPatientMaritalStatusPanel() {
 		JLabel l;
-		if (patient.getMaritalStatus().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getMaritalStatus().equalsIgnoreCase("")) {
+		if (patient.getMaritalStatus().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt"))
+						|| patient.getMaritalStatus().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
 			l = new JLabel(patientBrowserManager.getMaritalTranslated(patient.getMaritalStatus()));
@@ -313,7 +325,7 @@ public class PatientSummary {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisdead"));
 		}
 		// added
-			labelBfr.append(patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getMotherName() + ")<BR>");
+		labelBfr.append(patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : '(' + patient.getMotherName() + ")<BR>");
 		if (patient.getFather() == 'A') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisalive"));
 		} else if (patient.getFather() == 'D') {

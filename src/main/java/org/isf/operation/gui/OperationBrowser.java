@@ -42,6 +42,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.operation.gui.OperationEdit.OperationListener;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.opetype.manager.OperationTypeBrowserManager;
@@ -57,7 +58,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Rick, Vero, Pupo
  */
-public class OperationBrowser extends ModalJFrame implements OperationEdit.OperationListener {
+public class OperationBrowser extends ModalJFrame implements OperationListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
@@ -82,13 +83,13 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	}
 	
 	//TODO: replace with mapping mnemonic / translation in OperationBrowserManager
-	public static String OPD = MessageBundle.getMessage("angal.admission.opd.txt").toUpperCase();
-	public static String ADMISSION = MessageBundle.getMessage("angal.admission.admission.txt").toUpperCase();
-	public static String OPD_ADMISSION = OPD + " / " + ADMISSION;
+	public static final String OPD = MessageBundle.getMessage("angal.admission.opd.txt").toUpperCase();
+	public static final String ADMISSION = MessageBundle.getMessage("angal.admission.admission.txt").toUpperCase();
+	public static final String OPD_ADMISSION = OPD + " / " + ADMISSION;
 
-	private int pfrmBase = 8;
-	private int pfrmWidth = 5;
-	private int pfrmHeight = 5;
+	private static final int pfrmBase = 8;
+	private static final int pfrmWidth = 5;
+	private static final int pfrmHeight = 5;
 	private int selectedrow;
 	private JComboBox<OperationType> diseaseTypeFilter;
 	private List<Operation> pOperation;
@@ -163,7 +164,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		buttonNew.addActionListener(actionEvent -> {
 			operation = new Operation(null, "", new OperationType("", ""), 0); // operation will reference the new record
 			OperationEdit newrecord = new OperationEdit(myFrame, operation, true);
-			newrecord.addOperationListener(OperationBrowser.this);
+			newrecord.addOperationListener(this);
 			newrecord.setVisible(true);
 		});
 		buttonPanel.add(buttonNew);
@@ -177,7 +178,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				selectedrow = table.getSelectedRow();
 				operation = (Operation) (model.getValueAt(table.getSelectedRow(), -1));
 				OperationEdit editrecord = new OperationEdit(myFrame, operation, false);
-				editrecord.addOperationListener(OperationBrowser.this);
+				editrecord.addOperationListener(this);
 				editrecord.setVisible(true);
 			}
 		});
@@ -191,14 +192,15 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			} else {
 				Operation operation = (Operation) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg", operation.getDescription());
-				try {
-					if ((answer == JOptionPane.YES_OPTION) && (operationBrowserManager.deleteOperation(operation))) {
+				if (answer == JOptionPane.YES_OPTION) {
+					try {
+						operationBrowserManager.deleteOperation(operation);
 						pOperation.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
 					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
 				}
 			}
 		});

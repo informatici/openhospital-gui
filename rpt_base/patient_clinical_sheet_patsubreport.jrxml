@@ -11,6 +11,10 @@
 	<import value="org.joda.time.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<parameter name="patientID" class="java.lang.String"/>
+	<parameter name="PATIENT_PHOTO" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Image file]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT * 
 FROM OH_PATIENT p
@@ -183,11 +187,6 @@ WHERE PAT_ID = $P{patientID}]]>
 		<property name="com.jaspersoft.studio.field.name" value="PAT_PROFILE_PHOTO_ID"/>
 		<property name="com.jaspersoft.studio.field.label" value="PAT_PROFILE_PHOTO_ID"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
-	</field>
-	<field name="COLUMN_34" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="PAT_PROFILE_PHOTO_ID"/>
-		<property name="com.jaspersoft.studio.field.label" value="PAT_PROFILE_PHOTO_ID"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient_profile_photo"/>
 	</field>
 	<field name="PAT_PHOTO" class="byte[]">
 		<property name="com.jaspersoft.studio.field.name" value="PAT_PHOTO"/>
@@ -394,7 +393,7 @@ WHERE PAT_ID = $P{patientID}]]>
 					<bottomPen lineWidth="0.25" lineStyle="Solid"/>
 					<rightPen lineWidth="0.25" lineStyle="Solid"/>
 				</box>
-				<imageExpression><![CDATA[$F{PAT_PHOTO}]]></imageExpression>
+				<imageExpression><![CDATA[$F{PAT_PHOTO} != null ? $F{PAT_PHOTO} : $P{PATIENT_PHOTO}]]></imageExpression>
 			</image>
 			<line>
 				<reportElement key="line-1" x="0" y="1" width="535" height="1" uuid="edbf4e23-3e0a-4b7b-a247-5fd68849d3ca"/>

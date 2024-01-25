@@ -45,6 +45,7 @@ import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JPopupMenu.Separator;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextPane;
@@ -229,7 +230,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 			chat.addMessageListener((chat1, message) -> {
 				if (message.getType() == Message.Type.chat) {
 					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
-					LOGGER.debug("GUI: {}", CommunicationFrame.this);
+					LOGGER.debug("GUI: {}", this);
 					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf('@'));
 					printMessage(getArea(user, true), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {
@@ -257,7 +258,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 		final JPopupMenu popUpMenu = new JPopupMenu();
 		JMenuItem sendFile;
 		popUpMenu.add(sendFile = new JMenuItem(MessageBundle.getMessage("angal.xmpp.sendfile.txt")));
-		popUpMenu.add(new JPopupMenu.Separator());
+		popUpMenu.add(new Separator());
 		JMenuItem getInfo;
 		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo.txt")));
 		final JFileChooser fileChooser = new JFileChooser();
@@ -466,7 +467,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 
 	public void sendMessage(String textMessage, String to, boolean visualize) {
 
-		interaction.sendMessage(CommunicationFrame.this, textMessage, to, visualize);
+		interaction.sendMessage(this, textMessage, to, visualize);
 		if (visualize) {
 			printMessage(getArea(getSelectedUser(), false), MessageBundle.getMessage("angal.xmpp.me.txt"), textMessage, visualize);
 		}
@@ -529,7 +530,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 
 			chooser.setAcceptAllFileFilterUsed(false);
 
-			if (chooser.showOpenDialog(CommunicationFrame.this) == JFileChooser.APPROVE_OPTION) {
+			if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 				LOGGER.debug("getCurrentDirectory(): {}", chooser.getCurrentDirectory());
 				LOGGER.debug("getSelectedFile() : {}", chooser.getSelectedFile());
 			} else {
@@ -567,7 +568,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 			chat.addMessageListener((chat1, message) -> {
 				if (message.getType() == Message.Type.chat) {
 					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
-					LOGGER.debug("GUI: {}", CommunicationFrame.this);
+					LOGGER.debug("GUI: {}", this);
 					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf('@'));
 					printMessage((getArea(user, false)), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 					if (!isVisible()) {

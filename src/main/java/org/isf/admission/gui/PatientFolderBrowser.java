@@ -55,6 +55,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.admission.gui.AdmissionBrowser.AdmissionListener;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.dicom.gui.DicomGui;
@@ -73,7 +74,7 @@ import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.operation.gui.OperationList;
 import org.isf.patient.gui.PatientInsert;
-import org.isf.patient.gui.PatientInsertExtended;
+import org.isf.patient.gui.PatientInsertExtended.PatientListener;
 import org.isf.patient.gui.PatientSummary;
 import org.isf.patient.model.Patient;
 import org.isf.stat.gui.report.GenericReportAdmission;
@@ -88,29 +89,14 @@ import org.isf.utils.table.TableSorter;
 import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
-import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This class shows patient data and the list of admissions and lab exams.
- * <p>
- * last release  jun-14-08
- * @author chiara
- *
- * ----------------------------------------------------------
- * modification history
- * ====================
- * 14/06/08 - chiara - first version
- * <p>
- * 30/06/08 - fabrizio - implemented automatic selection of exams within the admission period
- * 05/09/08 - alessandro - second version:
- * 						 - same PatientSummary than PatientDataBrowser
- * 						 - includes OPD in the table
- * -----------------------------------------------------------
  */
 public class PatientFolderBrowser extends ModalJFrame
-		implements PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener {
+		implements PatientInsert.PatientListener, PatientListener, AdmissionListener {
 
 	private static final long serialVersionUID = -3427327158197856822L;
 
@@ -557,7 +543,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 					new GenericReportOpd(opd.getCode(), opd.getPatient().getCode(), GeneralData.OPDCHART);
 				} else {
-					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.pleaseselectanopd.msg");
+					MessageDialog.error(this, "angal.admission.patientfolder.pleaseselectanopd.msg");
 				}
 			});
 		}
@@ -581,12 +567,12 @@ public class PatientFolderBrowser extends ModalJFrame
 
 					Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 					if (adm.getDisDate() == null) {
-						MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.thepatientisnotyetdischarged.msg");
+						MessageDialog.error(this, "angal.admission.patientfolder.thepatientisnotyetdischarged.msg");
 						return;
 					}
 					new GenericReportDischarge(adm.getId(), adm.getPatient().getCode(), GeneralData.DISCHART);
 				} else {
-					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
+					MessageDialog.error(this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
 				}
 			});
 		}
@@ -611,7 +597,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 					new GenericReportAdmission(adm.getId(), adm.getPatient().getCode(), GeneralData.ADMCHART);
 				} else {
-					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
+					MessageDialog.error(this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
 				}
 			});
 		}
@@ -624,10 +610,10 @@ public class PatientFolderBrowser extends ModalJFrame
 			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
 			launchReportButton.addActionListener(actionEvent -> {
 				if (fromDate == null) {
-					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.nodatatoshow.msg");
+					MessageDialog.error(this, "angal.admission.patientfolder.nodatatoshow.msg");
 					return;
 				}
-				new PatientFolderReportModal(PatientFolderBrowser.this, patient.getCode(), fromDate.toLocalDate(), LocalDate.now(), "ALL");
+				new PatientFolderReportModal(this, patient.getCode(), fromDate.toLocalDate(), LocalDate.now(), "ALL");
 			});
 		}
 		return launchReportButton;
@@ -638,7 +624,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			dicomButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.dicom.btn"));
 			dicomButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.dicom.btn.key"));
 			dicomButton.addActionListener(actionEvent -> {
-				DicomGui dg = new DicomGui(patient, PatientFolderBrowser.this);
+				DicomGui dg = new DicomGui(patient, this);
 				dg.showAsModal(this);
 			});
 		}
@@ -700,11 +686,6 @@ public class PatientFolderBrowser extends ModalJFrame
 			}
 			try {
 				disease = diseaseBrowserManager.getDiseaseAll();
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			}
-			try {
-				List<Ward> ward = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

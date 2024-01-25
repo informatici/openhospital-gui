@@ -31,6 +31,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.imgscalr.Scalr;
+import org.imgscalr.Scalr.Method;
+import org.imgscalr.Scalr.Mode;
 
 public final class ImageUtil {
 
@@ -52,7 +54,7 @@ public final class ImageUtil {
 		int originalWidth = originalImage.getWidth();
 		int originalHeight = originalImage.getHeight();
 		if (originalWidth > targetWidth || originalHeight > targetHeight) {
-			return Scalr.resize(originalImage, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, targetWidth, targetHeight, Scalr.OP_ANTIALIAS);
+			return Scalr.resize(originalImage, Method.AUTOMATIC, Mode.AUTOMATIC, targetWidth, targetHeight, Scalr.OP_ANTIALIAS);
 		}
 		return originalImage;
 	}

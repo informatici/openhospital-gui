@@ -102,16 +102,8 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * ------------------------------------------
  * MovStockBrowser - list medicals movement. let the user search for movements
  * 					  and insert a new movements
- * -----------------------------------------
- * modification history
- * 30/03/2006 - Theo - first beta version
- * 03/11/2006 - ross - changed title, removed delete all button
- *                   - corrected an error in datetextfield class (the month displayed in the filter was -1
- * 			         - version is now  1.0
- * ------------------------------------------
  */
 public class MovStockBrowser extends ModalJFrame {
 
@@ -245,14 +237,14 @@ public class MovStockBrowser extends ModalJFrame {
 				medical = movement.getMedical();
 			}
 
-			StockCardDialog stockCardDialog = new StockCardDialog(MovStockBrowser.this,
+			StockCardDialog stockCardDialog = new StockCardDialog(this,
 							medical,
 							movDateFrom.getDateStartOfDay(),
 							movDateTo.getDateStartOfDay());
 			medical = stockCardDialog.getMedical();
 			if (!stockCardDialog.isCancel()) {
 				if (medical == null) {
-					MessageDialog.error(MovStockBrowser.this, "angal.medicalstock.chooseamedical.msg");
+					MessageDialog.error(this, "angal.medicalstock.chooseamedical.msg");
 					return;
 				}
 				LocalDateTime dateFrom = stockCardDialog.getLocalDateTimeFrom();
@@ -270,7 +262,7 @@ public class MovStockBrowser extends ModalJFrame {
 		stockLedgerButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockledger.btn.key"));
 		stockLedgerButton.addActionListener(actionEvent -> {
 
-			StockLedgerDialog stockCardDialog = new StockLedgerDialog(MovStockBrowser.this, movDateFrom.getDateStartOfDay(), movDateTo.getDateStartOfDay());
+			StockLedgerDialog stockCardDialog = new StockLedgerDialog(this, movDateFrom.getDateStartOfDay(), movDateTo.getDateStartOfDay());
 			if (!stockCardDialog.isCancel()) {
 				new GenericReportPharmaceuticalStockCard("ProductLedger_multi", stockCardDialog.getLocalDateTimeFrom(), stockCardDialog.getLocalDateTimeTo(),
 								null, null, false);
@@ -949,7 +941,7 @@ public class MovStockBrowser extends ModalJFrame {
 			File defaultFileName = new File(fileName);
 			JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFileName);
 
-			int iRetVal = fcExcel.showSaveDialog(MovStockBrowser.this);
+			int iRetVal = fcExcel.showSaveDialog(this);
 			if (iRetVal == JFileChooser.APPROVE_OPTION) {
 				File exportFile = fcExcel.getSelectedFile();
 				if (!exportFile.getName().endsWith(".xls") && !exportFile.getName().endsWith(".xlsx")) {
@@ -967,7 +959,7 @@ public class MovStockBrowser extends ModalJFrame {
 						xlsExport.exportTableToExcelOLD(movTable, exportFile);
 					}
 				} catch (IOException exc) {
-					JOptionPane.showMessageDialog(MovStockBrowser.this,
+					JOptionPane.showMessageDialog(this,
 									exc.getMessage(),
 									MessageBundle.getMessage("angal.messagedialog.error.title"),
 									JOptionPane.PLAIN_MESSAGE);

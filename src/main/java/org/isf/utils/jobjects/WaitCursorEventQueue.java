@@ -24,6 +24,9 @@ package org.isf.utils.jobjects;
 import java.awt.AWTEvent;
 import java.awt.EventQueue;
 
+import org.isf.utils.time.DelayTimer;
+import org.isf.utils.time.DelayTimerCallback;
+
 public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallback {
 
 	private final CursorManager cursorManager;
