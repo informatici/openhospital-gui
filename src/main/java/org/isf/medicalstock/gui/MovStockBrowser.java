@@ -962,11 +962,6 @@ public class MovStockBrowser extends ModalJFrame {
 			try {
 				Movement lastMovement = movBrowserManager.getLastMovement();
 				if (lastMovement.getCode() == selectedMovement.getCode()) {
-					List<MovementWard> movWard = movWardBrowserManager.getMovementWardByMedical(lastMovement.getMedical().getCode());
-					if (movWard.size() > 0) {
-						MessageDialog.warning(this, "angal.medicalstock.deletelastmovementdenied.msg");
-						return;
-					}
 					int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
 					if (delete == JOptionPane.YES_OPTION) {
 						movBrowserManager.deleteLastMovement(lastMovement);
