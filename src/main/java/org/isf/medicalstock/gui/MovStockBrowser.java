@@ -950,12 +950,12 @@ public class MovStockBrowser extends ModalJFrame {
 		deleteMovementButton.addActionListener(actionEvent -> {
 
 			if (movTable.getSelectedRowCount() > 1) {
-				MessageDialog.warning(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
+				MessageDialog.error(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
 				return;
 			}
 			int selectedRow = movTable.getSelectedRow();
 			if (selectedRow == -1) {
-				MessageDialog.warning(this, "angal.medicalstock.pleaseselectamovement.msg");
+				MessageDialog.error(this, "angal.medicalstock.pleaseselectamovement.msg");
 				return;
 			}
 			Movement selectedMovement = (Movement) movTable.getValueAt(selectedRow, -1);
