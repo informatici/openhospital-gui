@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -76,6 +76,8 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovBrowserManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
+import org.isf.medicalstockward.manager.MovWardBrowserManager;
+import org.isf.medicalstockward.model.MovementWard;
 import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.medtype.manager.MedicalTypeBrowserManager;
@@ -176,6 +178,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 
 	public MovStockBrowser() {
 		myFrame = this;
@@ -220,6 +223,10 @@ public class MovStockBrowser extends ModalJFrame {
 		if (MainMenu.checkUserGrants("btnpharmstockdischarge")) {
 			buttonPanel.add(getDischargeButton());
 		}
+		if (MainMenu.checkUserGrants("btnpharmstockcmovdelete")) {
+			buttonPanel.add(getDeleteLastMovementButton());
+		}
+
 		buttonPanel.add(getExportToExcelButton());
 		buttonPanel.add(getStockCardButton());
 		buttonPanel.add(getStockLedgerButton());
@@ -930,6 +937,50 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 		});
 		return dischargeButton;
+	}
+
+	/**
+	 * This method creates the button that delete the last stock {@link Movement)
+	 * 
+	 * @return
+	 */
+	private JButton getDeleteLastMovementButton() {
+		JButton deleteMovementButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteMovementButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+		deleteMovementButton.addActionListener(actionEvent -> {
+
+			if (movTable.getSelectedRowCount() > 1) {
+				MessageDialog.warning(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
+				return;
+			}
+			int selectedRow = movTable.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.warning(this, "angal.medicalstock.pleaseselectamovement.msg");
+				return;
+			}
+			Movement selectedMovement = (Movement) movTable.getValueAt(selectedRow, -1);
+			try {
+				Movement lastMovement = movBrowserManager.getLastMovement();
+				if (lastMovement.getCode() == selectedMovement.getCode()) {
+					int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
+					if (delete == JOptionPane.YES_OPTION) {
+						movBrowserManager.deleteLastMovement(lastMovement);
+					} else {
+						return;
+					}
+				} else {
+					MessageDialog.warning(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
+					return;
+				}
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
+				return;
+			}
+			MessageDialog.info(this, "angal.medicalstock.deletemovementsuccess.msg");
+			filterButton.doClick();
+		});
+		return deleteMovementButton;
+
 	}
 
 	private JButton getExportToExcelButton() {
