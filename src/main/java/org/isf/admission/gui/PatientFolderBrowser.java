@@ -274,15 +274,14 @@ public class PatientFolderBrowser extends ModalJFrame
 							Object dateObject = target.getValueAt(targetSelectedRow, 4);
 							if (dateObject instanceof LocalDateTime) {
 								toDate = (LocalDateTime) dateObject;
-								if (toDate == null) {
-									toDate = TimeTools.getNow();
-								}
 							} else if (dateObject instanceof String) {
 								if (dateObject.equals(TEXT_ADMISSION_PRESENT)) {
 									toDate = TimeTools.getNow();
 								} else {
 									toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YYYY).atTime(LocalTime.MAX);
 								}
+							} else {
+								toDate = TimeTools.getNow();
 							}
 							reportType = "ADMISSION";
 						} else if (objType instanceof Opd) {
