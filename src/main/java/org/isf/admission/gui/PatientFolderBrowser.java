@@ -98,6 +98,8 @@ import org.slf4j.LoggerFactory;
 public class PatientFolderBrowser extends ModalJFrame
 				implements PatientInsert.PatientListener, PatientListener, AdmissionListener {
 
+	private static final String TEXT_ADMISSION_PRESENT = MessageBundle.getMessage("angal.admission.present.txt");
+
 	private static final long serialVersionUID = -3427327158197856822L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientFolderBrowser.class);
@@ -276,7 +278,7 @@ public class PatientFolderBrowser extends ModalJFrame
 									toDate = TimeTools.getNow();
 								}
 							} else if (dateObject instanceof String) {
-								if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
+								if (dateObject.equals(TEXT_ADMISSION_PRESENT)) {
 									toDate = TimeTools.getNow();
 								} else {
 									toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YYYY).atTime(LocalTime.MAX);
@@ -675,7 +677,6 @@ public class PatientFolderBrowser extends ModalJFrame
 		private static final String TEXT_ADMISSION_O2 = MessageBundle.getMessage("angal.admission.o2.txt");
 		private static final String TEXT_NEWATTENDANCE = MessageBundle.getMessage("angal.opd.newattendance.txt");
 		private static final String TEXT_REATTENDANCE = MessageBundle.getMessage("angal.opd.reattendance.txt");
-		private static final String TEXT_ADMISSION_PRESENT = MessageBundle.getMessage("angal.admission.present.txt");
 		private static final String TEXT_TEMPERATURE_ABBR = MessageBundle.getMessage("angal.common.temperatureabbr.txt");
 		private static final String TEXT_ARTERIALPRESSURE_ABBR = MessageBundle.getMessage("angal.common.arterialpressureabbr.txt");
 		private static final String TEXT_WEIGHT = MessageBundle.getMessage("angal.common.weight.txt");
