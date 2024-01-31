@@ -969,7 +969,7 @@ public class MovStockBrowser extends ModalJFrame {
 						return;
 					}
 				} else {
-					MessageDialog.warning(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
+					MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
 					return;
 				}
 			} catch (OHServiceException e1) {
