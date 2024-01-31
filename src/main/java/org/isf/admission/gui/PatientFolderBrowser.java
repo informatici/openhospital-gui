@@ -88,7 +88,6 @@ import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.table.TableSorter;
 import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
-import org.isf.ward.manager.WardBrowserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,7 +95,9 @@ import org.slf4j.LoggerFactory;
  * This class shows patient data and the list of admissions and lab exams.
  */
 public class PatientFolderBrowser extends ModalJFrame
-		implements PatientInsert.PatientListener, PatientListener, AdmissionListener {
+				implements PatientInsert.PatientListener, PatientListener, AdmissionListener {
+
+	private static final String TEXT_ADMISSION_PRESENT = MessageBundle.getMessage("angal.admission.present.txt");
 
 	private static final long serialVersionUID = -3427327158197856822L;
 
@@ -106,20 +107,21 @@ public class PatientFolderBrowser extends ModalJFrame
 
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
 
-    public interface DeleteAdmissionListener extends EventListener {
-        void deleteAdmissionUpdated(AWTEvent e);
-    }
+	public interface DeleteAdmissionListener extends EventListener {
 
-    public void addDeleteAdmissionListener(DeleteAdmissionListener l) {
-        deleteAdmissionListeners.add(DeleteAdmissionListener.class, l);
-    }
+		void deleteAdmissionUpdated(AWTEvent e);
+	}
 
-    public void removeDeleteAdmissionListener(DeleteAdmissionListener listener) {
-        deleteAdmissionListeners.remove(DeleteAdmissionListener.class, listener);
-    }
-	
-	//---------------------------------------------------------------------
-	
+	public void addDeleteAdmissionListener(DeleteAdmissionListener l) {
+		deleteAdmissionListeners.add(DeleteAdmissionListener.class, l);
+	}
+
+	public void removeDeleteAdmissionListener(DeleteAdmissionListener listener) {
+		deleteAdmissionListeners.remove(DeleteAdmissionListener.class, listener);
+	}
+
+	// ---------------------------------------------------------------------
+
 	@Override
 	public void patientInserted(AWTEvent e) {
 	}
@@ -127,9 +129,9 @@ public class PatientFolderBrowser extends ModalJFrame
 	@Override
 	public void patientUpdated(AWTEvent e) {
 		jContentPane = null;
-		initialize();		
+		initialize();
 	}
-	
+
 	@Override
 	public void admissionInserted(AWTEvent e) {
 	}
@@ -137,14 +139,12 @@ public class PatientFolderBrowser extends ModalJFrame
 	@Override
 	public void admissionUpdated(AWTEvent e) {
 		jContentPane = null;
-		initialize();		
+		initialize();
 	}
-	
-	
 
 	private Patient patient;
-	
-	public PatientFolderBrowser(AdmittedPatientBrowser listener,  Patient myPatient) {
+
+	public PatientFolderBrowser(AdmittedPatientBrowser listener, Patient myPatient) {
 		super();
 		patient = myPatient;
 		initialize();
@@ -192,7 +192,7 @@ public class PatientFolderBrowser extends ModalJFrame
 	private List<Laboratory> labList;
 	private List<Disease> disease;
 	private List<Opd> opdList;
-	private List <PatientExamination> examinationList;
+	private List<PatientExamination> examinationList;
 
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
@@ -201,15 +201,15 @@ public class PatientFolderBrowser extends ModalJFrame
 			MessageBundle.getMessage("angal.admission.diagnosisout.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.status.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {120, 150, 200, 200, 120};
-	
+	private int[] pColumnWidth = { 120, 150, 200, 200, 120 };
+
 	private String[] plColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
 	};
-	private int[] plColumnwidth = {150, 200, 50, 200};
+	private int[] plColumnwidth = { 150, 200, 50, 200 };
 
 	private TableSorter sorter;
 	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
@@ -273,15 +273,14 @@ public class PatientFolderBrowser extends ModalJFrame
 							Object dateObject = target.getValueAt(targetSelectedRow, 4);
 							if (dateObject instanceof LocalDateTime) {
 								toDate = (LocalDateTime) dateObject;
-								if (toDate == null) {
-									toDate = TimeTools.getNow();
-								}
 							} else if (dateObject instanceof String) {
-								if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
+								if (dateObject.equals(TEXT_ADMISSION_PRESENT)) {
 									toDate = TimeTools.getNow();
 								} else {
 									toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YYYY).atTime(LocalTime.MAX);
 								}
+							} else {
+								toDate = TimeTools.getNow();
 							}
 							reportType = "ADMISSION";
 						} else if (objType instanceof Opd) {
@@ -313,7 +312,7 @@ public class PatientFolderBrowser extends ModalJFrame
 		JScrollPane scrollPane = new JScrollPane(admTable);
 		scrollPane.setPreferredSize(new Dimension(500, 200));
 		tablesPanel.add(scrollPane, BorderLayout.NORTH);
-		sorter.sortByColumn(0, false); //sort by first column, descending
+		sorter.sortByColumn(0, false); // sort by first column, descending
 		sorter.updateRowHeights(admTable);
 
 		DefaultTableModel labModel = new LabBrowserModel();
@@ -369,58 +368,63 @@ public class PatientFolderBrowser extends ModalJFrame
 		getOlderDate(drugsList.getDrugsData(), "date");
 		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.admission.patientfolder.drugs.title"), null, drugsList, null);
 
-        // Handle double click on rows of tables generating report dialog
-        if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
-            labTable.addMouseListener(
-                    new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent mouseEvent) {
-                            if (mouseEvent.getClickCount() == 2) {
-	                            LocalDate fromDate = ((LocalDateTime)labTable.getValueAt(labTable.getSelectedRow(), 0)).toLocalDate();
-                                new PatientFolderReportModal(
-                                        PatientFolderBrowser.this,
-                                        patient.getCode(),
-                                        fromDate,
-                                        fromDate,
-                                        "LABORATORY");
-                            }
-                        }
-                    });
+		// Handle double click on rows of tables generating report dialog
+		if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
+			labTable.addMouseListener(
+							new MouseAdapter() {
 
-            JTable opeTable = opeList.getjTableData();
-            opeTable.addMouseListener(
-                    new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent mouseEvent) {
-                            if (mouseEvent.getClickCount() == 2) {
-                                fromDate = Converters.parseStringToLocalDate((String)opeTable.getValueAt(opeTable.getSelectedRow(), 0), DATE_FORMAT_DD_MM_YYYY).atStartOfDay();
-                                new PatientFolderReportModal(
-                                        PatientFolderBrowser.this,
-                                        patient.getCode(),
-                                        fromDate.toLocalDate(),
-                                        fromDate.toLocalDate(),
-                                        "OPERATION");
-                            }
-                        }
-                    });
+								@Override
+								public void mouseClicked(MouseEvent mouseEvent) {
+									if (mouseEvent.getClickCount() == 2) {
+										LocalDate fromDate = ((LocalDateTime) labTable.getValueAt(labTable.getSelectedRow(), 0)).toLocalDate();
+										new PatientFolderReportModal(
+														PatientFolderBrowser.this,
+														patient.getCode(),
+														fromDate,
+														fromDate,
+														"LABORATORY");
+									}
+								}
+							});
 
-            JTable drugTable = drugsList.getJTable();
-            drugTable.addMouseListener(
-                    new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent mouseEvent) {
-                            if (mouseEvent.getClickCount() == 2) {
-                                fromDate = Converters.parseStringToLocalDate((String)drugTable.getValueAt(drugTable.getSelectedRow(), 0), DATE_FORMAT_DD_MM_YYYY).atStartOfDay();
-                                new PatientFolderReportModal(
-                                        PatientFolderBrowser.this,
-                                        patient.getCode(),
-                                        fromDate.toLocalDate(),
-                                        fromDate.toLocalDate(),
-                                        "DRUGS");
-                            }
-                        }
-                    });
-        }
+			JTable opeTable = opeList.getjTableData();
+			opeTable.addMouseListener(
+							new MouseAdapter() {
+
+								@Override
+								public void mouseClicked(MouseEvent mouseEvent) {
+									if (mouseEvent.getClickCount() == 2) {
+										fromDate = Converters.parseStringToLocalDate((String) opeTable.getValueAt(opeTable.getSelectedRow(), 0),
+														DATE_FORMAT_DD_MM_YYYY).atStartOfDay();
+										new PatientFolderReportModal(
+														PatientFolderBrowser.this,
+														patient.getCode(),
+														fromDate.toLocalDate(),
+														fromDate.toLocalDate(),
+														"OPERATION");
+									}
+								}
+							});
+
+			JTable drugTable = drugsList.getJTable();
+			drugTable.addMouseListener(
+							new MouseAdapter() {
+
+								@Override
+								public void mouseClicked(MouseEvent mouseEvent) {
+									if (mouseEvent.getClickCount() == 2) {
+										fromDate = Converters.parseStringToLocalDate((String) drugTable.getValueAt(drugTable.getSelectedRow(), 0),
+														DATE_FORMAT_DD_MM_YYYY).atStartOfDay();
+										new PatientFolderReportModal(
+														PatientFolderBrowser.this,
+														patient.getCode(),
+														fromDate.toLocalDate(),
+														fromDate.toLocalDate(),
+														"DRUGS");
+									}
+								}
+							});
+		}
 
 		ListSelectionModel listSelectionModel = admTable.getSelectionModel();
 		listSelectionModel.addListSelectionListener(selectionEvent -> {
@@ -487,7 +491,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					// check only that the exam date is the same or after the admission date.
 					// On true condition select the corresponding table row.
 					if (!labDate.isBefore(startDate.toLocalDate()) &&
-							(null == endDate || !labDate.isAfter(endDate.toLocalDate())))  {
+									(null == endDate || !labDate.isAfter(endDate.toLocalDate()))) {
 						labTable.addRowSelectionInterval(i, i);
 					}
 				}
@@ -523,7 +527,7 @@ public class PatientFolderBrowser extends ModalJFrame
 	private JButton admReportButton;
 	private JButton disReportButton;
 	private JButton launchReportButton;
-    private JButton dicomButton;
+	private JButton dicomButton;
 	private JButton closeButton;
 
 	private JButton getOpdReportButton() {
@@ -668,11 +672,20 @@ public class PatientFolderBrowser extends ModalJFrame
 
 	class AdmissionBrowserModel extends DefaultTableModel {
 
+		private static final String TEXT_ADMISSION_O2 = MessageBundle.getMessage("angal.admission.o2.txt");
+		private static final String TEXT_NEWATTENDANCE = MessageBundle.getMessage("angal.opd.newattendance.txt");
+		private static final String TEXT_REATTENDANCE = MessageBundle.getMessage("angal.opd.reattendance.txt");
+		private static final String TEXT_TEMPERATURE_ABBR = MessageBundle.getMessage("angal.common.temperatureabbr.txt");
+		private static final String TEXT_ARTERIALPRESSURE_ABBR = MessageBundle.getMessage("angal.common.arterialpressureabbr.txt");
+		private static final String TEXT_WEIGHT = MessageBundle.getMessage("angal.common.weight.txt");
+		private static final String TEXT_HEIGHT = MessageBundle.getMessage("angal.common.height.txt");
+		private static final String TEXT_NODISEASE = MessageBundle.getMessage("angal.admission.nodisease.txt");
+		private static final String TEXT_EXAMINATION_RECORD = MessageBundle.getMessage("angal.admission.patientfolder.examination.txt");
+
 		private static final long serialVersionUID = -453243229156512947L;
 
 		private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 		private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-		private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 		private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 		private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 
@@ -758,7 +771,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					int z = row - admList.size();
 					return opdList.get(z).getWard().getDescription();
 				} else {
-					return MessageBundle.getMessage("angal.admission.patientfolder.examination.txt");
+					return TEXT_EXAMINATION_RECORD;
 				}
 			} else if (column == 2) {
 				String id;
@@ -772,7 +785,7 @@ public class PatientFolderBrowser extends ModalJFrame
 							return elem.getDescription();
 						}
 					}
-					return MessageBundle.getMessage("angal.admission.nodisease.txt");
+					return TEXT_NODISEASE;
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
 					id = opdList.get(z).getDisease().getCode();
@@ -784,14 +797,14 @@ public class PatientFolderBrowser extends ModalJFrame
 							return elem.getDescription();
 						}
 					}
-					return MessageBundle.getMessage("angal.admission.nodisease.txt");
+					return TEXT_NODISEASE;
 				} else {
 					int f = row - (opdList.size() + admList.size());
 					return "<html>" +
-							MessageBundle.getMessage("angal.common.height.txt") + ": " + (examinationList.get(f).getPex_height())
-							+ "<br>" +
-							MessageBundle.getMessage("angal.common.weight.txt") + ": " + (examinationList.get(f).getPex_weight())
-							+ "</html>";
+									TEXT_HEIGHT + ": " + (examinationList.get(f).getPex_height())
+									+ "<br>" +
+									TEXT_WEIGHT + ": " + (examinationList.get(f).getPex_weight())
+									+ "</html>";
 				}
 
 			} else if (column == 3) {
@@ -806,7 +819,7 @@ public class PatientFolderBrowser extends ModalJFrame
 							return elem.getDescription();
 						}
 					}
-					return MessageBundle.getMessage("angal.admission.nodisease.txt");
+					return TEXT_NODISEASE;
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
 					Disease dis = opdList.get(z).getDisease3();
@@ -825,20 +838,20 @@ public class PatientFolderBrowser extends ModalJFrame
 							return elem.getDescription();
 						}
 					}
-					return MessageBundle.getMessage("angal.admission.nodisease.txt");
+					return TEXT_NODISEASE;
 				} else {
 					int f = row - (opdList.size() + admList.size());
 					return "<html>" +
-							MessageBundle.getMessage("angal.common.arterialpressureabbr.txt") + ": " + (examinationList.get(f).getPex_ap_min())
-							+ '/' + (examinationList.get(f).getPex_ap_max())
-							+ "<br>" +
-							MessageBundle.getMessage("angal.common.temperatureabbr.txt") + ": " + (examinationList.get(f).getPex_temp()) +
-							"</html>";
+									TEXT_ARTERIALPRESSURE_ABBR + ": " + (examinationList.get(f).getPex_ap_min())
+									+ '/' + (examinationList.get(f).getPex_ap_max())
+									+ "<br>" +
+									TEXT_TEMPERATURE_ABBR + ": " + (examinationList.get(f).getPex_temp()) +
+									"</html>";
 				}
 			} else if (column == 4) {
 				if (row < admList.size()) {
 					if (admList.get(row).getDisDate() == null) {
-						return MessageBundle.getMessage("angal.admission.present.txt");
+						return TEXT_ADMISSION_PRESENT;
 					} else {
 						return admList.get(row).getDisDate();
 					}
@@ -846,11 +859,11 @@ public class PatientFolderBrowser extends ModalJFrame
 					int z = row - admList.size();
 					String status = String.valueOf(opdList.get(z).getNewPatient());
 					return (status.compareTo("R") == 0
-							? MessageBundle.getMessage("angal.opd.reattendance.txt")
-							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
+									? TEXT_REATTENDANCE
+									: TEXT_NEWATTENDANCE);
 				} else {
 					int f = row - (opdList.size() + admList.size());
-					return MessageBundle.getMessage("angal.admission.o2.txt") + ": " + (examinationList.get(f).getPex_sat());
+					return TEXT_ADMISSION_O2 + ": " + (examinationList.get(f).getPex_sat());
 				}
 			}
 			return null;
@@ -927,7 +940,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 			if (value instanceof LocalDateTime) {
-				String strDate = ((LocalDateTime)value).format(DATE_TIME_FORMATTER);
+				String strDate = ((LocalDateTime) value).format(DATE_TIME_FORMATTER);
 				// Sorting algorithm will work with model value. So you dont need to worry about the renderer's display value.
 				this.setText(strDate);
 			}
