@@ -219,6 +219,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private JButton jRectifyButton;
 	private JButton jButtonStockCard;
 	private JButton jButtonStockLedger;
+	private JButton jButtonDelete;
 
 	/*
 	 * Managers and datas
@@ -290,12 +291,14 @@ public class WardPharmacy extends ModalJFrame implements
 			if (MainMenu.checkUserGrants("btnmedicalswardrectify")) {
 				jPanelButtons.add(getJRectifyButton());
 			}
-			// jPanelButtons.add(getJButtonDelete());
 			if (MainMenu.checkUserGrants("btnmedicalswardreport")) {
 				jPanelButtons.add(getPrintTableButton());
 			}
 			if (MainMenu.checkUserGrants("btnmedicalswardexcel")) {
 				jPanelButtons.add(getExportToExcelButton());
+			}
+			if (MainMenu.checkUserGrants("btnmedicalswarddelete")) {
+				jPanelButtons.add(getJButtonDelete());
 			}
 			jPanelButtons.add(getJButtonStockCard());
 			jPanelButtons.add(getJButtonStockLedger());
@@ -410,6 +413,62 @@ public class WardPharmacy extends ModalJFrame implements
 		return jButtonClose;
 	}
 
+	private JButton getJButtonDelete() {
+		if (jButtonDelete == null) {
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+			jButtonDelete.setVisible(false);
+			jButtonDelete.addActionListener(actionEvent -> {
+				
+				if ((jTableOutcomes.getSelectedRow() == -1 && jTableIncomes.getSelectedRow() == -1)) {
+					MessageDialog.error(this, "angal.medicalstock.pleaseselectamovement.msg");
+					return;
+				}
+				if (jTableOutcomes.getSelectedRow() > 1 || jTableIncomes.getSelectedRow() > 1) {
+					MessageDialog.error(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
+					return;
+				}
+				MovementWard movSelected = null;
+				
+				if (jTableOutcomes.getSelectedRow() == 1) {
+					movSelected = (MovementWard) jTableOutcomes.getModel().getValueAt(jTableOutcomes.getSelectedRow(), -1);
+				}
+				if (jTableIncomes.getSelectedRow() == 1) {
+					movSelected = (MovementWard) jTableIncomes.getModel().getValueAt(jTableIncomes.getSelectedRow(), -1);
+				}
+				try {
+					MovementWard movWard = movWardBrowserManager.getLastMovementWard(wardSelected);
+					if (movWard != null && movSelected != null) {
+						System.out.println("last mov "+movWard.getDate());
+						System.out.println("select mov "+movSelected.getDate());
+						if (movWard.getDate() == movSelected.getDate()) {
+							int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
+							if (delete == JOptionPane.YES_OPTION) {
+								movWardBrowserManager.deleteLastMovementWard(movSelected);
+							} else {
+								return;
+							}
+						} else {
+							MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
+							return;
+						}
+					} else {
+						MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
+						return;
+					}
+					
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+					return;
+				}
+				MessageDialog.info(this, "angal.medicalstock.deletemovementsuccess.msg");
+				filterButton.doClick();
+				
+			});
+		}
+		return jButtonDelete;
+	}
+	
 	private JPanel getJPanelWard() {
 		if (jPanelWard == null) {
 			jPanelWard = new JPanel();
@@ -1133,11 +1192,13 @@ public class WardPharmacy extends ModalJFrame implements
 						if (editAllowed) {
 							jButtonEdit.setVisible(true);
 						}
+						if (MainMenu.checkUserGrants("btnmedicalswarddelete")) {
+							jButtonDelete.setVisible(true);
+						}
 						jButtonStockCard.setVisible(true);
 						jButtonStockLedger.setVisible(true);
 						validate();
 						setLocationRelativeTo(null);
-						// jButtonDelete.setVisible(true);
 						added = true;
 					} else {
 						if (wardSelected != null) {
