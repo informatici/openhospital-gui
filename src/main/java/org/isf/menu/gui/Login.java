@@ -29,19 +29,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.time.Duration;
 import java.util.EventListener;
 import java.util.List;
+import java.util.Scanner;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.SpringLayout;
+import javax.swing.*;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.GeneralData;
@@ -58,6 +55,14 @@ import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.FileCopyUtils;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Login extends JDialog implements ActionListener, KeyListener {
 
@@ -297,6 +302,16 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 			JPanel buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
+
+			JButton infoButton = new JButton();
+			if(verifyIfResourceExists("default_credential.properties")) {
+				ImageIcon infoIcon = new ImageIcon("rsc/icons/info_button.png");
+				infoButton.setIcon(infoIcon);
+				String textToolTipBeginning = readFileToString("info_button3.html");
+				String textToolTipEnd = readFileToStringLineByLine("default_credential.properties");
+				infoButton.setToolTipText(textToolTipBeginning.concat(textToolTipEnd));
+				buttons.add(infoButton);
+			}
 			buttons.add(submit);
 			buttons.add(cancel);
 
@@ -310,6 +325,56 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			cancel.addActionListener(myFrame);
 			cancel.setName("cancel");
 			cancel.addKeyListener(myFrame);
+
+
+
 		}
 	}
+	public static void main(String args[]){
+		ApplicationContext context = null;
+		try {
+			context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		} catch (Exception e) {
+			LOGGER.error("Fatal: fail to load application context. {}", e.getMessage(), e);
+			System.exit(1);
+		}
+		Context.setApplicationContext(context);
+		new Login(null);
+	}
+
+	public static String readFileToStringLineByLine(String path) {
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		Resource resource = resourceLoader.getResource(path);
+		StringBuilder text = new StringBuilder();
+		try (Scanner scanner = new Scanner(new InputStreamReader(resource.getInputStream(), UTF_8) )){
+			while (scanner.hasNextLine()) {
+				text.append("<h5>");
+				text.append(scanner.nextLine());
+				text.append("</h5>");
+			}
+			scanner.close();
+			return text.toString();
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	public static String readFileToString(String path) {
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		Resource resource = resourceLoader.getResource(path);
+
+		try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
+			return FileCopyUtils.copyToString(reader);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	public static boolean verifyIfResourceExists(String path) {
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		Resource resource = resourceLoader.getResource(path);
+		return resource.exists();
+	}
+
+
 }
