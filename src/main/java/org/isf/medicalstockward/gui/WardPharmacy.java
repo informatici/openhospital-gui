@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -112,7 +112,6 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 public class WardPharmacy extends ModalJFrame implements
-		WardPharmacyEdit.MovementWardListeners,
 		WardPharmacyNew.MovementWardListeners,
 		MovementWardListeners {
 
@@ -167,7 +166,6 @@ public class WardPharmacy extends ModalJFrame implements
 	private JButton jButtonNew;
 	private JPanel jPanelRange;
 	private JButton jButtonClose;
-	private JButton jButtonEdit;
 	private GoodDateChooser jCalendarFrom;
 	private LocalDateTime dateFrom = TimeTools.getDateToday0();
 	private LocalDateTime dateTo = TimeTools.getDateToday24();
@@ -213,7 +211,6 @@ public class WardPharmacy extends ModalJFrame implements
 	private int ageTo;
 	private int weightFrom;
 	private int weightTo;
-	private boolean editAllowed;
 	private JButton jPrintTableButton;
 	private JButton jExportToExcelButton;
 	private JButton jRectifyButton;
@@ -246,9 +243,6 @@ public class WardPharmacy extends ModalJFrame implements
 	private JButton searchButton;
 
 	public WardPharmacy() {
-		if (MainMenu.checkUserGrants("btnmedicalswardedit")) {
-			editAllowed = true;
-		}
 		initComponents();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -285,9 +279,6 @@ public class WardPharmacy extends ModalJFrame implements
 		if (jPanelButtons == null) {
 			jPanelButtons = new JPanel(new WrapLayout());
 			jPanelButtons.add(getJButtonNew());
-			if (editAllowed) {
-				jPanelButtons.add(getJButtonEdit());
-			}
 			if (MainMenu.checkUserGrants("btnmedicalswardrectify")) {
 				jPanelButtons.add(getJRectifyButton());
 			}
@@ -376,26 +367,6 @@ public class WardPharmacy extends ModalJFrame implements
 		return jButtonNew;
 	}
 
-	private JButton getJButtonEdit() {
-		if (jButtonEdit == null) {
-			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
-			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jButtonEdit.setVisible(false);
-			jButtonEdit.addActionListener(actionEvent -> {
-
-				if (jTableOutcomes.getSelectedRow() < 0 || !jScrollPaneOutcomes.isShowing()) {
-					MessageDialog.error(this, "angal.medicalstockward.pleaseselectanoutcomesmovementfirst");
-				} else {
-					movSelected = (MovementWard) jTableOutcomes.getModel().getValueAt(jTableOutcomes.getSelectedRow(), -1);
-					WardPharmacyEdit editor = new WardPharmacyEdit(this, movSelected, wardDrugs);
-					editor.addMovementWardListener(this);
-					editor.setVisible(true);
-				}
-			});
-		}
-		return jButtonEdit;
-	}
-
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
@@ -420,36 +391,23 @@ public class WardPharmacy extends ModalJFrame implements
 			jButtonDelete.setVisible(false);
 			jButtonDelete.addActionListener(actionEvent -> {
 				
-				if ((jTableOutcomes.getSelectedRow() == -1 && jTableIncomes.getSelectedRow() == -1)) {
-					MessageDialog.error(this, "angal.medicalstock.pleaseselectamovement.msg");
-					return;
-				}
-				if (jTableOutcomes.getSelectedRow() > 1 || jTableIncomes.getSelectedRow() > 1) {
+				if (jTableOutcomes.getSelectedRowCount() > 1 ) {
 					MessageDialog.error(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
 					return;
 				}
-				MovementWard movSelected = null;
-				
-				if (jTableOutcomes.getSelectedRow() == 1) {
-					movSelected = (MovementWard) jTableOutcomes.getModel().getValueAt(jTableOutcomes.getSelectedRow(), -1);
+				int selectedRow = jTableOutcomes.getSelectedRow();
+				if (selectedRow == -1) {
+					MessageDialog.error(this, "angal.medicalstock.pleaseselectoucomemovement.msg");
+					return;
 				}
-				if (jTableIncomes.getSelectedRow() == 1) {
-					movSelected = (MovementWard) jTableIncomes.getModel().getValueAt(jTableIncomes.getSelectedRow(), -1);
-				}
+				MovementWard selectedMovement = (MovementWard)jTableOutcomes.getValueAt(selectedRow, -1);
 				try {
 					MovementWard movWard = movWardBrowserManager.getLastMovementWard(wardSelected);
-					if (movWard != null && movSelected != null) {
-						System.out.println("last mov "+movWard.getDate());
-						System.out.println("select mov "+movSelected.getDate());
-						if (movWard.getDate() == movSelected.getDate()) {
-							int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
-							if (delete == JOptionPane.YES_OPTION) {
-								movWardBrowserManager.deleteLastMovementWard(movSelected);
-							} else {
-								return;
-							}
+					if (movWard.getDate().compareTo(selectedMovement.getDate()) == 0) {
+						int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
+						if (delete == JOptionPane.YES_OPTION) {
+							movWardBrowserManager.deleteLastMovementWard(movWard);
 						} else {
-							MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
 							return;
 						}
 					} else {
@@ -463,6 +421,7 @@ public class WardPharmacy extends ModalJFrame implements
 				}
 				MessageDialog.info(this, "angal.medicalstock.deletemovementsuccess.msg");
 				filterButton.doClick();
+				jTableDrugs.setModel(new DrugsModel());
 				
 			});
 		}
@@ -1188,9 +1147,6 @@ public class WardPharmacy extends ModalJFrame implements
 						}
 						if (MainMenu.checkUserGrants("btnmedicalswardrectify")) {
 							jRectifyButton.setVisible(true);
-						}
-						if (editAllowed) {
-							jButtonEdit.setVisible(true);
 						}
 						if (MainMenu.checkUserGrants("btnmedicalswarddelete")) {
 							jButtonDelete.setVisible(true);
