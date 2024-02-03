@@ -403,7 +403,7 @@ public class WardPharmacy extends ModalJFrame implements
 				MovementWard selectedMovement = (MovementWard)jTableOutcomes.getValueAt(selectedRow, -1);
 				try {
 					MovementWard movWard = movWardBrowserManager.getLastMovementWard(wardSelected);
-					if (movWard.getDate().compareTo(selectedMovement.getDate()) == 0) {
+					if (movWard.getCode() == selectedMovement.getCode()) {
 						int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
 						if (delete == JOptionPane.YES_OPTION) {
 							movWardBrowserManager.deleteLastMovementWard(movWard);
