@@ -34,14 +34,12 @@ import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 
 /**
- * JLabelInfo.java
- *
  * @author Mwithi
  */
 public class JLabelInfo extends JLabel {
 
-	private final int defaultInitDelay = ToolTipManager.sharedInstance().getInitialDelay();
-	private final Color defaultBackgroundColor = (Color) UIManager.get("ToolTip.background");
+	private static final int defaultInitDelay = ToolTipManager.sharedInstance().getInitialDelay();
+	private static final Color defaultBackgroundColor = (Color) UIManager.get("ToolTip.background");
 
 	/**
 	 * Creates a {@code JLabelInfo} instance with the specified
@@ -66,11 +64,13 @@ public class JLabelInfo extends JLabel {
 
 		MouseListener ml = new MouseAdapter() {
 
+			@Override
 			public void mouseEntered(MouseEvent me) {
 				ToolTipManager.sharedInstance().setInitialDelay(0);
 				UIManager.put("ToolTip.background", backgroundColor);
 			}
 
+			@Override
 			public void mouseExited(MouseEvent me) {
 				ToolTipManager.sharedInstance().setInitialDelay(defaultInitDelay);
 				UIManager.put("ToolTip.background", defaultBackgroundColor);
