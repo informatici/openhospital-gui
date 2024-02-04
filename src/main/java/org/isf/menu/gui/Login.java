@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.time.Duration;
 import java.util.EventListener;
 import java.util.List;
@@ -62,9 +63,6 @@ import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 
 public class Login extends JDialog implements ActionListener, KeyListener {
 
@@ -312,8 +310,9 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			add(body, BorderLayout.NORTH);
 			add(buttons, BorderLayout.SOUTH);
 
-			if (verifyIfResourceExists(DEFAULT_CREDENTIALS_PROPERTIES)) {
-				String tooltip = FileTools.readFileToStringLineByLine(DEFAULT_CREDENTIALS_PROPERTIES, true);
+			File credentialProperties = FileTools.getFile(DEFAULT_CREDENTIALS_PROPERTIES);
+			if (credentialProperties != null) {
+				String tooltip = FileTools.readFileToStringLineByLine(credentialProperties.getAbsolutePath(), true);
 				JLabel infoButton = new JLabelInfo(new ImageIcon("rsc/icons/info_button.png"), tooltip, Color.white);
 
 				JPanel infoPanel = new JPanel();
@@ -328,14 +327,6 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			cancel.addActionListener(myFrame);
 			cancel.setName("cancel");
 			cancel.addKeyListener(myFrame);
-
 		}
 	}
-
-	private boolean verifyIfResourceExists(String path) {
-		ResourceLoader resourceLoader = new DefaultResourceLoader();
-		Resource resource = resourceLoader.getResource(path);
-		return resource.exists();
-	}
-
 }
