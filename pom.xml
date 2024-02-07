@@ -177,6 +177,7 @@
 							<resources>
 								<resource>
 									<directory>${project.basedir}</directory>
+									<include>ohmac.*</include>
 									<include>oh.*</include>
 									<include>README.md</include>
 								</resource>
