@@ -2,7 +2,7 @@
 #!/usr/bin/pwsh
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -98,14 +98,15 @@ $global:ProgressPreference= 'SilentlyContinue'
 ##################### OH general configuration ####################
 
 # -> OH_PATH is the directory where Open Hospital files are located
-# OH_PATH="c:\Users\OH\OpenHospital\oh-1.14"
+# OH_PATH="c:\Users\OH\OpenHospital\oh"
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #$script:OH_MODE="PORTABLE"
 
 # language setting - default set to en
-$script:OH_LANGUAGE_LIST="en|fr|es|it|pt|ar"
-$script:OH_LANGUAGE="en" # default
+$script:OH_LANGUAGE_LIST= @("ar","de","en","es","fr","it","pt","sq")
+$script:OH_LANGUAGE_LIST_INFO=("Arabic","German","English","Spanish","French","Italian","Portuguese","Albanian")
+#$script:OH_LANGUAGE="en" # default
 
 # single / multiuser - set "yes" for single user configuration
 $script:OH_SINGLE_USER="no"
@@ -160,9 +161,6 @@ $script:API_ERR_LOG_FILE="api_error.log"
 $script:DB_DEMO="create_all_demo.sql"
 
 ######################## Other settings ########################
-# available languages - do not modify
-$script:languagearray= @("en","fr","es","it","pt","ar")
-
 # date format
 $script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
@@ -203,7 +201,7 @@ $script:OH_API_PID="../tmp/oh-api.pid"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-$script:MYSQL_VERSION="10.6.15"
+$script:MYSQL_VERSION="10.6.16"
 $script:MYSQL32_VERSION="10.6.5"
 
 ######## define system and software architecture
@@ -236,19 +234,19 @@ $script:MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ######## JAVA Software
 ######## JAVA 64bit - default architecture
-### JRE 17 - openjdk
-# https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9.1/OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9.zip
-#$script:JAVA_URL="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9.1/"
-#$script:JAVA_DISTRO="OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9"
-#$script:JAVA_DIR="jdk-17.0.9_9-jre"
+### JRE 11 - openjdk
+#$script:JAVA_URL="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.11%2B9/"
+#$script:JAVA_DISTRO="OpenJDK11U-jre_x64_windows_hotspot_11.0.11_9"
+#$script:JAVA_DIR="jdk-11.0.11+9-jre"
 
 ### JRE 17 - zulu distribution
+#$script:JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-win_$JAVA_PACKAGE_ARCH"
+$script:JAVA_DISTRO="zulu17.48.15-ca-jre17.0.10-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
-$script:JAVA_DISTRO="zulu17.46.19-ca-jre17.0.9-win_$JAVA_PACKAGE_ARCH"
 
-# workaround for JRE 17 - 32bit
+# workaround for JRE 11 - 32bit
 #	if ( $JAVA_ARCH -eq "32" ) {
-#	$script:JAVA_DISTRO="zulu17.46.19-ca-jre17.0.9-win_$JAVA_PACKAGE_ARCH"
+#	$script:JAVA_DISTRO="zulu11.58.25-ca-jre11.0.16.1-win_$JAVA_PACKAGE_ARCH"
 #}
 
 $script:JAVA_DIR=$JAVA_DISTRO
@@ -277,7 +275,7 @@ function script_menu {
 	Write-Host "   C    set OH in CLIENT mode"
 	Write-Host "   P    set OH in PORTABLE mode"
 	Write-Host "   S    set OH in SERVER mode (portable)"
-	Write-Host "   l    $OH_LANGUAGE_LIST -> set language"
+	Write-Host "   l    set language -> [ $OH_LANGUAGE_LIST ]"
 	Write-Host "   E    toggle EXPERT MODE - show advanced options"
 	Write-Host "   h    show help"
 	Write-Host "   q    quit"
@@ -502,17 +500,26 @@ function set_demo_data {
 }
 
 ###################################################################
-function set_language {
+function check_language {
 	# check for valid language selection
-	if ($script:languagearray -contains "$OH_LANGUAGE") {
-		# set localized database creation script
-		$script:DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
+
+        foreach ($lang in $OH_LANGUAGE_LIST) {
+	if ($script:OH_LANGUAGE_LIST -contains "$OH_LANGUAGE") {
+		Write-Host ""
+		Write-Host "Language set to $OH_LANGUAGE"
+		return;
 	}
-	else {
-		Write-Host "Invalid language option: $OH_LANGUAGE. Exiting." -ForegroundColor Red
-		Read-Host; exit 1
+	
+	Write-Host ""
+	Write-Host "Invalid language option [$OH_LANGUAGE]: setting to default [en]" -ForegroundColor Yellow
+	$script:OH_LANGUAGE="en"
+	Read-Host;
 	}
-	# set database creation script in chosen language
+}
+
+###################################################################
+function set_language {
+	# set localized database creation script
 	$script:DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
 
 	# if $OH_SETTINGS is present set language
@@ -527,7 +534,6 @@ function set_language {
 		Write-Host "Warning: $OH_SETTINGS file not found." -ForegroundColor Yellow
 	}
 }
-
 
 ###################################################################
 function set_log_level {
@@ -1298,6 +1304,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host ""
 			get_confirmation 1;
 			initialize_dir_structure;
+			check_language;
 			set_language;
 			mysql_check;
 			Write-Host "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server?"
@@ -1320,7 +1327,19 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		}
 		###################################################
 		"l"	{ # set language 
-			$script:OH_LANGUAGE = Read-Host "Select language: $OH_LANGUAGE_LIST (default is en)"
+			Write-Host ""
+			Write-Host "Available languages:"
+			Write-Host ""
+			# show all available languages
+			
+			for ( $i = 0; $i -lt $OH_LANGUAGE_LIST.count; $i++)
+			{
+				Write-Host " " $OH_LANGUAGE_LIST[$i] - $OH_LANGUAGE_LIST_INFO[$i] ;
+			}
+	
+			Write-Host ""
+			$script:OH_LANGUAGE = Read-Host "Please select language: [$OH_LANGUAGE_LIST] (default is en)"
+			check_language;
 			set_language;
 			Read-Host "Press any key to continue";
 		}
@@ -1429,6 +1448,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			# overwrite configuration files if existing
 			$script:WRITE_CONFIG_FILES="on"; write_config_files;
 			set_oh_mode;
+			check_language;
 			set_language;
 			set_log_level;
 			# if Desktop link is present update it
