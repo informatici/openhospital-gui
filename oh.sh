@@ -1198,7 +1198,7 @@ function parse_user_input {
 			# show all available languages
 			for ((i=0; i < ${#OH_LANGUAGE_LIST[@]}; i++ )); do echo " ${OH_LANGUAGE_LIST[$i]} - ${OH_LANGUAGE_LIST_INFO[$i]} "; done
 			echo ""
-			read -n 2 -p "Please select language [${OH_LANGUAGE_LIST[*]}]: " OH_LANGUAGE
+			read -n 2 -p "Please select language [${OH_LANGUAGE_LIST[*]}] (default is en): " OH_LANGUAGE
 		fi
 		check_language;
 		set_language;

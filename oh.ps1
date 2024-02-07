@@ -1334,11 +1334,11 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			
 			for ( $i = 0; $i -lt $OH_LANGUAGE_LIST.count; $i++)
 			{
-				Write-Host " " $OH_LANGUAGE_LIST[$i] $OH_LANGUAGE_LIST_INFO[$i] ;
+				Write-Host " " $OH_LANGUAGE_LIST[$i] - $OH_LANGUAGE_LIST_INFO[$i] ;
 			}
 	
 			Write-Host ""
-			$script:OH_LANGUAGE = Read-Host "Select language: [ $OH_LANGUAGE_LIST ] (default is en)"
+			$script:OH_LANGUAGE = Read-Host "Please select language: [$OH_LANGUAGE_LIST] (default is en)"
 			check_language;
 			set_language;
 			Read-Host "Press any key to continue";
