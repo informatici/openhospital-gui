@@ -133,7 +133,7 @@ $script:DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-$script:OH_DIR="."
+$script:OH_DIR="oh"
 $script:OH_DOC_DIR="doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
@@ -275,7 +275,7 @@ function script_menu {
 	Write-Host "   C    set OH in CLIENT mode"
 	Write-Host "   P    set OH in PORTABLE mode"
 	Write-Host "   S    set OH in SERVER mode (portable)"
-	Write-Host "   l    set language -> $OH_LANGUAGE_LIST"
+	Write-Host "   l    set language -> [ $OH_LANGUAGE_LIST ]"
 	Write-Host "   E    toggle EXPERT MODE - show advanced options"
 	Write-Host "   h    show help"
 	Write-Host "   q    quit"
@@ -1328,8 +1328,17 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		###################################################
 		"l"	{ # set language 
 			Write-Host ""
-			Write-Host "Available languages: [$OH_LANGUAGE_LIST_INFO]"
-			$script:OH_LANGUAGE = Read-Host "Select language: $OH_LANGUAGE_LIST (default is en)"
+			Write-Host "Available languages:"
+			Write-Host ""
+			# show all available languages
+			
+			for ( $i = 0; $i -lt $OH_LANGUAGE_LIST.count; $i++)
+			{
+				Write-Host " " $OH_LANGUAGE_LIST[$i] $OH_LANGUAGE_LIST_INFO[$i] ;
+			}
+	
+			Write-Host ""
+			$script:OH_LANGUAGE = Read-Host "Select language: [ $OH_LANGUAGE_LIST ] (default is en)"
 			check_language;
 			set_language;
 			Read-Host "Press any key to continue";

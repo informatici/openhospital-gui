@@ -77,7 +77,7 @@ DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-OH_DIR="."
+OH_DIR="oh"
 OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
@@ -1193,7 +1193,10 @@ function parse_user_input {
 			option="Z";
 		else
 			echo ""
-			echo "Available languages: [${OH_LANGUAGE_LIST_INFO[*]}]"
+			echo "Available languages:"
+			echo ""
+			# show all available languages
+			for ((i=0; i < ${#OH_LANGUAGE_LIST[@]}; i++ )); do echo " ${OH_LANGUAGE_LIST[$i]} - ${OH_LANGUAGE_LIST_INFO[$i]} "; done
 			echo ""
 			read -n 2 -p "Please select language [${OH_LANGUAGE_LIST[*]}]: " OH_LANGUAGE
 		fi
