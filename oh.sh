@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -43,14 +43,14 @@ WRITE_CONFIG_FILES="off"
 ############## OH general configuration - change at your own risk :-) ##############
 
 # OH_PATH is the directory where Open Hospital files are located
-# OH_PATH=/usr/local/OpenHospital/oh-1.14
+# OH_PATH=/usr/local/OpenHospital/oh
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #OH_MODE="PORTABLE" 
 
 # language setting - default set to en
-OH_LANGUAGE_LIST="en|fr|es|it|pt|ar"
-#OH_LANGUAGE="en" # default
+OH_LANGUAGE_LIST=("ar" "de" "en" "es" "fr" "it" "pt" "sq")
+OH_LANGUAGE_LIST_INFO=("Arabic" "German" "English" "Spanish" "French" "Italian" "Portuguese" "Albanian")
 
 # single / multiuser - set "yes" for single user configuration
 #OH_SINGLE_USER="no"
@@ -143,8 +143,8 @@ OH_API_PID="../tmp/oh-api.pid"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-MYSQL_VERSION="10.6.15"
-MYSQL32_VERSION="10.5.22"
+MYSQL_VERSION="10.6.16"
+MYSQL32_VERSION="10.5.23"
 PACKAGE_TYPE="systemd" 
 
 ######## define system and software architecture
@@ -177,13 +177,15 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ######## JAVA Software
 ######## JAVA 64bit - default architecture
-### JRE 17 - openjdk distribution
-#JAVA_URL="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9.1"
-#JAVA_DISTRO="OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9"
-#JAVA_DIR="jdk-17.0.9_9-jre"
+
+### JRE 11 - openjdk distribution
+#JAVA_URL="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.11%2B9"
+#JAVA_DISTRO="OpenJDK11U-jre_x64_linux_hotspot_11.0.11_9"
+#JAVA_DIR="jdk-11.0.11+9-jre"
 
 ### JRE 17 - zulu distribution
-JAVA_DISTRO="zulu17.46.19-ca-jre17.0.9-win_$JAVA_PACKAGE_ARCH"
+#JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu17.48.15-ca-jre17.0.10-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
 
@@ -212,7 +214,7 @@ function script_menu {
 	echo "   -C    set OH in CLIENT mode"
 	echo "   -P    set OH in PORTABLE mode"
 	echo "   -S    set OH in SERVER mode (portable)"
-	echo "   -l    [ $OH_LANGUAGE_LIST ] -> set language"
+	echo "   -l    set language -> [ ${OH_LANGUAGE_LIST[*]} ]"
 	echo "   -E    toggle EXPERT MODE - show advanced options"
 	echo "   -h    show help"
 	echo "   -q    quit"
@@ -451,18 +453,25 @@ function set_demo_data {
 }
 
 ###################################################################
-function set_language {
+function check_language {
 	# check for valid language selection
-	case "$OH_LANGUAGE" in 
-		en|fr|it|es|pt|ar) # TBD: language array direct check
-			# set localized database creation script
-			DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
-			;;
-		*)
-			echo "Invalid language option: $OH_LANGUAGE. Exiting."
-			exit 1
-		;;
-	esac
+
+	for lang in "${OH_LANGUAGE_LIST[@]}"; do
+		if [[ $lang == $OH_LANGUAGE ]]; then
+			echo ""
+			echo "Language set to $OH_LANGUAGE"
+			return 0;
+		fi
+	done
+	echo ""
+	echo "Invalid language option [$OH_LANGUAGE]: setting to default [en]"
+	OH_LANGUAGE=en
+}
+
+###################################################################
+function set_language {
+	# set localized database creation script
+	DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
 
 	# if $OH_SETTINGS is present set language
 	if [ -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
@@ -520,11 +529,11 @@ desktop_path=$(xdg-user-dir DESKTOP)
 echo "[Desktop Entry]
 	Type=Application
 	# The version of the Desktop Entry Specification
-	Version=1.14.0
+	Version=1.x
 	# The name of the application
 	Name=OpenHospital
 	# A comment which will be used as a tooltip
-	Comment=Open Hospital 1.14 shortcut
+	Comment=Open Hospital 1.x shortcut
 	# The path to the folder in which the executable is run
 	Path=$OH_PATH
 	# The executable of the application, possibly with arguments
@@ -1153,6 +1162,7 @@ function parse_user_input {
 		echo ""
 		get_confirmation 1;
 		initialize_dir_structure;
+		check_language;
 		set_language;
 		mysql_check;
 		echo "Do you want to create the [$DATABASE_USER] user and [$DATABASE_NAME] database on [$DATABASE_SERVER] server?"
@@ -1182,8 +1192,12 @@ function parse_user_input {
 			OH_LANGUAGE="$OPTARG"
 			option="Z";
 		else
-			read -n 2 -p "Please select language [$OH_LANGUAGE_LIST]: " OH_LANGUAGE
+			echo ""
+			echo "Available languages: [${OH_LANGUAGE_LIST_INFO[*]}]"
+			echo ""
+			read -n 2 -p "Please select language [${OH_LANGUAGE_LIST[*]}]: " OH_LANGUAGE
 		fi
+		check_language;
 		set_language;
 		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
 		;;
@@ -1294,6 +1308,7 @@ function parse_user_input {
 		# overwrite configuration files if existing
 		WRITE_CONFIG_FILES=on; write_config_files;
 		set_oh_mode;
+		check_language;
 		set_language;
 		set_log_level;
 		echo "Done!"
