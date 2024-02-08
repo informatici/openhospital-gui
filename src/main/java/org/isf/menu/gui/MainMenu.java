@@ -25,13 +25,13 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -524,16 +524,22 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 		}
 
 		private JPanel getLogoPanel() {
-			JLabel logo_appl = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "logo_menu_vert.png"));
-			JLabel logo_hosp = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "logo_hospital.png"));
+			JLabel logo_appl = new JLabel(new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("logo_menu_vert.png"))
+							.getImage().getScaledInstance(28, 180, Image.SCALE_SMOOTH)));
+			Object checkLogoHospital = getClass().getClassLoader().getResource("logo_hospital.png");
+
 			JPanel logoPanel = new JPanel();
 			logoPanel.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10)); // top, left, bottom, right
 			BoxLayout layout = new BoxLayout(logoPanel, BoxLayout.Y_AXIS);
 			logoPanel.setLayout(layout);
 			logoPanel.setBackground(Color.decode(BACKGROUND_COLOR_HEX));
-			if (logo_hosp.getIcon().getIconHeight() > 0) {
+			if (checkLogoHospital != null) {
+				JLabel logo_hosp = new JLabel(new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("logo_hospital.png"))
+								.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 				logoPanel.add(logo_hosp);
-				logo_appl = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("logo_menu.png")));
+				logo_appl.setIcon(new ImageIcon(
+								new ImageIcon(getClass().getClassLoader().getResource("logo_menu.png"))
+												.getImage().getScaledInstance(90, 57, Image.SCALE_SMOOTH)));
 			} else {
 				logoPanel.add(Box.createVerticalStrut(100)); // for short menu
 			}
