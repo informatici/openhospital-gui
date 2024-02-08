@@ -115,9 +115,16 @@ MYSQL_CONF_FILE="my.cnf"
 # OH configuration files
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
+EXAMINATION_SETTINGS="examination.properties"
 IMAGING_SETTINGS="dicom.properties"
+PRINTER_SETTINGS="txtPrinter.properties"
+SMS_SETTINGS="sms.properties"
 LOG4J_SETTINGS="log4j.properties"
+TELEMETRY_SETTINGS="telemetry.properties"
+XMPP_SETTINGS="xmpp.properties"
 API_SETTINGS="application.properties"
+CRED_SETTINGS="default_credentials.properties"
+DEMO_CRED_SETTINGS="default_demo_credentials.properties"
 
 # OH jar bin files
 OH_GUI_JAR="OH-gui.jar"
@@ -317,7 +324,7 @@ function read_settings {
 		source "./$OH_DIR/rsc/version.properties"
 		OH_VERSION=$VER_MAJOR.$VER_MINOR.$VER_RELEASE
 	else 
-		echo "Error: Open Hospital non found! Exiting."
+		echo "Error: Open Hospital not found! Exiting."
 		exit 1;
 	fi
 	
@@ -413,6 +420,7 @@ function set_defaults {
 	PHOTO_DIR_ESCAPED=$(echo $PHOTO_DIR | sed -e 's/\//\\\//g')
 	LOG_DIR_ESCAPED=$(echo $LOG_DIR | sed -e 's/\//\\\//g')
 	TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
+
 }
 
 ###################################################################
@@ -872,17 +880,28 @@ function write_api_config_file {
 }
 
 ###################################################################
+function copy_config_file {
+	# function to copy a single configuration file with backup
+	# usage: copy_config_file [file_name]
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$1 ]; then
+		[ -f ./$OH_DIR/rsc/$1 ] && mv -f ./$OH_DIR/rsc/$1 ./$OH_DIR/rsc/$1.old
+		echo "Writing OH configuration file -> $1..."
+		cp ./$OH_DIR/rsc/$1.dist ./$OH_DIR/rsc/$1
+	fi
+}
+
+###################################################################
 function write_config_files {
 	# set up configuration files
 	echo "Checking for OH configuration files..."
-	######## DICOM setup
+	######## IMAGING / DICOM setup
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ]; then
 		[ -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ] && mv -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ./$OH_DIR/rsc/$IMAGING_SETTINGS.old
 		echo "Writing OH configuration file -> $IMAGING_SETTINGS..."
 		sed -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
 		-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/$IMAGING_SETTINGS.dist > ./$OH_DIR/rsc/$IMAGING_SETTINGS
 	fi
-	######## $LOG4J_SETTINGS setup
+	######## LOG4J_SETTINGS setup
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$LOG4J_SETTINGS ]; then
 		OH_LOG_DEST="$OH_PATH_ESCAPED/$LOG_DIR/$OH_LOG_FILE"
 		[ -f ./$OH_DIR/rsc/$LOG4J_SETTINGS ] && mv -f ./$OH_DIR/rsc/$LOG4J_SETTINGS ./$OH_DIR/rsc/$LOG4J_SETTINGS.old
@@ -891,7 +910,7 @@ function write_config_files {
 		-e "s/DBNAME/$DATABASE_NAME/g" -e "s/LOG_LEVEL/$LOG_LEVEL/g" -e "s+LOG_DEST+$OH_LOG_DEST+g" \
 		./$OH_DIR/rsc/$LOG4J_SETTINGS.dist > ./$OH_DIR/rsc/$LOG4J_SETTINGS
 	fi
-	######## $DATABASE_SETTINGS setup 
+	######## DATABASE_SETTINGS setup 
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ]; then
 		[ -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ] && mv -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ./$OH_DIR/rsc/$DATABASE_SETTINGS.old
 		echo "Writing OH database configuration file -> $DATABASE_SETTINGS..."
@@ -899,7 +918,7 @@ function write_config_files {
 		-e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
 		./$OH_DIR/rsc/$DATABASE_SETTINGS.dist > ./$OH_DIR/rsc/$DATABASE_SETTINGS
 	fi
-	######## $OH_SETTINGS setup
+	######## OH_SETTINGS setup
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
 		[ -f ./$OH_DIR/rsc/$OH_SETTINGS ] && mv -f ./$OH_DIR/rsc/$OH_SETTINGS ./$OH_DIR/rsc/$OH_SETTINGS.old
 		echo "Writing OH configuration file -> $OH_SETTINGS..."
@@ -907,6 +926,21 @@ function write_config_files {
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
 		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
 		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS
+	fi
+
+	######## OH - Other settings setup
+	copy_config_file $EXAMINATION_SETTINGS;
+	copy_config_file $PRINTER_SETTINGS;
+	copy_config_file $SMS_SETTINGS;
+	copy_config_file $TELEMETRY_SETTINGS;
+	copy_config_file $XMPP_SETTINGS;
+
+	######## DEFAULT_CREDENTIALS_SETTINGS setup
+	if [ "$OH_MODE" == "PORTABLE" ]; then
+		copy_config_file $CRED_SETTINGS;
+	fi
+	if [ "$DEMO_DATA" = "on" ]; then
+		copy_config_file $DEMO_CRED_SETTINGS;
 	fi
 }
 
@@ -1088,8 +1122,6 @@ function parse_user_input {
 				LOG_LEVEL="INFO";
 			;;
 		esac
-		# create config files if not present
-		#write_config_files;
 		set_log_level;
 		if (( $2==0 )); then option="Z"; else echo "Press any key to continue"; read; fi
 		;;
