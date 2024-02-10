@@ -77,7 +77,7 @@ DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-OH_DIR="."
+OH_DIR="oh"
 OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
@@ -117,9 +117,9 @@ OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
 EXAMINATION_SETTINGS="examination.properties"
 IMAGING_SETTINGS="dicom.properties"
+LOG4J_SETTINGS="log4j.properties"
 PRINTER_SETTINGS="txtPrinter.properties"
 SMS_SETTINGS="sms.properties"
-LOG4J_SETTINGS="log4j.properties"
 TELEMETRY_SETTINGS="telemetry.properties"
 XMPP_SETTINGS="xmpp.properties"
 API_SETTINGS="application.properties"
@@ -964,12 +964,26 @@ function clean_conf_files {
 	rm -f ./$OH_DIR/rsc/$OH_SETTINGS.old
 	rm -f ./$OH_DIR/rsc/$DATABASE_SETTINGS
 	rm -f ./$OH_DIR/rsc/$DATABASE_SETTINGS.old
-	rm -f ./$OH_DIR/rsc/$LOG4J_SETTINGS
-	rm -f ./$OH_DIR/rsc/$LOG4J_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$EXAMINATION_SETTINGS
+	rm -f ./$OH_DIR/rsc/$EXAMINATION_SETTINGS.old
 	rm -f ./$OH_DIR/rsc/$IMAGING_SETTINGS
 	rm -f ./$OH_DIR/rsc/$IMAGING_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$LOG4J_SETTINGS
+	rm -f ./$OH_DIR/rsc/$LOG4J_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$PRINTER_SETTINGS
+	rm -f ./$OH_DIR/rsc/$PRINTER_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$SMS_SETTINGS
+	rm -f ./$OH_DIR/rsc/$SMS_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$TELEMETRY_SETTINGS
+	rm -f ./$OH_DIR/rsc/$TELEMETRY_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$XMPP_SETTINGS
+	rm -f ./$OH_DIR/rsc/$XMPP_SETTINGS.old
 	rm -f ./$OH_DIR/rsc/$API_SETTINGS
 	rm -f ./$OH_DIR/rsc/$API_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$CRED_SETTINGS
+	rm -f ./$OH_DIR/rsc/$CRED_SETTINGS.old
+	rm -f ./$OH_DIR/rsc/$DEMO_CRED_SETTINGS
+	rm -f ./$OH_DIR/rsc/$DEMO_CRED_SETTINGS.old
 }
 
 ###################################################################

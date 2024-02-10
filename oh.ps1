@@ -133,7 +133,7 @@ $script:DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-$script:OH_DIR="."
+$script:OH_DIR="oh"
 $script:OH_DOC_DIR="doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
@@ -175,9 +175,9 @@ $script:OH_SETTINGS="settings.properties"
 $script:DATABASE_SETTINGS="database.properties"
 $script:EXAMINATION_SETTINGS="examination.properties"
 $script:IMAGING_SETTINGS="dicom.properties"
+$script:LOG4J_SETTINGS="log4j.properties"
 $script:PRINTER_SETTINGS="txtPrinter.properties"
 $script:SMS_SETTINGS="sms.properties"
-$script:LOG4J_SETTINGS="log4j.properties"
 $script:TELEMETRY_SETTINGS="telemetry.properties"
 $script:XMPP_SETTINGS="xmpp.properties"
 $script:API_SETTINGS="application.properties"
@@ -1098,12 +1098,26 @@ function clean_conf_files {
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$EXAMINATION_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$EXAMINATION_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$PRINTER_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$PRINTER_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$SMS_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$SMS_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$TELEMETRY_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$TELEMETRY_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$XMPP_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$XMPP_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$API_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$CRED_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$CRED_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$DEMO_CRED_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$DEMO_CRED_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 }
 
 ###################################################################
