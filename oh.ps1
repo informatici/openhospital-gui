@@ -173,9 +173,16 @@ $script:MYSQL_CONF_FILE="my.cnf"
 # OH configuration files
 $script:OH_SETTINGS="settings.properties"
 $script:DATABASE_SETTINGS="database.properties"
+$script:EXAMINATION_SETTINGS="examination.properties"
 $script:IMAGING_SETTINGS="dicom.properties"
 $script:LOG4J_SETTINGS="log4j.properties"
+$script:PRINTER_SETTINGS="txtPrinter.properties"
+$script:SMS_SETTINGS="sms.properties"
+$script:TELEMETRY_SETTINGS="telemetry.properties"
+$script:XMPP_SETTINGS="xmpp.properties"
 $script:API_SETTINGS="application.properties"
+$script:CRED_SETTINGS="default_credentials.properties"
+$script:DEMO_CRED_SETTINGS="default_demo_credentials.properties"
 
 # OH jar bin files
 $script:OH_GUI_JAR="OH-gui.jar"
@@ -981,11 +988,22 @@ function write_api_config_file {
 }
 
 ###################################################################
+function copy_config_file ($arg) {
+	# function to copy a single configuration file with backup
+	# usage: copy_config_file [file_name]
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$arg" -PathType leaf) ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$arg" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$arg $OH_PATH/$OH_DIR/rsc/$arg.old }
+		Write-Host "Writing OH configuration file -> $arg..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$arg.dist") | Set-Content "$OH_PATH/$OH_DIR/rsc/$arg"
+	}
+}
+
+###################################################################
 function write_config_files {
 	# set up configuration files
 	Write-Host "Checking for OH configuration files..."
 
-	######## DICOM setup
+	######## IMAGING / DICOM setup
 	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS" -PathType leaf) ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS $OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.old }
 		Write-Host "Writing OH configuration file -> $IMAGING_SETTINGS..."
@@ -995,7 +1013,7 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
 	}
 
-	######## $LOG4J_SETTINGS setup
+	######## LOG4J_SETTINGS setup
 	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS" -PathType leaf) ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS $OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.old }
 		Write-Host "Writing OH configuration file -> $LOG4J_SETTINGS..."
@@ -1008,7 +1026,7 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("LOG_DEST","../$LOG_DIR/$OH_LOG_FILE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
 	}
 
-	######## $DATABASE_SETTINGS setup 
+	######## DATABASE_SETTINGS setup 
 	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS" -PathType leaf) ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS.old }
 		Write-Host "Writing OH database configuration file -> $DATABASE_SETTINGS..."
@@ -1024,7 +1042,7 @@ function write_config_files {
 		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.password=$DATABASE_PASSWORD"
 	}
 
-	######## $OH_SETTINGS setup
+	######## OH_SETTINGS setup
 	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS" -PathType leaf) ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$OH_SETTINGS $OH_PATH/$OH_DIR/rsc/$OH_SETTINGS.old }
 		Write-Host "Writing OH configuration file -> $OH_SETTINGS..."
@@ -1042,6 +1060,21 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set API_SERVER
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("APISERVER=off","APISERVER=$API_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+	}
+
+	######## OH - Other settings setup
+	copy_config_file $EXAMINATION_SETTINGS;
+	copy_config_file $PRINTER_SETTINGS;
+	copy_config_file $SMS_SETTINGS;
+	copy_config_file $TELEMETRY_SETTINGS;
+	copy_config_file $XMPP_SETTINGS;
+
+	######## DEFAULT_CREDENTIALS_SETTINGS setup
+	if ($OH_MODE -eq "PORTABLE") {
+		copy_config_file $CRED_SETTINGS;
+	}
+	if ( $DEMO_DATA -eq "on" ) {
+		copy_config_file $DEMO_CRED_SETTINGS;
 	}
 }
 
@@ -1065,12 +1098,26 @@ function clean_conf_files {
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$EXAMINATION_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$EXAMINATION_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$PRINTER_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$PRINTER_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$SMS_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$SMS_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$TELEMETRY_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$TELEMETRY_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$XMPP_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$XMPP_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH/$OH_DIR/rsc/$API_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$CRED_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$CRED_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$DEMO_CRED_SETTINGS"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH/$OH_DIR/rsc/$DEMO_CRED_SETTINGS.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 }
 
 ###################################################################
@@ -1237,8 +1284,6 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				$script:LOG_LEVEL="INFO"
 				}
 			}
-			# create config files if not present
-			#write_config_files;
 			# set configuration
 			set_log_level;
 			Read-Host "Press any key to continue";

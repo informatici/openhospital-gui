@@ -154,13 +154,13 @@ set ARCH=x64
 
 REM ######## MySQL Software
 REM # MariaDB 64bit download URL
-REM https://archive.mariadb.org/mariadb-10.6.15/winx64-packages/mariadb-10.6.15-winx64.zip
+REM https://archive.mariadb.org/mariadb-10.6.16/winx64-packages/mariadb-10.6.16-winx64.zip
 
 REM # MariaDB 32bit download  URL
 REM https://archive.mariadb.org/mariadb-10.6.5/win32-packages/mariadb-10.6.5-win32.zip
 
 REM set MYSQL_DIR=mariadb-10.6.5-win%ARCH%
-set MYSQL_DIR=mariadb-10.6.15-win%ARCH%
+set MYSQL_DIR=mariadb-10.6.16-win%ARCH%
 
 REM ####### JAVA Software
 REM # JRE 11 64bit - x86_64 - openjdk
@@ -172,7 +172,7 @@ REM set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
 REM set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 REM # JRE 11 32bit - i686 - zulu - default
-set JAVA_DIR=zulu11.68.17-ca-jre11.0.21-win_%ARCH%
+set JAVA_DIR=zulu17.48.15-ca-jre17.0.10-win_%ARCH%
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin
@@ -253,6 +253,15 @@ echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\log4j.properties.dist %OH_PATH%\%OH_DIR%\r
 %REPLACE_PATH%\replace.exe DBNAME %DATABASE_NAME% -- %OH_PATH%\%OH_DIR%\rsc\log4j.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe LOG_LEVEL %LOG_LEVEL% -- %OH_PATH%\%OH_DIR%\rsc\log4j.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe LOG_DEST %OH_LOG_DEST% -- %OH_PATH%\%OH_DIR%\rsc\log4j.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+
+REM ### Setup other OH property files
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\examination.properties.dist %OH_PATH%\%OH_DIR%\rsc\examination.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\sms.properties.dist %OH_PATH%\%OH_DIR%\rsc\sms.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\txtPrinter.properties.dist %OH_PATH%\%OH_DIR%\rsc\txtPrinter.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\telemetry.properties.dist %OH_PATH%\%OH_DIR%\rsc\telemetry.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\xmpp.properties.dist %OH_PATH%\%OH_DIR%\rsc\xmpp.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\default_credentials.properties.dist %OH_PATH%\%OH_DIR%\rsc\default_credentials.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\default_demo_credentials.properties.dist %OH_PATH%\%OH_DIR%\rsc\default_demo_credentials.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 
 REM ### Setup database if not already existing
 if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
