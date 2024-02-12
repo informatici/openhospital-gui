@@ -77,7 +77,7 @@ DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-OH_DIR="oh"
+OH_DIR="."
 OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
