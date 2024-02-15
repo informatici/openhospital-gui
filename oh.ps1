@@ -1082,11 +1082,13 @@ function write_config_files {
 	copy_config_file $XMPP_SETTINGS;
 
 	######## DEFAULT_CREDENTIALS_SETTINGS setup
-	if ($OH_MODE -eq "PORTABLE") {
-		copy_config_file $CRED_SETTINGS;
-	}
-	if ( $DEMO_DATA -eq "on" ) {
-		copy_and_rename_config_file $DEMO_CRED_SETTINGS $CRED_SETTINGS;
+	if ( $OH_MODE -eq "PORTABLE" ) {
+		if ( $DEMO_DATA -eq "on" ) {
+			copy_and_rename_config_file $DEMO_CRED_SETTINGS $CRED_SETTINGS;
+		} 
+		else {
+			copy_config_file $CRED_SETTINGS;
+		} 
 	}
 }
 
