@@ -577,7 +577,6 @@ function java_lib_setup {
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_base
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_extra
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_stat
-	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc/images
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/lib
 
@@ -941,7 +940,7 @@ function write_config_files {
 		copy_config_file $CRED_SETTINGS;
 	fi
 	if [ "$DEMO_DATA" = "on" ]; then
-		copy_config_file $DEMO_CRED_SETTINGS;
+		cp ./$OH_DIR/rsc/$DEMO_CRED_SETTINGS.dist ./$OH_DIR/rsc/$CRED_SETTINGS
 	fi
 }
 
@@ -983,8 +982,6 @@ function clean_conf_files {
 	rm -f ./$OH_DIR/rsc/$API_SETTINGS.old
 	rm -f ./$OH_DIR/rsc/$CRED_SETTINGS
 	rm -f ./$OH_DIR/rsc/$CRED_SETTINGS.old
-	rm -f ./$OH_DIR/rsc/$DEMO_CRED_SETTINGS
-	rm -f ./$OH_DIR/rsc/$DEMO_CRED_SETTINGS.old
 }
 
 ###################################################################
