@@ -1003,8 +1003,8 @@ function copy_config_file ($arg) {
 function copy_and_rename_config_file ($arg1, $arg2) {
 	# function to copy and rename a single configuration file with backup
 	# usage: copy_config_file [origin_name] [destination_name]
-	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$arg" -PathType leaf) ) {
-		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$arg2" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$arg $OH_PATH/$OH_DIR/rsc/$arg2.old }
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$arg2" -PathType leaf) ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$arg2" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$arg2 $OH_PATH/$OH_DIR/rsc/$arg2.old }
 		Write-Host "Writing OH configuration file -> $arg2..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$arg1.dist") | Set-Content "$OH_PATH/$OH_DIR/rsc/$arg2"
 	}
