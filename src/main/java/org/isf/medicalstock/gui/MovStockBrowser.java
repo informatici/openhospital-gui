@@ -76,8 +76,6 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovBrowserManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
-import org.isf.medicalstockward.manager.MovWardBrowserManager;
-import org.isf.medicalstockward.model.MovementWard;
 import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.medtype.manager.MedicalTypeBrowserManager;
@@ -178,7 +176,6 @@ public class MovStockBrowser extends ModalJFrame {
 	private HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 
 	public MovStockBrowser() {
 		myFrame = this;
