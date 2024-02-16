@@ -330,6 +330,8 @@ set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_base
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_extra
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_stat
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc
+set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\images
+REM set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\icons REM hardcoded
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\bin\OH-gui.jar
 
 REM # Setup native_lib_path for current architecture
