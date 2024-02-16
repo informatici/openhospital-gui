@@ -261,7 +261,7 @@ echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\txtPrinter.properties.dist %OH_PATH%\%OH_D
 echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\telemetry.properties.dist %OH_PATH%\%OH_DIR%\rsc\telemetry.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\xmpp.properties.dist %OH_PATH%\%OH_DIR%\rsc\xmpp.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\default_credentials.properties.dist %OH_PATH%\%OH_DIR%\rsc\default_credentials.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\default_demo_credentials.properties.dist %OH_PATH%\%OH_DIR%\rsc\default_demo_credentials.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+REM echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\default_demo_credentials.properties.dist %OH_PATH%\%OH_DIR%\rsc\default_demo_credentials.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 
 REM ### Setup database if not already existing
 if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
@@ -329,8 +329,9 @@ set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\bundle
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_base
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_extra
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_stat
-set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\images
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc
+set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\images
+REM set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\icons REM hardcoded
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\bin\OH-gui.jar
 
 REM # Setup native_lib_path for current architecture
