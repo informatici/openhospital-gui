@@ -20,7 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
-#
 
 #################### Script info and configuration - Do not edit #####################
 # set script DEBUG mode
