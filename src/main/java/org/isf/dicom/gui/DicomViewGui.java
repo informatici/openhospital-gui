@@ -94,10 +94,7 @@ public class DicomViewGui extends JPanel {
 	private Attributes attributes;
 	private FileDicom tmpDbFile;
 
-	// GUI
-	private JPanel jPanelHeader;
 	private JPanel jPanelCenter;
-	private JPanel jPanelFooter;
 	private JSlider jSliderZoom;
 	private JSlider jSliderFrame;
 	
@@ -128,7 +125,7 @@ public class DicomViewGui extends JPanel {
 
 		if (patID >= 0) {
 			try {
-				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
+				frames = DicomManagerFactory.getManager().getSeriesDetail(patID, serieNumber);
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -153,7 +150,7 @@ public class DicomViewGui extends JPanel {
 
 		if (patID >= 0) {
 			try {
-				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
+				frames = DicomManagerFactory.getManager().getSeriesDetail(patID, serieNumber);
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -177,8 +174,8 @@ public class DicomViewGui extends JPanel {
 	 */
 	void initComponent() {
 
-		jPanelHeader = new JPanel();
-		jPanelFooter = new JPanel();
+		JPanel jPanelHeader = new JPanel();
+		JPanel jPanelFooter = new JPanel();
 
 		jSliderFrame = new JSlider(0, 0, 0);
 		jSliderZoom = new JSlider(50, 300, 100);
@@ -447,7 +444,7 @@ public class DicomViewGui extends JPanel {
 		if (txt == null) {
 			txt = "";
 		}
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.serie.n") + " " + txt, ws, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.serie.n") + ' ' + txt, ws, hi);
 		canvas.setColor(orig);
 	}
 

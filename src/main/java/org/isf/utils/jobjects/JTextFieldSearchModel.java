@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -147,7 +146,7 @@ public class JTextFieldSearchModel extends JPanel {
 					Show.FOCUS_GAINED);
 			suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			suggestion.setForeground(Color.GRAY);
-			suggestion.setHorizontalAlignment(JLabel.CENTER);
+			suggestion.setHorizontalAlignment(SwingConstants.CENTER);
 			suggestion.changeAlpha(0.5f);
 			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 			if (medical != null) {

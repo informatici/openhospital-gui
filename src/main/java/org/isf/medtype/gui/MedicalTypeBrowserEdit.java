@@ -198,7 +198,6 @@ public class MedicalTypeBrowserEdit extends JDialog {
 				medicalType.setDescription(descriptionTextField.getText());
 				medicalType.setCode(codeTextField.getText());
 
-				boolean result;
 				if (insert) { // inserting
 					try {
 						MedicalType insertedMedicalType = medicalTypeBrowserManager.newMedicalType(medicalType);

@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -42,8 +43,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.LayoutStyle;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
@@ -75,21 +77,13 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 	private JButton jButtonLoadDicom;
 	private JButton jButtonDeleteDicom;
-	private JPanel jPanel1;
 	private JPanel jPanelDetail;
-	private JPanel jPanelButton;
-	private JScrollPane jScrollPane2;
 	private JSplitPane jSplitPane1;
-	private JPanel jPanelMain;
 
 	private ThumbnailViewGui thumbnail;
-	private int patient = -1;
+	private int patient;
 	private Patient ohPatient;
-	private int position = 150;
-
 	private JFrame myJFrame;
-
-	private ModalJFrame owner;
 
 	/**
 	 * Construct a GUI
@@ -100,7 +94,6 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		super();
 		this.patient = patient.getCode();
 		this.ohPatient = patient;
-		this.owner = owner;
 
 		initialize();
 		//setVisible(true);
@@ -108,7 +101,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		myJFrame = this;
 
 		// TMP
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	/**
@@ -151,7 +144,6 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 			y = ois.readInt();
 			h = ois.readInt();
 			w = ois.readInt();
-			position = ois.readInt();
 			lastDir = ois.readUTF();
 			ois.close();
 		} catch (Exception e) {
@@ -176,8 +168,8 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 	}
 
 	private void initComponents() {
-		jPanelMain = new JPanel();
-		jPanel1 = new JPanel();
+		JPanel jPanelMain = new JPanel();
+		JPanel jPanel1 = new JPanel();
 		jButtonLoadDicom = new JButton(MessageBundle.getMessage("angal.dicom.load.btn"));
 		jButtonLoadDicom.setMnemonic(MessageBundle.getMnemonic("angal.dicom.load.btn.key"));
 		jButtonLoadDicom.setName("jButtonLoadDicom");
@@ -189,7 +181,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 		jPanelDetail = new DicomViewGui(null, null);
 		jPanelDetail.setName("jPanelDetail");
-		jPanelButton = new JPanel();
+		JPanel jPanelButton = new JPanel();
 		jPanelButton.add(jButtonLoadDicom);
 		jPanelButton.add(jButtonDeleteDicom);
 		jPanelMain.setName("mainPanel");
@@ -198,26 +190,26 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
 		jPanel1Layout.setAutoCreateContainerGaps(true);
 		jPanel1.setLayout(jPanel1Layout);
-		jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-				jPanel1Layout.createSequentialGroup().addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING))
-						.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)).addComponent(jPanelButton)));
+		jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING).addGroup(
+				jPanel1Layout.createSequentialGroup().addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING))
+						.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)).addComponent(jPanelButton)));
 		jPanel1Layout.setVerticalGroup(jPanel1Layout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.createParallelGroup(Alignment.LEADING)
 				.addGroup(
-						GroupLayout.Alignment.TRAILING,
-						jPanel1Layout.createSequentialGroup().addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE))
-								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE))
+						Alignment.TRAILING,
+						jPanel1Layout.createSequentialGroup().addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE))
+								.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE))
 								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-				.addGroup(GroupLayout.Alignment.TRAILING,
+				.addGroup(Alignment.TRAILING,
 						jPanel1Layout.createSequentialGroup().addContainerGap()
-								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(jPanelButton))));
+								.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE).addComponent(jPanelButton))));
 
 		//jSplitPane1.setDividerLocation(position);
 
 		thumbnail = new ThumbnailViewGui(patient, this);
 		thumbnail.initialize();
 
-		jScrollPane2 = new JScrollPane();
+		JScrollPane jScrollPane2 = new JScrollPane();
 		jScrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		jScrollPane2.setViewportView(thumbnail);
@@ -231,15 +223,15 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 		GroupLayout mainPanelLayout = new GroupLayout(jPanelMain);
 		jPanelMain.setLayout(mainPanelLayout);
 
-		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(Alignment.LEADING)
 				.addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				.addGroup(
 						mainPanelLayout.createSequentialGroup().addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE).addGap(10, 10, 10)));
 
-		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-				GroupLayout.Alignment.TRAILING,
+		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(Alignment.LEADING).addGroup(
+				Alignment.TRAILING,
 				mainPanelLayout.createSequentialGroup().addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)));
 
 		actionListenerJButtonLoadDicom();
@@ -281,7 +273,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 					try {
 						numfiles = SourceFiles.countFiles(selectedFile, patient);
 					} catch (OHDicomException e1) {
-						OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+						OHServiceExceptionUtil.showMessages(e1, this);
 						return;
 					}
 					if (numfiles == 1) {
@@ -291,12 +283,12 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 				} else {
 					try {
 						if (!SourceFiles.checkSize(file)) {
-							MessageDialog.error(DicomGui.this, "angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty.fmt.msg",
+							MessageDialog.error(this, "angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty.fmt.msg",
 									DicomManagerFactory.getMaxDicomSize());
 							return;
 						}
 					} catch (OHDicomException e1) {
-						OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+						OHServiceExceptionUtil.showMessages(e1, this);
 						return;
 					}
 				}
@@ -307,7 +299,7 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 				//shows settings to the user for validation/modification
 				List<Date> dates = FileTools.getTimestampFromName(file);
 
-				ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
+				ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(this, numfiles, dummyFileDicom, dates);
 				preLoadDialog.setVisible(true);
 
 				if (!preLoadDialog.isSave()) {
@@ -343,13 +335,13 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 
 			Object[] options = { MessageBundle.getMessage("angal.dicom.delete.yes"), MessageBundle.getMessage("angal.dicom.delete.no") };
 
-			int n = JOptionPane.showOptionDialog(DicomGui.this, MessageBundle.getMessage("angal.dicom.delete.request"),
+			int n = JOptionPane.showOptionDialog(this, MessageBundle.getMessage("angal.dicom.delete.request"),
 					MessageBundle.getMessage("angal.dicom.delete.title"),
 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "");
 
 			if (n == 0) {
 				try {
-					DicomManagerFactory.getManager().deleteSerie(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
+					DicomManagerFactory.getManager().deleteSeries(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 				}

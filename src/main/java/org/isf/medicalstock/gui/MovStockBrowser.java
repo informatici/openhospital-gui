@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -102,16 +102,8 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * ------------------------------------------
  * MovStockBrowser - list medicals movement. let the user search for movements
  * 					  and insert a new movements
- * -----------------------------------------
- * modification history
- * 30/03/2006 - Theo - first beta version
- * 03/11/2006 - ross - changed title, removed delete all button
- *                   - corrected an error in datetextfield class (the month displayed in the filter was -1
- * 			         - version is now  1.0
- * ------------------------------------------
  */
 public class MovStockBrowser extends ModalJFrame {
 
@@ -228,6 +220,10 @@ public class MovStockBrowser extends ModalJFrame {
 		if (MainMenu.checkUserGrants("btnpharmstockdischarge")) {
 			buttonPanel.add(getDischargeButton());
 		}
+		if (MainMenu.checkUserGrants("btnpharmstockcmovdelete")) {
+			buttonPanel.add(getDeleteLastMovementButton());
+		}
+
 		buttonPanel.add(getExportToExcelButton());
 		buttonPanel.add(getStockCardButton());
 		buttonPanel.add(getStockLedgerButton());
@@ -245,14 +241,14 @@ public class MovStockBrowser extends ModalJFrame {
 				medical = movement.getMedical();
 			}
 
-			StockCardDialog stockCardDialog = new StockCardDialog(MovStockBrowser.this,
+			StockCardDialog stockCardDialog = new StockCardDialog(this,
 							medical,
 							movDateFrom.getDateStartOfDay(),
 							movDateTo.getDateStartOfDay());
 			medical = stockCardDialog.getMedical();
 			if (!stockCardDialog.isCancel()) {
 				if (medical == null) {
-					MessageDialog.error(MovStockBrowser.this, "angal.medicalstock.chooseamedical.msg");
+					MessageDialog.error(this, "angal.medicalstock.chooseamedical.msg");
 					return;
 				}
 				LocalDateTime dateFrom = stockCardDialog.getLocalDateTimeFrom();
@@ -270,7 +266,7 @@ public class MovStockBrowser extends ModalJFrame {
 		stockLedgerButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockledger.btn.key"));
 		stockLedgerButton.addActionListener(actionEvent -> {
 
-			StockLedgerDialog stockCardDialog = new StockLedgerDialog(MovStockBrowser.this, movDateFrom.getDateStartOfDay(), movDateTo.getDateStartOfDay());
+			StockLedgerDialog stockCardDialog = new StockLedgerDialog(this, movDateFrom.getDateStartOfDay(), movDateTo.getDateStartOfDay());
 			if (!stockCardDialog.isCancel()) {
 				new GenericReportPharmaceuticalStockCard("ProductLedger_multi", stockCardDialog.getLocalDateTimeFrom(), stockCardDialog.getLocalDateTimeTo(),
 								null, null, false);
@@ -940,6 +936,50 @@ public class MovStockBrowser extends ModalJFrame {
 		return dischargeButton;
 	}
 
+	/**
+	 * This method creates the button that delete the last stock {@link Movement)
+	 * 
+	 * @return
+	 */
+	private JButton getDeleteLastMovementButton() {
+		JButton deleteMovementButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteMovementButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+		deleteMovementButton.addActionListener(actionEvent -> {
+
+			if (movTable.getSelectedRowCount() > 1) {
+				MessageDialog.error(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
+				return;
+			}
+			int selectedRow = movTable.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.error(this, "angal.medicalstock.pleaseselectamovement.msg");
+				return;
+			}
+			Movement selectedMovement = (Movement) movTable.getValueAt(selectedRow, -1);
+			try {
+				Movement lastMovement = movBrowserManager.getLastMovement();
+				if (lastMovement.getCode() == selectedMovement.getCode()) {
+					int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
+					if (delete == JOptionPane.YES_OPTION) {
+						movBrowserManager.deleteLastMovement(lastMovement);
+					} else {
+						return;
+					}
+				} else {
+					MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
+					return;
+				}
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
+				return;
+			}
+			MessageDialog.info(this, "angal.medicalstock.deletemovementsuccess.msg");
+			filterButton.doClick();
+		});
+		return deleteMovementButton;
+
+	}
+
 	private JButton getExportToExcelButton() {
 		JButton exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
 		exportToExcel.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.exporttoexcel.btn.key"));
@@ -949,7 +989,7 @@ public class MovStockBrowser extends ModalJFrame {
 			File defaultFileName = new File(fileName);
 			JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFileName);
 
-			int iRetVal = fcExcel.showSaveDialog(MovStockBrowser.this);
+			int iRetVal = fcExcel.showSaveDialog(this);
 			if (iRetVal == JFileChooser.APPROVE_OPTION) {
 				File exportFile = fcExcel.getSelectedFile();
 				if (!exportFile.getName().endsWith(".xls") && !exportFile.getName().endsWith(".xlsx")) {
@@ -967,7 +1007,7 @@ public class MovStockBrowser extends ModalJFrame {
 						xlsExport.exportTableToExcelOLD(movTable, exportFile);
 					}
 				} catch (IOException exc) {
-					JOptionPane.showMessageDialog(MovStockBrowser.this,
+					JOptionPane.showMessageDialog(this,
 									exc.getMessage(),
 									MessageBundle.getMessage("angal.messagedialog.error.title"),
 									JOptionPane.PLAIN_MESSAGE);

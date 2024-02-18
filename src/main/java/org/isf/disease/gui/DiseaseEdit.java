@@ -53,15 +53,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
- * ------------------------------------------
  * DiseaseEdit - Add/edit a Disease
- * -----------------------------------------
- * modification history
- * 25/01/2006 - Rick, Vero, Pupo - first beta version
- * 03/11/2006 - ross - added flags OPD / IPD
- * 			         - changed title, version is now 1.0
- * 09/06/2007 - ross - when updating, now the user can change the "dis type" also
- * ------------------------------------------
  */
 public class DiseaseEdit extends JDialog {
 	
@@ -159,8 +151,8 @@ public class DiseaseEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.CENTER);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}

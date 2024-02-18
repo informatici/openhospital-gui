@@ -139,7 +139,7 @@ public class ScaledJSlider extends JSlider {
 	 */
 	public double getScaledValue() {
 		double value = super.getValue() * step;
-		return new BigDecimal(value).setScale(precision, RoundingMode.HALF_UP).doubleValue();
+		return BigDecimal.valueOf(value).setScale(precision, RoundingMode.HALF_UP).doubleValue();
 	}
 
 }

@@ -94,7 +94,7 @@ public class VisitView extends ModalJFrame {
 	}
 
 	private void fireVisitsUpdated() {
-		AWTEvent event = new AWTEvent(VisitView.this, AWTEvent.RESERVED_ID_MAX + 1) {
+		AWTEvent event = new AWTEvent(this, AWTEvent.RESERVED_ID_MAX + 1) {
 
 			private static final long serialVersionUID = 1L;
 		};
@@ -111,7 +111,9 @@ public class VisitView extends ModalJFrame {
 	private static final int VISIT_BUTTON_WIDTH = 200;
 	private static final int ACTIONS_BUTTON_WIDTH = 240;
 	private static final int ALL_BUTTON_HEIGHT = 30;
-	
+
+	private static final String SELECT_A_WARD = MessageBundle.getMessage("angal.visit.selectaward.txt");
+
 	/*
 	 * Attributes
 	 */
@@ -142,7 +144,7 @@ public class VisitView extends ModalJFrame {
 	private JComboBox<Ward> wardBox;
 	private SpringLayout slVisitParamsPanel;
 	
-	public String[] visColumns = { MessageBundle.getMessage("angal.visit.visits") };
+	private String[] visColumns = { MessageBundle.getMessage("angal.visit.visits") };
 
 	/*
 	 * Managers
@@ -164,10 +166,8 @@ public class VisitView extends ModalJFrame {
 
 	private void loadDataForWard(Ward ward) {
 		try {
-			if (ward != null) {
+			if (!ward.getDescription().equals(SELECT_A_WARD)) {
 				visits = visitManager.getVisitsWard(ward.getCode());
-			} else {
-				visits = visitManager.getVisitsWard(null);
 			}
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
@@ -315,7 +315,7 @@ public class VisitView extends ModalJFrame {
 			addFirstVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addFirstVisitButton.addActionListener(actionEvent -> {
 
-				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateFirst, getWard(), patient, true);
+				InsertVisit newVsRow = new InsertVisit(this, dateFirst, getWard(), patient, true);
 				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
@@ -336,11 +336,11 @@ public class VisitView extends ModalJFrame {
 
 				int row = jTableFirst.getSelectedRow();
 				if (row < 0) {
-					MessageDialog.info(VisitView.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.info(this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
 				Visit visit = (Visit) jTableFirst.getModel().getValueAt(row, -1);
-				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
+				int ok = MessageDialog.okCancel(this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
 					try {
 						visitManager.deleteVisit(visit);
@@ -364,7 +364,7 @@ public class VisitView extends ModalJFrame {
 			addSecondVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addSecondVisitButton.addActionListener(actionEvent -> {
 
-				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateSecond, getWard(), patient, true);
+				InsertVisit newVsRow = new InsertVisit(this, dateSecond, getWard(), patient, true);
 				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
@@ -385,11 +385,11 @@ public class VisitView extends ModalJFrame {
 
 				int row = jTableSecond.getSelectedRow();
 				if (row < 0) {
-					MessageDialog.info(VisitView.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.info(this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
 				Visit visit = (Visit) jTableSecond.getModel().getValueAt(row, -1);
-				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
+				int ok = MessageDialog.okCancel(this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
 					try {
 						visitManager.deleteVisit(visit);
@@ -600,11 +600,11 @@ public class VisitView extends ModalJFrame {
 	private Object getVisitString(Visit visit, LocalDateTime localDateTime) {
 		StringBuilder strBuilder = new StringBuilder();
 		strBuilder.append(formatDateTime(localDateTime)).append(" - "); //$NON-NLS-1$
-		strBuilder.append("(").append(MessageBundle.getMessage("angal.common.patientID")).append(": ").append(visit.getPatient().getCode()).append(") - "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		strBuilder.append('(').append(MessageBundle.getMessage("angal.common.patientID")).append(": ").append(visit.getPatient().getCode()).append(") - "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		strBuilder.append(visit.getPatient().getName()).append(" - "); //$NON-NLS-1$
 		strBuilder.append(visit.getService() == null || visit.getService().isEmpty() ? MessageBundle.getMessage("angal.common.notdefined.txt") : visit.getService()) //$NON-NLS-1$
-						.append(" "); //$NON-NLS-1$
-		strBuilder.append("(").append(visit.getDuration()).append(MessageBundle.getMessage("angal.common.minutesabbr")).append(")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						.append(' '); //$NON-NLS-1$
+		strBuilder.append('(').append(visit.getDuration()).append(MessageBundle.getMessage("angal.common.minutesabbr")).append(')'); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return strBuilder.toString();
 	}
 
@@ -788,7 +788,6 @@ public class VisitView extends ModalJFrame {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
 			wardBox = new JComboBox<>();
-			wardBox.addItem(null);
 			List<Ward> wardList;
 			try {
 				wardList = wardBrowserManager.getWards();
@@ -796,11 +795,13 @@ public class VisitView extends ModalJFrame {
 				wardList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			for (Ward ward : wardList) {
-				wardBox.addItem(ward);
-				if (this.ward != null) {
-					if (this.ward.getCode().equalsIgnoreCase(ward.getCode())) {
-						wardBox.setSelectedItem(ward);
+			Ward selectAWard = new Ward("", SELECT_A_WARD, "", "", "", -1, -1, -1, false, false);
+			wardBox.addItem(selectAWard);
+			for (Ward aWard : wardList) {
+				wardBox.addItem(aWard);
+				if (ward != null) {
+					if (ward.getCode().equalsIgnoreCase(aWard.getCode())) {
+						wardBox.setSelectedItem(aWard);
 					}
 				}
 			}
@@ -814,12 +815,16 @@ public class VisitView extends ModalJFrame {
 					loadDataForWard(ward);
 					showGui(true);
 				}
+				Ward wardAtZero = wardBox.getItemAt(0);
+				if (wardAtZero.getDescription().equals(SELECT_A_WARD)) {
+					wardBox.removeItem(wardAtZero);
+				}
 				updatePanels();
 			});
 		}
 
 		wardPanel.add(wardBox);
-		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.visit.selectaward"))); //$NON-NLS-1$
+		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.visit.ward.border")));
 
 		return wardPanel;
 	}

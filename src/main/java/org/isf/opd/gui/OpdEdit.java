@@ -49,6 +49,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.event.EventListenerList;
 
 import org.isf.disease.manager.DiseaseBrowserManager;
@@ -71,21 +72,8 @@ import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
 /**
- * ------------------------------------------
  * OpdEdit - add/edit an OPD registration
- * -----------------------------------------
- * modification history
- * 11/12/2005 - Vero, Rick  - first beta version
- * 07/11/2006 - ross - renamed from Surgery
- *                   - added visit date, disease 2, disease 3
- *                   - disease is not mandatory if re-attendance
- * 			         - version is now 1.0
- * 28/05/2008 - ross - added referral to / referral from check boxes
- * 			         - version is now 1.1
- * 09/01/2009 - fabrizio - Removed unuseful control on variable dateIn.
- *                         Cosmetic changes to code style.
- * ------------------------------------------
- * */
+ */
 public class OpdEdit extends JDialog {
 	
 	private static final long serialVersionUID = -7369841416710920082L;
@@ -223,8 +211,8 @@ public class OpdEdit extends JDialog {
 		if (principalPanel == null) {
 			principalPanel = new JPanel();
 			principalPanel.setLayout(new BorderLayout());
-			principalPanel.add(getInsertPanel(), java.awt.BorderLayout.NORTH);
-			principalPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
+			principalPanel.add(getInsertPanel(), BorderLayout.NORTH);
+			principalPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
 		}
 		return principalPanel;
 	}
@@ -328,7 +316,7 @@ public class OpdEdit extends JDialog {
 				if (opd.getDisease() != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease().getCode().equals(elem.getCode())) {
-							MessageDialog.warning(OpdEdit.this,"angal.opd.disease1mayhavebeencancelled.msg");
+							MessageDialog.warning(this,"angal.opd.disease1mayhavebeencancelled.msg");
 							diseaseBox.addItem(elem);
 							diseaseBox.setSelectedItem(elem);
 						}
@@ -368,7 +356,7 @@ public class OpdEdit extends JDialog {
 				if (diseasesAll != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease2().getCode().equals(elem.getCode())) {
-							MessageDialog.warning(OpdEdit.this, "angal.opd.disease2mayhavebeencancelled.msg");
+							MessageDialog.warning(this, "angal.opd.disease2mayhavebeencancelled.msg");
 							diseaseBox2.addItem(elem);
 							diseaseBox2.setSelectedItem(elem);
 						}
@@ -408,7 +396,7 @@ public class OpdEdit extends JDialog {
 				if (diseasesAll != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease3().getCode().equals(elem.getCode())) {
-							MessageDialog.warning(OpdEdit.this, "angal.opd.disease3mayhavebeencancelled.msg");
+							MessageDialog.warning(this, "angal.opd.disease3mayhavebeencancelled.msg");
 							diseaseBox3.addItem(elem);
 							diseaseBox3.setSelectedItem(elem);
 						}
@@ -443,7 +431,6 @@ public class OpdEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-						boolean result;
 						LocalDateTime visitDate;
 						char newPatient;
 						String referralTo;
@@ -451,7 +438,7 @@ public class OpdEdit extends JDialog {
 						Disease disease = null;
 						Disease disease2 = null;
 						Disease disease3 = null;
-						Ward ward = null;
+						Ward ward;
 
 						if (newPatientCheckBox.isSelected()) {
 							newPatient = 'N';
@@ -473,20 +460,20 @@ public class OpdEdit extends JDialog {
 
 						// disease
 						if (diseaseBox.getSelectedIndex() > 0) {
-							disease = ((Disease) diseaseBox.getSelectedItem());
+							disease = (Disease) diseaseBox.getSelectedItem();
 						}
 						// disease2
 						if (diseaseBox2.getSelectedIndex() > 0) {
-							disease2 = ((Disease) diseaseBox2.getSelectedItem());
+							disease2 = (Disease) diseaseBox2.getSelectedItem();
 						}
 						// disease3
 						if (diseaseBox3.getSelectedIndex() > 0) {
-							disease3 = ((Disease) diseaseBox3.getSelectedItem());
+							disease3 = (Disease) diseaseBox3.getSelectedItem();
 						}
 						// visit date
 						LocalDateTime localDateTime = opdDateField.getLocalDateTime();
 						if (localDateTime == null) {
-							MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertattendancedate.msg");
+							MessageDialog.error(this, "angal.opd.pleaseinsertattendancedate.msg");
 							return;
 						}
 						visitDate = localDateTime;
@@ -931,7 +918,7 @@ public class OpdEdit extends JDialog {
 	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
+		Border b2 = BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(title), BorderFactory
 						.createEmptyBorder(0, 0, 0, 0));
 		c.setBorder(b2);

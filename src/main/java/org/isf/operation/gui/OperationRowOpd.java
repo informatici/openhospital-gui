@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.isf.menu.gui.MainMenu;
-import org.isf.opd.gui.OpdEditExtended;
+import org.isf.opd.gui.OpdEditExtended.SurgeryListener;
 import org.isf.opd.model.Opd;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
@@ -36,7 +36,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhTableOperationModel;
 
-public class OperationRowOpd extends OperationRowBase implements OpdEditExtended.SurgeryListener {
+public class OperationRowOpd extends OperationRowBase implements SurgeryListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +62,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 	@Override
 	public void addToGrid() {
 		if ((this.textDate.getLocalDateTime() == null) || (this.comboOperation.getSelectedItem() == null)) {
-			MessageDialog.error(OperationRowOpd.this, "angal.operationrowedit.warningdateope");
+			MessageDialog.error(this, "angal.operationrowedit.warningdateope");
 			return;
 		}
 

@@ -39,6 +39,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.disease.gui.DiseaseEdit.DiseaseListener;
 import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
 import org.isf.distype.manager.DiseaseTypeBrowserManager;
@@ -50,17 +51,11 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
- * ------------------------------------------
  * DiseaseBrowser - This class shows a list of diseases.
  * 					It is possible to filter data with a selection combo box
  * 					and edit-insert-delete records
- * -----------------------------------------
- * modification history
- * 25-gen-2006 - Rick, Vero, Pupo - first beta version
- * 03/11/2006 - ross - version is now 1.0
- * ------------------------------------------
  */
-public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseListener {
+public class DiseaseBrowser extends ModalJFrame implements DiseaseListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final DiseaseType ALL_DISEASETYPES = new DiseaseType("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
@@ -80,14 +75,13 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		pDisease.set(selectedrow, disease);
 		((DiseaseBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1) {
+		if (table.getRowCount() > 0 && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 
 	}
 	
 	private int selectedrow;
-	private JLabel selectlabel;
 	private JComboBox pbox;
 	private List<Disease> pDisease;
 	private String[] pColumns = {
@@ -120,8 +114,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		JPanel buttonPanel = new JPanel();
-		
-		selectlabel = new JLabel(MessageBundle.getMessage("angal.disease.selecttype"));
+
+		JLabel selectlabel = new JLabel(MessageBundle.getMessage("angal.disease.selecttype"));
 		buttonPanel.add(selectlabel);
 		
 		pbox = new JComboBox();
@@ -155,7 +149,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		buttonNew.addActionListener(actionEvent -> {
 			disease = new Disease(null, "", new DiseaseType("", ""));    //disease will reference the new record
 			DiseaseEdit newrecord = new DiseaseEdit(myFrame, disease, true);
-			newrecord.addDiseaseListener(DiseaseBrowser.this);
+			newrecord.addDiseaseListener(this);
 			newrecord.setVisible(true);
 		});
 		buttonPanel.add(buttonNew);
@@ -164,12 +158,12 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
+				MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
 				disease = (Disease) model.getValueAt(selectedrow, -1);
 				DiseaseEdit editrecord = new DiseaseEdit(myFrame, disease, false);
-				editrecord.addDiseaseListener(DiseaseBrowser.this);
+				editrecord.addDiseaseListener(this);
 				editrecord.setVisible(true);
 			}
 		});
@@ -179,13 +173,14 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
+				MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
 				disease = (Disease) model.getValueAt(selectedrow, -1);
-				int answer = MessageDialog.yesNo(DiseaseBrowser.this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
+				int answer = MessageDialog.yesNo(this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
 				try {
-					if ((answer == JOptionPane.YES_OPTION) && (diseaseBrowserManager.deleteDisease(disease))) {
+					if (answer == JOptionPane.YES_OPTION) {
+						diseaseBrowserManager.deleteDisease(disease);
 						disease.setIpdInInclude(false);
 						disease.setIpdOutInclude(false);
 						disease.setOpdInclude(false);

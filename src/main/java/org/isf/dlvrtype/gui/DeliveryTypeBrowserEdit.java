@@ -101,7 +101,6 @@ public class DeliveryTypeBrowserEdit extends JDialog {
     private DeliveryType deliveryType;
     private boolean insert;
     private JPanel jDataPanel;
-    private JLabel jCodeLabel;
 
     /**
      * This is the default constructor; we pass the arraylist and the selectedrow
@@ -140,8 +139,8 @@ public class DeliveryTypeBrowserEdit extends JDialog {
         if (jContentPane == null) {
             jContentPane = new JPanel();
             jContentPane.setLayout(new BorderLayout());
-            jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-            jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+            jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+            jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
         }
         return jContentPane;
     }
@@ -204,32 +203,18 @@ public class DeliveryTypeBrowserEdit extends JDialog {
                     }
                     deliveryType.setDescription(descriptionTextField.getText());
                     deliveryType.setCode(codeTextField.getText());
-                    boolean result;
                     if (insert) {      // inserting
-                        result = deliveryTypeBrowserManager.newDeliveryType(deliveryType);
-                        if (result) {
-                            fireDeliveryInserted();
-                        }
-                        if (!result) {
-                            MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
-                        } else {
-                            dispose();
-                        }
+                        deliveryTypeBrowserManager.newDeliveryType(deliveryType);
+                        fireDeliveryInserted();
+                        dispose();
                     } else {                          // updating
                         if (descriptionTextField.getText().equals(lastdescription)) {
                             dispose();
                         } else {
-                            result = deliveryTypeBrowserManager.updateDeliveryType(deliveryType);
-                            if (result) {
-                                fireDeliveryUpdated();
-                            }
-                            if (!result) {
-                                MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
-                            } else {
-                                dispose();
-                            }
+                            deliveryTypeBrowserManager.updateDeliveryType(deliveryType);
+                            fireDeliveryUpdated();
+                            dispose();
                         }
-
                     }
                 } catch (OHServiceException ohServiceException) {
                     MessageDialog.showExceptions(ohServiceException);

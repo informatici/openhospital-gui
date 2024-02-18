@@ -126,8 +126,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			.ifPresent(w -> patientWeight = w);
 			
 		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e, WardPharmacyNew.this);
-			MessageDialog.error(WardPharmacyNew.this, "angal.medicalstockwardedit.problemoccurredwhileretrievingweight");
+			OHServiceExceptionUtil.showMessages(e, this);
+			MessageDialog.error(this, "angal.medicalstockwardedit.problemoccurredwhileretrievingweight");
 		}
 	}
 	
@@ -178,10 +178,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JRadioButton jRadioWard;
 	private JComboBox wardBox;
 	private JPanel panelWard;
-	/*
-	 * Adds to facilitate the selection of products
-	 */
-	private JPanel searchPanel;
 	private JTextField searchTextField;
 	private JButton searchButton;
 	private JComboBox jComboBoxMedicals;
@@ -327,7 +323,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private boolean checkQuantityInLot(MedicalWard medWard, double qty) {
 		double wardQty = medWard.getQty();
 		if (qty > wardQty) {
-			MessageDialog.error(WardPharmacyNew.this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.msg");
+			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.msg");
 			return false;
 		} 
 		return true;
@@ -349,15 +345,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				if (elem.getQty() != 0.0) {
 					if (q != 0) {
 						if (elem.getQty() <= q) {
-							MedicalWard e = elem;
 							q = (int) (q - elem.getQty());
 							int maxquantity = (int) (elem.getQty() - 0);
 							medWard = elem;
 							addItem(medWard, maxquantity);
 
 						} else {
-							MedicalWard e = elem;
-							int qu = (int) (elem.getQty() - q);
 							medWard = elem;
 
 							addItem(medWard, q);
@@ -392,7 +385,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
 
 		do {
-			int ok = JOptionPane.showConfirmDialog(WardPharmacyNew.this,
+			int ok = JOptionPane.showConfirmDialog(this,
 					panel,
 					MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$
 					JOptionPane.OK_CANCEL_OPTION);
@@ -445,7 +438,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 
 		do {
-			String quantity = JOptionPane.showInputDialog(WardPharmacyNew.this, message.toString(), title.toString(),
+			String quantity = JOptionPane.showInputDialog(this, message.toString(), title.toString(),
 					JOptionPane.QUESTION_MESSAGE);
 
 			if (quantity != null) {
@@ -459,7 +452,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					}
 
 				} catch (NumberFormatException nfe) {
-					MessageDialog.error(WardPharmacyNew.this, "angal.medicalstock.multipledischarging.pleaseinsertavalidvalue");
+					MessageDialog.error(this, "angal.medicalstock.multipledischarging.pleaseinsertavalidvalue");
 					qty = 0;
 				}
 			} else {
@@ -486,10 +479,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (qty > totalQty) {
 			StringBuilder message = new StringBuilder();
 			message.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.thequantityisnotavailable")) //$NON-NLS-1$
-				.append("\n") //$NON-NLS-1$
+				.append('\n') //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty);
-			JOptionPane.showMessageDialog(WardPharmacyNew.this, message.toString());
+			JOptionPane.showMessageDialog(this, message.toString());
 			return false;
 		}
 		return true;
@@ -519,7 +512,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonRemoveMedical.setIcon(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
 			jButtonRemoveMedical.addActionListener(actionEvent -> {
 				if (jTableMedicals.getSelectedRow() < 0) {
-					MessageDialog.error(WardPharmacyNew.this, "angal.medicalstockwardedit.pleaseselectanitem");
+					MessageDialog.error(this, "angal.medicalstockwardedit.pleaseselectanitem");
 				} else {
 					removeItem(jTableMedicals.getSelectedRow());
 				}
@@ -718,8 +711,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
 			jButtonPickPatient.addActionListener(actionEvent -> {
-				SelectPatient sp = new SelectPatient(WardPharmacyNew.this, patientSelected);
-				sp.addSelectionListener(WardPharmacyNew.this);
+				SelectPatient sp = new SelectPatient(this, patientSelected);
+				sp.addSelectionListener(this);
 				sp.pack();
 				sp.setVisible(true);
 			});
@@ -847,7 +840,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			}
 			wardBox.addItem("");
 			if (wardList != null) {
-				for (org.isf.ward.model.Ward elem : wardList) {
+				for (Ward elem : wardList) {
 					if (!wardSelected.getCode().equals(elem.getCode())) {
 						wardBox.addItem(elem);
 					}
@@ -890,7 +883,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			}
 		});
 
-		searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		/*
+		 * Adds to facilitate the selection of products
+		 */
+		JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		searchPanel.add(searchTextField);
 		searchPanel.add(searchButton);
 		searchPanel.add(getJComboBoxMedicals());

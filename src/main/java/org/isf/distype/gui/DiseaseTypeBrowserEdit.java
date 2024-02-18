@@ -137,8 +137,8 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -203,28 +203,16 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 					diseaseType.setCode(codeTextField.getText());
 					boolean result;
 					if (insert) {      // inserting
-						result = diseaseTypeBrowserManager.newDiseaseType(diseaseType);
-						if (result) {
-							fireDiseaseInserted();
-						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
+						diseaseTypeBrowserManager.newDiseaseType(diseaseType);
+						fireDiseaseInserted();
+						dispose();
 					} else {                          // updating
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							result = diseaseTypeBrowserManager.updateDiseaseType(diseaseType);
-							if (result) {
-								fireDiseaseUpdated();
-							}
-							if (!result) {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							} else {
-								dispose();
-							}
+							diseaseTypeBrowserManager.updateDiseaseType(diseaseType);
+							fireDiseaseUpdated();
+							dispose();
 						}
 					}
 				} catch (OHServiceException ohServiceException) {

@@ -29,10 +29,10 @@ import java.util.Arrays;
 import org.isf.accounting.TestBill;
 import org.junit.jupiter.api.Test;
 
-public class BalanceTotalTest {
+class BalanceTotalTest {
 
 	@Test
-	public void shouldCalculateBalanceForWholePeriod() {
+	void shouldCalculateBalanceForWholePeriod() {
 		// given:
 		BalanceTotal balanceTotal = new BalanceTotal(Arrays.asList(
 				TestBill.notDeletedBillWithBalance(1, 123),
@@ -47,7 +47,7 @@ public class BalanceTotalTest {
 	}
 
 	@Test
-	public void shouldSkipDeletedBills() {
+	void shouldSkipDeletedBills() {
 		// given:
 		BalanceTotal balanceTotal = new BalanceTotal(Arrays.asList(
 				TestBill.notDeletedBillWithBalance(1, 123),

@@ -90,10 +90,10 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 		final int pfrmBase = 10;
         final int pfrmWidth = 5;
         final int pfrmHeight = 4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
+        setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2,
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle(MessageBundle.getMessage("angal.dicomtype.dicomtypebrowser.title"));
-		this.setContentPane(getJContainPanel());
+		setTitle(MessageBundle.getMessage("angal.dicomtype.dicomtypebrowser.title"));
+		setContentPane(getJContainPanel());
 
 	}
 	
@@ -102,9 +102,8 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -128,7 +127,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jNewButton.addActionListener(actionEvent -> {
 				DicomType dicomType = new DicomType("", "");
 				DicomTypeEdit newrecord = new DicomTypeEdit(myFrame, dicomType, true);
-				newrecord.addDicomTypeListener(DicomTypeBrowser.this);
+				newrecord.addDicomTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -149,9 +148,9 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					dicomType = (DicomType) (model.getValueAt(selectedrow, -1));
+					dicomType = (DicomType) model.getValueAt(selectedrow, -1);
 					DicomTypeEdit newrecord = new DicomTypeEdit(myFrame, dicomType, false);
-					newrecord.addDicomTypeListener(DicomTypeBrowser.this);
+					newrecord.addDicomTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});
@@ -186,23 +185,16 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					DicomType dicomType = (DicomType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					DicomType dicomType = (DicomType) model.getValueAt(jTable.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.dicomtype.delete.fmt.msg", dicomType.getDicomTypeDescription());
-					if ((answer == JOptionPane.YES_OPTION)) {
-
-						boolean deleted;
-
+					if (answer == JOptionPane.YES_OPTION) {
 						try {
-							deleted = dicomTypeBrowserManager.deleteDicomType(dicomType);
-						} catch (OHServiceException e) {
-							deleted = false;
-							OHServiceExceptionUtil.showMessages(e);
-						}
-
-						if (deleted) {
+							dicomTypeBrowserManager.deleteDicomType(dicomType);
 							pDicomType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
 				}
@@ -275,7 +267,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 		pDicomType.set(selectedrow, dicomType);
 		((DicomTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}

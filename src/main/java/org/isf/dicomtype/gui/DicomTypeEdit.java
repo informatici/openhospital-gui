@@ -41,7 +41,6 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
@@ -118,15 +117,15 @@ public class DicomTypeEdit extends JDialog {
 	 */
 	private void initialize() {
 		
-		this.setContentPane(getJContentPane());
+		setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.dicomtype.newdicomtype.title"));
+			setTitle(MessageBundle.getMessage("angal.dicomtype.newdicomtype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.dicomtype.editdicomtype.title"));
+			setTitle(MessageBundle.getMessage("angal.dicomtype.editdicomtype.title"));
 		}
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		this.pack();
-		this.setLocationRelativeTo(null);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		pack();
+		setLocationRelativeTo(null);
 	}
 
 	/**
@@ -138,8 +137,8 @@ public class DicomTypeEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -198,37 +197,24 @@ public class DicomTypeEdit extends JDialog {
 
 				dicomType.setDicomTypeDescription(descriptionTextField.getText());
 				dicomType.setDicomTypeID(codeTextField.getText());
-				boolean result;
 				if (insert) {    // inserting
 					try {
-						result = dicomTypeBrowserManager.newDicomType(dicomType);
-						if (result) {
-							fireDicomTypeInserted(dicomType);
-						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
+						dicomTypeBrowserManager.newDicomType(dicomType);
+						fireDicomTypeInserted(dicomType);
+						dispose();
 					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
+						OHServiceExceptionUtil.showMessages(e1, this);
 					}
 				} else {                // updating
 					if (descriptionTextField.getText().equals(lastdescription)) {
 						dispose();
 					} else {
 						try {
-							result = dicomTypeBrowserManager.updateDicomType(dicomType);
-							if (result) {
-								fireDicomUpdated();
-							}
-							if (!result) {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							} else {
-								dispose();
-							}
+							dicomTypeBrowserManager.updateDicomType(dicomType);
+							fireDicomUpdated();
+							dispose();
 						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
+							OHServiceExceptionUtil.showMessages(e1, this);
 						}
 					}
 				}

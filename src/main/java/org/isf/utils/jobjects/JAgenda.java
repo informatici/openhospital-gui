@@ -84,8 +84,6 @@ import javax.swing.UIManager;
  * JAgenda - It's a substantial modification of JCalendar(r) by Kai Toedter
  * that allows the creation of a BIG JCalendar with an AgendaDayObject for
  * each day.
- *
- * @author Mwithi
  */
 public class JAgenda extends JPanel implements ActionListener, KeyListener, FocusListener {
 
@@ -329,7 +327,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 			String buttonText = Integer.toString(week);
 
 			if (week < 10) {
-				buttonText = "0" + buttonText;
+				buttonText = '0' + buttonText;
 			}
 
 			weeks[i].setText(buttonText);
@@ -597,7 +595,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 	public void actionPerformed(ActionEvent actionEvent) {
 		JButton button = (JButton) actionEvent.getSource();
 		String buttonText = button.getText();
-		int day = Integer.valueOf(buttonText);
+		int day = Integer.parseInt(buttonText);
 		setDay(day);
 	}
 
@@ -1183,7 +1181,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 
 				JPanel thisDay;
 				thisDay = AgendaDayObject.this.popUp();
-				final JDialog dialog = new JDialog(owner);
+				JDialog dialog = new JDialog(owner);
 				dialog.add(thisDay);
 				dialog.setUndecorated(true);
 				dialog.setSize(new Dimension(600, 400));
@@ -1290,7 +1288,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 	@Override
 	public void removeAll() {
 
-		DefaultListModel model = new DefaultListModel();
+		DefaultListModel model;
 		for (AgendaDayObject day : days) {
 			if (day.getList() != null) {
 				model = (DefaultListModel) day.getList().getModel();

@@ -24,7 +24,7 @@ package org.isf.operation.gui;
 import java.awt.AWTEvent;
 import java.util.List;
 
-import org.isf.admission.gui.AdmissionBrowser;
+import org.isf.admission.gui.AdmissionBrowser.AdmissionListener;
 import org.isf.admission.model.Admission;
 import org.isf.menu.gui.MainMenu;
 import org.isf.operation.manager.OperationRowBrowserManager;
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author hp
  */
-public class OperationRowAdm extends OperationRowBase implements AdmissionBrowser.AdmissionListener {
+public class OperationRowAdm extends OperationRowBase implements AdmissionListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -66,11 +66,11 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 	@Override
 	public void addToGrid() {
 		if ((this.textDate.getLocalDateTime() == null) || (this.comboOperation.getSelectedItem() == null)) {
-			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateope");
+			MessageDialog.error(this, "angal.operationrowedit.warningdateope");
 			return;
 		}
 		if ((myAdmission != null) && (myAdmission.getAdmDate().isAfter(this.textDate.getLocalDateTime()))) {
-			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateafter");
+			MessageDialog.error(this, "angal.operationrowedit.warningdateafter");
 			return;
 		}
 

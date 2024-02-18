@@ -21,6 +21,8 @@
  */
 package org.isf.utils.jobjects;
 
+import java.util.regex.Pattern;
+
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -33,6 +35,7 @@ import javax.swing.text.PlainDocument;
 public class VoFloatTextField extends JTextField {
 
 	private static final long serialVersionUID = 1L;
+	private static final Pattern ALPHA_NUMERIC_PATTERN = Pattern.compile("^[a-zA-Z0-9]*$");
 
 	/**
 	 * @param defval - default value
@@ -72,10 +75,10 @@ public class VoFloatTextField extends JTextField {
 			String oldString = getText(0, getLength());
 			String newString = oldString.substring(0, offs) + str + oldString.substring(offs);
 			try {
-				Float.parseFloat(newString + "0");
+				Float.parseFloat(newString + '0');
 				super.insertString(offs, str, a);
 			} catch (NumberFormatException e) {
-				if (!str.matches("^[a-zA-Z0-9]*$")) {
+				if (!ALPHA_NUMERIC_PATTERN.matcher(str).matches()) {
 					super.insertString(offs, ".", a);
 				}
 			}

@@ -98,23 +98,11 @@ public class SupplierEdit extends JDialog {
 	private int pfrmBase = 16;
 	private int pfrmWidth = 5;
 	private int pfrmHeight = 9;
-	private int pfrmBordX;
-	private int pfrmBordY;
 	private JPanel jContentPane;
 	private JPanel dataPanel;
 	private JPanel buttonPanel;
 	private JButton cancelButton;
 	private JButton okButton;
-	private JLabel nameLabel;
-	private JLabel addressLabel;
-	private JLabel idLabel;
-	private JLabel taxcodeLabel;
-	private JLabel phoneLabel;
-	private JLabel faxLabel;
-	private JLabel emailLabel;
-	private JLabel noteLabel;
-	private JLabel isDeletedLabel;
-	private JLabel requiredLabel;
 	private JTextField nameTextField;
 	private JTextField idTextField;
 	private JTextField addressTexField;
@@ -147,8 +135,8 @@ public class SupplierEdit extends JDialog {
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
+		int pfrmBordX = (screensize.width - screensize.width / pfrmBase * pfrmWidth) / 2;
+		int pfrmBordY = (screensize.height - screensize.height / pfrmBase * pfrmHeight) / 2;
 		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
@@ -167,8 +155,8 @@ public class SupplierEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -180,16 +168,16 @@ public class SupplierEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			idLabel = new JLabel(MessageBundle.getMessage("angal.common.id.txt") + ':');
-			nameLabel = new JLabelRequired(MessageBundle.getMessage("angal.common.name.txt") + ':');
-			addressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt") + ':');
-			taxcodeLabel = new JLabel(MessageBundle.getMessage("angal.supplier.taxcode") + ':');
-			phoneLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt") + ':');
-			faxLabel = new JLabel(MessageBundle.getMessage("angal.supplier.faxnumber") + ':');
-			emailLabel = new JLabel(MessageBundle.getMessage("angal.supplier.email") + ':');
-			noteLabel = new JLabel(MessageBundle.getMessage("angal.supplier.note") + ':');
-			isDeletedLabel = new JLabel(MessageBundle.getMessage("angal.supplier.deleted") + ':');
-			requiredLabel= new JLabel(MessageBundle.getMessage("angal.supplier.requiredfields"));
+			JLabel idLabel = new JLabel(MessageBundle.getMessage("angal.common.id.txt") + ':');
+			JLabel nameLabel = new JLabelRequired(MessageBundle.getMessage("angal.common.name.txt") + ':');
+			JLabel addressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt") + ':');
+			JLabel taxcodeLabel = new JLabel(MessageBundle.getMessage("angal.supplier.taxcode") + ':');
+			JLabel phoneLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt") + ':');
+			JLabel faxLabel = new JLabel(MessageBundle.getMessage("angal.supplier.faxnumber") + ':');
+			JLabel emailLabel = new JLabel(MessageBundle.getMessage("angal.supplier.email") + ':');
+			JLabel noteLabel = new JLabel(MessageBundle.getMessage("angal.supplier.note") + ':');
+			JLabel isDeletedLabel = new JLabel(MessageBundle.getMessage("angal.supplier.deleted") + ':');
+			JLabel requiredLabel = new JLabel(MessageBundle.getMessage("angal.supplier.requiredfields"));
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(idLabel);
 			dataPanel.add(getIdTextField());
@@ -274,32 +262,24 @@ public class SupplierEdit extends JDialog {
 				} else {
 					supplier.setSupDeleted('N');
 				}
-				boolean result = false;
 				if (insert) {	// inserting
 					try {
 						Supplier insertedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
-						if (insertedSupplier != null) {
-							fireSupplierInserted();
-							result = true;
-						}
+						fireSupplierInserted();
+						dispose();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				} else {	// updating
 					try {
 						Supplier updatedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
-						if (updatedSupplier != null) {
-							fireSupplierUpdated();
-							result = true;
-						}
+						fireSupplierUpdated();
+						dispose();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
-				}
-				if (!result) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-				} else {
-					dispose();
 				}
 			});
 		}

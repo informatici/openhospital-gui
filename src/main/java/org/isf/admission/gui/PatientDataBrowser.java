@@ -46,6 +46,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.admission.gui.AdmissionBrowser.AdmissionListener;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.disease.manager.DiseaseBrowserManager;
@@ -56,11 +57,12 @@ import org.isf.malnutrition.gui.MalnutritionBrowser;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.opd.gui.OpdEdit;
+import org.isf.opd.gui.OpdEdit.SurgeryListener;
 import org.isf.opd.gui.OpdEditExtended;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.patient.gui.PatientInsert;
-import org.isf.patient.gui.PatientInsertExtended;
+import org.isf.patient.gui.PatientInsertExtended.PatientListener;
 import org.isf.patient.gui.PatientSummary;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
@@ -68,26 +70,12 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.table.TableSorter;
-import org.isf.ward.manager.WardBrowserManager;
-import org.isf.ward.model.Ward;
 
 /**
  * This class shows and allows to modify all patient data and all patient admissions.
- * <p>
- * last release  oct-23-06
- * @author flavio
- * ----------------------------------------------------
- * (org.isf.admission.gui)PatientDataBrowser
- * ---------------------------------------------------
- * modification history
- * 08/09/2008 - alex - added OPD in the table
- * 					 - modified EDIT and DELETE methods to match the selection
- * 					 - fixed record elimination in the view port
- * 					 - modified some panels in GUI
- * ------------------------------------------
  */
 public class PatientDataBrowser extends ModalJFrame implements 
-				PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener, OpdEditExtended.SurgeryListener, OpdEdit.SurgeryListener {
+				PatientInsert.PatientListener, PatientListener, AdmissionListener, OpdEditExtended.SurgeryListener, SurgeryListener {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
@@ -175,18 +163,14 @@ public class PatientDataBrowser extends ModalJFrame implements
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getPatientDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getPatientDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
-	
-	
-	private JPanel patientData;
-	private boolean isMalnutrition;
-	
+
 	private JPanel getPatientDataPanel() {
-		patientData = new JPanel();
+		JPanel patientData = new JPanel();
 		patientData.setLayout(new BorderLayout());
 		
 		patientData.add(getTablesPanel(), BorderLayout.EAST);
@@ -194,7 +178,6 @@ public class PatientDataBrowser extends ModalJFrame implements
 		PatientSummary ps = new PatientSummary(patient);
 		for (Admission elem : admList) {
 			if (elem.getType().equalsIgnoreCase("M")) {
-				isMalnutrition = true;
 				break;
 			}
 		}
@@ -204,13 +187,11 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 
 	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 	private List<Admission> admList;
 	private List<Disease> disease;
-	private List<Ward> ward;
 	private List<Opd> opdList;
 
 	private String[] pColumns = {
@@ -226,13 +207,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 	private JTable admTable;
 	private TableSorter sorter;
-	
-	private JScrollPane scrollPane;
-	
-	private JPanel tablesPanel;
-	
+
 	private JPanel getTablesPanel() {
-		tablesPanel = new JPanel(new BorderLayout());
+		JPanel tablesPanel = new JPanel(new BorderLayout());
 		
 		admModel = new AdmissionBrowserModel();
 		sorter = new TableSorter(admModel);
@@ -247,7 +224,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 			}
 		}
 
-		scrollPane = new JScrollPane(admTable);
+		JScrollPane scrollPane = new JScrollPane(admTable);
 		scrollPane.setPreferredSize(new Dimension(500, 440));
 		tablesPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -300,17 +277,17 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 				if (selectedObj instanceof Admission) {
 					Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
-					new AdmissionBrowser(PatientDataBrowser.this, admittedPatientWindow, patient, ad);
+					new AdmissionBrowser(this, admittedPatientWindow, patient, ad);
 				} else {
 
 					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 					if (GeneralData.OPDEXTENDED) {
-						OpdEditExtended newrecord = new OpdEditExtended(PatientDataBrowser.this, opd, false);
-						newrecord.addSurgeryListener(PatientDataBrowser.this);
-						newrecord.showAsModal(PatientDataBrowser.this);
+						OpdEditExtended newrecord = new OpdEditExtended(this, opd, false);
+						newrecord.addSurgeryListener(this);
+						newrecord.showAsModal(this);
 					} else {
-						OpdEdit newrecord = new OpdEdit(PatientDataBrowser.this, opd, false);
-						newrecord.addSurgeryListener(PatientDataBrowser.this);
+						OpdEdit newrecord = new OpdEdit(this, opd, false);
+						newrecord.addSurgeryListener(this);
 						newrecord.setVisible(true);
 					}
 				}
@@ -332,35 +309,46 @@ public class PatientDataBrowser extends ModalJFrame implements
 				int selectedRow = admTable.getSelectedRow();
 				Object selectedObj = sorter.getValueAt(selectedRow, -1);
 
-				try {
-					if (selectedObj instanceof Admission) {
+				if (selectedObj instanceof Admission) {
 
-						Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
+					Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 
-						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedadmission.msg");
-						if ((n == JOptionPane.YES_OPTION) && admissionBrowserManager.setDeleted(adm.getId())) {
-							admList.remove(adm);
-							admModel.fireTableDataChanged();
-							admTable.updateUI();
-							sorter.sortByColumn(0, false);
-							if (adm.getAdmitted() == 1) {
-								fireDeleteAdmissionUpdated(adm);
+					int n = MessageDialog.yesNo(null, "angal.admission.deleteselectedadmission.msg");
+					if (n == JOptionPane.YES_OPTION) {
+						try {
+							Admission deletedAdmission = admissionBrowserManager.setDeleted(adm.getId());
+							if (deletedAdmission == null) {
+								MessageDialog.error(this, "angal.admission.theselectedadmissionisnotfound.msg");
+								return;
 							}
-							PatientDataBrowser.this.requestFocus();
+						} catch (OHServiceException ex) {
+							OHServiceExceptionUtil.showMessages(ex);
+							return;
 						}
-					} else {
-						Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
+						admList.remove(adm);
+						admModel.fireTableDataChanged();
+						admTable.updateUI();
+						sorter.sortByColumn(0, false);
+						if (adm.getAdmitted() == 1) {
+							fireDeleteAdmissionUpdated(adm);
+						}
+                        this.requestFocus();
+					}
+				} else {
+					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 
-						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedopd.msg");
-						if ((n == JOptionPane.YES_OPTION) && (opdBrowserManager.deleteOpd(opd))) {
+					int n = MessageDialog.yesNo(null, "angal.admission.deleteselectedopd.msg");
+					if (n == JOptionPane.YES_OPTION) {
+						try {
+							opdBrowserManager.deleteOpd(opd);
 							opdList.remove(opd);
 							admModel.fireTableDataChanged();
 							admTable.updateUI();
 							sorter.sortByColumn(0, false);
+						} catch (OHServiceException serviceException) {
+							OHServiceExceptionUtil.showMessages(serviceException);
 						}
 					}
-				} catch (OHServiceException ex) {
-					OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 		}
@@ -382,7 +370,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 				if (selectedObj instanceof Admission) {
 					Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
 					if (ad.getType().equalsIgnoreCase("M")) {
-						new MalnutritionBrowser(PatientDataBrowser.this, ad);
+						new MalnutritionBrowser(this, ad);
 					}
 					else {
 						MessageDialog.info(null, "angal.admission.theselectedadmissionhasnoconcernwithmalnutrition.msg");
@@ -409,11 +397,6 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				admList = admissionBrowserManager.getAdmissions(patient);
 			} catch(OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-			}
-			try {
-				ward = wardBrowserManager.getWards();
-			} catch(OHServiceException e) {
-                OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
 				disease = diseaseBrowserManager.getDiseaseAll();
@@ -533,9 +516,9 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				} else {
 					int z = row - admList.size();
 					String status = String.valueOf(opdList.get(z).getNewPatient());
-					return (status.compareTo("R") == 0
+					return status.compareTo("R") == 0
 							? MessageBundle.getMessage("angal.opd.reattendance.txt")
-							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
+							: MessageBundle.getMessage("angal.opd.newattendance.txt");
 				}
 			}
 			return null;

@@ -72,15 +72,8 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
- * --------------------------------------------------------
  * ReportLauncher - launch all the reports that have as parameters year and month
  * 					the class expects the initialization through year, month, name of the report (without .jasper)
- * ---------------------------------------------------------
- * modification history
- * 01/01/2006 - rick - first version. launches HMIS1081 and HMIS1081
- * 11/11/2006 - ross - rendered generic (ad angal)
- * 16/11/2014 - eppesuig - show WAIT_CURSOR during generateReport()
- * -----------------------------------------------------------------
  */
 public class ReportLauncher extends ModalJFrame {
 
@@ -105,7 +98,6 @@ public class ReportLauncher extends ModalJFrame {
 
 	private JComboBox<String> jRptComboBox;
 
-	private List<File> jasperFilesInFolder;
 	private Map<String, File> reportNameFileMap;
 	private Map<String, List<String>> folderNameFileNameMap;
 	private List<String> userInputParamNames;
@@ -222,7 +214,7 @@ public class ReportLauncher extends ModalJFrame {
 			JLabel jRptLabel = new JLabel(MessageBundle.getMessage("angal.stat.report"));
 
 			jRptComboBox = new JComboBox<>();
-			jasperFilesInFolder = new LinkedList<>();
+			List<File> jasperFilesInFolder = new LinkedList<>();
 			folderNameFileNameMap = new HashMap<>();
 			try {
 				List<File> loadedFiles = Files.walk(Paths.get("./rpt_stat"))
@@ -246,7 +238,7 @@ public class ReportLauncher extends ModalJFrame {
 				for (File f : jasperFilesInFolder) {
 					try {
 						Properties props = ConfigurationProperties.loadPropertiesFile(
-										f.getName().replace(".jasper", '_' + (new Locale(GeneralData.LANGUAGE)).getLanguage() + ".properties"), LOGGER);
+										f.getName().replace(".jasper", '_' + new Locale(GeneralData.LANGUAGE).getLanguage() + ".properties"), LOGGER);
 
 						if (props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
 							reportNameFileMap.put(props.getProperty("jTitle"), f);
@@ -388,7 +380,7 @@ public class ReportLauncher extends ModalJFrame {
 	}
 
 	public static Date convertToDateUsingInstant(LocalDate date) {
-		return java.util.Date.from(date.atStartOfDay()
+		return Date.from(date.atStartOfDay()
 						.atZone(ZoneId.systemDefault())
 						.toInstant());
 	}
@@ -412,7 +404,7 @@ public class ReportLauncher extends ModalJFrame {
 				}
 			} else {
 				int month = jMonthComboBox.getSelectedIndex() + 1;
-				int year = (Integer.parseInt((String) jYearComboBox.getSelectedItem()));
+				int year = Integer.parseInt((String) jYearComboBox.getSelectedItem());
 
 				new GenericReportMY(month, year,
 								folderNameFileNameMap.get("rpt_stat").contains(

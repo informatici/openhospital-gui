@@ -28,14 +28,13 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -55,6 +54,7 @@ import org.isf.menu.manager.Context;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
+import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
@@ -80,15 +80,12 @@ abstract class OperationRowBase extends JPanel {
 	protected JButton searchOperationButton;
 	protected JComboBox<String> comboResult;
 	protected JTextArea textAreaRemark;
-	
-	protected List<Operation> operationsOPD;
-	protected List<Operation> operationsAll;
 
 	protected OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	protected OperationRowBrowserManager operationRowBrowserManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
 
-	protected OhTableOperationModel<org.isf.operation.model.OperationRow> modelOhOpeRow;
-	protected List<org.isf.operation.model.OperationRow> oprowData = new ArrayList<>();
+	protected OhTableOperationModel<OperationRow> modelOhOpeRow;
+	protected List<OperationRow> oprowData = new ArrayList<>();
 
 	protected List<String> operationResults = operationBrowserManager.getResultDescriptionList();
 	protected OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
@@ -152,31 +149,25 @@ abstract class OperationRowBase extends JPanel {
 		gbc_labelOperation.gridx = 2;
 		gbc_labelOperation.gridy = 0;
 		searchOperationButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-		searchOperationButton.addActionListener(new ActionListener() {
+		searchOperationButton.addActionListener(actionEvent -> {
+			List<Operation> operationsOPD = new LinkedList<>();
+			try {
+				operationsOPD = operationBrowserManager.getOperation();
+			} catch (OHServiceException ex) {
+				OHServiceExceptionUtil.showMessages(ex);
+			}
+			comboOperation.removeAllItems();
+			comboOperation.addItem(null);
+			for (Operation ope : getSearchOperationsResults(searchOperationTextField.getText(), operationsOPD)) {
+				comboOperation.addItem(ope);
+			}
 
-			List<Operation> operationsOPD;
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					operationsOPD = operationBrowserManager.getOperation();
-				} catch (OHServiceException ex) {
-					OHServiceExceptionUtil.showMessages(ex);
-				}
-				comboOperation.removeAllItems();
-				comboOperation.addItem(null);
-				for (Operation ope : getSearchOperationsResults(searchOperationTextField.getText(),
-								operationsOPD == null ? operationsAll : operationsOPD)) {
-					comboOperation.addItem(ope);
-				}
-
-				if (comboOperation.getItemCount() >= 2) {
-					comboOperation.setSelectedIndex(1);
-				}
-				comboOperation.requestFocus();
-				if (comboOperation.getItemCount() > 2) {
-					comboOperation.showPopup();
-				}
+			if (comboOperation.getItemCount() >= 2) {
+				comboOperation.setSelectedIndex(1);
+			}
+			comboOperation.requestFocus();
+			if (comboOperation.getItemCount() > 2) {
+				comboOperation.showPopup();
 			}
 		});
 		panelForm.add(searchOperationButton, gbc_searchOperationButton);
@@ -399,7 +390,7 @@ abstract class OperationRowBase extends JPanel {
 	abstract List<Operation> getOperationCollection() throws OHServiceException;
 
 	public void addToForm() {
-		org.isf.operation.model.OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
+		OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
 		/* ** for combo operation **** */
 		List<Operation> opeList = new ArrayList<>();
 		try {
@@ -432,7 +423,7 @@ abstract class OperationRowBase extends JPanel {
 		/* ***** resultat **** */
 		int index = 0;
 		for (int i = 0; i < operationResults.size(); i++) {
-			if (opeRow.getOpResult() != null && (operationBrowserManager.getResultDescriptionKey(operationResults.get(i))).equals(opeRow.getOpResult())) {
+			if (opeRow.getOpResult() != null && operationBrowserManager.getResultDescriptionKey(operationResults.get(i)).equals(opeRow.getOpResult())) {
 				index = i;
 			}
 		}
@@ -441,7 +432,7 @@ abstract class OperationRowBase extends JPanel {
 	}
 
 	public void deleteOpeRow(Component parentComponent, int idRow) {
-		org.isf.operation.model.OperationRow operationRow;
+		OperationRow operationRow;
 		if (idRow < 0) {
 			MessageDialog.error(parentComponent, "angal.common.pleaseselectarow.msg");
 		} else {
@@ -450,22 +441,17 @@ abstract class OperationRowBase extends JPanel {
 			if (answer == JOptionPane.YES_OPTION) {
 				int idOpe = operationRow.getId();
 				if (idOpe > 0) {
-					boolean result;
 					try {
-						result = operationRowBrowserManager.deleteOperationRow(operationRow);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-						return;
-					}
-					if (result) {
+						operationRowBrowserManager.deleteOperationRow(operationRow);
 						MessageDialog.info(parentComponent, "angal.operationrowlist.successdel");
 						oprowData.remove(idRow);
 						modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 						tableData.setModel(modelOhOpeRow);
 						tableData.repaint();
 						clearForm();
-					} else {
+					} catch (OHServiceException e) {
 						MessageDialog.error(parentComponent, "angal.operationrowlist.errosdel");
+						OHServiceExceptionUtil.showMessages(e);
 					}
 				} else {
 					MessageDialog.info(parentComponent, "angal.operationrowlist.successdel");
@@ -489,11 +475,11 @@ abstract class OperationRowBase extends JPanel {
 		comboOperation.setEnabled(true);
 	}
 
-	public List<org.isf.operation.model.OperationRow> getOprowData() {
+	public List<OperationRow> getOprowData() {
 		return oprowData;
 	}
 
-	public void setOprowData(List<org.isf.operation.model.OperationRow> oprowData) {
+	public void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
 

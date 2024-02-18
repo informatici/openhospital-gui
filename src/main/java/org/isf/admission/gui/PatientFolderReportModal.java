@@ -26,10 +26,12 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -68,14 +70,12 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JCheckBox allCheck;
 	private JPanel labelPanel;
 	private LocalDate fromDate;
-	private LocalDate toDate;
 	private String selectedReport;
 
 	public PatientFolderReportModal(JFrame parent, Integer code, LocalDate fromDate, LocalDate toDate, String selectedReport) {
 		this.parent = parent;
 		this.patId = code;
 		this.fromDate = fromDate;
-		this.toDate = toDate;
 		this.selectedReport = selectedReport.toUpperCase();
 		switch(this.selectedReport) {
 			case "ADMISSION":
@@ -173,7 +173,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
 			launchReportButton.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					new GenericReportPatientVersion2(patId, getParameterString(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEET);
 				}
 				
@@ -223,7 +223,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 		if (choosePanel == null) {
 
 			choosePanel = new JPanel();
-			choosePanel.setLayout(new javax.swing.BoxLayout(choosePanel, javax.swing.BoxLayout.Y_AXIS));
+			choosePanel.setLayout(new BoxLayout(choosePanel, BoxLayout.Y_AXIS));
 			
 			choosePanel.add(getPanelLabel());
 			choosePanel.add(getPanelAll());

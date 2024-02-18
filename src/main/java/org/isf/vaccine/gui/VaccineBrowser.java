@@ -42,6 +42,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.vaccine.gui.VaccineEdit.VaccineListener;
 import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
@@ -50,13 +51,8 @@ import org.isf.vactype.model.VaccineType;
 /**
  * This class shows a list of vaccines.
  * It is possible to edit-insert-delete records
- *
- * @author Eva
- * 
- * modification history
- * 20/10/2011 - Cla - insert vaccinetype managment
  */
-public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineListener {
+public class VaccineBrowser extends ModalJFrame implements VaccineListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
@@ -75,7 +71,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		pVaccine.set(selectedrow, vaccine);
 		((VaccineBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1) {
+		if (table.getRowCount() > 0 && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
@@ -138,8 +134,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContentPane.add(getJScrollPane(), java.awt.BorderLayout.CENTER);
+			jContentPane.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContentPane.add(getJScrollPane(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -211,9 +207,9 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					vaccine = (Vaccine) (model.getValueAt(table.getSelectedRow(), -1));
-					VaccineEdit editrecord = new VaccineEdit(VaccineBrowser.this, vaccine, false);
-					editrecord.addVaccineListener(VaccineBrowser.this);
+					vaccine = (Vaccine) model.getValueAt(table.getSelectedRow(), -1);
+					VaccineEdit editrecord = new VaccineEdit(this, vaccine, false);
+					editrecord.addVaccineListener(this);
 					editrecord.setVisible(true);
 				}
 			});
@@ -232,8 +228,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
 				vaccine = new Vaccine(null, "", new VaccineType("", ""));    //operation will reference the new record
-				VaccineEdit newrecord = new VaccineEdit(VaccineBrowser.this, vaccine, true);
-				newrecord.addVaccineListener(VaccineBrowser.this);
+				VaccineEdit newrecord = new VaccineEdit(this, vaccine, true);
+				newrecord.addVaccineListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -253,10 +249,11 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					Vaccine vaccine = (Vaccine) (model.getValueAt(table.getSelectedRow(), -1));
+					Vaccine vaccine = (Vaccine) model.getValueAt(table.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.vaccine.deletevaccine.fmt.msg", vaccine.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (vaccineBrowserManager.deleteVaccine(vaccine))) {
+						if (answer == JOptionPane.YES_OPTION) {
+							vaccineBrowserManager.deleteVaccine(vaccine);
 							pVaccine.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();

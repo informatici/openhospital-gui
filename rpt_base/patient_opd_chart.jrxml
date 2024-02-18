@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_opd_chart" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_opd_chart" whenResourceMissingType="Key" uuid="25ced88e-7415-4de7-b271-0dd0e47d2329">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -19,22 +20,25 @@
 	<parameter name="LOGO_PATH" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./rsc/images/logo.jpg"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PATIENT_PHOTO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT "ID" AS FIELD, OPD_PROG_YEAR AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+		<![CDATA[SELECT "Id" AS FIELD, OPD_PROG_YEAR AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
 UNION
-SELECT "Date:" AS FIELD, DATE(OPD_DATE) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+SELECT "Date" AS FIELD, DATE(OPD_DATE) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
 UNION
-SELECT "Time:" AS FIELD, TIME_FORMAT(TIME(OPD_DATE), "%H:%i") AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+SELECT "Time" AS FIELD, TIME_FORMAT(TIME(OPD_DATE), "%H:%i") AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
 UNION
-SELECT "Type:" AS FIELD, IF(OPD_NEW_PAT='N','New Attendance','Re-Attendance') AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+SELECT "Type" AS FIELD, IF(OPD_NEW_PAT='N','New Attendance','Re-Attendance') AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
 UNION
-SELECT "Clinical Remarks:" AS FIELD, OPD_NOTE AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+SELECT "ClinicalRemarks" AS FIELD, OPD_NOTE AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
 UNION
-SELECT "Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A)) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+SELECT "Diagnosis" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A)) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
 UNION
-SELECT "Second Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_2)) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
+SELECT "SecondDiagnosis" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_2)) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}
 UNION
-SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_3)) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}]]>
+SELECT "ThirdDiagnosis" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_3)) AS DETAIL FROM OH_OPD WHERE OPD_ID = $P{opdID}]]>
 	</queryString>
 	<field name="FIELD" class="java.lang.String"/>
 	<field name="DETAIL" class="java.lang.String"/>
@@ -59,6 +63,12 @@ SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHER
 			<subreport isUsingCache="true">
 				<reportElement key="subreport-1" x="0" y="114" width="535" height="55" uuid="be91e036-2881-4441-b7c3-5dda779d3d77"/>
 				<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
+				<subreportParameter name="patientID">
+					<subreportParameterExpression><![CDATA[$P{patientID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PATIENT_PHOTO">
+					<subreportParameterExpression><![CDATA[$P{PATIENT_PHOTO}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_patsubreport.jasper"]]></subreportExpression>
 			</subreport>
@@ -158,7 +168,7 @@ SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM OH_DISEASE WHER
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FIELD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str($F{FIELD}) + ':']]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement key="textField-18" x="107" y="5" width="428" height="14" uuid="c8f67f70-4af2-43e3-b620-8f483827ef4a"/>

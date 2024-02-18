@@ -54,13 +54,6 @@ import org.isf.utils.layout.SpringUtilities;
 
 /**
  * This class allows operations edits and inserts
- *
- * @author Rick, Vero, Pupo
- * ----------------------------------------------------------
- * modification history
- * ====================
- * 13/02/09 - Alex - added Major/Minor control
- * -----------------------------------------------------------
  */
 public class OperationEdit extends JDialog {
 
@@ -158,8 +151,8 @@ public class OperationEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}

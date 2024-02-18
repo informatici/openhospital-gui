@@ -7,7 +7,7 @@ An alternative user interface based on React and currently still work-in-progres
 
 ## How to build
 
-To build this project you'll need Java JDK 8+ and Maven. 
+To build this project you'll need Java JDK 17+ and Maven (or using the provided Maven Wrapper `mvnw`)
 Additionally, you'll need to build and install locally the [Core component][openhospital-core] of Open Hospital.
 Once you do that, to build this project just issue:
 
@@ -25,7 +25,7 @@ or any similar SQL database (e.g. MariaDB).
 
 ### Launch within IDE
 
-Be sure to have configured properly the classpath for the project (see [5 Installing Open Hospital 1.13.0 in Eclipse EE](https://github.com/informatici/openhospital-doc/blob/develop/doc_admin/AdminManual.adoc#5-installing-open-hospital-1-13-0-in-eclipse-ee))
+Be sure to have configured properly the classpath for the project (see [5 Installing Open Hospital 1.14.0 in Eclipse EE](https://github.com/informatici/openhospital-doc/blob/develop/doc_admin/AdminManual.adoc#5-installing-open-hospital-1-14-0-in-eclipse-ee))
 
 Before running the application, you should generate the config files with the `g)` option, or manually copying and renaming the files `*.dist` files in `rsc/` folder and edit them accordingly:
 

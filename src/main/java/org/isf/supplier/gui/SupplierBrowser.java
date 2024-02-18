@@ -37,6 +37,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.supplier.gui.SupplierEdit.SupplierListener;
 import org.isf.supplier.manager.SupplierBrowserManager;
 import org.isf.supplier.model.Supplier;
 import org.isf.utils.exception.OHServiceException;
@@ -50,7 +51,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  * 
  * @author Mwithi
  */
-public class SupplierBrowser extends ModalJFrame implements SupplierEdit.SupplierListener {
+public class SupplierBrowser extends ModalJFrame implements SupplierListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -68,7 +69,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		pSupplier.set(selectedrow, supplier);
 		((SupplierBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1) {
+		if (table.getRowCount() > 0 && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
@@ -76,8 +77,6 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	private int pfrmBase = 10;
 	private int pfrmWidth = 8;
 	private int pfrmHeight = 6;
-	private int pfrmBordX;
-	private int pfrmBordY;
 	private JPanel jContentPane;
 	private JPanel jButtonPanel;
 	private JButton jEditButton;
@@ -123,8 +122,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		this.setTitle(MessageBundle.getMessage("angal.supplier.suppliersbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
+		int pfrmBordX = (screensize.width - screensize.width / pfrmBase * pfrmWidth) / 2;
+		int pfrmBordY = (screensize.height - screensize.height / pfrmBase * pfrmHeight) / 2;
 		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 	}
@@ -138,8 +137,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContentPane.add(getJScrollPane(), java.awt.BorderLayout.CENTER);
+			jContentPane.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContentPane.add(getJScrollPane(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -174,9 +173,9 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					supplier = (Supplier) (model.getValueAt(table.getSelectedRow(), -1));
+					supplier = (Supplier) model.getValueAt(table.getSelectedRow(), -1);
 					SupplierEdit editrecord = new SupplierEdit(myFrame, supplier, false);
-					editrecord.addSupplierListener(SupplierBrowser.this);
+					editrecord.addSupplierListener(this);
 					editrecord.setVisible(true);
 				}
 			});
@@ -196,7 +195,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 			jNewButton.addActionListener(actionEvent -> {
 				supplier = new Supplier();    //operation will reference the new record
 				SupplierEdit newrecord = new SupplierEdit(myFrame, supplier, true);
-				newrecord.addSupplierListener(SupplierBrowser.this);
+				newrecord.addSupplierListener(this);
 				newrecord.setVisible(true);
 			});
 		}

@@ -53,7 +53,7 @@ public class OhDefaultCellRenderer extends DefaultTableCellRenderer {
 	}
 
 	@Override
-	public Component getTableCellRendererComponent(JTable table, java.lang.Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		Component cmp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 		JLabel lbl = (JLabel) cmp;

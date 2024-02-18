@@ -91,8 +91,8 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -117,7 +117,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jNewButton.addActionListener(actionEvent -> {
 				DischargeType mdsr = new DischargeType("", "");
 				DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame, mdsr, true);
-				newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
+				newrecord.addDischargeTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -138,9 +138,9 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					dischargeType = (DischargeType) (model.getValueAt(selectedrow, -1));
+					dischargeType = (DischargeType) model.getValueAt(selectedrow, -1);
 					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame, dischargeType, false);
-					newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
+					newrecord.addDischargeTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});
@@ -175,22 +175,16 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					DischargeType disType = (DischargeType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					DischargeType disType = (DischargeType) model.getValueAt(jTable.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.disctype.deleterow.fmt.msg", disType.getDescription());
 					if (answer == JOptionPane.YES_OPTION) {
-
-						boolean deleted;
 						try {
-							deleted = dischargeTypeBrowserManager.deleteDischargeType(disType);
-						} catch (OHServiceException e) {
-							deleted = false;
-							OHServiceExceptionUtil.showMessages(e);
-						}
-
-						if (deleted) {
+							dischargeTypeBrowserManager.deleteDischargeType(disType);
 							pDischargeType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
 				}
@@ -263,7 +257,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		pDischargeType.set(selectedrow, dischargeType);
 		((DischargeTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}

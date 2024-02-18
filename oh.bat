@@ -1,6 +1,6 @@
 @echo off
 REM # Open Hospital (www.open-hospital.org)
-REM # Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+REM # Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 REM #
 REM # Open Hospital is a free and open source software for healthcare data management.
 REM #
@@ -154,13 +154,13 @@ set ARCH=x64
 
 REM ######## MySQL Software
 REM # MariaDB 64bit download URL
-REM https://archive.mariadb.org/mariadb-10.6.14/winx64-packages/mariadb-10.6.14-winx64.zip
+REM https://archive.mariadb.org/mariadb-10.6.16/winx64-packages/mariadb-10.6.16-winx64.zip
 
 REM # MariaDB 32bit download  URL
 REM https://archive.mariadb.org/mariadb-10.6.5/win32-packages/mariadb-10.6.5-win32.zip
 
 REM set MYSQL_DIR=mariadb-10.6.5-win%ARCH%
-set MYSQL_DIR=mariadb-10.6.14-win%ARCH%
+set MYSQL_DIR=mariadb-10.6.16-win%ARCH%
 
 REM ####### JAVA Software
 REM # JRE 11 64bit - x86_64 - openjdk
@@ -172,7 +172,7 @@ REM set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
 REM set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 REM # JRE 11 32bit - i686 - zulu - default
-set JAVA_DIR=zulu11.64.19-ca-jre11.0.19-win_%ARCH%
+set JAVA_DIR=zulu17.48.15-ca-jre17.0.10-win_%ARCH%
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin
@@ -254,6 +254,15 @@ echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\log4j.properties.dist %OH_PATH%\%OH_DIR%\r
 %REPLACE_PATH%\replace.exe LOG_LEVEL %LOG_LEVEL% -- %OH_PATH%\%OH_DIR%\rsc\log4j.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe LOG_DEST %OH_LOG_DEST% -- %OH_PATH%\%OH_DIR%\rsc\log4j.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 
+REM ### Setup other OH property files
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\examination.properties.dist %OH_PATH%\%OH_DIR%\rsc\examination.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\sms.properties.dist %OH_PATH%\%OH_DIR%\rsc\sms.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\txtPrinter.properties.dist %OH_PATH%\%OH_DIR%\rsc\txtPrinter.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\telemetry.properties.dist %OH_PATH%\%OH_DIR%\rsc\telemetry.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\xmpp.properties.dist %OH_PATH%\%OH_DIR%\rsc\xmpp.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\default_credentials.properties.dist %OH_PATH%\%OH_DIR%\rsc\default_credentials.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+REM echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\default_demo_credentials.properties.dist %OH_PATH%\%OH_DIR%\rsc\default_demo_credentials.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+
 REM ### Setup database if not already existing
 if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
  	REM # Remove database files
@@ -321,6 +330,8 @@ set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_base
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_extra
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt_stat
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc
+set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\images
+REM set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\icons REM hardcoded
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\bin\OH-gui.jar
 
 REM # Setup native_lib_path for current architecture

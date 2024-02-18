@@ -40,6 +40,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.gui.UserEdit.UserListener;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
@@ -50,7 +51,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
-public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
+public class UserBrowsing extends ModalJFrame implements UserListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String ALL_STR = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
@@ -77,7 +78,6 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	}
 
 	private int selectedrow;
-	private JLabel selectlabel;
 	private JComboBox<UserGroup> userGroupFilter;
 	private List<User> userList;
 	private String[] pColumns = {
@@ -89,7 +89,6 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private User user;
 	private DefaultTableModel model;
 	private JTable table;
-	private JScrollPane scrollPane;
 
 	private String pSelection;
 
@@ -108,12 +107,12 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
 		table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
 
-		scrollPane = new JScrollPane(table);
+		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel();
 
-		selectlabel = new JLabel(MessageBundle.getMessage("angal.userbrowser.selectgroup.label"));
+		JLabel selectlabel = new JLabel(MessageBundle.getMessage("angal.userbrowser.selectgroup.label"));
 		buttonPanel.add(selectlabel);
 
 		userGroupFilter = new JComboBox<>();
@@ -200,24 +199,24 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 				while (newPassword.isEmpty()) {
 					int action = JOptionPane
-							.showConfirmDialog(UserBrowsing.this, stepPanel, MessageBundle.getMessage("angal.userbrowser.resetpassword.title"),
+							.showConfirmDialog(this, stepPanel, MessageBundle.getMessage("angal.userbrowser.resetpassword.title"),
 									JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 					if (JOptionPane.CANCEL_OPTION == action) {
 						return;
 					}
 					newPassword = new String(pwd.getPassword());
 					if (newPassword.isEmpty()) {
-						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustnotbeblank.msg");
+						MessageDialog.error(this, "angal.userbrowser.passwordmustnotbeblank.msg");
 						newPassword = "";
 						pwd.setText("");
 					} else {
 						if (GeneralData.STRONGLENGTH != 0 && newPassword.length() < GeneralData.STRONGLENGTH) {
-							MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
+							MessageDialog.error(this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 							newPassword = "";
 							pwd.setText("");
 						} else {
 							if (!userBrowsingManager.isPasswordStrong(newPassword)) {
-								MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+								MessageDialog.error(this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
 								newPassword = "";
 								pwd.setText("");
 							}
@@ -231,7 +230,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				stepPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step2.pleaserepeatthenewpassword.label")));
 				stepPanel.add(pwd);
 				int action = JOptionPane
-						.showConfirmDialog(UserBrowsing.this, stepPanel, MessageBundle.getMessage("angal.userbrowser.resetpassword.title"),
+						.showConfirmDialog(this, stepPanel, MessageBundle.getMessage("angal.userbrowser.resetpassword.title"),
 								JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 				if (JOptionPane.CANCEL_OPTION == action) {
 					return;
@@ -240,7 +239,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 				// 3. Check & Save
 				if (!newPassword.equals(newPassword2)) {
-					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
+					MessageDialog.error(this, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
 					newPassword = null;
 					newPassword2 = null;
 					return;
@@ -249,7 +248,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				// BCrypt has a maximum length of 72 characters
 				// see for example, https://security.stackexchange.com/questions/152430/what-maximum-password-length-to-choose-when-using-bcrypt
 				if (newPassword.length() > 72) {
-					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+					MessageDialog.error(this, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
 					newPassword = null;
 					newPassword2 = null;
 					return;
@@ -260,7 +259,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				user.setPasswd(hashed);
 				try {
 					if (userBrowsingManager.updatePassword(user)) {
-						MessageDialog.info(UserBrowsing.this, "angal.userbrowser.thepasswordhasbeenchanged.msg");
+						MessageDialog.info(this, "angal.userbrowser.thepasswordhasbeenchanged.msg");
 					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
@@ -278,7 +277,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				User selectedUser = (User) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.userbrowser.deleteuser.fmt.msg", selectedUser.getUserName());
 				try {
-					if ((JOptionPane.YES_OPTION == answer) && userBrowsingManager.deleteUser(selectedUser)) {
+					if (answer == JOptionPane.YES_OPTION) {
+						userBrowsingManager.deleteUser(selectedUser);
 						userList.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();

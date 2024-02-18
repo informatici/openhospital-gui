@@ -66,14 +66,7 @@ import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
 /**
- * ------------------------------------------
  * PatVacEdit - edit (new/update) a patient's vaccine
- * -----------------------------------------
- * modification history
- * 25/08/2011 - claudia - first beta version
- * 04/11/2011 - claudia modify vaccine date check on OK button
- * 14/11/2011 - claudia inserted search condition on patient based on ENHANCEDSEARCH property
- * ------------------------------------------
  */
 public class PatVacEdit extends JDialog {
 
@@ -105,7 +98,6 @@ public class PatVacEdit extends JDialog {
 	private String s;
 	private List<Patient> patientList;
 	private GoodDateChooser vaccineDateFieldCal;
-	private LocalDateTime dateIn;
 	private int patNextYProg;
 
 	private JPanel centerPanel;
@@ -363,6 +355,7 @@ public class PatVacEdit extends JDialog {
 	 * @return GoodDateChooser
 	 */
 	private GoodDateChooser getVaccineDateFieldCal() {
+		LocalDateTime dateIn;
 		if (insert) {
 			dateIn = RememberDates.getLastPatientVaccineDate();
 		} else {
@@ -414,7 +407,7 @@ public class PatVacEdit extends JDialog {
 				for (VaccineType elem : types) {
 					vaccineTypeComboBox.addItem(elem);
 					if (!insert && elem.getCode() != null) {
-						if (elem.getCode().equalsIgnoreCase((patVac.getVaccine().getVaccineType().getCode()))) {
+						if (elem.getCode().equalsIgnoreCase(patVac.getVaccine().getVaccineType().getCode())) {
 							vaccineTypeSel = elem;
 						}
 					}
@@ -458,7 +451,7 @@ public class PatVacEdit extends JDialog {
 		if (allVac != null) {
 			for (Vaccine elem : allVac) {
 				if (!insert && elem.getCode() != null) {
-					if (elem.getCode().equalsIgnoreCase((patVac.getVaccine().getCode()))) {
+					if (elem.getCode().equalsIgnoreCase(patVac.getVaccine().getCode())) {
 						vaccineSel = elem;
 					}
 				}
@@ -726,34 +719,17 @@ public class PatVacEdit extends JDialog {
 				patVac.setPatient(selectedPatient);
 				patVac.setLock(0);
 
-				boolean result = false;
 				// handling db insert/update
-				if (insert) {
-					try {
-						PatientVaccine insertedPatientVaccine = patVacManager.newPatientVaccine(patVac);
-						if (insertedPatientVaccine != null) {
-							result = true;
-						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
-						return;
+				try {
+					if (insert) {
+						patVacManager.newPatientVaccine(patVac);
+					} else {
+						patVacManager.updatePatientVaccine(patVac);
 					}
-				} else {
-					try {
-						PatientVaccine updatedPatientVaccine = patVacManager.updatePatientVaccine(patVac);
-						if (updatedPatientVaccine != null) {
-							result = true;
-						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
-						return;
-					}
-				}
-
-				if (!result) {
-					MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
-				} else {
 					dispose();
+				} catch (OHServiceException e1) {
+					MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
+					OHServiceExceptionUtil.showMessages(e1);
 				}
 			});
 		}

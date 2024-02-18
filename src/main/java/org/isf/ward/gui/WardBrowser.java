@@ -42,6 +42,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.ward.gui.WardEdit.WardListener;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
@@ -53,7 +54,7 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
  * 
  * @author Rick
  */
-public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
+public class WardBrowser extends ModalJFrame implements WardListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -71,7 +72,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		pWard.set(selectedrow, ward);
 		((WardBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1) {
+		if (table.getRowCount() > 0 && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
@@ -176,9 +177,9 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					ward = (Ward) (model.getValueAt(table.getSelectedRow(), -1));
+					ward = (Ward) model.getValueAt(table.getSelectedRow(), -1);
 					WardEdit editrecord = new WardEdit(myFrame, ward, false);
-					editrecord.addWardListener(WardBrowser.this);
+					editrecord.addWardListener(this);
 					editrecord.setVisible(true);
 				}
 			});
@@ -198,7 +199,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			jNewButton.addActionListener(actionEvent -> {
 				ward = new Ward(null, "", "", "", "", null, null, null, false, false);    //operation will reference the new record
 				WardEdit newrecord = new WardEdit(myFrame, ward, true);
-				newrecord.addWardListener(WardBrowser.this);
+				newrecord.addWardListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -216,12 +217,13 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 				} else {
-					Ward ward = (Ward) (model.getValueAt(table.getSelectedRow(), -1));
-					int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
+					Ward ward = (Ward) model.getValueAt(table.getSelectedRow(), -1);
+					int answer = MessageDialog.yesNo(this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (wardBrowserManager.deleteWard(ward))) {
+						if (answer == JOptionPane.YES_OPTION) {
+							wardBrowserManager.deleteWard(ward);
 							pWard.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();

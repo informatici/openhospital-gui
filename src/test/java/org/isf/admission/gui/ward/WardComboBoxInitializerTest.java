@@ -36,19 +36,19 @@ import org.isf.ward.model.Ward;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class WardComboBoxInitializerTest {
+class WardComboBoxInitializerTest {
 
 	private WardBrowserManager wardBrowserManager;
 	private JComboBox wardComboBox;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		wardBrowserManager = new WardBrowserManagerStub();
 		wardComboBox = new JComboBox();
 	}
 
 	@Test
-	public void shouldSkipFemaleWardForMalePatient() throws OHServiceException {
+	void shouldSkipFemaleWardForMalePatient() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('M');
@@ -72,7 +72,7 @@ public class WardComboBoxInitializerTest {
 	}
 
 	@Test
-	public void shouldSkipWardWithoutBeds() throws OHServiceException {
+	void shouldSkipWardWithoutBeds() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('M');
@@ -97,7 +97,7 @@ public class WardComboBoxInitializerTest {
 	}
 
 	@Test
-	public void shouldSkipMaleWardForFemalePatient() throws OHServiceException {
+	void shouldSkipMaleWardForFemalePatient() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('F');
@@ -121,7 +121,7 @@ public class WardComboBoxInitializerTest {
 	}
 
 	@Test
-	public void shouldSelectRecentlySavedWard() throws OHServiceException {
+	void shouldSelectRecentlySavedWard() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('F');
@@ -144,7 +144,7 @@ public class WardComboBoxInitializerTest {
 	}
 
 	@Test
-	public void shouldSelectWardFromAdmissionWhenEditing() throws OHServiceException {
+	void shouldSelectWardFromAdmissionWhenEditing() throws OHServiceException {
 		// given:
 		Patient patient = new Patient();
 		patient.setSex('M');

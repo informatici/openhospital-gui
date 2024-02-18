@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -159,8 +159,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private boolean isMale;
 	private boolean modified;
 
-	private static final String PATH_FEMALE_GENDER = "rsc/images/sagoma-donna-132x300.jpg";
-	private static final String PATH_MALE_GENDER = "rsc/images/sagoma-uomo-132x300.jpg";
+	private static final String PATH_FEMALE_GENDER = "rsc/images/woman-132x300.png";
+	private static final String PATH_MALE_GENDER = "rsc/images/man-132x300.png";
 
 	private final String[] columnNames = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
@@ -227,7 +227,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		setTitle(MessageBundle.getMessage("angal.examination.title"));
 		getContentPane().add(getJPanelCenter(), BorderLayout.CENTER);
 		getContentPane().add(getJPanelButtons(), BorderLayout.SOUTH);
-		//updateSummary();
+		// updateSummary();
 		updateBMI();
 		pack();
 		setResizable(false);
@@ -257,10 +257,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return jPanelButtons;
 	}
 
-	//TODO: try to use JDOM...
+	// TODO: try to use JDOM...
 	private void updateBMI() {
 		double bmi = patex.getBMI();
-		StringBuilder bmiStringBuilder = new StringBuilder();
+		StringBuilder bmiStringBuilder = new StringBuilder(70);
 		bmiStringBuilder.append("<html><body>");
 		bmiStringBuilder.append("<strong>");
 		bmiStringBuilder.append(MessageBundle.getMessage("angal.examination.bmi")).append(':');
@@ -291,19 +291,18 @@ public class PatientExaminationEdit extends ModalJFrame {
 		jTextFieldSaturation.setText(patex.getPex_sat() != null ? String.valueOf(patex.getPex_sat()) : String.valueOf(ExaminationParameters.SAT_INIT));
 		jSliderHGT.setValue(patex.getPex_hgt() != null ? patex.getPex_hgt() : ExaminationParameters.HGT_INIT);
 		jTextFieldHGT.setText(patex.getPex_hgt() != null ? String.valueOf(patex.getPex_hgt()) : String.valueOf(ExaminationParameters.HGT_INIT));
-		jTextFieldDiuresisVolume.setText(patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) :
-				String.valueOf(ExaminationParameters.DIURESIS_INIT));
-		jComboBoxDiuresisType.setSelectedItem(patex.getPex_diuresis_desc() != null ?
-				examinationBrowserManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) :
-				examinationBrowserManager.getDiuresisDescriptionTranslated(ExaminationParameters.DIURESIS_DESC_INIT));
-		jComboBoxBowel.setSelectedItem(patex.getPex_bowel_desc() != null ?
-				examinationBrowserManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc()) :
-				examinationBrowserManager.getBowelDescriptionTranslated(ExaminationParameters.BOWEL_DESC_INIT));
+		jTextFieldDiuresisVolume.setText(
+						patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) : String.valueOf(ExaminationParameters.DIURESIS_INIT));
+		jComboBoxDiuresisType.setSelectedItem(
+						patex.getPex_diuresis_desc() != null ? examinationBrowserManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc())
+										: examinationBrowserManager.getDiuresisDescriptionTranslated(ExaminationParameters.DIURESIS_DESC_INIT));
+		jComboBoxBowel.setSelectedItem(patex.getPex_bowel_desc() != null ? examinationBrowserManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc())
+						: examinationBrowserManager.getBowelDescriptionTranslated(ExaminationParameters.BOWEL_DESC_INIT));
 		jSliderRR.setValue(patex.getPex_rr() != null ? patex.getPex_rr() : ExaminationParameters.RR_INIT);
 		jTextFieldRR.setText(patex.getPex_rr() != null ? String.valueOf(patex.getPex_rr()) : String.valueOf(ExaminationParameters.RR_INIT));
-		jComboBoxAuscultation.setSelectedItem(patex.getPex_auscultation() != null ?
-				examinationBrowserManager.getAuscultationTranslated(patex.getPex_auscultation()) :
-				examinationBrowserManager.getAuscultationTranslated(ExaminationParameters.AUSCULTATION_INIT));
+		jComboBoxAuscultation
+						.setSelectedItem(patex.getPex_auscultation() != null ? examinationBrowserManager.getAuscultationTranslated(patex.getPex_auscultation())
+										: examinationBrowserManager.getAuscultationTranslated(ExaminationParameters.AUSCULTATION_INIT));
 		jTextAreaNote.setText(patex.getPex_note());
 		disableAP();
 		disableHR();
@@ -898,7 +897,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jNotePanel.setLayout(gblNotePanel);
 
 			JLabel jLabelNote = new JLabel(MessageBundle.getMessage("angal.examination.note"), new ImageIcon("rsc/icons/list_button.png"),
-					SwingConstants.LEFT);
+							SwingConstants.LEFT);
 			GridBagConstraints gbcLabelNote = new GridBagConstraints();
 			gbcLabelNote.anchor = GridBagConstraints.WEST;
 			gbcLabelNote.insets = new Insets(5, 5, 5, 5);
@@ -1199,7 +1198,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private ScaledJSlider getJSliderWeight() {
 		if (jSliderWeight == null) {
 			jSliderWeight = new ScaledJSlider(ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_MAX, ExaminationParameters.WEIGHT_STEP,
-					ExaminationParameters.WEIGHT_INIT);
+							ExaminationParameters.WEIGHT_INIT);
 			jSliderWeight.addChangeListener(e -> {
 				JSlider source = (JSlider) e.getSource();
 				if (!source.getValueIsAdjusting()) {
@@ -1218,7 +1217,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private ScaledJSlider getJSliderTemp() {
 		if (jSliderTemp == null) {
 			jSliderTemp = new ScaledJSlider(ExaminationParameters.TEMP_MIN, ExaminationParameters.TEMP_MAX, ExaminationParameters.TEMP_STEP,
-					ExaminationParameters.TEMP_INIT);
+							ExaminationParameters.TEMP_INIT);
 			jSliderTemp.addChangeListener(e -> {
 				double value = jSliderTemp.getScaledValue();
 				jTextFieldTemp.setText(String.valueOf(value));
@@ -1232,7 +1231,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private ScaledJSlider getJSliderSaturation() {
 		if (jSliderSaturation == null) {
 			jSliderSaturation = new ScaledJSlider(ExaminationParameters.SAT_MIN, 100, ExaminationParameters.SAT_STEP,
-					ExaminationParameters.SAT_INIT); //MAX / STEP
+							ExaminationParameters.SAT_INIT); // MAX / STEP
 			jSliderSaturation.addChangeListener(e -> {
 				double value = jSliderSaturation.getScaledValue();
 				jTextFieldSaturation.setText(String.valueOf(value));
@@ -1309,10 +1308,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jButtonDelete.addActionListener(actionEvent -> {
 				int[] row = jTableSummary.getSelectedRows();
 				if (row.length == 0) {
-					MessageDialog.error(PatientExaminationEdit.this, "angal.common.pleaseselectarow.msg");
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
-				int ok = JOptionPane.showConfirmDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.doyouwanttoproceed.msg"));
+				int ok = JOptionPane.showConfirmDialog(this, MessageBundle.getMessage("angal.common.doyouwanttoproceed.msg"));
 				if (ok == JOptionPane.OK_OPTION) {
 					List<PatientExamination> patexList = new ArrayList<>();
 					for (int j : row) {
@@ -1338,9 +1337,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jButtonClose.addActionListener(actionEvent -> {
 
-				//TODO: to provide a more rigorous changes inspections logic
+				// TODO: to provide a more rigorous changes inspections logic
 				if (modified) {
-					int ok = MessageDialog.yesNoCancel(PatientExaminationEdit.this, "angal.examination.savethechanges.msg");
+					int ok = MessageDialog.yesNoCancel(this, "angal.examination.savethechanges.msg");
 					if (ok == JOptionPane.YES_OPTION) {
 						jButtonSave.doClick();
 						dispose();
@@ -1464,17 +1463,35 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			double weight = patex.getPex_weight();
+			int height = patex.getPex_height();
 
-			try {
-				examinationBrowserManager.saveOrUpdate(patex);
-				modified = false;
-			} catch (OHServiceException ohServiceException) {
-				MessageDialog.showExceptions(ohServiceException);
+			if (weight != 0 && height != 0) {
+				if (weight == ExaminationParameters.WEIGHT_MIN || weight == ExaminationParameters.WEIGHT_MAX || height == ExaminationParameters.HEIGHT_MIN || height == ExaminationParameters.HEIGHT_MAX) {
+					int response = MessageDialog.yesNo(null, MessageBundle.getMessage("angal.patient.examination.minmaxvalues.msg"));
+					if (response == JOptionPane.YES_OPTION) {
+						savePatientExamaination();
+					}
+				} else {
+					savePatientExamaination();
+				}
+			} else {
+				MessageDialog.error(null, MessageBundle.getMessage("angal.patient.examination.nonzero.msg"));
 			}
-			JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
-			model.reloadData();
 		}
 	}
+
+	private void savePatientExamaination(){
+		try {
+			examinationBrowserManager.saveOrUpdate(patex);
+			modified = false;
+		} catch (OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
+		}
+		JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
+		model.reloadData();
+	}
+
 
 	private Action getActionSavePatientExamination() {
 		if (actionSavePatientExamination == null) {
@@ -1904,7 +1921,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		scrollPane.setPreferredSize(new Dimension(890, 150));
 		TableCellRenderer buttonRenderer = new JTableButtonRenderer();
 		jTableSummary = new JTable(new JTableModelSummary());
-		for (int i = 0; i < columnNames.length - 1; i++) { //last column is for JButton
+		for (int i = 0; i < columnNames.length - 1; i++) { // last column is for JButton
 			jTableSummary.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
 			jTableSummary.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
 		}
@@ -1923,11 +1940,11 @@ public class PatientExaminationEdit extends ModalJFrame {
 				JTable target = (JTable) me.getSource();
 				int row = target.getSelectedRow(); // select a row
 
-				/*Checking the row or column is valid or not*/
+				/* Checking the row or column is valid or not */
 				if (row < jTableSummary.getRowCount() && row >= 0 && column < jTableSummary.getColumnCount() && column >= 0) {
 					Object value = jTableSummary.getValueAt(row, column);
 					if (value instanceof JButton) {
-						/*perform a click event*/
+						/* perform a click event */
 						((JButton) value).doClick();
 					}
 				}
@@ -1992,7 +2009,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		}
 
 		@Override
-		public Class<?> getColumnClass(int columnIndex) {
+		public Class< ? > getColumnClass(int columnIndex) {
 			return columnClasses[columnIndex];
 		}
 
@@ -2009,23 +2026,18 @@ public class PatientExaminationEdit extends ModalJFrame {
 		@Override
 		public Object getValueAt(int r, int c) {
 			PatientExamination patientExamination = patexList.get(r);
-			StringBuilder pressurStringBuilder = new StringBuilder();
-			pressurStringBuilder.append(patientExamination.getPex_ap_min() == null ? "-" : patientExamination.getPex_ap_min())
-					.append(" / ").append(patientExamination.getPex_ap_max() == null ? "-" : patientExamination.getPex_ap_max());
-			String datetime = DATE_TIME_FORMATTER.format(patientExamination.getPex_date());
-			String diuresis = patientExamination.getPex_diuresis_desc() == null ? "-" : examinationBrowserManager.getDiuresisDescriptionTranslated(patientExamination.getPex_diuresis_desc());
-			String bowel = patientExamination.getPex_bowel_desc() == null ? "-" : examinationBrowserManager.getBowelDescriptionTranslated(patientExamination.getPex_bowel_desc());
-			String ausc = patientExamination.getPex_auscultation() == null ? "-" : examinationBrowserManager.getAuscultationTranslated(patientExamination.getPex_auscultation());
-			String note = patientExamination.getPex_note();
 			if (c == -1) {
 				return patientExamination;
 			} else if (c == 0) {
-				return datetime;
+				return DATE_TIME_FORMATTER.format(patientExamination.getPex_date());
 			} else if (c == 1) {
 				return patientExamination.getPex_height();
 			} else if (c == 2) {
 				return patientExamination.getPex_weight();
 			} else if (c == 3) {
+				StringBuilder pressurStringBuilder = new StringBuilder();
+				pressurStringBuilder.append(patientExamination.getPex_ap_min() == null ? "-" : patientExamination.getPex_ap_min())
+								.append(" / ").append(patientExamination.getPex_ap_max() == null ? "-" : patientExamination.getPex_ap_max());
 				return pressurStringBuilder.toString();
 			} else if (c == 4) {
 				return patientExamination.getPex_hr() == null ? "-" : patientExamination.getPex_hr();
@@ -2040,22 +2052,26 @@ public class PatientExaminationEdit extends ModalJFrame {
 			} else if (c == 9) {
 				return patientExamination.getPex_diuresis() == null ? "-" : patientExamination.getPex_diuresis();
 			} else if (c == 10) {
-				return diuresis;
+				return patientExamination.getPex_diuresis_desc() == null ? "-"
+								: examinationBrowserManager.getDiuresisDescriptionTranslated(patientExamination.getPex_diuresis_desc());
 			} else if (c == 11) {
-				return bowel;
+				return patientExamination.getPex_bowel_desc() == null ? "-"
+								: examinationBrowserManager.getBowelDescriptionTranslated(patientExamination.getPex_bowel_desc());
 			} else if (c == 12) {
-				return ausc;
+				return patientExamination.getPex_auscultation() == null ? "-"
+								: examinationBrowserManager.getAuscultationTranslated(patientExamination.getPex_auscultation());
 			} else if (c == 13) {
+				String note = patientExamination.getPex_note();
 				if (!note.trim().isEmpty()) {
-					final IconButton button = new IconButton(new ImageIcon("rsc/icons/list_button.png"));
+					IconButton button = new IconButton(new ImageIcon("rsc/icons/list_button.png"));
 					button.addActionListener(actionEvent -> {
 						VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
 						noteArea.setText(note);
 						noteArea.setEditable(false);
 						JOptionPane.showMessageDialog(PatientExaminationEdit.this,
-								new JScrollPane(noteArea),
-								MessageBundle.getMessage("angal.examination.note"), //$NON-NLS-1$
-								JOptionPane.INFORMATION_MESSAGE);
+										new JScrollPane(noteArea),
+										MessageBundle.getMessage("angal.examination.note"), //$NON-NLS-1$
+										JOptionPane.INFORMATION_MESSAGE);
 					});
 					return button;
 				}

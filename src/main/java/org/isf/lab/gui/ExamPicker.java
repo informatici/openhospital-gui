@@ -22,6 +22,7 @@
 package org.isf.lab.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -59,13 +61,6 @@ import org.isf.utils.jobjects.OhTableModelExam;
  */
 public class ExamPicker extends JPanel {
 
-	private JButton jButtonSelect;
-	private JButton jButtonCancel;
-	private JLabel jLabelImage;
-	private JPanel jPanel1;
-	private JPanel jPanel2;
-	private JPanel jPanel3;
-	private JScrollPane jScrollPane1;
 	private JTable jTableData;
 	private JTextField jTextFieldFind;
 
@@ -88,12 +83,12 @@ public class ExamPicker extends JPanel {
 	@SuppressWarnings("unchecked")
 	private void initComponents(TableModel model) {
 
-		jPanel3 = new JPanel();
-		jPanel1 = new JPanel();
+		JPanel jPanel3 = new JPanel();
+		JPanel jPanel1 = new JPanel();
 
-		jPanel3.setBackground(new java.awt.Color(240, 240, 240));
+		jPanel3.setBackground(new Color(240, 240, 240));
 
-		jPanel1.setBackground(new java.awt.Color(240, 240, 240));
+		jPanel1.setBackground(new Color(240, 240, 240));
 
 		setLayout(new BorderLayout(10, 10));
 		add(jPanel1, BorderLayout.CENTER);
@@ -103,8 +98,8 @@ public class ExamPicker extends JPanel {
 		gblPanel1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gblPanel1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		jPanel1.setLayout(gblPanel1);
-		jScrollPane1 = new javax.swing.JScrollPane();
-		jTableData = new javax.swing.JTable();
+		JScrollPane jScrollPane1 = new JScrollPane();
+		jTableData = new JTable();
 
 		jTableData.setSelectionModel(new DefaultListSelectionModel() {
 
@@ -151,7 +146,7 @@ public class ExamPicker extends JPanel {
 		jTableData.setModel(model);
 		jTableData.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		jTableData.setShowVerticalLines(false);
-		jTableData.addMouseListener(new java.awt.event.MouseAdapter() {
+		jTableData.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
@@ -192,15 +187,15 @@ public class ExamPicker extends JPanel {
 		gblPanel3.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		jPanel3.setLayout(gblPanel3);
 
-		jLabelImage = new JLabel(MessageBundle.getMessage("angal.exams.find"));
-		jLabelImage.setIcon(new javax.swing.ImageIcon("rsc/icons/operation_dialog.png"));
+		JLabel jLabelImage = new JLabel(MessageBundle.getMessage("angal.exams.find"));
+		jLabelImage.setIcon(new ImageIcon("rsc/icons/operation_dialog.png"));
 		GridBagConstraints gbcLabelImage = new GridBagConstraints();
 		gbcLabelImage.anchor = GridBagConstraints.WEST;
 		gbcLabelImage.insets = new Insets(0, 15, 0, 5);
 		gbcLabelImage.gridx = 0;
 		gbcLabelImage.gridy = 0;
 		jPanel3.add(jLabelImage, gbcLabelImage);
-		jTextFieldFind = new javax.swing.JTextField();
+		jTextFieldFind = new JTextField();
 
 		jTextFieldFind.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -273,12 +268,12 @@ public class ExamPicker extends JPanel {
 			}
 		});
 
-		jPanel2 = new JPanel();
-		jPanel2.setBackground(new java.awt.Color(240, 240, 240));
+		JPanel jPanel2 = new JPanel();
+		jPanel2.setBackground(new Color(240, 240, 240));
 
-		jButtonSelect = new JButton(MessageBundle.getMessage("angal.common.select.btn"));
+		JButton jButtonSelect = new JButton(MessageBundle.getMessage("angal.common.select.btn"));
 		jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
-		jButtonSelect.addMouseListener(new java.awt.event.MouseAdapter() {
+		jButtonSelect.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
@@ -287,9 +282,9 @@ public class ExamPicker extends JPanel {
 		});
 		jButtonSelect.addActionListener(actionEvent -> jButtonSelectActionPerformed(actionEvent));
 
-		jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		JButton jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 		jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-		jButtonCancel.addMouseListener(new java.awt.event.MouseAdapter() {
+		jButtonCancel.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
@@ -308,19 +303,16 @@ public class ExamPicker extends JPanel {
 	}
 
 	private void validateSelection() {
-		this.setSelectedRow(this.jTableData.getSelectedRow());
 		this.setVisible(false);
 		this.getParentFrame().dispose();
 	}
 
 	private void jButtonSelectActionPerformed(ActionEvent actionEvent) {
-		this.setSelectedRow(this.jTableData.getSelectedRow());
 		this.setVisible(false);
 		this.getParentFrame().dispose();
 	}
 
 	private void jButtonSelectMouseClicked(MouseEvent mouseEvent) {
-		this.setSelectedRow(this.jTableData.getSelectedRow());
 		this.setVisible(false);
 		this.getParentFrame().dispose();
 	}
@@ -328,17 +320,6 @@ public class ExamPicker extends JPanel {
 	private void jButtonQuitMouseClicked(MouseEvent mouseEvent) {
 		this.setVisible(false);
 		this.getParentFrame().dispose();
-	}
-
-	private int selectedRow = -1;
-
-	private int getSelectedRow() {
-		return selectedRow;
-	}
-
-	public Object getSelectedObject() {
-		OhTableModelExam<?> model = (OhTableModelExam<?>) jTableData.getModel();
-		return model.getObjectAt(this.getSelectedRow());
 	}
 
 	public List<Exam> getAllSelectedObject() {
@@ -350,10 +331,6 @@ public class ExamPicker extends JPanel {
 			exams.add(model.getObjectAt(row));
 		}
 		return exams;
-	}
-
-	private void setSelectedRow(int selectedRow) {
-		this.selectedRow = selectedRow;
 	}
 
 	private JDialog parentFrame;

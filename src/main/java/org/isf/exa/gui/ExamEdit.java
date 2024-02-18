@@ -51,14 +51,7 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
 /**
- * ------------------------------------------
  * ExamEdit - add/edit an exam
- * -----------------------------------------
- * modification history
- * 03/11/2006 - ross - Enlarged Description from 50 to 100
- *                   - removed toupper for the description
- * 			         - version is now 1.0
- * ------------------------------------------
  */
 public class ExamEdit extends JDialog {
 
@@ -108,15 +101,10 @@ public class ExamEdit extends JDialog {
 	private JPanel buttonPanel;
 	private JButton cancelButton;
 	private JButton okButton;
-	private JLabel descLabel;
-	private JLabel codeLabel;
-	private JLabel procLabel;
-	private JLabel defLabel;
 	private VoLimitedTextField descriptionTextField;
 	private VoLimitedTextField codeTextField;
 	private JComboBox<String> procComboBox;
 	private VoLimitedTextField defTextField;
-	private JLabel typeLabel;
 	private JComboBox<ExamType> examTypeComboBox;
 	private Exam exam;
 	private boolean insert;
@@ -177,11 +165,11 @@ public class ExamEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			typeLabel = new JLabel(MessageBundle.getMessage("angal.exa.type") + ':');
-			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
-			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
-			procLabel = new JLabel(MessageBundle.getMessage("angal.exa.procedure") + ':');
-			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default") + ':');
+			JLabel typeLabel = new JLabel(MessageBundle.getMessage("angal.exa.type") + ':');
+			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
+			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
+			JLabel procLabel = new JLabel(MessageBundle.getMessage("angal.exa.procedure") + ':');
+			JLabel defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default") + ':');
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(typeLabel);
 			dataPanel.add(getExamTypeComboBox());
@@ -236,7 +224,7 @@ public class ExamEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				if ((codeTextField.getText().trim().equals("")) || (descriptionTextField.getText().trim().equals(""))) {
+				if (codeTextField.getText().trim().equals("") || descriptionTextField.getText().trim().equals("")) {
 					MessageDialog.error(null, "angal.exa.pleaseinsertcodeoranddescription");
 				} else {
 					int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
@@ -248,38 +236,34 @@ public class ExamEdit extends JDialog {
 					exam.setDefaultResult(defTextField.getText().toUpperCase());
 					exam.setProcedure(procedure);
 
-					boolean result = false;
+					boolean inError = false;
 					if (insert) {
 						try {
 							if (examBrowsingManager.isKeyPresent(exam)) {
-								MessageDialog.error(ExamEdit.this, "angal.exa.changethecodebecauseisalreadyinuse");
+								MessageDialog.error(this, "angal.exa.changethecodebecauseisalreadyinuse");
 								return;
 							}
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
+							inError = true;
 						}
 						try {
-							result = examBrowsingManager.newExam(exam);
-							if (result) {
-								fireExamInserted();
-							}
+							examBrowsingManager.newExam(exam);
+							fireExamInserted();
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
+							inError = true;
 						}
 					} else {
 						try {
-							Exam updatedExam = examBrowsingManager.updateExam(exam);
-							if (updatedExam != null) {
-								result = true;
-							}
-							if (result) {
-								fireExamUpdated();
-							}
+							examBrowsingManager.updateExam(exam);
+							fireExamUpdated();
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
+							inError = true;
 						}
 					}
-					if (!result) {
+					if (inError) {
 						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					} else {
 						dispose();
@@ -327,7 +311,7 @@ public class ExamEdit extends JDialog {
 		return codeTextField;
 	}
 
-	private JComboBox getProcComboBox() {
+	private JComboBox<String> getProcComboBox() {
 		if (procComboBox == null) {
 			procComboBox = new JComboBox<>();
 			if (insert) {

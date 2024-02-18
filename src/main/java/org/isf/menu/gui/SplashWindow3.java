@@ -35,9 +35,9 @@ import javax.swing.SwingUtilities;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.session.LogoutEventListener;
-import org.isf.session.SessionRefresheTimerRunnable;
-import org.isf.session.UserSession;
-import org.isf.utils.jobjects.DelayTimer;
+import org.isf.session.RestartUserSession;
+import org.isf.session.SessionRefreshTimerRunnable;
+import org.isf.utils.time.DelayTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,7 @@ class SplashWindow3 extends JWindow {
 		getContentPane().add(l, BorderLayout.CENTER);
 		pack();
 
-		Toolkit kit = java.awt.Toolkit.getDefaultToolkit();
+		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = kit.getScreenSize();
 
 		Dimension labelSize = l.getPreferredSize();
@@ -92,12 +92,12 @@ class SplashWindow3 extends JWindow {
 	}
 
 	private void startLogoutTimer(MainMenu mainMenu) {
-		new Thread(new SessionRefresheTimerRunnable()).start();
-		if (UserSession.getTimer() != null) {
-			UserSession.getTimer().quit();
+		new Thread(new SessionRefreshTimerRunnable()).start();
+		if (RestartUserSession.getTimer() != null) {
+			RestartUserSession.getTimer().quit();
 		}
-		UserSession.setTimer(new DelayTimer(new LogoutEventListener(), GeneralData.SESSIONTIMEOUT * 1000 * 60));
-		UserSession.getTimer().startTimer();
+		RestartUserSession.setTimer(new DelayTimer(new LogoutEventListener(), GeneralData.SESSIONTIMEOUT * 1000 * 60));
+		RestartUserSession.getTimer().startTimer();
 	}
 
 }

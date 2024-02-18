@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -23,16 +23,19 @@ package org.isf.menu.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.time.Duration;
 import java.util.EventListener;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -49,10 +52,12 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
-import org.isf.session.UserSession;
+import org.isf.session.RestartUserSession;
 import org.isf.utils.db.BCrypt;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.file.FileTools;
+import org.isf.utils.jobjects.JLabelInfo;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.TimeTools;
@@ -86,6 +91,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 	private void fireLoginInserted(User aUser) {
 		AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
+
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -124,12 +130,11 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	private MainMenu parent;
 	private boolean usersListLogin;
 
-	
 	public Login(JFrame parent) {
 		super(parent, MessageBundle.getMessage("angal.login.title"), true);
 
 		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
-		
+
 		// add panel to frame
 		LoginPanel panel = new LoginPanel(this);
 		add(panel);
@@ -144,7 +149,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		super(hiddenFrame, MessageBundle.getMessage("angal.login.title"), true);
 
 		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
-		
+
 		this.parent = parent;
 
 		addLoginListener(parent);
@@ -206,18 +211,22 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				}
 				fireLoginInserted(user);
 				removeLoginListener(parent);
-				UserSession.setUser(user);
+				RestartUserSession.setUser(user);
 				dispose();
-				return;
-			}
-			if (user.isAccountLocked()) {
-				MessageDialog.error(this, "angal.login.accountislocked.msg");
 				return;
 			}
 			LOGGER.warn("Login failed: {}", MessageBundle.getMessage("angal.login.passwordisincorrectpleaseretry.msg"));
 			MessageDialog.error(this, "angal.login.passwordisincorrectpleaseretry.msg");
 			pwd.setText("");
 			pwd.grabFocus();
+			// Can't lock an account that doesn't exist
+			if (user == null) {
+				return;
+			}
+			if (user.isAccountLocked()) {
+				MessageDialog.error(this, "angal.login.accountislocked.msg");
+				return;
+			}
 			userBrowsingManager.increaseFailedAttempts(user);
 			if (GeneralData.PASSWORDTRIES != 0) {
 				user.setFailedAttempts(user.getFailedAttempts() + 1);
@@ -246,6 +255,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 	private class LoginPanel extends JPanel {
 
+		private static final String DEFAULT_CREDENTIALS_PROPERTIES = "default_credentials.properties";
 		private static final long serialVersionUID = 4338749100444551874L;
 
 		public LoginPanel(Login myFrame) {
@@ -257,13 +267,13 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				OHServiceExceptionUtil.showMessages(e1);
 				System.exit(1);
 			}
-			
+
 			if (usersListLogin) {
 				usersList = new JComboBox<>();
 				for (User u : users) {
 					usersList.addItem(u.getUserName());
 				}
-	
+
 				Dimension preferredSize = usersList.getPreferredSize();
 				usersList.setPreferredSize(new Dimension(120, preferredSize.height));
 			} else {
@@ -287,9 +297,9 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			body.add(new JLabel(MessageBundle.getMessage("angal.login.password.label")));
 			body.add(pwd);
 			SpringUtilities.makeCompactGrid(body,
-					2, 2,
-					5, 5,
-					5, 5);
+							2, 2,
+							5, 5,
+							5, 5);
 
 			JPanel buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
@@ -299,6 +309,17 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			setLayout(new BorderLayout(10, 10));
 			add(body, BorderLayout.NORTH);
 			add(buttons, BorderLayout.SOUTH);
+
+			File credentialProperties = FileTools.getFile(DEFAULT_CREDENTIALS_PROPERTIES);
+			if (credentialProperties != null) {
+				String tooltip = FileTools.readFileToStringLineByLine(credentialProperties.getAbsolutePath(), true);
+				JLabel infoButton = new JLabelInfo(new ImageIcon("rsc/icons/info_button.png"), tooltip, Color.white);
+
+				JPanel infoPanel = new JPanel();
+				infoPanel.setLayout(new FlowLayout());
+				infoPanel.add(infoButton, BorderLayout.CENTER);
+				add(infoPanel, BorderLayout.WEST);
+			}
 
 			submit.addActionListener(myFrame);
 			submit.setName("submit");

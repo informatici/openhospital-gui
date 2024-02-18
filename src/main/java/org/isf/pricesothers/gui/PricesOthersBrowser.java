@@ -124,18 +124,12 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 					}
 					int answer = MessageDialog.yesNo(null, "angal.pricesothers.deletethisitem.fmt.msg", pOthers.getDescription());
 					if (answer == JOptionPane.OK_OPTION) {
-
-						boolean result = false;
 						try {
-							result = pricesOthersManager.deleteOther(pOthers);
-						} catch (OHServiceException e) {
-							OHServiceExceptionUtil.showMessages(e);
-						}
-
-						if (result) {
+							pricesOthersManager.deleteOther(pOthers);
 							jTablePricesOthers.setModel(new PricesOthersBrowserModel());
-						} else {
+						} catch (OHServiceException e) {
 							MessageDialog.error(null, "angal.pricesothers.thedatacouldnotbedeleted");
+							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
 				}
@@ -155,7 +149,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 					int selectedRow = jTablePricesOthers.getSelectedRow();
 					PricesOthers pOther = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
 					PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, false);
-					editOther.addOtherListener(PricesOthersBrowser.this);
+					editOther.addOtherListener(this);
 					editOther.setVisible(true);
 				}
 			});
@@ -170,7 +164,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 			jButtonNew.addActionListener(actionEvent -> {
 				PricesOthers pOther = new PricesOthers("", "", true, true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);
-				editOther.addOtherListener(PricesOthersBrowser.this);
+				editOther.addOtherListener(this);
 				editOther.setVisible(true);
 			});
 		}

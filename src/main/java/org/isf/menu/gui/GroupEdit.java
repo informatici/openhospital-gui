@@ -206,31 +206,24 @@ public class GroupEdit extends JDialog {
 				group.setCode(nameTextField.getText());
 
 				group.setDesc(descriptionTextField.getText());
-				boolean result = false;
 				if (insert) {      // inserting
 					try {
-						result = userBrowsingManager.newUserGroup(group);
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
-					}
-					if (result) {
+						userBrowsingManager.newUserGroup(group);
 						fireGroupInserted(group);
+						dispose();
+					} catch (OHServiceException e1) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						OHServiceExceptionUtil.showMessages(e1);
 					}
 				} else {         // updating
 					try {
-						result = userBrowsingManager.updateUserGroup(group);
+						userBrowsingManager.updateUserGroup(group);
+						fireGroupUpdated();
+						dispose();
 					} catch (OHServiceException e1) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-					if (result) {
-						fireGroupUpdated();
-					}
-				}
-				if (!result) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-				}
-				else {
-					dispose();
 				}
 			});
 		}

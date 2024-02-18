@@ -44,13 +44,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
- * ------------------------------------------
  * ExamTypeBrowser - list all exam types. Let the user select an exam type to edit
- * -----------------------------------------
- * modification history
- * ??/??/2005 - first beta version
- * 03/11/2006 - ross - version is now 1.0
- * ------------------------------------------
  */
 public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 
@@ -98,8 +92,8 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContainPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -123,7 +117,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 			jNewButton.addActionListener(actionEvent -> {
 				examType = new ExamType("", "");
 				ExamTypeEdit newrecord = new ExamTypeEdit(myFrame, examType, true);
-				newrecord.addExamTypeListener(ExamTypeBrowser.this);
+				newrecord.addExamTypeListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -144,9 +138,9 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = jTable.getSelectedRow();
-					examType = (ExamType) (model.getValueAt(selectedrow, -1));
+					examType = (ExamType) model.getValueAt(selectedrow, -1);
 					ExamTypeEdit newrecord = new ExamTypeEdit(myFrame, examType, false);
-					newrecord.addExamTypeListener(ExamTypeBrowser.this);
+					newrecord.addExamTypeListener(this);
 					newrecord.setVisible(true);
 				}
 			});
@@ -181,22 +175,16 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					ExamType examType = (ExamType) (model.getValueAt(jTable.getSelectedRow(), -1));
-					int answer = MessageDialog.yesNo(null,"angal.exatype.deleteexamtype.fmt.msg", examType.getDescription());
+					ExamType selectedExamType = (ExamType) model.getValueAt(jTable.getSelectedRow(), -1);
+					int answer = MessageDialog.yesNo(null,"angal.exatype.deleteexamtype.fmt.msg", selectedExamType.getDescription());
 					if (answer == JOptionPane.YES_OPTION) {
-
-						boolean deleted;
 						try {
-							deleted = examTypeBrowserManager.deleteExamType(examType);
-						} catch (OHServiceException e) {
-							deleted = false;
-							OHServiceExceptionUtil.showMessages(e);
-						}
-
-						if (deleted) {
+							examTypeBrowserManager.deleteExamType(selectedExamType);
 							pExamType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
 				}
@@ -270,7 +258,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 		pExamType.set(selectedrow, examType);
 		((ExamTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+		if (jTable.getRowCount() > 0 && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}

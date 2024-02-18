@@ -31,6 +31,7 @@ import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -65,6 +66,7 @@ import org.isf.utils.time.TimeTools;
 public class SmsEdit extends JDialog implements SelectionListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
 
 	private JPanel jCenterPanel;
 	private JPanel jButtonPanel;
@@ -93,7 +95,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	}
 	
 	private void initialize() {
-		maxLength = smsManager.getMaxLength();
+		maxLength = SmsManager.MAX_LENGHT;
 	}
 
 	private void initComponents() {
@@ -163,8 +165,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jPatientButton = new JButton();
 			jPatientButton.setIcon(new ImageIcon("./rsc/icons/other_button.png")); //$NON-NLS-1$
 			jPatientButton.addActionListener(actionEvent -> {
-				SelectPatient sp = new SelectPatient(SmsEdit.this, "");
-				sp.addSelectionListener(SmsEdit.this);
+				SelectPatient sp = new SelectPatient(this, "");
+				sp.addSelectionListener(this);
 				sp.pack();
 				sp.setVisible(true);
 			});
@@ -231,7 +233,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jOkButton.addActionListener(actionEvent -> {
-				String number = jNumberTextField.getText().replaceAll(" ", "").trim();
+				String number = SPACE_PATTERN.matcher(jNumberTextField.getText()).replaceAll("").trim();
 				String text = jTextArea.getText();
 				LocalDateTime schedDate = jSchedDateChooser.getLocalDateTime();
 				if (schedDate == null) {
@@ -256,16 +258,16 @@ public class SmsEdit extends JDialog implements SelectionListener {
 						int textParts = (textLength + maxLength - 1) / maxLength;
 						StringBuilder message = new StringBuilder();
 						message.append(e1.getMessages().get(0).getMessage())
-								.append("\n")
+								.append('\n')
 								.append(MessageBundle.getMessage("angal.sms.doyouwanttosplitinmoremessages"))
 								.append(" (").append(textParts).append(")?");
 
-						int ok = JOptionPane.showConfirmDialog(SmsEdit.this, message.toString());
+						int ok = JOptionPane.showConfirmDialog(this, message.toString());
 						if (ok == JOptionPane.YES_OPTION) {
 							try {
 								smsManager.saveOrUpdate(smsToSend, true);
 							} catch (OHServiceException e2) {
-								OHServiceExceptionUtil.showMessages(e2, SmsEdit.this);
+								OHServiceExceptionUtil.showMessages(e2, this);
 								return;
 							}
 
@@ -273,7 +275,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 							return;
 						}
 					} else {
-						OHServiceExceptionUtil.showMessages(e1, SmsEdit.this);
+						OHServiceExceptionUtil.showMessages(e1, this);
 						return;
 					}
 				}

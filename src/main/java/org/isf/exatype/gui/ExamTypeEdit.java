@@ -45,13 +45,7 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
 /**
- * ------------------------------------------
  * ExamTypeEdit - inset/edit an exam type.
- * -----------------------------------------
- * modification history
- * ??/??/2005 - first beta version (former name ExamTypeBrowserEdit)
- * 03/11/2006 - ross - version is now 1.0
- * ------------------------------------------
  */
 public class ExamTypeEdit extends JDialog {
 
@@ -147,8 +141,8 @@ public class ExamTypeEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -209,24 +203,16 @@ public class ExamTypeEdit extends JDialog {
 					examType.setCode(codeTextField.getText());
 
 					if (insert) {     // inserting
-						ExamType newExamType = examTypeBrowserManager.newExamType(examType);
-						if (newExamType != null) {
-							fireExamTypeInserted();
-							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
+						examTypeBrowserManager.newExamType(examType);
+						fireExamTypeInserted();
+						dispose();
 					} else {            // updating
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							ExamType updatedExamType = examTypeBrowserManager.newExamType(examType);
-							if (updatedExamType != null) {
-								fireExamTypeUpdated();
-								dispose();
-							} else {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							}
+							examTypeBrowserManager.newExamType(examType);
+							fireExamTypeUpdated();
+							dispose();
 						}
 					}
 				} catch (OHServiceException ohServiceException) {

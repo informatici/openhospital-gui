@@ -30,10 +30,10 @@ import java.util.function.Function;
 import org.isf.lab.model.Laboratory;
 import org.junit.jupiter.api.Test;
 
-public class MatComboBoxTest {
+class MatComboBoxTest {
 
 	@Test
-	public void shouldCreateComboBoxWithMaterialsAndMaterialFromLaboratorySelected() {
+	void shouldCreateComboBoxWithMaterialsAndMaterialFromLaboratorySelected() {
 		// given:
 		List<String> materials = Arrays.asList("mat1translated", "mat2translated");
 		Laboratory laboratory = new Laboratory();
@@ -49,7 +49,7 @@ public class MatComboBoxTest {
 	}
 
 	@Test
-	public void shouldCreateComboBoxWithMaterialsAndNotSelectWhenInsertMode() {
+	void shouldCreateComboBoxWithMaterialsAndNotSelectWhenInsertMode() {
 		// given:
 		List<String> materials = Arrays.asList("mat1translated", "mat2translated");
 		Laboratory laboratory = new Laboratory();

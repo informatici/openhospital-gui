@@ -48,13 +48,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 
 /**
- * ------------------------------------------
  * ExamShow - list all possible results for an exam
- * -----------------------------------------
- * modification history
- * 03/11/2006 - ross - changed title
- * 			         - version is now 1.0
- * ------------------------------------------
  */
 public class ExamShow extends JDialog implements ExamRowListener {
 
@@ -141,7 +135,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 			newButton.addActionListener(actionEvent -> {
 				examRow = new ExamRow();
 				ExamRowEdit newrecord = new ExamRowEdit(myFrame, examRow, exam);
-				newrecord.addExamListener(ExamShow.this);
+				newrecord.addExamListener(this);
 				newrecord.setVisible(true);
 			});
 		}
@@ -165,15 +159,12 @@ public class ExamShow extends JDialog implements ExamRowListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					ExamRow row = (ExamRow) (model.getValueAt(table.getSelectedRow(), -1));
+					ExamRow row = (ExamRow) model.getValueAt(table.getSelectedRow(), -1);
 					int answer = MessageDialog.yesNo(null, "angal.exa.deleteexamresult.fmt.msg", row.getDescription());
-					if ((answer == JOptionPane.YES_OPTION)) {
+					if (answer == JOptionPane.YES_OPTION) {
 						try {
-							boolean deleted = examRowBrowsingManager.deleteExamRow(row);
-
-							if (deleted) {
-								examRowDeleted();
-							}
+							examRowBrowsingManager.deleteExamRow(row);
+							examRowDeleted();
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
 						}

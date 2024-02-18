@@ -71,15 +71,7 @@ import org.isf.vactype.model.VaccineType;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * ------------------------------------------
  * PatVacBrowser - list all patient's vaccines
- * -----------------------------------------
- * modification history
- * 25/08/2011 - claudia - first beta version
- * 25/10/2011 - claudia - modify selection section
- * 14/11/2011 - claudia - eliminated @override tag
- *                      - inserted ENHANCEDSEARCH functionality on search
- * ------------------------------------------
  */
 public class PatVacBrowser extends ModalJFrame {
 
@@ -161,9 +153,9 @@ public class PatVacBrowser extends ModalJFrame {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContentPane.add(getJSelectionPanel(), java.awt.BorderLayout.WEST);
-			jContentPane.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+			jContentPane.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContentPane.add(getJSelectionPanel(), BorderLayout.WEST);
+			jContentPane.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			validate();
 		}
 		return jContentPane;
@@ -188,7 +180,7 @@ public class PatVacBrowser extends ModalJFrame {
 			if (MainMenu.checkUserGrants("btnpatientvaccinedel")) {
 				jButtonPanel.add(getButtonDelete(), null);
 			}
-			jButtonPanel.add((getCloseButton()), null);
+			jButtonPanel.add(getCloseButton(), null);
 		}
 		return jButtonPanel;
 	}
@@ -240,7 +232,7 @@ public class PatVacBrowser extends ModalJFrame {
 				}
 
 				selectedrow = jTable.getSelectedRow();
-				patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
+				patientVaccine = (PatientVaccine) model.getValueAt(selectedrow, -1);
 
 				PatientVaccine last = new PatientVaccine(patientVaccine.getCode(),
 						patientVaccine.getProgr(),
@@ -254,7 +246,7 @@ public class PatVacBrowser extends ModalJFrame {
 				if (!last.equals(patientVaccine)) {
 					((PatVacBrowsingModel) jTable.getModel()).fireTableDataChanged();
 					updateRowCounter();
-					if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+					if (jTable.getRowCount() > 0 && selectedrow > -1) {
 						jTable.setRowSelectionInterval(selectedrow, selectedrow);
 					}
 				}
@@ -278,26 +270,20 @@ public class PatVacBrowser extends ModalJFrame {
 					return;
 				}
 				selectedrow = jTable.getSelectedRow();
-				patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
+				patientVaccine = (PatientVaccine) model.getValueAt(selectedrow, -1);
 				int answer = MessageDialog.yesNo(null, "angal.patvac.deletepatientvaccine.fmt.msg",
 						patientVaccine.getVaccineDate().format(DATE_FORMATTER),
 						patientVaccine.getVaccine().getDescription(),
 						patientVaccine.getPatName());
 
 				if (answer == JOptionPane.YES_OPTION) {
-
-					boolean deleted;
 					try {
-						deleted = patVacManager.deletePatientVaccine(patientVaccine);
-					} catch (OHServiceException e) {
-						deleted = false;
-						OHServiceExceptionUtil.showMessages(e);
-					}
-
-					if (deleted) {
+						patVacManager.deletePatientVaccine(patientVaccine);
 						lPatVac.remove(jTable.getSelectedRow());
 						model.fireTableDataChanged();
 						jTable.updateUI();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
 			});
@@ -490,7 +476,7 @@ public class PatVacBrowser extends ModalJFrame {
 				public void focusLost(FocusEvent e) {
 					try {
 						ageFrom = Integer.parseInt(jAgeFromTextField.getText());
-						if ((ageFrom < 0) || (ageFrom > 200)) {
+						if (ageFrom < 0 || ageFrom > 200) {
 							jAgeFromTextField.setText("0");
 							ageFrom = Integer.parseInt(jAgeFromTextField.getText());
 							MessageDialog.error(null, "angal.patvac.insertvalidage");
@@ -526,7 +512,7 @@ public class PatVacBrowser extends ModalJFrame {
 				public void focusLost(FocusEvent e) {
 					try {
 						ageTo = Integer.parseInt(jAgeToTextField.getText());
-						if ((ageTo < 0) || (ageTo > 200)) {
+						if (ageTo < 0 || ageTo > 200) {
 							jAgeToTextField.setText("0");
 							ageTo = Integer.parseInt(jAgeToTextField.getText());
 							MessageDialog.error(null, "angal.patvac.insertvalidage");

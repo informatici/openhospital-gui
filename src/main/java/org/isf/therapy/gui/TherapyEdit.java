@@ -21,8 +21,6 @@
  */
 package org.isf.therapy.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD;
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -39,7 +37,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -83,7 +80,6 @@ import org.isf.utils.jobjects.JMonthChooser;
 import org.isf.utils.jobjects.JYearChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.time.TimeTools;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.visits.gui.VisitView;
 import org.isf.visits.gui.VisitView.VisitListener;
@@ -203,7 +199,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private void initComponents() {
 
 		getContentPane().setLayout(new BorderLayout());
-		jAgenda = new JAgenda(TherapyEdit.this);
+		jAgenda = new JAgenda(this);
 		
 		loadFromDB();
 
@@ -295,10 +291,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		noteTextArea.setText("");
 		smsCheckBox.setEnabled(false);
 		notifyCheckBox.setEnabled(false);
-	}
-
-	private String getDate() {
-		return DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD).format(TimeTools.getNow());
 	}
 
 	private void showTherapies() {
@@ -445,13 +437,13 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			worksheetButton.addActionListener(actionEvent -> {
 
 				if (visitModified || therapyModified) {
-					MessageDialog.info(TherapyEdit.this, "angal.therapy.pleasesavechangesfirst.msg");
+					MessageDialog.info(this, "angal.therapy.pleasesavechangesfirst.msg");
 					return;
 				}
 
-				VisitView worksheet = new VisitView(TherapyEdit.this, patient, ward);
-				worksheet.addVisitListener(TherapyEdit.this);
-				worksheet.showAsModal(TherapyEdit.this);
+				VisitView worksheet = new VisitView(this, patient, ward);
+				worksheet.addVisitListener(this);
+				worksheet.showAsModal(this);
 			});
 		}
 		return worksheetButton;
@@ -466,7 +458,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addVisitButton.addActionListener(actionEvent -> {
 
-				InsertVisit newVsRow = new InsertVisit(TherapyEdit.this, ward, patient, false);
+				InsertVisit newVsRow = new InsertVisit(this, ward, patient, false);
 				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
@@ -590,9 +582,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			smsCheckBox.addActionListener(actionEvent -> {
 				String telephone = patient.getTelephone();
 				if (smsCheckBox.isSelected() && (telephone.isEmpty() || telephone.length() < 7)) {
-					MessageDialog.warning(TherapyEdit.this, "angal.therapy.theresnotelephonenumberassociatedwiththispatient");
+					MessageDialog.warning(this, "angal.therapy.theresnotelephonenumberassociatedwiththispatient");
 					int ok = JOptionPane.showConfirmDialog(
-							TherapyEdit.this,
+                            this,
 							MessageBundle.formatMessage("angal.therapy.doyouwanttosetanumernowfor.fmt", patient.getName()),
 							MessageBundle.getMessage("angal.therapy.settelephonenumber"),
 							JOptionPane.CANCEL_OPTION);
@@ -659,7 +651,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				if (therapyModified) {
 					if (thRows.isEmpty()) {
 						ok = JOptionPane.showConfirmDialog(
-								TherapyEdit.this,
+                                this,
 								MessageBundle.formatMessage("angal.therapy.deletealltherapiesfor.fmt", patient.getName()),
 								MessageBundle.getMessage("angal.therapy.notherapies"),
 								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
@@ -678,7 +670,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 									saveTherapies = true;
 							} else {
 								ok = JOptionPane.showConfirmDialog(
-										TherapyEdit.this,
+                                        this,
 										MessageBundle.getMessage("angal.therapy.thetherapyisnotavailablecontinue"),
 										MessageBundle.getMessage("angal.therapy.notavailable"),
 										JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
@@ -690,7 +682,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 							}
 						} else {
 							ok = JOptionPane.showConfirmDialog(
-									TherapyEdit.this,
+                                    this,
 									MessageBundle.getMessage("angal.therapy.thetherapyhasnotbeencheckedcontinue"),
 									MessageBundle.getMessage("angal.therapy.notchecked"),
 									JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
@@ -709,7 +701,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				if (visitModified) {
 					if (visits.isEmpty()) {
 						ok = JOptionPane.showConfirmDialog(
-								TherapyEdit.this,
+                                this,
 								MessageBundle.formatMessage("angal.therapy.deleteallvisitsfor.fmt", patient.getName()),
 								MessageBundle.getMessage("angal.therapy.novisits"),
 								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
@@ -728,20 +720,20 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 							result = visitManager.newVisits(visits, removedVisits);
 
 						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex, TherapyEdit.this);
+							OHServiceExceptionUtil.showMessages(ex, this);
 							return;
 						}
 						if (result) {
-							MessageDialog.info(TherapyEdit.this, "angal.therapy.patientvisitssaved");
+							MessageDialog.info(this, "angal.therapy.patientvisitssaved");
 						} else {
-							MessageDialog.error(TherapyEdit.this, "angal.therapy.patientvisitscouldnotbesaved");
+							MessageDialog.error(this, "angal.therapy.patientvisitscouldnotbesaved");
 						}
 					}
 				}
 
 				if (!therapyModified && !visitModified) {
 					ok = JOptionPane.showConfirmDialog(
-							TherapyEdit.this,
+                            this,
 							MessageBundle.formatMessage("angal.therapy.changenotifysettingsfor.fmt", patient.getName()),
 							MessageBundle.getMessage("angal.therapy.notifychanged"),
 							JOptionPane.CANCEL_OPTION);
@@ -753,18 +745,14 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				}
 
 				if (saveTherapies) {
-					boolean result = false;
 					try {
-						result = therapyManager.deleteAllTherapies(patient.getCode());
-						result = result && therapyManager.newTherapies(thRows);
+						therapyManager.deleteAllTherapies(patient.getCode());
+						therapyManager.newTherapies(thRows);
 					} catch (OHServiceException ex) {
+						MessageDialog.error(this, "angal.therapy.therapiesplancouldnotbesaved");
 						OHServiceExceptionUtil.showMessages(ex);
 					}
-					if (result) {
-						MessageDialog.info(TherapyEdit.this, "angal.therapy.therapiesplansaved");
-					} else {
-						MessageDialog.error(TherapyEdit.this, "angal.therapy.therapiesplancouldnotbesaved");
-					}
+					MessageDialog.info(this, "angal.therapy.therapiesplansaved");
 				}
 				loadFromDB();
 				therapyModified = false;
@@ -786,8 +774,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			closeButton.addActionListener(actionEvent -> {
 				// to free memory
 				if (therapyModified || visitModified) {
-					int ok = JOptionPane.showConfirmDialog(TherapyEdit.this,
-									MessageBundle.getMessage("angal.common.save") + "?"); //$NON-NLS-1$
+					int ok = JOptionPane.showConfirmDialog(this,
+									MessageBundle.getMessage("angal.common.save") + '?'); //$NON-NLS-1$
 					if (ok == JOptionPane.YES_OPTION) {
 						saveButton.doClick();
 					} else if (ok == JOptionPane.NO_OPTION) {
@@ -889,9 +877,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		if (!medOutStock.isEmpty()) {
 			StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.therapy.followingdrugsarefewornotavailable")); //$NON-NLS-1$
 			for (Medical med : medOutStock) {
-				message.append("\n").append(med.toString());
+				message.append('\n').append(med.toString());
 			}
-			JOptionPane.showMessageDialog(TherapyEdit.this, message.toString(),
+			JOptionPane.showMessageDialog(this, message.toString(),
 					MessageBundle.getMessage("angal.therapy.therapynotavailable.title"), JOptionPane.WARNING_MESSAGE);
 		}
 	}
@@ -926,7 +914,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addTherapyButton.addActionListener(actionEvent -> {
 
-				TherapyEntryForm newThRow = new TherapyEntryForm(TherapyEdit.this, patient.getCode(), null);
+				TherapyEntryForm newThRow = new TherapyEntryForm(this, patient.getCode(), null);
 				newThRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newThRow.setVisible(true);
 
@@ -984,7 +972,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				if (selectedTherapy == null) {
 					return;
 				}
-				TherapyEntryForm newThRow = new TherapyEntryForm(TherapyEdit.this, patient.getCode(), selectedTherapy);
+				TherapyEntryForm newThRow = new TherapyEntryForm(this, patient.getCode(), selectedTherapy);
 				newThRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newThRow.setVisible(true);
 
