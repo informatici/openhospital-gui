@@ -21,17 +21,11 @@
  */
 package org.isf.medicalinventory.gui;
 
-import org.isf.utils.jobjects.InventoryState;
-import org.isf.generaldata.MessageBundle;
-import org.isf.utils.jobjects.ModalJFrame;
-
-import com.toedter.calendar.JDateChooser;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -42,19 +36,23 @@ import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import java.awt.Dimension;
-import javax.swing.JFrame;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import org.isf.generaldata.MessageBundle;
+import org.isf.utils.jobjects.InventoryState;
+import org.isf.utils.jobjects.ModalJFrame;
+
+import com.toedter.calendar.JDateChooser;
 
 public class InventoryWardBrowser extends ModalJFrame {
 
