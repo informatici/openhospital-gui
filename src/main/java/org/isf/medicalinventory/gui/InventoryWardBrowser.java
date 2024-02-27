@@ -269,20 +269,6 @@ public class InventoryWardBrowser extends ModalJFrame {
         return closeButton;
     }
 
-    /*
-     * private JButton getInitialStocksButton() { initialStocksButton = new
-     * JButton(MessageBundle.getMessage("angal.inventory.initialstocks"));
-     * initialStocksButton.setMnemonic(KeyEvent.VK_N);
-     * initialStocksButton.addActionListener(new ActionListener() { public void
-     * actionPerformed(ActionEvent e) { WardInitialStocks wardInitialStocks = new
-     * WardInitialStocks();
-     * 
-     * if (Param.bool("WITHMODALWINDOW")) {
-     * wardInitialStocks.showAsModal(InventoryWardBrowser.this); } else {
-     * wardInitialStocks.show(InventoryWardBrowser.this); } // } }); return
-     * initialStocksButton; }
-     */
-
     private JScrollPane getScrollPaneInventory() {
         if (scrollPaneInventory == null) {
             scrollPaneInventory = new JScrollPane();
