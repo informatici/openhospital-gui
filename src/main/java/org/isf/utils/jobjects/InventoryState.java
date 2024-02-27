@@ -26,9 +26,9 @@ public class InventoryState {
     }
 
     public enum State {
-        PROGRESS("1", "angal.inventory.state.inprogress"),
-        CANCELED("2", "angal.inventory.state.canceled"),
-        VALIDATE("3", "angal.inventory.state.validate");
+        PROGRESS("1", "angal.inventory.state.inprogress.txt"),
+        CANCELED("2", "angal.inventory.state.canceled.txt"),
+        VALIDATE("3", "angal.inventory.state.validate.txt");
 
         String code;
         String label;

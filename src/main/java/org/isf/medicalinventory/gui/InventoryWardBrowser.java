@@ -31,10 +31,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.GregorianCalendar;
 
 import javax.swing.JButton;
@@ -49,19 +48,19 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.InventoryState;
 import org.isf.utils.jobjects.ModalJFrame;
-
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.time.TimeTools;
 
 public class InventoryWardBrowser extends ModalJFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private JDateChooser jCalendarTo;
-    private JDateChooser jCalendarFrom;
-    private GregorianCalendar dateFrom = new GregorianCalendar();
-    private GregorianCalendar dateTo = new GregorianCalendar();
+    private GoodDateChooser jCalendarTo;
+    private GoodDateChooser jCalendarFrom;
+    private LocalDateTime dateFrom = TimeTools.getDateToday0();
+    private LocalDateTime dateTo = TimeTools.getDateToday24();
     private JLabel jLabelTo;
     private JLabel jLabelFrom;
     private JPanel panelHeader;
@@ -74,9 +73,10 @@ public class InventoryWardBrowser extends ModalJFrame {
     private JButton viewButton;
     private JScrollPane scrollPaneInventory;
     private JTable jTableInventory;
-    private String[] pColums = { MessageBundle.getMessage("angal.inventory.referenceshow"),
-            MessageBundle.getMessage("angal.inventory.ward"), MessageBundle.getMessage("angal.common.date.txt"),
-            MessageBundle.getMessage("angal.inventory.state"), MessageBundle.getMessage("angal.inventory.user") };
+    private String[] pColums = { MessageBundle.getMessage("angal.inventory.referenceshow.col"),
+            MessageBundle.getMessage("angal.inventory.ward.col"), MessageBundle.getMessage("angal.common.date.txt"),
+            MessageBundle.getMessage("angal.inventory.state.col"),
+            MessageBundle.getMessage("angal.inventory.user.col") };
     private int[] pColumwidth = { 150, 150, 100, 100, 150 };
     private JComboBox<Object> stateComboBox;
     private JLabel stateLabel;
@@ -101,7 +101,9 @@ public class InventoryWardBrowser extends ModalJFrame {
         panelFooter = getPanelFooter();
         getContentPane().add(panelFooter, BorderLayout.SOUTH);
 
-        ajustWidth();
+        for (int i = 0; i < pColumwidth.length; i++) {
+            jTableInventory.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
+        }
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -190,47 +192,32 @@ public class InventoryWardBrowser extends ModalJFrame {
         return panelFooter;
     }
 
-    private JDateChooser getJCalendarFrom() {
+    private GoodDateChooser getJCalendarFrom() {
         if (jCalendarFrom == null) {
-            dateFrom.set(GregorianCalendar.HOUR_OF_DAY, 0);
-            dateFrom.set(GregorianCalendar.MINUTE, 0);
-            dateFrom.set(GregorianCalendar.SECOND, 0);
-
-            jCalendarFrom = new JDateChooser(dateFrom.getTime()); // Calendar
-            jCalendarFrom.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-            jCalendarFrom.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
-
-                public void propertyChange(PropertyChangeEvent evt) {
-                    jCalendarFrom.setDate((Date) evt.getNewValue());
-                    dateFrom.setTime((Date) evt.getNewValue());
-                    dateFrom.set(GregorianCalendar.HOUR_OF_DAY, 0);
-                    dateFrom.set(GregorianCalendar.MINUTE, 0);
-                    dateFrom.set(GregorianCalendar.SECOND, 0);
-                    jTableInventory.setModel(new InventoryBrowsingModel());
+            jCalendarFrom = new GoodDateChooser(dateFrom.toLocalDate());
+            jCalendarFrom.addDateChangeListener(dateChangeEvent -> {
+                LocalDate newDate = dateChangeEvent.getNewDate();
+                if (newDate != null) {
+                    dateFrom = newDate.atStartOfDay();
+                    InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
                 }
             });
+            jCalendarFrom.setEnabled(false);
         }
         return jCalendarFrom;
     }
 
-    private JDateChooser getJCalendarTo() {
+    private GoodDateChooser getJCalendarTo() {
         if (jCalendarTo == null) {
-            dateTo.set(GregorianCalendar.HOUR_OF_DAY, 23);
-            dateTo.set(GregorianCalendar.MINUTE, 59);
-            dateTo.set(GregorianCalendar.SECOND, 59);
-            jCalendarTo = new JDateChooser(dateTo.getTime()); // Calendar
-            jCalendarTo.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-            jCalendarTo.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
-
-                public void propertyChange(PropertyChangeEvent evt) {
-                    jCalendarTo.setDate((Date) evt.getNewValue());
-                    dateTo.setTime((Date) evt.getNewValue());
-                    dateTo.set(GregorianCalendar.HOUR_OF_DAY, 23);
-                    dateTo.set(GregorianCalendar.MINUTE, 59);
-                    dateTo.set(GregorianCalendar.SECOND, 59);
-                    jTableInventory.setModel(new InventoryBrowsingModel());
+            jCalendarTo = new GoodDateChooser(dateTo.toLocalDate(), false);
+            jCalendarTo.addDateChangeListener(dateChangeEvent -> {
+                LocalDate newDate = dateChangeEvent.getNewDate();
+                if (newDate != null) {
+                    dateTo = newDate.atStartOfDay();
+                    InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
                 }
             });
+            jCalendarTo.setEnabled(false);
         }
         return jCalendarTo;
     }
@@ -239,7 +226,7 @@ public class InventoryWardBrowser extends ModalJFrame {
         if (jLabelTo == null) {
             jLabelTo = new JLabel();
             jLabelTo.setHorizontalAlignment(SwingConstants.RIGHT);
-            jLabelTo.setText(MessageBundle.getMessage("angal.billbrowser.to")); //$NON-NLS-1$
+            jLabelTo.setText(MessageBundle.getMessage("angal.common.to.txt")); //$NON-NLS-1$
         }
         return jLabelTo;
     }
@@ -248,37 +235,37 @@ public class InventoryWardBrowser extends ModalJFrame {
         if (jLabelFrom == null) {
             jLabelFrom = new JLabel();
             jLabelFrom.setHorizontalAlignment(SwingConstants.RIGHT);
-            jLabelFrom.setText(MessageBundle.getMessage("angal.billbrowser.from")); //$NON-NLS-1$
+            jLabelFrom.setText(MessageBundle.getMessage("angal.common.from.txt")); //$NON-NLS-1$
         }
         return jLabelFrom;
     }
 
     private JButton getNewButton() {
-        newButton = new JButton(MessageBundle.getMessage("angal.inventory.new"));
+        newButton = new JButton(MessageBundle.getMessage("angal.inventory.new.btn"));
         newButton.setMnemonic(KeyEvent.VK_N);
         return newButton;
     }
 
     private JButton getViewButton() {
-        viewButton = new JButton(MessageBundle.getMessage("angal.inventory.view"));
+        viewButton = new JButton(MessageBundle.getMessage("angal.inventory.view.btn"));
         viewButton.setMnemonic(KeyEvent.VK_V);
         return viewButton;
     }
 
     private JButton getUpdateButton() {
-        updateButton = new JButton(MessageBundle.getMessage("angal.inventory.update"));
+        updateButton = new JButton(MessageBundle.getMessage("angal.inventory.update.btn"));
         updateButton.setMnemonic(KeyEvent.VK_M);
         return updateButton;
     }
 
     private JButton getDeleteButton() {
-        deleteButton = new JButton(MessageBundle.getMessage("angal.inventory.delete"));
+        deleteButton = new JButton(MessageBundle.getMessage("angal.inventory.delete.btn"));
         deleteButton.setMnemonic(KeyEvent.VK_D);
         return deleteButton;
     }
 
     private JButton getCloseButton() {
-        closeButton = new JButton(MessageBundle.getMessage("angal.inventory.close"));
+        closeButton = new JButton(MessageBundle.getMessage("angal.inventory.close.btn"));
         closeButton.setMnemonic(KeyEvent.VK_C);
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -351,12 +338,6 @@ public class InventoryWardBrowser extends ModalJFrame {
         return format.format(time.getTime());
     }
 
-    private void ajustWidth() {
-        for (int i = 0; i < pColumwidth.length; i++) {
-            jTableInventory.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
-        }
-    }
-
     private JComboBox<Object> getComboBox() {
         if (stateComboBox == null) {
             stateComboBox = new JComboBox<Object>();
@@ -370,7 +351,7 @@ public class InventoryWardBrowser extends ModalJFrame {
 
     private JLabel getStateLabel() {
         if (stateLabel == null) {
-            stateLabel = new JLabel(MessageBundle.getMessage("angal.inventory.state"));
+            stateLabel = new JLabel(MessageBundle.getMessage("angal.inventory.state.label"));
             stateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         }
         return stateLabel;
