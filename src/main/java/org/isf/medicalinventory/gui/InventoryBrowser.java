@@ -112,8 +112,9 @@ public class InventoryBrowser extends ModalJFrame {
 		previous.setEnabled(false);
 		next.setEnabled(false);
 		next.addActionListener(actionEvent -> {
-				if (!previous.isEnabled())
+				if (!previous.isEnabled()) {
 					previous.setEnabled(true);
+				}
 				START_INDEX += PAGE_SIZE;
 				jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
 				if ((START_INDEX + PAGE_SIZE) > TOTAL_ROWS) {
@@ -123,8 +124,9 @@ public class InventoryBrowser extends ModalJFrame {
 		});
 
 		previous.addActionListener(actionEvent -> {
-				if (!next.isEnabled())
+				if (!next.isEnabled()) {
 					next.setEnabled(true);
+				}
 				START_INDEX -= PAGE_SIZE;
 				jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
 				if (START_INDEX < PAGE_SIZE) {
