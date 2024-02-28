@@ -332,11 +332,6 @@ public class InventoryWardBrowser extends ModalJFrame {
 
     }
 
-    public String formatDateTime(GregorianCalendar time) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy"); //$NON-NLS-1$
-        return format.format(time.getTime());
-    }
-
     private JComboBox<Object> getComboBox() {
         if (stateComboBox == null) {
             stateComboBox = new JComboBox<Object>();
