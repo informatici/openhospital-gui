@@ -282,7 +282,7 @@ public class InventoryBrowser extends ModalJFrame {
 		if (jLabelTo == null) {
 			jLabelTo = new JLabel();
 			jLabelTo.setHorizontalAlignment(SwingConstants.RIGHT);
-			jLabelTo.setText(MessageBundle.getMessage("angal.common.dateto.label")); //$NON-NLS-1$
+			jLabelTo.setText(MessageBundle.getMessage("angal.common.dateto.label"));
 		}
 		return jLabelTo;
 	}
@@ -290,7 +290,7 @@ public class InventoryBrowser extends ModalJFrame {
 		if (jLabelFrom == null) {
 			jLabelFrom = new JLabel();
 			jLabelFrom.setHorizontalAlignment(SwingConstants.RIGHT);
-			jLabelFrom.setText(MessageBundle.getMessage("angal.common.datefrom.label")); //$NON-NLS-1$
+			jLabelFrom.setText(MessageBundle.getMessage("angal.common.datefrom.label"));
 		}
 		return jLabelFrom;
 	}
