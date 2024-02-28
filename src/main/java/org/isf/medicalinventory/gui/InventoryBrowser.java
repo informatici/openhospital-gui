@@ -111,9 +111,7 @@ public class InventoryBrowser extends ModalJFrame {
 		pagesCombo.setEditable(true);
 		previous.setEnabled(false);
 		next.setEnabled(false);
-		next.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent ae) {
+		next.addActionListener(actionEvent -> {
 				if (!previous.isEnabled())
 					previous.setEnabled(true);
 				START_INDEX += PAGE_SIZE;
@@ -122,12 +120,9 @@ public class InventoryBrowser extends ModalJFrame {
 					next.setEnabled(false);
 				}
 				pagesCombo.setSelectedItem(START_INDEX / PAGE_SIZE + 1);
-			}
 		});
 
-		previous.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent ae) {
+		previous.addActionListener(actionEvent -> {
 				if (!next.isEnabled())
 					next.setEnabled(true);
 				START_INDEX -= PAGE_SIZE;
@@ -136,7 +131,6 @@ public class InventoryBrowser extends ModalJFrame {
 					previous.setEnabled(false);
 				}
 				pagesCombo.setSelectedItem(START_INDEX / PAGE_SIZE + 1);
-			}
 		});
 		pagesCombo.addItemListener(new ItemListener() {
 
@@ -327,10 +321,8 @@ public class InventoryBrowser extends ModalJFrame {
 	private JButton getCloseButton() {
 		jButtonClose = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 		jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-		jButtonClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		jButtonClose.addActionListener(actionEvent -> {
 				dispose();
-			}
 		});
 		return jButtonClose;
 	}
