@@ -49,7 +49,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.utils.jobjects.GoodDateChooser;
-import org.isf.utils.jobjects.InventoryState;
+import org.isf.utils.jobjects.InventoryStatus;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 
@@ -72,9 +72,9 @@ public class InventoryBrowser extends ModalJFrame {
 	private JButton jButtonView;
 	private JScrollPane scrollPaneInventory;
 	private JTable jTableInventory;
-	private String[] pColums = { MessageBundle.getMessage("angal.common.reference").toUpperCase(),
+	private String[] pColums = { MessageBundle.getMessage("angal.common.reference.label").toUpperCase(),
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.common.status.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.inventory.status.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.user.col").toUpperCase() };
 	private int[] pColumwidth = { 150, 150, 150, 200 };
 	private JComboBox stateComboBox;
@@ -402,8 +402,8 @@ public class InventoryBrowser extends ModalJFrame {
 		if (stateComboBox == null) {
 			stateComboBox = new JComboBox();
 			stateComboBox.addItem("");
-			for (InventoryState.State currentState : InventoryState.State.values()) {
-				stateComboBox.addItem(MessageBundle.getMessage(currentState.getLabel()));
+			for (InventoryStatus currentState : InventoryStatus.values()) {
+				stateComboBox.addItem(MessageBundle.getMessage("angal.inventory."+currentState));
 			}
 			stateComboBox.addActionListener(new ActionListener() {
 
@@ -427,7 +427,7 @@ public class InventoryBrowser extends ModalJFrame {
 
 	private JLabel getStateLabel() {
 		if (stateLabel == null) {
-			stateLabel = new JLabel(MessageBundle.getMessage("angal.common.status.txt"));
+			stateLabel = new JLabel(MessageBundle.getMessage("angal.inventory.status.txt"));
 			stateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		}
 		return stateLabel;

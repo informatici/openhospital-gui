@@ -22,34 +22,7 @@
 package org.isf.utils.jobjects;
 
 
-public class InventoryState {
-	public InventoryState(){}
-	public enum State
-	 {		
-		PROGRESS ("1", "angal.common.statecanceled"),
-		CANCELED ("2", "angal.common.stateinprogress"),
-		VALIDATE ("3", "angal.common.statevalidate");
-		
-		String code;
-		String label;
-			
-		private State(String code, String label){
-			this.code=code;
-			this.label=label;
-		}
-
-		public String getCode() {
-			return code;
-		}
-		public void setCode(String code) {
-			this.code = code;
-		}
-		public String getLabel() {
-			return label;
-		}
-		public void setLabel(String label) {
-			this.label = label;
-	    }
-	}
+public enum InventoryStatus {
+	draft, validated, canceled;
 }
 
