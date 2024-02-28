@@ -28,7 +28,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
@@ -74,9 +73,9 @@ public class InventoryWardBrowser extends ModalJFrame {
     private JScrollPane scrollPaneInventory;
     private JTable jTableInventory;
     private String[] pColums = { MessageBundle.getMessage("angal.inventory.referenceshow.col"),
-            MessageBundle.getMessage("angal.inventory.ward.col"), MessageBundle.getMessage("angal.common.date.txt"),
+            MessageBundle.getMessage("angal.common.ward.col"), MessageBundle.getMessage("angal.common.date.col"),
             MessageBundle.getMessage("angal.inventory.state.col"),
-            MessageBundle.getMessage("angal.inventory.user.col") };
+            MessageBundle.getMessage("angal.common.user.col") };
     private int[] pColumwidth = { 150, 150, 100, 100, 150 };
     private JComboBox<Object> stateComboBox;
     private JLabel stateLabel;
@@ -226,7 +225,7 @@ public class InventoryWardBrowser extends ModalJFrame {
         if (jLabelTo == null) {
             jLabelTo = new JLabel();
             jLabelTo.setHorizontalAlignment(SwingConstants.RIGHT);
-            jLabelTo.setText(MessageBundle.getMessage("angal.common.to.txt")); //$NON-NLS-1$
+            jLabelTo.setText(MessageBundle.getMessage("angal.common.dateto.label")); //$NON-NLS-1$
         }
         return jLabelTo;
     }
@@ -235,38 +234,38 @@ public class InventoryWardBrowser extends ModalJFrame {
         if (jLabelFrom == null) {
             jLabelFrom = new JLabel();
             jLabelFrom.setHorizontalAlignment(SwingConstants.RIGHT);
-            jLabelFrom.setText(MessageBundle.getMessage("angal.common.from.txt")); //$NON-NLS-1$
+            jLabelFrom.setText(MessageBundle.getMessage("angal.common.datefrom.label")); //$NON-NLS-1$
         }
         return jLabelFrom;
     }
 
     private JButton getNewButton() {
-        newButton = new JButton(MessageBundle.getMessage("angal.inventory.new.btn"));
-        newButton.setMnemonic(KeyEvent.VK_N);
+        newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+        newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
         return newButton;
     }
 
     private JButton getViewButton() {
         viewButton = new JButton(MessageBundle.getMessage("angal.inventory.view.btn"));
-        viewButton.setMnemonic(KeyEvent.VK_V);
+        viewButton.setMnemonic(MessageBundle.getMnemonic("angal.inventory.view.btn.key"));
         return viewButton;
     }
 
     private JButton getUpdateButton() {
-        updateButton = new JButton(MessageBundle.getMessage("angal.inventory.update.btn"));
-        updateButton.setMnemonic(KeyEvent.VK_M);
+        updateButton = new JButton(MessageBundle.getMessage("angal.common.update.btn"));
+        updateButton.setMnemonic(MessageBundle.getMnemonic("angal.common.update.btn.key"));
         return updateButton;
     }
 
     private JButton getDeleteButton() {
-        deleteButton = new JButton(MessageBundle.getMessage("angal.inventory.delete.btn"));
-        deleteButton.setMnemonic(KeyEvent.VK_D);
+        deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+        deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
         return deleteButton;
     }
 
     private JButton getCloseButton() {
-        closeButton = new JButton(MessageBundle.getMessage("angal.inventory.close.btn"));
-        closeButton.setMnemonic(KeyEvent.VK_C);
+        closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+        closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
