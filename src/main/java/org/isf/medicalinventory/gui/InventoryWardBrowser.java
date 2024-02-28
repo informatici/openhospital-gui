@@ -30,10 +30,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.GregorianCalendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -72,10 +70,13 @@ public class InventoryWardBrowser extends ModalJFrame {
     private JButton viewButton;
     private JScrollPane scrollPaneInventory;
     private JTable jTableInventory;
-    private String[] pColums = { MessageBundle.getMessage("angal.inventory.referenceshow.col"),
-            MessageBundle.getMessage("angal.common.ward.col"), MessageBundle.getMessage("angal.common.date.col"),
-            MessageBundle.getMessage("angal.inventory.state.col"),
-            MessageBundle.getMessage("angal.common.user.col") };
+    private String[] pColums = {
+            MessageBundle.getMessage("angal.inventory.referenceshow.col").toUpperCase(),
+            MessageBundle.getMessage("angal.common.ward.col").toUpperCase(),
+            MessageBundle.getMessage("angal.common.date.col").toUpperCase(),
+            MessageBundle.getMessage("angal.inventory.state.col").toUpperCase(),
+            MessageBundle.getMessage("angal.common.user.col").toUpperCase()
+    };
     private int[] pColumwidth = { 150, 150, 100, 100, 150 };
     private JComboBox<Object> stateComboBox;
     private JLabel stateLabel;
