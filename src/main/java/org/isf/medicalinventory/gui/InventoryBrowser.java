@@ -309,7 +309,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			String status = InventoryStatus.draft.toString();
 			List<MedicalInventory> medicalInventories = new ArrayList<>();
 			try {
-				medicalInventories = medicalInventoryManager.getMedicalInventory();
+				medicalInventories = medicalInventoryManager.getMedicalInventoryByStatus(status);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
