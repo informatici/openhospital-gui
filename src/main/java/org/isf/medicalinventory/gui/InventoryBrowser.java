@@ -21,6 +21,7 @@
  */
 package org.isf.medicalinventory.gui;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -34,7 +35,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -48,12 +51,18 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.medicalinventory.gui.InventoryEdit.InventoryListener;
+import org.isf.medicalinventory.manager.MedicalInventoryManager;
+import org.isf.medicalinventory.model.MedicalInventory;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.InventoryStatus;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 
-public class InventoryBrowser extends ModalJFrame {
+public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 	private GoodDateChooser jCalendarTo;
 	private GoodDateChooser jCalendarFrom;
@@ -294,6 +303,25 @@ public class InventoryBrowser extends ModalJFrame {
 	private JButton getNewButton() {
 		jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
+		jButtonNew.addActionListener(actionEvent -> {
+			MedicalInventoryManager manager = new MedicalInventoryManager();
+			String status = InventoryStatus.draft.toString();
+			List<MedicalInventory> medicalInventories = new ArrayList<>();
+			try {
+				medicalInventories = manager.getMedicalInventoryByStatus(status);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
+			if (medicalInventories.size() == 0) {
+				InventoryEdit inventoryEdit = new InventoryEdit();
+				InventoryEdit.addInventoryListener(InventoryBrowser.this);
+				inventoryEdit.showAsModal(InventoryBrowser.this);	
+			} else {
+				MessageDialog.error(null, "angal.inventory.cannotcreateanotherinventorywithotherinprogress");
+				return;
+			}
+			
+		});
 		return jButtonNew;
 	}
 
@@ -447,5 +475,29 @@ public class InventoryBrowser extends ModalJFrame {
 		} else {
 			under.setText("/" + total_rows / PAGE_SIZE + " Pages");
 		}
+	}
+
+	@Override
+	public void InventoryUpdated(AWTEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void InventoryInserted(AWTEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void InventoryValidated(AWTEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void InventoryCancelled(AWTEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
