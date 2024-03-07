@@ -54,6 +54,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.medicalinventory.gui.InventoryEdit.InventoryListener;
 import org.isf.medicalinventory.manager.MedicalInventoryManager;
 import org.isf.medicalinventory.model.MedicalInventory;
+import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
@@ -95,6 +96,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private static int PAGE_SIZE = 50;
 	private int START_INDEX = 0;
 	private int TOTAL_ROWS;
+	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 
 	public InventoryBrowser() {
 		initComponents();
@@ -304,11 +306,10 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		jButtonNew.addActionListener(actionEvent -> {
-			MedicalInventoryManager manager = new MedicalInventoryManager();
 			String status = InventoryStatus.draft.toString();
 			List<MedicalInventory> medicalInventories = new ArrayList<>();
 			try {
-				medicalInventories = manager.getMedicalInventoryByStatus(status);
+				medicalInventories = medicalInventoryManager.getMedicalInventory();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
