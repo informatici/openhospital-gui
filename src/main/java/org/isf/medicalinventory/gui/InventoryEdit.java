@@ -374,7 +374,7 @@ public class InventoryEdit extends ModalJFrame {
 
 		public InventoryRowModel() {
 			if(inventoryRowList != null) {
-				inventoryRowSearchList = new ArrayList<MedicalInventoryRow>();
+				inventoryRowSearchList = new ArrayList<>();
 				inventoryRowSearchList.addAll(inventoryRowList);
 			}
 		}
@@ -463,7 +463,7 @@ public class InventoryEdit extends ModalJFrame {
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		private final DecimalFormat formatter = new DecimalFormat("#,##0.00"); //$NON-NLS-1$
+		private final DecimalFormat formatter = new DecimalFormat("#,##0.00");
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
