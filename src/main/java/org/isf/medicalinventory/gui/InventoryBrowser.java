@@ -318,7 +318,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				InventoryEdit.addInventoryListener(InventoryBrowser.this);
 				inventoryEdit.showAsModal(InventoryBrowser.this);	
 			} else {
-				MessageDialog.error(null, "angal.inventory.cannotcreateanotherinventorywithotherinprogress");
+				MessageDialog.error(null, "angal.inventory.cannotcreateanotherinventorywithstatusdraft.msg");
 				return;
 			}
 			
