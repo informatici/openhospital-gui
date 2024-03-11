@@ -442,7 +442,7 @@ public class InventoryEdit extends ModalJFrame {
 						intValue = Integer.parseInt(value.toString());
 					}
 					catch (NumberFormatException e) {
-						intValue=0;
+						intValue = 0;
 					}
 					
 					invRow.setRealqty(intValue);
