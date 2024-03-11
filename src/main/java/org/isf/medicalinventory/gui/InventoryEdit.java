@@ -341,7 +341,7 @@ public class InventoryEdit extends ModalJFrame {
 	
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
-					if(!e.getValueIsAdjusting()){
+					if (!e.getValueIsAdjusting()) {
 						jTableInventoryRow.editCellAt(jTableInventoryRow.getSelectedRow(), 5);
 						jTetFieldEditor.selectAll();
 					}
@@ -438,10 +438,10 @@ public class InventoryEdit extends ModalJFrame {
 				if (c == 5) {
 					Integer intValue=0;
 					try{
-						intValue=Integer.parseInt(value.toString());
+						intValue = Integer.parseInt(value.toString());
 					}
 					catch (NumberFormatException e) {
-						intValue=0;
+						intValue = 0;
 					}
 					
 					invRow.setRealqty(intValue);
@@ -541,7 +541,7 @@ public class InventoryEdit extends ModalJFrame {
 						searchTextField.setText("");
 						codeTextField.setText("");
 						searchTextField.setEnabled(true);
-						if(inventory == null) {
+						if (inventory == null) {
 							moreData.setEnabled(true);
 						}
 						if (inventoryRowList != null) {
@@ -605,7 +605,7 @@ public class InventoryEdit extends ModalJFrame {
 	}
 	
 	private JButton getMoreDataBtn() {
-		if(moreData == null) {
+		if (moreData == null) {
 			moreData = new JButton("...");
 			moreData.setPreferredSize(new Dimension(20, 20));
 			moreData.setEnabled(false);
