@@ -439,7 +439,7 @@ public class InventoryEdit extends ModalJFrame {
 				if (c == 5) {
 					Integer intValue=0;
 					try{
-						intValue=Integer.parseInt(value.toString());
+						intValue = Integer.parseInt(value.toString());
 					}
 					catch (NumberFormatException e) {
 						intValue=0;
