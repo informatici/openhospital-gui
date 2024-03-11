@@ -342,7 +342,7 @@ public class InventoryEdit extends ModalJFrame {
 	
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
-					if(!e.getValueIsAdjusting()){
+					if (!e.getValueIsAdjusting()) {
 						jTableInventoryRow.editCellAt(jTableInventoryRow.getSelectedRow(), 5);
 						jTetFieldEditor.selectAll();
 					}
