@@ -137,9 +137,6 @@ public class InventoryEdit extends ModalJFrame {
 	private JLabel loaderLabel;
 
 	private JButton moreData;
-	private int MAX_COUNT = 30;
-	private int CURRENT_INDEX = 0;
-	private boolean MORE_DATA = true;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private MedicalInventoryRowManager medicalInventoryRowManager = Context.getApplicationContext().getBean(MedicalInventoryRowManager.class);
 	
@@ -180,10 +177,12 @@ public class InventoryEdit extends ModalJFrame {
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				if (inventoryRowList != null)
+				if (inventoryRowList != null) {
 					inventoryRowList.clear();
-				if (inventoryRowSearchList != null)
+				}
+				if (inventoryRowSearchList != null) {
 					inventoryRowSearchList.clear();
+				}
 				dispose();
 			}
 		});
@@ -465,11 +464,9 @@ public class InventoryEdit extends ModalJFrame {
 		private static final long serialVersionUID = 1L;
 		private final DecimalFormat formatter = new DecimalFormat("#,##0.00");
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-				int row, int column) {
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			cell.addFocusListener(new java.awt.event.FocusListener()
-		      {
+			cell.addFocusListener(new java.awt.event.FocusListener() {
 		       
 				@Override
 				public void focusGained(java.awt.event.FocusEvent e) {				
@@ -568,17 +565,12 @@ public class InventoryEdit extends ModalJFrame {
 		if (searchTextField == null) {
 			searchTextField = new JTextField();
 			searchTextField.setColumns(16);
-			TextPrompt suggestion = new TextPrompt(
-					MessageBundle
-							.getMessage("angal.common.search.txt"),
-							searchTextField, Show.FOCUS_LOST);
-			{
-				suggestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
-				suggestion.setForeground(Color.GRAY);
-				suggestion.setHorizontalAlignment(JLabel.CENTER);
-				suggestion.changeAlpha(0.5f);
-				suggestion.changeStyle(Font.BOLD + Font.ITALIC);
-			}
+			TextPrompt suggestion = new TextPrompt( MessageBundle.getMessage("angal.common.search.txt"), searchTextField, Show.FOCUS_LOST);
+			suggestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			suggestion.setForeground(Color.GRAY);
+			suggestion.setHorizontalAlignment(JLabel.CENTER);
+			suggestion.changeAlpha(0.5f);
+			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 			searchTextField.getDocument().addDocumentListener(new DocumentListener() {
 				@Override
 				public void insertUpdate(DocumentEvent e) {
@@ -630,17 +622,12 @@ public class InventoryEdit extends ModalJFrame {
 				codeTextField.setEnabled(true);
 			}
 			codeTextField.setColumns(10);
-			TextPrompt suggestion = new TextPrompt(
-							MessageBundle
-							.getMessage("angal.common.code.txt"),
-							codeTextField, Show.FOCUS_LOST);
-			{
-				suggestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
-				suggestion.setForeground(Color.GRAY);
-				suggestion.setHorizontalAlignment(JLabel.CENTER);
-				suggestion.changeAlpha(0.5f);
-				suggestion.changeStyle(Font.BOLD + Font.ITALIC);
-			}
+			TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.common.code.txt"), codeTextField, Show.FOCUS_LOST);
+			suggestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			suggestion.setForeground(Color.GRAY);
+			suggestion.setHorizontalAlignment(JLabel.CENTER);
+			suggestion.changeAlpha(0.5f);
+			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 		}
 		return codeTextField;
 	}
