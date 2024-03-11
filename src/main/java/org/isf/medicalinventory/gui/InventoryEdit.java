@@ -114,12 +114,12 @@ public class InventoryEdit extends ModalJFrame {
 	private JTable jTableInventoryRow;
 	private List<MedicalInventoryRow> inventoryRowList;
 	private List<MedicalInventoryRow> inventoryRowSearchList;
-	private String[] pColums = { MessageBundle.getMessage("angal.common.code.txt"),
-			MessageBundle.getMessage("angal.medicalstockward.patient.drug.col"),
-			MessageBundle.getMessage("angal.wardpharmacy.lotnumber.col"),
-			MessageBundle.getMessage("angal.medicalstock.duedate.col"),
-			MessageBundle.getMessage("angal.inventoryrow.theorticqty.col"),
-			MessageBundle.getMessage("angal.inventoryrow.realqty.col") };
+	private String[] pColums = { MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.medicalstockward.patient.drug.col").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.lotnumber.col").toUpperCase(),
+			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),
+			MessageBundle.getMessage("angal.inventoryrow.theorticqty.col").toUpperCase(),
+			MessageBundle.getMessage("angal.inventoryrow.realqty.col").toUpperCase() };
 	private int[] pColumwidth = { 100, 300, 100, 100, 100, 100 };
 	private boolean[] columnEditable = { false, false, false, false, false, true };
 	private boolean[] columnEditableView = { false, false, false, false, false, false };
