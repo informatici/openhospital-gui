@@ -613,7 +613,7 @@ public class InventoryEdit extends ModalJFrame {
 	}
 	
 	private JButton getMoreDataBtn() {
-		if(moreData == null) {
+		if (moreData == null) {
 			moreData = new JButton("...");
 			moreData.setPreferredSize(new Dimension(20, 20));
 			moreData.setEnabled(false);
