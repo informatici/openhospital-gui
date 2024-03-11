@@ -544,7 +544,7 @@ public class InventoryEdit extends ModalJFrame {
 						searchTextField.setText("");
 						codeTextField.setText("");
 						searchTextField.setEnabled(true);
-						if(inventory == null) {
+						if (inventory == null) {
 							moreData.setEnabled(true);
 						}
 						if (inventoryRowList != null) {
