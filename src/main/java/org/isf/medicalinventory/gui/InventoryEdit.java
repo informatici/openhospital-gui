@@ -128,8 +128,6 @@ public class InventoryEdit extends ModalJFrame {
 	private JLabel referenceLabel;
 	private JTextField referenceTextField;
 	private JTextField jTetFieldEditor;
-	private JLabel loaderLabel;
-
 	private JButton moreData;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private MedicalInventoryRowManager medicalInventoryRowManager = Context.getApplicationContext().getBean(MedicalInventoryRowManager.class);
@@ -216,11 +214,6 @@ public class InventoryEdit extends ModalJFrame {
 			gbc_referenceTextField.gridx = 3;
 			gbc_referenceTextField.gridy = 0;
 			panelHeader.add(getReferenceTextField(), gbc_referenceTextField);
-			GridBagConstraints gbc_loaderLabel = new GridBagConstraints();
-			gbc_loaderLabel.insets = new Insets(0, 0, 5, 0);
-			gbc_loaderLabel.gridx = 4;
-			gbc_loaderLabel.gridy = 0;
-			panelHeader.add(getLoaderLabel(), gbc_loaderLabel);
 			GridBagConstraints gbc_specificRadio = new GridBagConstraints();
 			gbc_specificRadio.anchor = GridBagConstraints.EAST;
 			gbc_specificRadio.insets = new Insets(0, 0, 0, 5);
@@ -658,15 +651,5 @@ public class InventoryEdit extends ModalJFrame {
 			}
 		}
 		return referenceTextField;
-	}
-	
-	private JLabel getLoaderLabel() {
-		if (loaderLabel == null) {
-			ImageIcon icon = new ImageIcon("rsc/icons/oh_loader.gif");
-			loaderLabel = new JLabel("");
-			loaderLabel.setIcon(icon);
-			loaderLabel.setVisible(false);
-		}
-		return loaderLabel;
 	}
 }
