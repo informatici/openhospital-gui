@@ -662,7 +662,7 @@ public class InventoryEdit extends ModalJFrame {
 	
 	private JLabel getLoaderLabel() {
 		if (loaderLabel == null) {
-			ImageIcon icon = new ImageIcon("rsc/icons/oh_loader.GIF");
+			ImageIcon icon = new ImageIcon("rsc/icons/oh_loader.gif");
 			loaderLabel = new JLabel("");
 			loaderLabel.setIcon(icon);
 			loaderLabel.setVisible(false);
