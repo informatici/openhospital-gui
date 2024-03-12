@@ -89,12 +89,6 @@ public class InventoryEdit extends ModalJFrame {
 	
 	private static EventListenerList InventoryListeners = new EventListenerList();
 	public interface InventoryListener extends EventListener {
-		public void InventoryUpdated(AWTEvent e);
-
-		public void InventoryInserted(AWTEvent e);
-
-		public void InventoryValidated(AWTEvent e);
-
 		public void InventoryCancelled(AWTEvent e);
 	}
 

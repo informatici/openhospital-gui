@@ -31,6 +31,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -97,6 +99,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private int START_INDEX = 0;
 	private int TOTAL_ROWS;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
+	private List<MedicalInventory> inventoryList;
 
 	public InventoryBrowser() {
 		initComponents();
@@ -118,7 +121,14 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		getContentPane().add(panelFooter, BorderLayout.SOUTH);
 
 		ajustWidth();
-
+		addWindowListener(new WindowAdapter(){	
+			public void windowClosing(WindowEvent e) {
+				if(inventoryList!=null){
+					inventoryList.clear();
+				}
+				dispose();
+			}			
+		});
 		pagesCombo.setEditable(true);
 		previous.setEnabled(false);
 		next.setEnabled(false);
@@ -434,9 +444,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			for (InventoryStatus currentState : InventoryStatus.values()) {
 				stateComboBox.addItem(MessageBundle.getMessage("angal.inventory."+currentState));
 			}
-			stateComboBox.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
+			stateComboBox.addActionListener(actionEvent -> {
 					InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
 					TOTAL_ROWS = inventoryModel.getRowCount();
 					START_INDEX = 0;
@@ -448,7 +456,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 					}
 					jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
 					initialiseCombo(TOTAL_ROWS);
-				}
 			});
 		}
 		return stateComboBox;
@@ -479,26 +486,10 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	}
 
 	@Override
-	public void InventoryUpdated(AWTEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void InventoryInserted(AWTEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void InventoryValidated(AWTEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void InventoryCancelled(AWTEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (inventoryList!=null) {
+			inventoryList.clear();
+		}
+		jTableInventory.setModel(new InventoryBrowsingModel());		
 	}
 }
