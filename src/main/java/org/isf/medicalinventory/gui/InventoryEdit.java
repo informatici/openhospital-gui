@@ -215,6 +215,8 @@ public class InventoryEdit extends ModalJFrame {
 	private boolean MORE_DATA = true;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private MedicalInventoryRowManager medicalInventoryRowManager = Context.getApplicationContext().getBean(MedicalInventoryRowManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	
 	public InventoryEdit() {
 		initComponents();
@@ -865,36 +867,38 @@ public class InventoryEdit extends ModalJFrame {
 		moreData.addActionListener(actionEvent -> {
 			if (MORE_DATA && inventory == null) {
 				List<Medical> medicalList = new ArrayList<Medical>();
-				MedicalBrowsingManager medicalManager = new MedicalBrowsingManager();
 				CURRENT_INDEX += MAX_COUNT;
 				try {
-					medicalList = medicalManager.getMedicals();
+					medicalList = medicalBrowsingManager.getMedicals();
 				} catch (OHServiceException e) {
 					e.printStackTrace();
 				}
-				MovStockInsertingManager movBrowser = new MovStockInsertingManager();
-				ArrayList<Lot> lots;
-				MedicalInventoryRow inventoryRowTemp;
-				double quantityOutsideLot;
-				double cost;
+				List<Lot> lots = null;
+				MedicalInventoryRow inventoryRowTemp = null;
+				double quantityOutsideLot = 0.0;
+				double cost = 0.0;
 				Iterator<Medical> medicalIterator = medicalList.iterator();
 				Medical medical;
-				/* while (medicalIterator.hasNext()) {
+				while (medicalIterator.hasNext()) {
 					medical = medicalIterator.next();
-					lots = movBrowser.getLotByMedical(medical);
+					try {
+						lots = movStockInsertingManager.getLotByMedical(medical);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
 					quantityOutsideLot = medical.getTotalQuantity() - getQtyInALot(lots);
 					if ((lots.size() == 0) || (quantityOutsideLot != 0)) {
 						inventoryRowTemp = new MedicalInventoryRow(0, quantityOutsideLot, quantityOutsideLot, null,
-								medical, new Lot("", null, null), 0.0, 0.0, false);
+								medical, new Lot("", null, null));
 						inventoryRowList.add(inventoryRowTemp);
 					}
 					for (Lot lot : lots) {
-						cost = lot.getCost() * lot.getQuantity();
-						inventoryRowTemp = new MedicalInventoryRow(0, lot.getQuantity(), lot.getQuantity(), null,
-								medical, lot, lot.getCost(), cost, false);
+						cost = lot.getCost().doubleValue() * lot.getOverallQuantity();
+						inventoryRowTemp = new MedicalInventoryRow(0, lot.getOverallQuantity(), lot.getOverallQuantity(), null,
+								medical, lot);
 						inventoryRowList.add(inventoryRowTemp);
 					}
-				}*/
+				}
 				inventoryRowSearchList = new ArrayList<MedicalInventoryRow>();
 				inventoryRowSearchList.addAll(inventoryRowList);
 				if (medicalList.size() > 0) {
@@ -905,6 +909,14 @@ public class InventoryEdit extends ModalJFrame {
 		return moreData;
 	}
 
+	private double getQtyInALot(List<Lot> lots) {
+		double qty = 0.0;
+		for (Iterator iterator = lots.iterator(); iterator.hasNext();) {
+			Lot lot = (Lot) iterator.next();
+			qty += lot.getOverallQuantity();
+		}
+		return qty;
+	}
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
 			codeTextField = new JTextField();
