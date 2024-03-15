@@ -251,10 +251,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JPanel getPanelFooter() {
 		if (panelFooter == null) {
 			panelFooter = new JPanel();
-			next = new JButton(MessageBundle.getMessage("angal.visit.nextarrow.btn"));
-			next.setMnemonic(MessageBundle.getMnemonic("angal.visit.nextarrow.btn.key"));
-			previous = new JButton(MessageBundle.getMessage("angal.visit.arrowprevious.btn"));
-			next.setMnemonic(MessageBundle.getMnemonic("angal.visit.arrowprevious.btn.key"));
+			next = new JButton(MessageBundle.getMessage("angal.inventory.nextarrow.btn"));
+			previous = new JButton(MessageBundle.getMessage("angal.inventory.arrowprevious.btn"));
 
 			panelFooter.add(previous);
 			panelFooter.add(pagesCombo);
