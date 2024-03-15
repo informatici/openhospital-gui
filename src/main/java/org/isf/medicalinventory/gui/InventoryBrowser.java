@@ -27,10 +27,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
@@ -53,6 +52,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.medicalinventory.gui.InventoryBrowser.InventoryBrowsingModel;
 import org.isf.medicalinventory.gui.InventoryEdit.InventoryListener;
 import org.isf.medicalinventory.manager.MedicalInventoryManager;
 import org.isf.medicalinventory.model.MedicalInventory;
@@ -252,7 +252,9 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		if (panelFooter == null) {
 			panelFooter = new JPanel();
 			next = new JButton(MessageBundle.getMessage("angal.inventory.nextarrow.btn"));
+			next.setMnemonic(KeyEvent.VK_RIGHT);
 			previous = new JButton(MessageBundle.getMessage("angal.inventory.arrowprevious.btn"));
+			next.setMnemonic(KeyEvent.VK_LEFT);
 
 			panelFooter.add(previous);
 			panelFooter.add(pagesCombo);
@@ -489,5 +491,13 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			inventoryList.clear();
 		}
 		jTableInventory.setModel(new InventoryBrowsingModel());		
+	}
+
+	@Override
+	public void InventoryInserted(AWTEvent e) {
+		if(inventoryList!=null) {
+			inventoryList.clear();
+		}
+		jTableInventory.setModel(new InventoryBrowsingModel());
 	}
 }
