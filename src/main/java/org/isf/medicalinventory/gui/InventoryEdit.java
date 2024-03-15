@@ -34,6 +34,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -57,6 +59,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -154,6 +157,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JPanel panelFooter;
 	private JPanel panelContent;
 	private JButton closeButton;
+	private JButton deleteButton;
 	private JButton saveButton;
 	private JButton validateButton;
 	private JScrollPane scrollPaneInventory;
@@ -331,6 +335,7 @@ public class InventoryEdit extends ModalJFrame {
 		if (panelFooter == null) {
 			panelFooter = new JPanel();
 			panelFooter.add(getNewButton());
+			panelFooter.add(getDeleteButton());
 			panelFooter.add(getCloseButton());
 		}
 		return panelFooter;
@@ -393,7 +398,6 @@ public class InventoryEdit extends ModalJFrame {
 				inventory.setStatus(State);
 				inventory.setUser(user);
 				inventory.setInventoryType(InventoryType.principal.toString());
-				inventory.setWard("");
 				MedicalInventory meInventory;
 				try {
 					meInventory = medicalInventoryManager.newMedicalInventory(inventory);
@@ -401,12 +405,10 @@ public class InventoryEdit extends ModalJFrame {
 						inventory.setId(meInventory.getId());
 						MedicalInventoryRow currentInventoryRow;
 						Double totalCost = 0.0;
-						for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator
-										.hasNext();) {
+						for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator.hasNext();) {
 							MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
 							medicalInventoryRow.setInventory(inventory);
-							currentInventoryRow = medicalInventoryRowManager
-											.newMedicalInventoryRow(medicalInventoryRow);
+							currentInventoryRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 							if (currentInventoryRow == null) {
 								checkResults++;
 							} else {
@@ -534,7 +536,34 @@ public class InventoryEdit extends ModalJFrame {
 		 */
 		return validateButton;
 	}
-
+	private JButton getDeleteButton() {
+		deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+		deleteButton.addActionListener(actionEvent -> {
+			if (jTableInventoryRow.getSelectedRowCount() > 1 ) {
+				MessageDialog.error(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
+				return;
+			}
+			int selectedRow = jTableInventoryRow.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.error(this, "angal.medicalstock.pleaseselectonlyonemovement.msg");
+				return;
+			}
+			MedicalInventoryRow selectedInventory = (MedicalInventoryRow)jTableInventoryRow.getValueAt(selectedRow, -1);
+			int delete = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttodeletethisinventoryrow.msg");
+			if (delete == JOptionPane.YES_OPTION) {
+				if (selectedInventory.getInventory() == null) {
+					inventoryRowSearchList.remove(selectedRow);
+				} else {
+					
+				}
+			} else {
+				return;
+			}
+			jTableInventoryRow.updateUI();
+		});
+		return deleteButton;
+	}
 	private JButton getCloseButton() {
 		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
@@ -696,14 +725,14 @@ public class InventoryEdit extends ModalJFrame {
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			cell.addFocusListener(new java.awt.event.FocusListener() {
+			cell.addFocusListener(new FocusListener() {
 
 				@Override
-				public void focusGained(java.awt.event.FocusEvent e) {
+				public void focusGained(FocusEvent e) {
 				}
 
 				@Override
-				public void focusLost(java.awt.event.FocusEvent e) {
+				public void focusLost(FocusEvent e) {
 				}
 			});
 
@@ -981,8 +1010,7 @@ public class InventoryEdit extends ModalJFrame {
 		} else if (mode.equals("update")) {
 			if (medical != null) {
 				String medicalCode = medical.getProdCode();
-				inventoryRowsList = medicalInventoryRowManager
-								.getMedicalInventoryRowByInventoryId(inventory.getId()).stream().filter(medRow -> medRow.getMedical().getProdCode().equals(medicalCode)).toList();
+				inventoryRowsList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId()).stream().filter(medRow -> medRow.getMedical().getProdCode().equals(medicalCode)).toList();
 			}
 		}
 		if (inventoryRowSearchList == null) {
@@ -1044,7 +1072,7 @@ public class InventoryEdit extends ModalJFrame {
 		Collections.sort(medList);
 		Medical med = null;
 		if (!medList.isEmpty()) {
-			MedicalPicker framas = new MedicalPicker(new StockMedModel(medList));
+			MedicalPicker framas = new MedicalPicker(new StockMedModel(medList), medList);
 			framas.setSize(300, 400);
 			JDialog dialog = new JDialog();
 			dialog.setLocationRelativeTo(null);

@@ -1,11 +1,13 @@
 package org.isf.medicalinventory.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -13,9 +15,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableColumn;
@@ -25,7 +34,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 
-public class MedicalPicker extends javax.swing.JPanel {
+public class MedicalPicker extends JPanel {
 
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 	/**
@@ -35,18 +44,45 @@ public class MedicalPicker extends javax.swing.JPanel {
 
 	private Collection <Medical> medicalMapValues = new ArrayList<Medical>();
 	private String searchCode;
+	private JButton jButtonSelect;
+	private JButton jButtonQuit;
+	private JLabel jLabelImage;
+	private JPanel jPanel1;
+	private JPanel jPanel2;
+	private JPanel jPanel3;
+	private JScrollPane jScrollPane1;
+	private JTable jTableData;
+	private JTextField jTextFieldFind;
+	private int selectedRow = -1;
+	private JDialog parentFrame;
 	
-	public MedicalPicker(StockMedModel model) {
-		initComponents(model);
-	}
-	
-	public MedicalPicker(StockMedModel model, Collection <Medical> medicalMapValues, String searchCode) {
-		this.searchCode = searchCode;
-		initComponents(model);
-		this.medicalMapValues = medicalMapValues;
-		
+	private int getSelectedRow() {
+		return selectedRow;
 	}
 
+	public Medical getSelectedMedical() {
+		StockMedModel model = (StockMedModel) jTableData.getModel();
+		return model.getMedicalAtRow(this.getSelectedRow());
+	}
+
+	private void setSelectedRow(int selectedRow) {
+		this.selectedRow = selectedRow;
+	}
+
+	
+
+	public JDialog getParentFrame() {
+		return parentFrame;
+	}
+
+	public void setParentFrame(JDialog parentFrame) {
+		this.parentFrame = parentFrame;
+	}
+	
+	public MedicalPicker(StockMedModel model, List<Medical> medicals) {
+		initComponents(model);
+		this.medicalMapValues = medicals;
+	}
 	
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -55,12 +91,12 @@ public class MedicalPicker extends javax.swing.JPanel {
 	 */
 	private void initComponents(TableModel model) {
 
-		jPanel3 = new javax.swing.JPanel();
-		jPanel1 = new javax.swing.JPanel();
+		jPanel3 = new JPanel();
+		jPanel1 = new JPanel();
 
-		jPanel3.setBackground(new java.awt.Color(240, 240, 240));
+		jPanel3.setBackground(new Color(240, 240, 240));
 
-		jPanel1.setBackground(new java.awt.Color(240, 240, 240));
+		jPanel1.setBackground(new Color(240, 240, 240));
 
 		setLayout(new BorderLayout(10, 10));
 		add(jPanel1, BorderLayout.CENTER);
@@ -70,8 +106,8 @@ public class MedicalPicker extends javax.swing.JPanel {
 		gbl_jPanel1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gbl_jPanel1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		jPanel1.setLayout(gbl_jPanel1);
-		jScrollPane1 = new javax.swing.JScrollPane();
-		jTableData = new javax.swing.JTable();
+		jScrollPane1 = new JScrollPane();
+		jTableData = new JTable();
 
 		jTableData.setDefaultRenderer(Object.class, cellRenderer);
 		jTableData.setDefaultRenderer(Double.class, cellRenderer);
@@ -101,14 +137,14 @@ public class MedicalPicker extends javax.swing.JPanel {
 		});
 
 		jTableData.setModel(model);
-		jTableData.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+		jTableData.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableData.setShowVerticalLines(false);
-		jTableData.addMouseListener(new java.awt.event.MouseAdapter() {
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+		jTableData.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
 				jTableDataMouseClicked(evt);
 			}
 
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
 					validateSelection();
 				}
@@ -140,26 +176,23 @@ public class MedicalPicker extends javax.swing.JPanel {
 		gbl_jPanel3.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		jPanel3.setLayout(gbl_jPanel3);
 
-		jLabelImage = new javax.swing.JLabel();
+		jLabelImage = new JLabel();
 
-		jLabelImage.setText(MessageBundle.getMessage("aangal.common.search.txt"));
+		jLabelImage.setText(MessageBundle.getMessage("angal.common.search.txt"));
 		GridBagConstraints gbc_jLabelImage = new GridBagConstraints();
 		gbc_jLabelImage.anchor = GridBagConstraints.WEST;
 		gbc_jLabelImage.insets = new Insets(0, 15, 0, 5);
 		gbc_jLabelImage.gridx = 0;
 		gbc_jLabelImage.gridy = 0;
 		jPanel3.add(jLabelImage, gbc_jLabelImage);
-		jTextFieldFind = new javax.swing.JTextField();
-		
+		jTextFieldFind = new JTextField();
 		jTextFieldFind.setText(searchCode);
-		jTextFieldFind.setName("textRecherche");
 		GridBagConstraints gbc_jTextFieldFind = new GridBagConstraints();
 		gbc_jTextFieldFind.insets = new Insets(0, 0, 0, 15);
 		gbc_jTextFieldFind.fill = GridBagConstraints.HORIZONTAL;
 		gbc_jTextFieldFind.gridx = 1;
 		gbc_jTextFieldFind.gridy = 0;
 		jPanel3.add(jTextFieldFind, gbc_jTextFieldFind);
-		
 		jTextFieldFind.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
@@ -169,11 +202,10 @@ public class MedicalPicker extends javax.swing.JPanel {
 				for (Medical aMed : medicalMapValues) {
 						medList.add(aMed);
 				}
-				
 				StockMedModel model = new StockMedModel(medList);
 				jTableData.setModel(model);
 				TableColumn column;
-				for(int i = 0; i < 3; i++) {
+				for(int i = 0; i < 2; i++) {
 					column = jTableData.getColumnModel().getColumn(i);
 					if(i == 1) {
 						column.setPreferredWidth(375);
@@ -210,7 +242,6 @@ public class MedicalPicker extends javax.swing.JPanel {
 		jTextFieldFind.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					validateSelection();
 				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -220,49 +251,39 @@ public class MedicalPicker extends javax.swing.JPanel {
 						if (jTableData.getRowCount() > selectedRow) {
 							jTableData.setRowSelectionInterval(selectedRow, selectedRow);
 							jTableData.scrollRectToVisible(new Rectangle(jTableData.getCellRect(selectedRow, 0, true)));
-
 						}
 					}
-					jTableData.updateUI();
 				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
 					int selectedRow = jTableData.getSelectedRow();
 					if (jTableData.getRowCount() > 0 && selectedRow > 0) {
 						selectedRow--;
-						
 						jTableData.setRowSelectionInterval(selectedRow, selectedRow);
-						
 						jTableData.scrollRectToVisible(new Rectangle(jTableData.getCellRect(selectedRow, 0, true)));
-
 					}
-					jTableData.updateUI();
 				}
+				jTableData.updateUI();
 				super.keyPressed(e);
 			}
 		});
 
-		jPanel2 = new javax.swing.JPanel();
-		jButtonSelect = new javax.swing.JButton();
-		jButtonQuit = new javax.swing.JButton();
-
-		jPanel2.setBackground(new java.awt.Color(240, 240, 240));
-
+		jPanel2 = new JPanel();
+		jButtonSelect = new JButton();
+		jButtonQuit = new JButton();
+		jPanel2.setBackground(new Color(240, 240, 240));
 		jButtonSelect.setText(MessageBundle.getMessage("angal.common.select.btn"));
 		jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
-		jButtonSelect.addMouseListener(new java.awt.event.MouseAdapter() {
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+		jButtonSelect.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
 				jButtonSelectMouseClicked(evt);
 			}
 		});
-		jButtonSelect.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButtonSelectActionPerformed(evt);
-			}
+		jButtonSelect.addActionListener( actionEvent -> {
+				jButtonSelectActionPerformed(actionEvent);
 		});
-
 		jButtonQuit.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
 		jButtonQuit.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-		jButtonQuit.addMouseListener(new java.awt.event.MouseAdapter() {
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+		jButtonQuit.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
 				jButtonQuitMouseClicked(evt);
 			}
 		});
@@ -277,7 +298,7 @@ public class MedicalPicker extends javax.swing.JPanel {
 
 	}
 
-	private void jTableDataMouseClicked(java.awt.event.MouseEvent evt) {
+	private void jTableDataMouseClicked(MouseEvent evt) {
 
 	}
 
@@ -288,55 +309,19 @@ public class MedicalPicker extends javax.swing.JPanel {
 
 	}
 
-	private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {
+	private void jButtonSelectActionPerformed(ActionEvent evt) {
 
 	}
 
-	private void jButtonSelectMouseClicked(java.awt.event.MouseEvent evt) {
+	private void jButtonSelectMouseClicked(MouseEvent evt) {
 		this.setSelectedRow(this.jTableData.getSelectedRow());
 		this.setVisible(false);
 		this.getParentFrame().dispose();
 	}
 
-	private void jButtonQuitMouseClicked(java.awt.event.MouseEvent evt) {
+	private void jButtonQuitMouseClicked(MouseEvent evt) {
 		this.setVisible(false);
 		this.getParentFrame().dispose();
 	}
-
-	private int selectedRow = -1;
-
-	private int getSelectedRow() {
-		return selectedRow;
-	}
-
-	public Medical getSelectedMedical() {
-		StockMedModel model = (StockMedModel) jTableData.getModel();
-		return model.getMedicalAtRow(this.getSelectedRow());
-	}
-
-	private void setSelectedRow(int selectedRow) {
-		this.selectedRow = selectedRow;
-	}
-
-	private JDialog parentFrame;
-
-	public JDialog getParentFrame() {
-		return parentFrame;
-	}
-
-	public void setParentFrame(JDialog parentFrame) {
-		this.parentFrame = parentFrame;
-	}
-
-	private javax.swing.JButton jButtonSelect;
-	private javax.swing.JButton jButtonQuit;
-	private javax.swing.JLabel jLabelImage;
-	private javax.swing.JPanel jPanel1;
-	private javax.swing.JPanel jPanel2;
-	private javax.swing.JPanel jPanel3;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JTable jTableData;
-	private javax.swing.JTextField jTextFieldFind;
-
 }
 
