@@ -21,20 +21,24 @@
  */
 package org.isf.medicalinventory.gui;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -48,12 +52,20 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.medicalinventory.gui.InventoryBrowser.InventoryBrowsingModel;
+import org.isf.medicalinventory.gui.InventoryEdit.InventoryListener;
+import org.isf.medicalinventory.manager.MedicalInventoryManager;
+import org.isf.medicalinventory.model.MedicalInventory;
+import org.isf.menu.manager.Context;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.InventoryStatus;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 
-public class InventoryBrowser extends ModalJFrame {
+public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 	private GoodDateChooser jCalendarTo;
 	private GoodDateChooser jCalendarFrom;
@@ -86,6 +98,8 @@ public class InventoryBrowser extends ModalJFrame {
 	private static int PAGE_SIZE = 50;
 	private int START_INDEX = 0;
 	private int TOTAL_ROWS;
+	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
+	private List<MedicalInventory> inventoryList;
 
 	public InventoryBrowser() {
 		initComponents();
@@ -107,7 +121,14 @@ public class InventoryBrowser extends ModalJFrame {
 		getContentPane().add(panelFooter, BorderLayout.SOUTH);
 
 		ajustWidth();
-
+		addWindowListener(new WindowAdapter(){	
+			public void windowClosing(WindowEvent e) {
+				if(inventoryList!=null){
+					inventoryList.clear();
+				}
+				dispose();
+			}			
+		});
 		pagesCombo.setEditable(true);
 		previous.setEnabled(false);
 		next.setEnabled(false);
@@ -230,10 +251,10 @@ public class InventoryBrowser extends ModalJFrame {
 	private JPanel getPanelFooter() {
 		if (panelFooter == null) {
 			panelFooter = new JPanel();
-			next = new JButton(MessageBundle.getMessage("angal.visit.nextarrow.btn"));
-			next.setMnemonic(MessageBundle.getMnemonic("angal.visit.nextarrow.btn.key"));
-			previous = new JButton(MessageBundle.getMessage("angal.visit.arrowprevious.btn"));
-			next.setMnemonic(MessageBundle.getMnemonic("angal.visit.arrowprevious.btn.key"));
+			next = new JButton(MessageBundle.getMessage("angal.inventory.nextarrow.btn"));
+			next.setMnemonic(KeyEvent.VK_RIGHT);
+			previous = new JButton(MessageBundle.getMessage("angal.inventory.arrowprevious.btn"));
+			next.setMnemonic(KeyEvent.VK_LEFT);
 
 			panelFooter.add(previous);
 			panelFooter.add(pagesCombo);
@@ -294,6 +315,24 @@ public class InventoryBrowser extends ModalJFrame {
 	private JButton getNewButton() {
 		jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
+		jButtonNew.addActionListener(actionEvent -> {
+			String status = InventoryStatus.draft.toString();
+			List<MedicalInventory> medicalInventories = new ArrayList<>();
+			try {
+				medicalInventories = medicalInventoryManager.getMedicalInventoryByStatus(status);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
+			if (medicalInventories.size() == 0) {
+				InventoryEdit inventoryEdit = new InventoryEdit();
+				InventoryEdit.addInventoryListener(InventoryBrowser.this);
+				inventoryEdit.showAsModal(InventoryBrowser.this);	
+			} else {
+				MessageDialog.error(null, "angal.inventory.cannotcreateanotherinventorywithstatusdraft.msg");
+				return;
+			}
+			
+		});
 		return jButtonNew;
 	}
 
@@ -405,9 +444,7 @@ public class InventoryBrowser extends ModalJFrame {
 			for (InventoryStatus currentState : InventoryStatus.values()) {
 				stateComboBox.addItem(MessageBundle.getMessage("angal.inventory."+currentState));
 			}
-			stateComboBox.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
+			stateComboBox.addActionListener(actionEvent -> {
 					InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
 					TOTAL_ROWS = inventoryModel.getRowCount();
 					START_INDEX = 0;
@@ -419,7 +456,6 @@ public class InventoryBrowser extends ModalJFrame {
 					}
 					jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
 					initialiseCombo(TOTAL_ROWS);
-				}
 			});
 		}
 		return stateComboBox;
@@ -447,5 +483,13 @@ public class InventoryBrowser extends ModalJFrame {
 		} else {
 			under.setText("/" + total_rows / PAGE_SIZE + " Pages");
 		}
+	}
+
+	@Override
+	public void InventoryCancelled(AWTEvent e) {
+		if (inventoryList!=null) {
+			inventoryList.clear();
+		}
+		jTableInventory.setModel(new InventoryBrowsingModel());		
 	}
 }
