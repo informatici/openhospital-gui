@@ -29,6 +29,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
@@ -250,10 +251,10 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JPanel getPanelFooter() {
 		if (panelFooter == null) {
 			panelFooter = new JPanel();
-			next = new JButton(MessageBundle.getMessage("angal.visit.nextarrow.btn"));
-			next.setMnemonic(MessageBundle.getMnemonic("angal.visit.nextarrow.btn.key"));
-			previous = new JButton(MessageBundle.getMessage("angal.visit.arrowprevious.btn"));
-			next.setMnemonic(MessageBundle.getMnemonic("angal.visit.arrowprevious.btn.key"));
+			next = new JButton(MessageBundle.getMessage("angal.inventory.nextarrow.btn"));
+			next.setMnemonic(KeyEvent.VK_RIGHT);
+			previous = new JButton(MessageBundle.getMessage("angal.inventory.arrowprevious.btn"));
+			next.setMnemonic(KeyEvent.VK_LEFT);
 
 			panelFooter.add(previous);
 			panelFooter.add(pagesCombo);
