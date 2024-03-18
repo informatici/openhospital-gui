@@ -32,7 +32,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -106,9 +105,11 @@ public class InventoryEdit extends ModalJFrame {
 
 	private static EventListenerList InventoryListeners = new EventListenerList();
 
-	public interface InventoryListener extends java.util.EventListener {
+	public interface InventoryListener extends EventListener {
 
 		public void InventoryInserted(AWTEvent e);
+		
+		public void InventoryUpdated(AWTEvent e);
 
 		public void InventoryCancelled(AWTEvent e);
 	}
@@ -134,10 +135,9 @@ public class InventoryEdit extends ModalJFrame {
 		for (int i = 0; i < listeners.length; i++)
 			((InventoryListener) listeners[i]).InventoryInserted(event);
 	}
-
-	private void fireInventoryCancelled() {
+	
+	private void fireInventoryUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-
 			/**
 			 * 
 			 */
@@ -146,10 +146,9 @@ public class InventoryEdit extends ModalJFrame {
 
 		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
 		for (int i = 0; i < listeners.length; i++)
-			((InventoryListener) listeners[i]).InventoryCancelled(event);
+			((InventoryListener) listeners[i]).InventoryUpdated(event);
 	}
 
-	private GoodDateChooser jCalendarTo;
 	private GoodDateChooser jCalendarInventory;
 	private LocalDateTime dateInventory = TimeTools.getServerDateTime();
 	private JLabel jLabelTo;
@@ -185,8 +184,6 @@ public class InventoryEdit extends ModalJFrame {
 	private JTextField referenceTextField;
 	private JTextField jTetFieldEditor;
 	private JButton moreData;
-	private int MAX_COUNT = 30;
-	private int CURRENT_INDEX = 0;
 	private boolean MORE_DATA = true;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private MedicalInventoryRowManager medicalInventoryRowManager = Context.getApplicationContext().getBean(MedicalInventoryRowManager.class);
@@ -203,6 +200,8 @@ public class InventoryEdit extends ModalJFrame {
 		mode = modee;
 		initComponents();
 		if (mode.equals("view")) {
+			validateButton.setVisible(false);
+			saveButton.setVisible(false);
 			columnEditable = columnEditableView;
 		}
 
@@ -402,21 +401,15 @@ public class InventoryEdit extends ModalJFrame {
 				try {
 					meInventory = medicalInventoryManager.newMedicalInventory(inventory);
 					if (meInventory != null) {
-						inventory.setId(meInventory.getId());
 						MedicalInventoryRow currentInventoryRow;
-						Double totalCost = 0.0;
 						for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator.hasNext();) {
 							MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
-							medicalInventoryRow.setInventory(inventory);
+							medicalInventoryRow.setInventory(meInventory);
 							currentInventoryRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 							if (currentInventoryRow == null) {
 								checkResults++;
-							} else {
-								medicalInventoryRow.setId(currentInventoryRow.getId());
-								totalCost += medicalInventoryRow.getLot().getCost().doubleValue();
 							}
 						}
-
 						if (checkResults == 0) {
 							// enable validation
 							mode = "update";
@@ -434,7 +427,7 @@ public class InventoryEdit extends ModalJFrame {
 			} else if ((inventory != null) && (mode.equals("update"))) {
 				checkResults = 0;
 				boolean toUpdate = false;
-				MedicalInventory result = null;
+				MedicalInventory medIventory = null;
 				if (!inventory.getInventoryDate().equals(dateInventory)) {
 					inventory.setInventoryDate(dateInventory);
 					toUpdate = true;
@@ -445,13 +438,12 @@ public class InventoryEdit extends ModalJFrame {
 				}
 				if (toUpdate) {
 					try {
-						result = medicalInventoryManager.updateMedicalInventory(inventory);
+						medIventory = medicalInventoryManager.updateMedicalInventory(inventory);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
-				if (result != null) {
-					Double totalCost = 0.0;
+				if (medIventory != null) {
 					try {
 						for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator
 										.hasNext();) {
@@ -460,17 +452,14 @@ public class InventoryEdit extends ModalJFrame {
 							if (updateMedicalInvRow != null) {
 								checkResults++;
 							}
-
-							totalCost += medicalInventoryRow.getLot().getCost().doubleValue();
 						}
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
 					if (checkResults == 0) {
-						DecimalFormat formatter = new DecimalFormat("#,##0.00");
 						MessageDialog.error(null, "angal.inventoryoperation.update.succes.msg");
 						validateButton.setEnabled(true);
-						// fireInventoryUpdated();
+						fireInventoryUpdated();
 					} else {
 						MessageDialog.error(null, "angal.inventoryrowoperation.update.error.msg");
 					}
@@ -870,7 +859,6 @@ public class InventoryEdit extends ModalJFrame {
 		moreData.addActionListener(actionEvent -> {
 			if (MORE_DATA && inventory == null) {
 				List<Medical> medicalList = new ArrayList<Medical>();
-				CURRENT_INDEX += MAX_COUNT;
 				try {
 					medicalList = medicalBrowsingManager.getMedicals();
 				} catch (OHServiceException e) {
@@ -912,7 +900,7 @@ public class InventoryEdit extends ModalJFrame {
 		double qty = 0.0;
 		for (Iterator iterator = lots.iterator(); iterator.hasNext();) {
 			Lot lot = (Lot) iterator.next();
-			qty += lot.getOverallQuantity();
+			qty = qty + lot.getOverallQuantity();
 		}
 		return qty;
 	}
@@ -969,8 +957,9 @@ public class InventoryEdit extends ModalJFrame {
 						}
 					}
 				}
-				if (!found)
+				if (!found) {
 					medicalList.add(medical);
+				}
 			} else {
 				medical = chooseMedical(code);
 				if (medical != null) {
@@ -996,9 +985,8 @@ public class InventoryEdit extends ModalJFrame {
 			for (Iterator iterator = medicalList.iterator(); iterator.hasNext();) {
 				medical = (Medical) iterator.next();
 				lots = movStockInsertingManager.getLotByMedical(medical);
-				quantityOutsideLot = medical.getTotalQuantity() - getQtyInALot(lots);
-				if ((lots.size() == 0) || (quantityOutsideLot != 0)) {
-					inventoryRowTemp = new MedicalInventoryRow(0, quantityOutsideLot, quantityOutsideLot, null, medical, new Lot("", null, null));
+				if (lots.size() == 0) {
+					inventoryRowTemp = new MedicalInventoryRow(0, 0.0, 0.0, null, medical, new Lot("", null, null));
 					inventoryRowsList.add(inventoryRowTemp);
 				}
 				for (Iterator iterator2 = lots.iterator(); iterator2.hasNext();) {
@@ -1013,10 +1001,6 @@ public class InventoryEdit extends ModalJFrame {
 				inventoryRowsList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId()).stream().filter(medRow -> medRow.getMedical().getProdCode().equals(medicalCode)).toList();
 			}
 		}
-		if (inventoryRowSearchList == null) {
-			inventoryRowSearchList = new ArrayList<MedicalInventoryRow>();
-		}
-
 		for (MedicalInventoryRow inventoryRow : inventoryRowsList) {
 			boolean found = false;
 			for (MedicalInventoryRow row : inventoryRowSearchList) {
@@ -1024,8 +1008,9 @@ public class InventoryEdit extends ModalJFrame {
 					found = true;
 				}
 			}
-			if (!found)
+			if (!found) {
 				inventoryRowSearchList.add(inventoryRow);
+			}
 		}
 		jTableInventoryRow.updateUI();
 	}

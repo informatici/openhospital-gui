@@ -35,7 +35,6 @@ import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -52,7 +51,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
-import org.isf.medicalinventory.gui.InventoryBrowser.InventoryBrowsingModel;
 import org.isf.medicalinventory.gui.InventoryEdit.InventoryListener;
 import org.isf.medicalinventory.manager.MedicalInventoryManager;
 import org.isf.medicalinventory.model.MedicalInventory;
@@ -61,9 +59,13 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.InventoryStatus;
+import org.isf.utils.jobjects.InventoryType;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
+import org.springframework.data.domain.Page;
+
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
 public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
@@ -123,9 +125,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		ajustWidth();
 		addWindowListener(new WindowAdapter(){	
 			public void windowClosing(WindowEvent e) {
-				if(inventoryList!=null){
-					inventoryList.clear();
-				}
 				dispose();
 			}			
 		});
@@ -274,10 +273,21 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		if (jCalendarTo == null) {
 			jCalendarTo = new GoodDateChooser(LocalDate.now());
 			jCalendarTo.addDateChangeListener(event -> {
-				LocalDate newDate = event.getNewDate();
-				if (newDate != null) {
-					dateTo = newDate.atTime(LocalTime.MAX);
+				dateTo = jCalendarTo.getDateStartOfDay();
+				if (inventoryList != null) {
+					inventoryList.clear();
 				}
+				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
+				TOTAL_ROWS = inventoryModel.getRowCount();
+				START_INDEX = 0;
+				previous.setEnabled(false);
+				if (TOTAL_ROWS <= PAGE_SIZE){
+					next.setEnabled(false);
+				} else {
+					next.setEnabled(true);
+				}
+				jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
+				initialiseCombo(TOTAL_ROWS);
 			});
 		}
 		return jCalendarTo;
@@ -287,9 +297,21 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		if (jCalendarFrom == null) {
 			jCalendarFrom = new GoodDateChooser(LocalDate.now());
 			jCalendarFrom.addDateChangeListener(event -> {
-				LocalDate newDate = event.getNewDate();
-				if (newDate != null) {
-					dateFrom = newDate.atTime(LocalTime.MAX);				}
+				dateFrom = jCalendarFrom.getDateStartOfDay();
+				if (inventoryList != null) {
+					inventoryList.clear();
+				}
+				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
+				TOTAL_ROWS = inventoryModel.getRowCount();
+				START_INDEX = 0;
+				previous.setEnabled(false);
+				if (TOTAL_ROWS <= PAGE_SIZE){
+					next.setEnabled(false);
+				} else {
+					next.setEnabled(true);
+				}
+				jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
+				initialiseCombo(TOTAL_ROWS);
 			});
 		}
 		return jCalendarFrom;
@@ -393,9 +415,26 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		private static final long serialVersionUID = 1L;
 
 		public InventoryBrowsingModel() {
+			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase(): null;
+			String type = InventoryType.principal.toString();
+			try {
+				inventoryList = medicalInventoryManager.getMedicalInventoryByParams(dateFrom, dateTo, state, type);
+				System.out.println(inventoryList.size()+" size ");
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}	
 		}
-
+		
 		public InventoryBrowsingModel(int start_index, int page_size) {
+			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
+			String type = InventoryType.principal.toString();
+			
+			try {
+				Page<MedicalInventory> medInventorypage = medicalInventoryManager.getMedicalInventoryByParamsPageable(dateFrom, dateTo, state, type, start_index, page_size);
+				inventoryList = medInventorypage.getContent();
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}	
 		}
 
 		public Class< ? > getColumnClass(int c) {
@@ -411,6 +450,12 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			return null;
 		}
 
+		public int getRowCount() {
+			if (inventoryList == null)
+				return 0;
+			return inventoryList.size();
+		}
+		
 		public String getColumnName(int c) {
 			return pColums[c];
 		}
@@ -419,6 +464,22 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			return pColums.length;
 		}
 
+		public Object getValueAt(int r, int c) {
+			MedicalInventory medInvt = inventoryList.get(r);
+			if (c == -1) {
+				return medInvt;
+			} else if (c == 0) {
+				return medInvt.getInventoryReference();
+			} else if (c == 1) {
+				return medInvt.getInventoryDate().format(DATE_TIME_FORMATTER);
+			} else if (c == 2) {
+				return medInvt.getStatus();
+			} else if (c == 3) {
+				return medInvt.getUser();
+			} 
+			return null;
+		}
+		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
@@ -498,6 +559,12 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		if(inventoryList!=null) {
 			inventoryList.clear();
 		}
+		jTableInventory.setModel(new InventoryBrowsingModel());
+	}
+	
+	@Override
+	public void InventoryUpdated(AWTEvent e) {
+		if(inventoryList!=null) inventoryList.clear();
 		jTableInventory.setModel(new InventoryBrowsingModel());
 	}
 }
