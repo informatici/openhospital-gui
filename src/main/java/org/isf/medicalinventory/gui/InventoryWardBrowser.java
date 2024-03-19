@@ -45,12 +45,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.medicalinventory.gui.InventoryWardEdit.InventoryListener;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.InventoryState;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 
-public class InventoryWardBrowser extends ModalJFrame {
+public class InventoryWardBrowser extends ModalJFrame implements InventoryListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -243,6 +244,13 @@ public class InventoryWardBrowser extends ModalJFrame {
     private JButton getNewButton() {
         newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
         newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
+        newButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                InventoryWardEdit inventoryWardEdit = new InventoryWardEdit();
+                InventoryWardEdit.addInventoryListener(InventoryWardBrowser.this);
+                inventoryWardEdit.showAsModal(InventoryWardBrowser.this);
+            }
+        });
         return newButton;
     }
 
