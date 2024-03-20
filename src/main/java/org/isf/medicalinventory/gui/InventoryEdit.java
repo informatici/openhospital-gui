@@ -1007,7 +1007,7 @@ public class InventoryEdit extends ModalJFrame {
 			dialog.setSize(600, 350);
 			dialog.setLocationRelativeTo(null);
 			dialog.setModal(true);
-			dialog.setTitle(MessageBundle.getMessage("angal.inventory.selectmedical"));
+			dialog.setTitle(MessageBundle.getMessage("angal.medicalstock.multiplecharging.selectmedical.title"));
 			framas.setParentFrame(dialog);
 			dialog.setContentPane(framas);
 			dialog.setVisible(true);
