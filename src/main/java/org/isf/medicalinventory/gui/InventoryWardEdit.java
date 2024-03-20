@@ -31,11 +31,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
