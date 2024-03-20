@@ -302,7 +302,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				TOTAL_ROWS = inventoryModel.getRowCount();
 				START_INDEX = 0;
 				previous.setEnabled(false);
-				if (TOTAL_ROWS <= PAGE_SIZE){
+				if (TOTAL_ROWS <= PAGE_SIZE) {
 					next.setEnabled(false);
 				} else {
 					next.setEnabled(true);
