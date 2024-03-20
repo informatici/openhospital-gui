@@ -298,9 +298,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			jCalendarFrom = new GoodDateChooser(LocalDate.now());
 			jCalendarFrom.addDateChangeListener(event -> {
 				dateFrom = jCalendarFrom.getDateStartOfDay();
-				if (inventoryList != null) {
-					inventoryList.clear();
-				}
 				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
 				TOTAL_ROWS = inventoryModel.getRowCount();
 				START_INDEX = 0;
@@ -415,17 +412,18 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		private static final long serialVersionUID = 1L;
 
 		public InventoryBrowsingModel() {
+			inventoryList = new ArrayList<>();
 			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase(): null;
 			String type = InventoryType.principal.toString();
 			try {
 				inventoryList = medicalInventoryManager.getMedicalInventoryByParams(dateFrom, dateTo, state, type);
-				System.out.println(inventoryList.size()+" size ");
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}	
 		}
 		
 		public InventoryBrowsingModel(int start_index, int page_size) {
+			inventoryList = new ArrayList<>();
 			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
 			String type = InventoryType.principal.toString();
 			
