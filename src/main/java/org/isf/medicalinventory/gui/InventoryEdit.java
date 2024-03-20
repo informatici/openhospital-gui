@@ -1034,7 +1034,7 @@ public class InventoryEdit extends ModalJFrame {
 
 	private JLabel getReferenceLabel() {
 		if (referenceLabel == null) {
-			referenceLabel = new JLabel(MessageBundle.getMessage("aangal.common.reference.label"));
+			referenceLabel = new JLabel(MessageBundle.getMessage("angal.common.reference.label"));
 		}
 		return referenceLabel;
 	}
