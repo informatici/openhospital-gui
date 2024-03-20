@@ -356,8 +356,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	}
 
 	private JButton getViewButton() {
-		jButtonView = new JButton(MessageBundle.getMessage("angal.common.view.btn"));
-		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.common.view.btn.key"));
+		jButtonView = new JButton(MessageBundle.getMessage("angal.inventory.view.btn"));
+		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.inventory.view.btn.key"));
 		return jButtonView;
 	}
 
