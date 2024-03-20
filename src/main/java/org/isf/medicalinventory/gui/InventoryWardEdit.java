@@ -363,17 +363,8 @@ public class InventoryWardEdit extends ModalJFrame {
         }
     }
 
-    public String formatDateTime(GregorianCalendar time) {
-        if (time == null)
-            return "";
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy"); //$NON-NLS-1$
-        return format.format(time.getTime());
-    }
-
     class DecimalFormatRenderer extends DefaultTableCellRenderer {
-        /**
-         * 
-         */
+
         private static final long serialVersionUID = 1L;
         private final DecimalFormat formatter = new DecimalFormat("#,##0.00"); //$NON-NLS-1$
 
