@@ -51,6 +51,7 @@ import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
@@ -125,20 +126,6 @@ public class InventoryEdit extends ModalJFrame {
 		InventoryListeners.remove(InventoryListener.class, listener);
 	}
 
-	private void fireInventoryInserted() {
-		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-		};
-
-		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((InventoryListener) listeners[i]).InventoryInserted(event);
-	}
-
 	private void fireInventoryUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
@@ -188,7 +175,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JTextField referenceTextField;
 	private JTextField jTetFieldEditor;
 	private JButton moreData;
-	private boolean MORE_DATA = true;
+	private static boolean MORE_DATA = true;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private MedicalInventoryRowManager medicalInventoryRowManager = Context.getApplicationContext().getBean(MedicalInventoryRowManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
@@ -989,7 +976,7 @@ public class InventoryEdit extends ModalJFrame {
 	}
 
 	private Medical chooseMedical(String text) throws OHServiceException {
-		HashMap<String, Medical> medicalMap;
+		Map<String, Medical> medicalMap;
 		List<Medical> medicals = medicalBrowsingManager.getMedicals();
 		if (mode.equals("update")) {
 			medicals.clear();

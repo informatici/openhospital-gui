@@ -98,8 +98,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	JComboBox pagesCombo = new JComboBox();
 	JLabel under = new JLabel("/ 0 Page");
 	private static int PAGE_SIZE = 50;
-	private int START_INDEX = 0;
-	private int TOTAL_ROWS;
+	private int startIndex = 0;
+	private int totalRows;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private List<MedicalInventory> inventoryList;
 
@@ -135,24 +135,24 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				if (!previous.isEnabled()) {
 					previous.setEnabled(true);
 				}
-				START_INDEX += PAGE_SIZE;
-				jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
-				if ((START_INDEX + PAGE_SIZE) > TOTAL_ROWS) {
+				startIndex += PAGE_SIZE;
+				jTableInventory.setModel(new InventoryBrowsingModel(startIndex, PAGE_SIZE));
+				if ((startIndex + PAGE_SIZE) > totalRows) {
 					next.setEnabled(false);
 				}
-				pagesCombo.setSelectedItem(START_INDEX / PAGE_SIZE + 1);
+				pagesCombo.setSelectedItem(startIndex / PAGE_SIZE + 1);
 		});
 
 		previous.addActionListener(actionEvent -> {
 				if (!next.isEnabled()) {
 					next.setEnabled(true);
 				}
-				START_INDEX -= PAGE_SIZE;
-				jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
-				if (START_INDEX < PAGE_SIZE) {
+				startIndex -= PAGE_SIZE;
+				jTableInventory.setModel(new InventoryBrowsingModel(startIndex, PAGE_SIZE));
+				if (startIndex < PAGE_SIZE) {
 					previous.setEnabled(false);
 				}
-				pagesCombo.setSelectedItem(START_INDEX / PAGE_SIZE + 1);
+				pagesCombo.setSelectedItem(startIndex / PAGE_SIZE + 1);
 		});
 		pagesCombo.addItemListener(new ItemListener() {
 
@@ -161,9 +161,9 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 				if (eventID == ItemEvent.SELECTED) {
 					int page_number = (Integer) pagesCombo.getSelectedItem();
-					START_INDEX = (page_number - 1) * PAGE_SIZE;
+					startIndex = (page_number - 1) * PAGE_SIZE;
 
-					if ((START_INDEX + PAGE_SIZE) > TOTAL_ROWS) {
+					if ((startIndex + PAGE_SIZE) > totalRows) {
 						next.setEnabled(false);
 					} else {
 						next.setEnabled(true);
@@ -173,8 +173,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 					} else {
 						previous.setEnabled(true);
 					}
-					pagesCombo.setSelectedItem(START_INDEX / PAGE_SIZE + 1);
-					jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
+					pagesCombo.setSelectedItem(startIndex / PAGE_SIZE + 1);
+					jTableInventory.setModel(new InventoryBrowsingModel(startIndex, PAGE_SIZE));
 
 					pagesCombo.setEnabled(true);
 				}
@@ -278,16 +278,16 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 					inventoryList.clear();
 				}
 				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
-				TOTAL_ROWS = inventoryModel.getRowCount();
-				START_INDEX = 0;
+				totalRows = inventoryModel.getRowCount();
+				startIndex = 0;
 				previous.setEnabled(false);
-				if (TOTAL_ROWS <= PAGE_SIZE){
+				if (totalRows <= PAGE_SIZE){
 					next.setEnabled(false);
 				} else {
 					next.setEnabled(true);
 				}
-				jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
-				initialiseCombo(TOTAL_ROWS);
+				jTableInventory.setModel(new InventoryBrowsingModel(startIndex, PAGE_SIZE));
+				initialiseCombo(totalRows);
 			});
 		}
 		return jCalendarTo;
@@ -299,16 +299,16 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			jCalendarFrom.addDateChangeListener(event -> {
 				dateFrom = jCalendarFrom.getDateStartOfDay();
 				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
-				TOTAL_ROWS = inventoryModel.getRowCount();
-				START_INDEX = 0;
+				totalRows = inventoryModel.getRowCount();
+				startIndex  = 0;
 				previous.setEnabled(false);
-				if (TOTAL_ROWS <= PAGE_SIZE){
+				if (totalRows <= PAGE_SIZE){
 					next.setEnabled(false);
 				} else {
 					next.setEnabled(true);
 				}
-				jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
-				initialiseCombo(TOTAL_ROWS);
+				jTableInventory.setModel(new InventoryBrowsingModel(startIndex , PAGE_SIZE));
+				initialiseCombo(totalRows);
 			});
 		}
 		return jCalendarFrom;
@@ -356,8 +356,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	}
 
 	private JButton getViewButton() {
-		jButtonView = new JButton(MessageBundle.getMessage("angal.inventory.view.btn"));
-		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.inventory.view.btn.key"));
+		jButtonView = new JButton(MessageBundle.getMessage("angal.common.view.btn"));
+		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.common.view.btn.key"));
 		return jButtonView;
 	}
 
@@ -422,13 +422,13 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			}	
 		}
 		
-		public InventoryBrowsingModel(int start_index, int page_size) {
+		public InventoryBrowsingModel(int startIndex, int pageSize) {
 			inventoryList = new ArrayList<>();
 			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
 			String type = InventoryType.principal.toString();
 			
 			try {
-				Page<MedicalInventory> medInventorypage = medicalInventoryManager.getMedicalInventoryByParamsPageable(dateFrom, dateTo, state, type, start_index, page_size);
+				Page<MedicalInventory> medInventorypage = medicalInventoryManager.getMedicalInventoryByParamsPageable(dateFrom, dateTo, state, type, startIndex, pageSize);
 				inventoryList = medInventorypage.getContent();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
@@ -505,16 +505,16 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			}
 			stateComboBox.addActionListener(actionEvent -> {
 					InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
-					TOTAL_ROWS = inventoryModel.getRowCount();
-					START_INDEX = 0;
+					totalRows = inventoryModel.getRowCount();
+					startIndex = 0;
 					previous.setEnabled(false);
-					if (TOTAL_ROWS <= PAGE_SIZE) {
+					if (totalRows <= PAGE_SIZE) {
 						next.setEnabled(false);
 					} else {
 						next.setEnabled(true);
 					}
-					jTableInventory.setModel(new InventoryBrowsingModel(START_INDEX, PAGE_SIZE));
-					initialiseCombo(TOTAL_ROWS);
+					jTableInventory.setModel(new InventoryBrowsingModel(startIndex, PAGE_SIZE));
+					initialiseCombo(totalRows);
 			});
 		}
 		return stateComboBox;
