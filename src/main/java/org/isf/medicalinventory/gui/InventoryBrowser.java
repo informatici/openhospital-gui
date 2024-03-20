@@ -57,7 +57,6 @@ import org.isf.medicalinventory.gui.InventoryEdit.InventoryListener;
 import org.isf.medicalinventory.manager.MedicalInventoryManager;
 import org.isf.medicalinventory.model.MedicalInventory;
 import org.isf.menu.manager.Context;
-import org.isf.parameters.manager.Param;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
