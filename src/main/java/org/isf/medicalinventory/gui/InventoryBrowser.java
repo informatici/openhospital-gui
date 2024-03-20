@@ -554,7 +554,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 	@Override
 	public void InventoryInserted(AWTEvent e) {
-		if(inventoryList!=null) {
+		if (inventoryList != null) {
 			inventoryList.clear();
 		}
 		jTableInventory.setModel(new InventoryBrowsingModel());
