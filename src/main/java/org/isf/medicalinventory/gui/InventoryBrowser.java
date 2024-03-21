@@ -276,10 +276,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		if (jCalendarTo == null) {
 			jCalendarTo = new GoodDateChooser(LocalDate.now());
 			jCalendarTo.addDateChangeListener(event -> {
-				dateTo = jCalendarTo.getDateStartOfDay();
-				if (inventoryList != null) {
-					inventoryList.clear();
-				}
+				dateTo = jCalendarTo.getDateEndOfDay();
 				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
 				totalRows = inventoryModel.getRowCount();
 				startIndex = 0;
@@ -430,9 +427,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 	class InventoryBrowsingModel extends DefaultTableModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public InventoryBrowsingModel() {
@@ -474,8 +468,9 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		}
 
 		public int getRowCount() {
-			if (inventoryList == null)
+			if (inventoryList == null) {
 				return 0;
+			}
 			return inventoryList.size();
 		}
 
@@ -587,7 +582,9 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 	@Override
 	public void InventoryUpdated(AWTEvent e) {
-		if(inventoryList!=null) inventoryList.clear();
+		if(inventoryList != null) {
+			inventoryList.clear();
+		}
 		jTableInventory.setModel(new InventoryBrowsingModel());
 	}
 }

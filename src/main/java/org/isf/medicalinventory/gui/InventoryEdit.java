@@ -102,9 +102,6 @@ import org.isf.utils.time.TimeTools;
 
 public class InventoryEdit extends ModalJFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static EventListenerList InventoryListeners = new EventListenerList();
@@ -128,10 +125,6 @@ public class InventoryEdit extends ModalJFrame {
 
 	private void fireInventoryUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -332,15 +325,12 @@ public class InventoryEdit extends ModalJFrame {
 
 	private GoodDateChooser getJCalendarFrom() {
 		if (jCalendarInventory == null) {
-			dateInventory = LocalDateTime.now();
 			jCalendarInventory = new GoodDateChooser(LocalDate.now());
 			if (inventory != null) {
 				jCalendarInventory.setDate(inventory.getInventoryDate().toLocalDate());
 			}
-			jCalendarInventory.addPropertyChangeListener("date", new PropertyChangeListener() {
-
-				public void propertyChange(PropertyChangeEvent evt) {
-				}
+			jCalendarInventory.addDateChangeListener(event -> {
+				dateInventory = jCalendarInventory.getDateStartOfDay();
 			});
 		}
 		return jCalendarInventory;
@@ -657,9 +647,6 @@ public class InventoryEdit extends ModalJFrame {
 
 	class DecimalFormatRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private final DecimalFormat formatter = new DecimalFormat("#,##0.00");
 

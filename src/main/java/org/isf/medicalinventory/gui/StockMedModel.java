@@ -31,9 +31,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.utils.db.NormalizeString;
 
 public class StockMedModel extends DefaultTableModel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Medical> medList;
 	private ArrayList<Medical> initList=new ArrayList<Medical>();
@@ -43,8 +41,9 @@ public class StockMedModel extends DefaultTableModel {
 		initList.addAll(medList);
 	}
 	public int getRowCount() {
-		if (medList == null)
+		if (medList == null) {
 			return 0;
+		}
 		return medList.size();
 	}
 
@@ -55,7 +54,7 @@ public class StockMedModel extends DefaultTableModel {
 		if (c == 1) {
 			return MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
 		}
-		return ""; //$NON-NLS-1$
+		return "";
 	}
 
 	public int getColumnCount() {
@@ -74,20 +73,20 @@ public class StockMedModel extends DefaultTableModel {
 		return null;
 	}
 	
-	public void filter(String searchValue){
+	public void filter(String searchValue) {
 		medList.clear();
 		for (Iterator<Medical> iterator = initList.iterator(); iterator.hasNext();) {
 			Medical med = (Medical) iterator.next();
-			if(med.getProdCode().trim().equalsIgnoreCase(searchValue.trim())){
+			if (med.getProdCode().trim().equalsIgnoreCase(searchValue.trim())) {
 				medList.add(med);
 			}
-			else if(NormalizeString.normalizeContains(med.getProdCode().toLowerCase().trim()+med.getDescription().toLowerCase(), searchValue.toLowerCase().trim())){
+			else if (NormalizeString.normalizeContains(med.getProdCode().toLowerCase().trim()+med.getDescription().toLowerCase(), searchValue.toLowerCase().trim())) {
 				medList.add(med);
 			}
 		}
 	}
-	public Medical getMedicalAtRow(int row){
-		if(medList.size()>row && row>=0){
+	public Medical getMedicalAtRow(int row) {
+		if (medList.size() > row && row >= 0) {
 			return medList.get(row);
 		}
 		return null;
