@@ -366,26 +366,29 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		jButtonEdit.addActionListener(actionEvent -> {
 			MedicalInventory inventory = new MedicalInventory();
-			int selecedRow = jTableInventory.getSelectedRow();
-			if(selecedRow == 1 ){
-				inventory = inventoryList.get(selecedRow);
-				if(inventory.getStatus().equals(InventoryStatus.validated.toString())){
-					MessageDialog.error(null, "angal.inventory.noteditable");
-						return;
-					}
-					if(inventory.getStatus().equals(InventoryStatus.canceled.toString())){
-						MessageDialog.error(null, "angal.inventory.cancelednoteditable");
-						return;
-					}
-					InventoryEdit inventoryEdit = new InventoryEdit(inventory,"update");
-					InventoryEdit.addInventoryListener(InventoryBrowser.this);
-					inventoryEdit.showAsModal(InventoryBrowser.this);
-				} else {
-					MessageDialog.error(null, "angal.inventory.pleaseselectonlyoneinventory.msg");
-					return;
-				}
-		});return jButtonEdit;
-
+			if (jTableInventory.getSelectedRowCount() > 1) {
+				MessageDialog.error(this, "angal.inventory.pleaseselectonlyoneinventory.msg");
+				return;
+			}
+			int selectedRow = jTableInventory.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.error(this, "angal.inventory.pleaseselectinventory.msg");
+				return;
+			}
+			inventory = inventoryList.get(selectedRow);
+			if (inventory.getStatus().equals(InventoryStatus.validated.toString())) {
+				MessageDialog.error(null, "angal.inventory.validatednoteditable.msg");
+				return;
+			}
+			if (inventory.getStatus().equals(InventoryStatus.canceled.toString())) {
+				MessageDialog.error(null, "angal.inventory.cancelednoteditable.msg");
+				return;
+			}
+			InventoryEdit inventoryEdit = new InventoryEdit(inventory,"update");
+			InventoryEdit.addInventoryListener(InventoryBrowser.this);
+			inventoryEdit.showAsModal(InventoryBrowser.this);
+		});
+		return jButtonEdit;
 	}
 
 	private JButton getPrintButton() {
