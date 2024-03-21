@@ -58,11 +58,7 @@ import org.isf.utils.jobjects.OhDefaultCellRenderer;
 public class MedicalPicker extends JPanel {
 
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	private Collection <Medical> medicalMapValues = new ArrayList<Medical>();
 	private String searchCode;
 	private JButton jButtonSelect;
@@ -146,9 +142,7 @@ public class MedicalPicker extends JPanel {
 			}
 
 			@Override
-			public void mouseDragged(MouseEvent e) {
-
-			}
+			public void mouseDragged(MouseEvent e) {}
 		});
 		jTableData.addMouseListener(new MouseAdapter() {
 			@Override
@@ -228,7 +222,7 @@ public class MedicalPicker extends JPanel {
 				TableColumn column;
 				for(int i = 0; i < 2; i++) {
 					column = jTableData.getColumnModel().getColumn(i);
-					if(i == 1) {
+					if (i == 1) {
 						column.setPreferredWidth(375);
 					} else {
 						column.setPreferredWidth(100);
@@ -327,7 +321,6 @@ public class MedicalPicker extends JPanel {
 		this.setSelectedRow(this.jTableData.getSelectedRow());
 		this.setVisible(false);
 		this.getParentFrame().dispose();
-
 	}
 
 	private void jButtonSelectActionPerformed(ActionEvent evt) {
