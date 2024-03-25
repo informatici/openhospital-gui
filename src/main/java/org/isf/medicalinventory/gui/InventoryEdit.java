@@ -445,7 +445,7 @@ public class InventoryEdit extends ModalJFrame {
 					OHServiceExceptionUtil.showMessages(e);
 				}
 				if (checkResults == 0) {
-					MessageDialog.info(null, "angal.inventory.update.succes.msg");
+					MessageDialog.info(null, "angal.inventory.update.success.msg");
 					fireInventoryUpdated();
 				} else {
 					MessageDialog.error(null, "angal.inventory.update.error.msg");
