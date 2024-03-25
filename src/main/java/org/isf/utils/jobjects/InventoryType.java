@@ -23,5 +23,5 @@ package org.isf.utils.jobjects;
 
 
 public enum InventoryType {
-	principal, ward
+	main, ward
 }

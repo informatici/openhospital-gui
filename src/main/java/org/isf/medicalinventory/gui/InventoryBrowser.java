@@ -408,7 +408,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		public InventoryBrowsingModel() {
 			inventoryList = new ArrayList<>();
 			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase(): null;
-			String type = InventoryType.principal.toString();
+			String type = InventoryType.main.toString();
 			try {
 				inventoryList = medicalInventoryManager.getMedicalInventoryByParams(dateFrom, dateTo, state, type);
 			} catch (OHServiceException e) {
@@ -419,7 +419,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		public InventoryBrowsingModel(int startIndex, int pageSize) {
 			inventoryList = new ArrayList<>();
 			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
-			String type = InventoryType.principal.toString();
+			String type = InventoryType.main.toString();
 			
 			try {
 				Page<MedicalInventory> medInventorypage = medicalInventoryManager.getMedicalInventoryByParamsPageable(dateFrom, dateTo, state, type, startIndex, pageSize);
