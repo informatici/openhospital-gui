@@ -168,9 +168,9 @@ public class InventoryEdit extends ModalJFrame {
 	private JTextField referenceTextField;
 	private JTextField jTetFieldEditor;
 	private JButton moreData;
-	private static int MAX_COUNT = 30;
+	private final int MAX_COUNT = 30;
 	private int currentIndex = 0;
-	private static boolean MORE_DATA = true;
+	private final boolean MORE_DATA = true;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private MedicalInventoryRowManager medicalInventoryRowManager = Context.getApplicationContext().getBean(MedicalInventoryRowManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
@@ -390,7 +390,7 @@ public class InventoryEdit extends ModalJFrame {
 						if (checkResults == 0) {
 							// enable validation
 							mode = "update";
-							MessageDialog.info(this, "angal.inventory.savesucces.msg");
+							MessageDialog.info(this, "angal.inventory.savesuccess.msg");
 							fireInventoryUpdated();
 							closeButton.doClick();
 						} else {
@@ -445,7 +445,7 @@ public class InventoryEdit extends ModalJFrame {
 					OHServiceExceptionUtil.showMessages(e);
 				}
 				if (checkResults == 0) {
-					MessageDialog.info(null, "angal.inventory.update.succes.msg");
+					MessageDialog.info(null, "angal.inventory.update.success.msg");
 					fireInventoryUpdated();
 				} else {
 					MessageDialog.error(null, "angal.inventory.update.error.msg");
