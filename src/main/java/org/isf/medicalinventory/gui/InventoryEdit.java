@@ -369,7 +369,7 @@ public class InventoryEdit extends ModalJFrame {
 				inventory.setInventoryDate(dateInventory);
 				inventory.setStatus(State);
 				inventory.setUser(user);
-				inventory.setInventoryType(InventoryType.principal.toString());
+				inventory.setInventoryType(InventoryType.main.toString());
 				MedicalInventory meInventory;
 				try {
 					meInventory = medicalInventoryManager.newMedicalInventory(inventory);

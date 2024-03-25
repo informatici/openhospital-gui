@@ -91,11 +91,11 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			MessageBundle.getMessage("angal.inventory.status.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.user.col").toUpperCase() };
 	private int[] pColumwidth = { 150, 150, 150, 200 };
-	private JComboBox stateComboBox;
+	private JComboBox<String> stateComboBox;
 	private JLabel stateLabel;
 	JButton next;
 	JButton previous;
-	JComboBox pagesCombo = new JComboBox();
+	JComboBox<Integer> pagesCombo = new JComboBox<Integer>();
 	JLabel under = new JLabel("/ 0 Page");
 	private static int PAGE_SIZE = 50;
 	private int startIndex = 0;
@@ -432,8 +432,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 		public InventoryBrowsingModel() {
 			inventoryList = new ArrayList<>();
-			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
-			String type = InventoryType.principal.toString();
+			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase(): null;
+			String type = InventoryType.main.toString();
 			try {
 				inventoryList = medicalInventoryManager.getMedicalInventoryByParams(dateFrom, dateTo, state, type);
 			} catch (OHServiceException e) {
@@ -444,8 +444,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		public InventoryBrowsingModel(int startIndex, int pageSize) {
 			inventoryList = new ArrayList<>();
 			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
-			String type = InventoryType.principal.toString();
-
+			String type = InventoryType.main.toString();
 			try {
 				Page<MedicalInventory> medInventorypage = medicalInventoryManager.getMedicalInventoryByParamsPageable(dateFrom, dateTo, state, type, startIndex,
 								pageSize);
@@ -517,9 +516,9 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		}
 	}
 
-	private JComboBox getComboBox() {
+	private JComboBox<String> getComboBox() {
 		if (stateComboBox == null) {
-			stateComboBox = new JComboBox();
+			stateComboBox = new JComboBox<String>();
 			stateComboBox.addItem("");
 			for (InventoryStatus currentState : InventoryStatus.values()) {
 				stateComboBox.addItem(MessageBundle.getMessage("angal.inventory."+currentState));
