@@ -187,6 +187,7 @@ public class InventoryEdit extends ModalJFrame {
 		initComponents();
 		if (mode.equals("view")) {
 			saveButton.setVisible(false);
+			deleteButton.setVisible(false);
 			columnEditable = columnEditableView;
 		}
 	}

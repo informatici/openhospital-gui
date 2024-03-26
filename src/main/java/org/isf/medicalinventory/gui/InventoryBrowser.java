@@ -95,7 +95,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JLabel stateLabel;
 	JButton next;
 	JButton previous;
-	JComboBox<int> pagesCombo = new JComboBox<int>();
+	JComboBox pagesCombo = new JComboBox();
 	JLabel under = new JLabel("/ 0 Page");
 	private static int PAGE_SIZE = 50;
 	private int startIndex = 0;
@@ -356,6 +356,22 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JButton getViewButton() {
 		jButtonView = new JButton(MessageBundle.getMessage("angal.common.view.btn"));
 		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.common.view.btn.key"));
+		jButtonView.addActionListener(actionEvent -> {
+			MedicalInventory inventory = new MedicalInventory();
+			if (jTableInventory.getSelectedRowCount() > 1) {
+				MessageDialog.error(this, "angal.inventory.pleaseselectonlyoneinventory.msg");
+				return;
+			}
+			int selectedRow = jTableInventory.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.error(this, "angal.inventory.pleaseselectinventory.msg");
+				return;
+			}
+			inventory = inventoryList.get(selectedRow);
+			InventoryEdit inventoryEdit = new InventoryEdit(inventory,"view");
+			InventoryEdit.addInventoryListener(InventoryBrowser.this);
+			inventoryEdit.showAsModal(InventoryBrowser.this);
+		});
 		return jButtonView;
 	}
 
