@@ -695,7 +695,7 @@ public class InventoryWardEdit extends ModalJFrame {
         if (code != null) {
             medical = medicalBrowsingManager.getMedicalByMedicalCode(code);
             if (medical != null) {
-                medicalWardList = movWardBrowserManager.getMedicalsWard(wardId, medical.getCode());
+                medicalWardList = movWardBrowserManager.getMedicalsWard(wardId, medical.getCode(), false);
             } else {
                 MessageDialog.error(null, MessageBundle.getMessage("angal.inventory.noproductfound.msg"));
             }
@@ -896,7 +896,7 @@ public class InventoryWardEdit extends ModalJFrame {
         if (code != null) {
             medical = medicalBrowsingManager.getMedicalByMedicalCode(code);
             if (medical != null) {
-                medicalWardList = movWardBrowserManager.getMedicalsWard(wardId, medical.getCode());
+                medicalWardList = movWardBrowserManager.getMedicalsWard(wardId, medical.getCode(), false);
             } else {
                 medical = chooseMedical(code);
                 if (medical != null) {
@@ -909,7 +909,7 @@ public class InventoryWardEdit extends ModalJFrame {
                         }
                     }
                     if (!found) {
-                        medicalWardList = movWardBrowserManager.getMedicalsWard(wardId, medical.getCode());
+                        medicalWardList = movWardBrowserManager.getMedicalsWard(wardId, medical.getCode(), false);
                     }
                 }
             }
@@ -1048,7 +1048,7 @@ public class InventoryWardEdit extends ModalJFrame {
                             activedSomeComponents();
                         } else {
                             MessageDialog.error(this,
-                                    "angal.inventory.anotherinventoryonthiswardstillanotheroneisinprogress");
+                                    "angal.inventory.cannotcreateanotherinventorywithotherinprogressinthisward.msg");
                             return;
                         }
                     }
