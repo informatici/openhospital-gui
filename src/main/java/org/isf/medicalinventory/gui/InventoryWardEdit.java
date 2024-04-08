@@ -584,8 +584,9 @@ public class InventoryWardEdit extends ModalJFrame {
         }
 
         public int getRowCount() {
-            if (inventoryRowSearchList == null)
+            if (inventoryRowSearchList == null) {
                 return 0;
+            }
             return inventoryRowSearchList.size();
         }
 
