@@ -146,14 +146,14 @@ public class InventoryWardEdit extends ModalJFrame {
     private JTable jTableInventoryRow;
     private List<MedicalInventoryRow> inventoryRowList;
     private List<MedicalInventoryRow> inventoryRowSearchList;
-    private String[] pColums = { MessageBundle.getMessage("angal.common.code.txt"),
-            MessageBundle.getMessage("angal.inventory.medical.col"),
-            MessageBundle.getMessage("angal.inventory.lotcode.col"),
-            MessageBundle.getMessage("angal.medicalstock.duedate.col"),
-            MessageBundle.getMessage("angal.inventory.theorticalqty.col"),
-            MessageBundle.getMessage("angal.inventory.realqty.col"),
-            MessageBundle.getMessage("angal.inventory.unitprice.col"),
-            MessageBundle.getMessage("angal.inventory.totalprice.col")
+    private String[] pColums = { MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+            MessageBundle.getMessage("angal.inventory.medical.col").toUpperCase(),
+            MessageBundle.getMessage("angal.inventory.lotcode.col").toUpperCase(),
+            MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),
+            MessageBundle.getMessage("angal.inventory.theorticalqty.col").toUpperCase(),
+            MessageBundle.getMessage("angal.inventory.realqty.col").toUpperCase(),
+            MessageBundle.getMessage("angal.inventory.unitprice.col").toUpperCase(),
+            MessageBundle.getMessage("angal.inventory.totalprice.col").toUpperCase()
     };
     private int[] pColumwidth = { 100, 200, 100, 100, 100, 80, 80, 80 };
     private boolean[] columnEditable = { false, false, false, false, false, true, true, false };
