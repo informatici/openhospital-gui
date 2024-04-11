@@ -21,6 +21,7 @@
  */
 package org.isf.medicalinventory.gui;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -32,6 +33,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -46,6 +48,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicalinventory.gui.InventoryWardEdit.InventoryListener;
+import org.isf.medicalinventory.model.MedicalInventory;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.InventoryState;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -81,6 +84,7 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
     private int[] pColumwidth = { 150, 150, 100, 100, 150 };
     private JComboBox<Object> stateComboBox;
     private JLabel stateLabel;
+    private List<MedicalInventory> inventoryList;
 
     public InventoryWardBrowser() {
         initComponents();
@@ -358,5 +362,29 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
             stateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         }
         return stateLabel;
+    }
+
+    @Override
+    public void InventoryInserted(AWTEvent e) {
+        if (inventoryList != null) {
+            inventoryList.clear();
+        }
+        jTableInventory.setModel(new InventoryBrowsingModel());
+    }
+
+    @Override
+    public void InventoryUpdated(AWTEvent e) {
+        if (inventoryList != null) {
+            inventoryList.clear();
+        }
+        jTableInventory.setModel(new InventoryBrowsingModel());
+    }
+
+    @Override
+    public void InventoryCancelled(AWTEvent e) {
+        if (inventoryList != null) {
+            inventoryList.clear();
+        }
+        jTableInventory.setModel(new InventoryBrowsingModel());
     }
 }
