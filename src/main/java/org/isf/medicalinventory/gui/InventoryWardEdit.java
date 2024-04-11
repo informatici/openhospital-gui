@@ -594,19 +594,36 @@ public class InventoryWardEdit extends ModalJFrame {
         private static final long serialVersionUID = 1L;
 
         public InventoryRowModel() {
-            if (allRadio.isSelected()) {
-                try {
-                    inventoryRowList = loadNewInventoryTable(null);
-                } catch (OHServiceException e) {
-                    inventoryRowList = new ArrayList<>();
-                    OHServiceExceptionUtil.showMessages(e);
+            inventoryRowList = new ArrayList<>();
+            if (inventory == null) {
+                if (allRadio.isSelected()) {
+                    try {
+                        inventoryRowList = loadNewInventoryTable(null);
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
+                } else if (specificRadio.isSelected() && code != null && !code.trim().equals("")) {
+                    try {
+                        inventoryRowList = loadNewInventoryTable(code.trim());
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
                 }
-            } else if (specificRadio.isSelected() && code != null && !code.trim().equals("")) {
-                try {
-                    inventoryRowList = loadNewInventoryTable(code.trim());
-                } catch (OHServiceException e) {
-                    inventoryRowList = new ArrayList<>();
-                    OHServiceExceptionUtil.showMessages(e);
+            } else if (inventory != null) {
+                if (allRadio.isSelected()) {
+                    try {
+                        inventoryRowList = medicalInventoryRowManager
+                                .getMedicalInventoryRowByInventoryId(inventory.getId());
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
+                } else if (specificRadio.isSelected() && code != null && !code.trim().equals("")) {
+                    try {
+                        inventoryRowList = medicalInventoryRowManager
+                                .getMedicalInventoryRowByInventoryIdAndMedicalCode(inventory.getId(), code.trim());
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
                 }
             }
 
@@ -752,7 +769,6 @@ public class InventoryWardEdit extends ModalJFrame {
                 MessageDialog.error(null, MessageBundle.getMessage("angal.inventory.noproductfound.msg"));
             }
         } else {
-            MessageDialog.error(null, wardId);
             medicalWardList = movWardBrowserManager.getMedicalsWard(wardId.charAt(0), false);
         }
         medicalWardList.stream().forEach(medicalWard -> {
@@ -1076,10 +1092,21 @@ public class InventoryWardEdit extends ModalJFrame {
                 wardList = new ArrayList<>();
                 OHServiceExceptionUtil.showMessages(e);
             }
-            for (Ward elem : wardList) {
-                wardComboBox.addItem(elem);
+            if (!mode.equals("new")) {
+                String wardId = inventory.getWard();
+                for (Ward ward : wardList) {
+                    if (ward.getCode().equals(wardId)) {
+                        wardComboBox.addItem(ward);
+                        wardSelected = ward;
+                    }
+                }
+                wardComboBox.setEnabled(false);
+            } else {
+                for (Ward elem : wardList) {
+                    wardComboBox.addItem(elem);
+                }
+                wardComboBox.setSelectedIndex(-1);
             }
-            wardComboBox.setSelectedIndex(-1);
 
             wardComboBox.addItemListener(itemEvent -> {
 
