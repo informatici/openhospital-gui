@@ -383,7 +383,14 @@ public class InventoryWardEdit extends ModalJFrame {
                 inventory.setInventoryDate(dateInventory);
                 inventory.setStatus(State);
                 inventory.setUser(user);
-                inventory.setInventoryType(InventoryType.main.toString());
+                inventory.setInventoryType(InventoryType.ward.toString());
+                if (!wardComboBox.getSelectedItem().equals("") && wardComboBox.getSelectedItem() != null) {
+                    Ward selectedWard = (Ward) wardComboBox.getSelectedItem();
+                    inventory.setWard(selectedWard.getCode());
+                } else {
+                    MessageDialog.error(null, "angal.inventory.youmustselectaward.msg");
+                    return;
+                }
                 MedicalInventory meInventory;
                 try {
                     meInventory = medicalInventoryManager.newMedicalInventory(inventory);
@@ -418,6 +425,50 @@ public class InventoryWardEdit extends ModalJFrame {
                 } catch (OHServiceException e) {
                     OHServiceExceptionUtil.showMessages(e);
                 }
+            } else if (inventory != null && mode.equals("update")) {
+                checkResults = 0;
+                boolean toUpdate = false;
+                MedicalInventory result = new MedicalInventory();
+                if (!inventory.getInventoryDate().equals(dateInventory)) {
+                    inventory.setInventoryDate(dateInventory);
+                    toUpdate = true;
+                }
+                if (!inventory.getUser().equals(user)) {
+                    inventory.setUser(user);
+                    toUpdate = true;
+                }
+                if (toUpdate) {
+                    try {
+                        result = medicalInventoryManager.updateMedicalInventory(inventory);
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
+                }
+
+                if (result != null) {
+                    try {
+                        for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator
+                                .hasNext();) {
+                            MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
+                            if (medicalInventoryRowManager.updateMedicalInventoryRow(medicalInventoryRow) == null) {
+                                checkResults++;
+                            }
+                        }
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
+
+                    if (checkResults == 0) {
+                        MessageDialog.info(this, "angal.inventory.updatesucces.msg");
+                        validateButton.setEnabled(true);
+                        fireInventoryUpdated();
+                    } else {
+                        MessageDialog.error(null, "angal.inventory.updaterowerror.msg");
+                    }
+                } else {
+                    MessageDialog.error(null, "angal.inventory.updateerror.msg");
+                }
+
             }
         });
         return saveButton;
@@ -701,6 +752,7 @@ public class InventoryWardEdit extends ModalJFrame {
                 MessageDialog.error(null, MessageBundle.getMessage("angal.inventory.noproductfound.msg"));
             }
         } else {
+            MessageDialog.error(null, wardId);
             medicalWardList = movWardBrowserManager.getMedicalsWard(wardId.charAt(0), false);
         }
         medicalWardList.stream().forEach(medicalWard -> {
