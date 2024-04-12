@@ -61,6 +61,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.InventoryState;
+import org.isf.utils.jobjects.InventoryStatus;
 import org.isf.utils.jobjects.InventoryType;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -370,11 +371,11 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
             int selectedRow = jTableInventory.getSelectedRow();
             if (selectedRow > -1) {
                 inventory = inventoryList.get(selectedRow);
-                if (inventory.getStatus().equals("3")) {
+                if (inventory.getStatus().equals(InventoryStatus.validated.toString())) {
                     MessageDialog.error(null, "angal.inventory.noteditable.msg");
                     return;
                 }
-                if (inventory.getStatus().equals("2")) {
+                if (inventory.getStatus().equals(InventoryStatus.canceled.toString())) {
                     MessageDialog.error(null, "angal.inventory.acanceledinventorycannotbemodified.msg");
                     return;
                 }

@@ -355,7 +355,6 @@ public class InventoryWardEdit extends ModalJFrame {
         saveButton = new JButton(MessageBundle.getMessage("angal.common.save"));
         saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
         saveButton.addActionListener(actionEvent -> {
-            String State = InventoryStatus.draft.toString();
             String user = UserBrowsingManager.getCurrentUser();
             int checkResults = 0;
             if (inventoryRowSearchList == null || inventoryRowSearchList.size() < 1) {
@@ -381,7 +380,7 @@ public class InventoryWardEdit extends ModalJFrame {
                 inventory = new MedicalInventory();
                 inventory.setInventoryReference(reference);
                 inventory.setInventoryDate(dateInventory);
-                inventory.setStatus(State);
+                inventory.setStatus(InventoryStatus.draft.toString());
                 inventory.setUser(user);
                 inventory.setInventoryType(InventoryType.ward.toString());
                 if (!wardComboBox.getSelectedItem().equals("") && wardComboBox.getSelectedItem() != null) {
