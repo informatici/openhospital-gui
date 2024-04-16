@@ -34,6 +34,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
+import org.isf.Application;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.Version;
@@ -41,8 +42,8 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.jobjects.WaitCursorEventQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Menu {
 
@@ -158,15 +159,15 @@ public class Menu {
 		}
 	}
 
-	public static void main(String[] args) {
-		ApplicationContext context = null;
-		try {
-			context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		} catch (Exception e) {
-			LOGGER.error("Fatal: fail to load application context. {}", e.getMessage(), e);
-			System.exit(1);
-		}
+	public Menu(String[] args) {
+		ApplicationContext context = createApplicationContext(args);
 		Context.setApplicationContext(context);
 		SwingUtilities.invokeLater(() -> createAndShowGUI());
+	}
+
+	private static ApplicationContext createApplicationContext(String... args) {
+		return new SpringApplicationBuilder(Application.class)
+				.headless(false)
+				.run(args);
 	}
 }
