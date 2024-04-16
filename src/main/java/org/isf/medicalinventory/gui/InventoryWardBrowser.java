@@ -100,10 +100,10 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
     private int[] pColumwidth = { 150, 150, 100, 100, 150 };
     private JComboBox<Object> stateComboBox;
     private JLabel stateLabel;
-    JButton next;
-    JButton previous;
-    JComboBox pagesCombo = new JComboBox();
-    JLabel under = new JLabel("/ 0 Page");
+    private JButton next;
+    private JButton previous;
+    private JComboBox pagesCombo;
+    private JLabel under = new JLabel(MessageBundle.getMessage("angal.inventory.initialpage.label"));
     private static int PAGE_SIZE = 50;
     private int startIndex = 0;
     private int totalRows;
@@ -117,6 +117,7 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
     }
 
     private void initComponents() {
+        pagesCombo = new JComboBox();
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(850, 550));
@@ -472,8 +473,9 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
         }
 
         public int getRowCount() {
-            if (inventoryList == null)
+            if (inventoryList == null) {
                 return 0;
+            }
             return inventoryList.size();
         }
 
@@ -559,9 +561,10 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
         }
         if (j * PAGE_SIZE < total_rows) {
             pagesCombo.addItem(j + 1);
-            under.setText("/" + (total_rows / PAGE_SIZE + 1 + " Pages"));
+            under.setText(
+                    "/" + (total_rows / PAGE_SIZE + 1 + " " + MessageBundle.getMessage("angal.inventory.pages.label")));
         } else {
-            under.setText("/" + total_rows / PAGE_SIZE + " Pages");
+            under.setText("/" + total_rows / PAGE_SIZE + " " + MessageBundle.getMessage("angal.inventory.pages.label"));
         }
     }
 
