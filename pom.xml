@@ -218,7 +218,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>org.isf.menu.gui.Menu</mainClass>
+							<mainClass>org.isf.Application</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Class-Path>.</Class-Path>
