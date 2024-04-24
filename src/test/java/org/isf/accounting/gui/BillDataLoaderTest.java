@@ -34,17 +34,17 @@ import org.isf.accounting.model.Bill;
 import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 class BillDataLoaderTest {
 	
 	private static final String NO_USERNAME = null;
 
+    @Mock
     private AccountingIoOperations accountingIoOperations;
 
     @Test
-    @Disabled
     void shouldLoadPendingBillsFromManagerForParentPatient() throws OHServiceException {
         // given:
         Patient patientParent = new Patient();
@@ -73,7 +73,6 @@ class BillDataLoaderTest {
     }
 
     @Test
-    @Disabled
     void shouldLoadPendingBillsFromPeriodOnly() throws OHServiceException {
         // given:
         BillDataLoader billDataLoader = new BillDataLoader(
@@ -97,7 +96,6 @@ class BillDataLoaderTest {
     }
 
     @Test
-    @Disabled
     void shouldLoadAllBillsMergedWithBillsFromPaymentWithoutDuplicates() throws OHServiceException {
         // given:
         BillDataLoader billDataLoader = new BillDataLoader(
@@ -121,7 +119,6 @@ class BillDataLoaderTest {
     }
 
     @Test
-    @Disabled
     void shouldLoadClosedBillFromGivenPeriod() throws OHServiceException {
         // given:
         BillDataLoader billDataLoader = new BillDataLoader(
@@ -143,6 +140,5 @@ class BillDataLoaderTest {
         // then:
         assertThat(result).hasSize(1);
     }
-
 
 }
