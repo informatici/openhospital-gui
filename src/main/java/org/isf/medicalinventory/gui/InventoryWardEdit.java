@@ -128,8 +128,9 @@ public class InventoryWardEdit extends ModalJFrame {
         };
 
         EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
-        for (int i = 0; i < listeners.length; i++)
+        for (int i = 0; i < listeners.length; i++) {
             ((InventoryListener) listeners[i]).InventoryUpdated(event);
+        }
     }
 
     private GoodDateChooser jCalendarInventory;
@@ -208,7 +209,13 @@ public class InventoryWardEdit extends ModalJFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setMinimumSize(new DimensionUIResource(950, 580));
         setLocationRelativeTo(null); // center
-        setTitle(MessageBundle.getMessage("angal.inventory.edit.title"));
+        if (mode.equals("update")) {
+            setTitle(MessageBundle.getMessage("angal.inventory.edit.title"));
+        } else if (mode.equals("view")) {
+            setTitle(MessageBundle.getMessage("angal.inventory.view.title"));
+        } else {
+            setTitle(MessageBundle.getMessage("angal.inventory.new.title"));
+        }
 
         panelHeader = getPanelHeader();
         getContentPane().add(panelHeader, BorderLayout.NORTH);
