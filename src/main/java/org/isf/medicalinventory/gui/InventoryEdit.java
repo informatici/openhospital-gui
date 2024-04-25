@@ -39,8 +39,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -125,6 +123,7 @@ public class InventoryEdit extends ModalJFrame {
 
 	private void fireInventoryUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -134,7 +133,7 @@ public class InventoryEdit extends ModalJFrame {
 	}
 
 	private GoodDateChooser jCalendarInventory;
-	private LocalDateTime dateInventory = TimeTools.getServerDateTime();
+	private LocalDateTime dateInventory = TimeTools.getNow();
 	private JPanel panelHeader;
 	private JPanel panelFooter;
 	private JPanel panelContent;
@@ -832,7 +831,7 @@ public class InventoryEdit extends ModalJFrame {
 		});
 		return moreData;
 	}
-	
+
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
 			codeTextField = new JTextField();
