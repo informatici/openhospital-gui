@@ -12,6 +12,7 @@ logs
 *.pdf
 /data/
 /rsc/*.properties
+/rsc/*.properties.dist
 /rsc/*.pref
 /rsc/*.xml
 /target/
