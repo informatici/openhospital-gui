@@ -127,6 +127,7 @@ public class InventoryEdit extends ModalJFrame {
 
 	private void fireInventoryUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -137,7 +138,7 @@ public class InventoryEdit extends ModalJFrame {
 	}
 
 	private GoodDateChooser jCalendarInventory;
-	private LocalDateTime dateInventory = TimeTools.getServerDateTime();
+	private LocalDateTime dateInventory = TimeTools.getNow();
 	private JPanel panelHeader;
 	private JPanel panelFooter;
 	private JPanel panelContent;
@@ -1072,7 +1073,7 @@ public class InventoryEdit extends ModalJFrame {
 		});
 		return moreData;
 	}
-	
+
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
 			codeTextField = new JTextField();
