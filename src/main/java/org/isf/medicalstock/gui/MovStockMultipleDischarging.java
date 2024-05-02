@@ -950,7 +950,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		boolean ok = true;
 		List<Movement> movements = model.getMovements();
 		try {
-			movStockInsertingManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
+			movStockInsertingManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo(), false);
 
 			if (isXmpp()) {
 				if (shareWith.isEnabled() && (!(shareWith.getSelectedItem()
