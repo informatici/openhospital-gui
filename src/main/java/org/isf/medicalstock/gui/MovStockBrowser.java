@@ -1229,7 +1229,6 @@ public class MovStockBrowser extends ModalJFrame {
 	class DecimalFormatRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
-		private final DecimalFormat formatter100 = new DecimalFormat("#,##0.000");
 		private final DecimalFormat formatter10 = new DecimalFormat("#,##0.00");
 		private final DecimalFormat formatter1 = new DecimalFormat("#,##0");
 
@@ -1241,7 +1240,7 @@ public class MovStockBrowser extends ModalJFrame {
 				value = formatter1.format(value);
 			}
 			if (column == 11 && value instanceof Number) {
-				value = formatter100.format(value);
+				value = formatter10.format(value);
 			}
 			if (column == 12 && value instanceof Number) {
 				value = formatter10.format(value);
