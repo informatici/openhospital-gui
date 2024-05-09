@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.isf.accounting.TestBill;
 import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
 import org.isf.accounting.service.AccountingIoOperations;
@@ -38,107 +37,97 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 class BillDataLoaderTest {
-	
+
 	private static final String NO_USERNAME = null;
 
-    @Mock
-    private AccountingIoOperations accountingIoOperations;
+	@Mock
+	private AccountingIoOperations accountingIoOperations;
 
-    @Test
-    void shouldLoadPendingBillsFromManagerForParentPatient() throws OHServiceException {
-        // given:
-        Patient patientParent = new Patient();
-        patientParent.setCode(1);
-        BillDataLoader billDataLoader = new BillDataLoader(
-                Collections.emptyList(),
-                Collections.emptyList(),
-                patientParent,
-                new BillBrowserManager(accountingIoOperations) {
-                    @Override
-                    public List<Bill> getPendingBillsAffiliate(int patID) throws OHServiceException {
-                        return new ArrayList<>(Arrays.asList(
-                                TestBill.notDeletedBillWithStatus(1, "O"),
-                                TestBill.notDeletedBillWithStatus(2, "O"),
-                                TestBill.notDeletedBillWithStatus(3, "O")
-                        ));
-                    }
-                }
-        );
+	@Test
+	void shouldLoadPendingBillsFromManagerForParentPatient() throws OHServiceException {
+		// given:
+		Patient patientParent = new Patient();
+		patientParent.setCode(1);
+		BillDataLoader billDataLoader = new BillDataLoader(
+						Collections.emptyList(),
+						Collections.emptyList(),
+						patientParent,
+						new BillBrowserManager(accountingIoOperations) {
 
-        // when:
-        List<Bill> result = billDataLoader.loadBills("O", NO_USERNAME);
+							@Override
+							public List<Bill> getPendingBillsAffiliate(int patID) throws OHServiceException {
+								return new ArrayList<>(Arrays.asList(
+												TestBill.notDeletedBillWithStatus(1, "O"),
+												TestBill.notDeletedBillWithStatus(2, "O"),
+												TestBill.notDeletedBillWithStatus(3, "O")));
+							}
+						});
 
-        // then:
-        assertThat(result).hasSize(3);
-    }
+		// when:
+		List<Bill> result = billDataLoader.loadBills("O", NO_USERNAME);
 
-    @Test
-    void shouldLoadPendingBillsFromPeriodOnly() throws OHServiceException {
-        // given:
-        BillDataLoader billDataLoader = new BillDataLoader(
-                Arrays.asList(
-                        TestBill.notDeletedBillWithStatus(1, "C"),
-                        TestBill.notDeletedBillWithStatus(2, "O")
-                ),
-                Arrays.asList(
-                        TestBill.notDeletedBillWithStatus(1, "C"),
-                        TestBill.notDeletedBillWithStatus(3, "O")
-                ),
-                null,
-                new BillBrowserManager(accountingIoOperations)
-        );
+		// then:
+		assertThat(result).hasSize(3);
+	}
 
-        // when:
-        List<Bill> result = billDataLoader.loadBills("O", NO_USERNAME);
+	@Test
+	void shouldLoadPendingBillsFromPeriodOnly() throws OHServiceException {
+		// given:
+		BillDataLoader billDataLoader = new BillDataLoader(
+						Arrays.asList(
+										TestBill.notDeletedBillWithStatus(1, "C"),
+										TestBill.notDeletedBillWithStatus(2, "O")),
+						Arrays.asList(
+										TestBill.notDeletedBillWithStatus(1, "C"),
+										TestBill.notDeletedBillWithStatus(3, "O")),
+						null,
+						new BillBrowserManager(accountingIoOperations));
 
-        // then:
-        assertThat(result).hasSize(1);
-    }
+		// when:
+		List<Bill> result = billDataLoader.loadBills("O", NO_USERNAME);
 
-    @Test
-    void shouldLoadAllBillsMergedWithBillsFromPaymentWithoutDuplicates() throws OHServiceException {
-        // given:
-        BillDataLoader billDataLoader = new BillDataLoader(
-                Arrays.asList(
-                        TestBill.notDeletedBillWithStatus(1, "O"),
-                        TestBill.notDeletedBillWithStatus(2, "C")
-                ),
-                Arrays.asList(
-                        TestBill.notDeletedBillWithStatus(1, "0"),
-                        TestBill.notDeletedBillWithStatus(3, "C")
-                ),
-                null,
-                new BillBrowserManager(accountingIoOperations)
-        );
+		// then:
+		assertThat(result).hasSize(1);
+	}
 
-        // when:
-        List<Bill> result = billDataLoader.loadBills("ALL", NO_USERNAME);
+	@Test
+	void shouldLoadAllBillsMergedWithBillsFromPaymentWithoutDuplicates() throws OHServiceException {
+		// given:
+		BillDataLoader billDataLoader = new BillDataLoader(
+						Arrays.asList(
+										TestBill.notDeletedBillWithStatus(1, "O"),
+										TestBill.notDeletedBillWithStatus(2, "C")),
+						Arrays.asList(
+										TestBill.notDeletedBillWithStatus(1, "0"),
+										TestBill.notDeletedBillWithStatus(3, "C")),
+						null,
+						new BillBrowserManager(accountingIoOperations));
 
-        // then:
-        assertThat(result).hasSize(3);
-    }
+		// when:
+		List<Bill> result = billDataLoader.loadBills("ALL", NO_USERNAME);
 
-    @Test
-    void shouldLoadClosedBillFromGivenPeriod() throws OHServiceException {
-        // given:
-        BillDataLoader billDataLoader = new BillDataLoader(
-                Arrays.asList(
-                        TestBill.notDeletedBillWithStatus(1, "O"),
-                        TestBill.notDeletedBillWithStatus(2, "C")
-                ),
-                Arrays.asList(
-                        TestBill.notDeletedBillWithStatus(1, "0"),
-                        TestBill.notDeletedBillWithStatus(3, "C")
-                ),
-                null,
-                new BillBrowserManager(accountingIoOperations)
-        );
+		// then:
+		assertThat(result).hasSize(3);
+	}
 
-        // when:
-        List<Bill> result = billDataLoader.loadBills("C", NO_USERNAME);
+	@Test
+	void shouldLoadClosedBillFromGivenPeriod() throws OHServiceException {
+		// given:
+		BillDataLoader billDataLoader = new BillDataLoader(
+						Arrays.asList(
+										TestBill.notDeletedBillWithStatus(1, "O"),
+										TestBill.notDeletedBillWithStatus(2, "C")),
+						Arrays.asList(
+										TestBill.notDeletedBillWithStatus(1, "0"),
+										TestBill.notDeletedBillWithStatus(3, "C")),
+						null,
+						new BillBrowserManager(accountingIoOperations));
 
-        // then:
-        assertThat(result).hasSize(1);
-    }
+		// when:
+		List<Bill> result = billDataLoader.loadBills("C", NO_USERNAME);
+
+		// then:
+		assertThat(result).hasSize(1);
+	}
 
 }
