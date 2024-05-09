@@ -140,25 +140,26 @@ public class MovStockBrowser extends ModalJFrame {
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(), // 3
 			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(), // 4
 			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(), // 5
-			MessageBundle.getMessage("angal.medicalstock.pharmaceutical.col").toUpperCase(), // 6
-			MessageBundle.getMessage("angal.medicalstock.medtype.col").toUpperCase(), // 7
-			MessageBundle.getMessage("angal.medicalstock.lot.col").toUpperCase(), // 8
-			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(), // 9
-			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(), // 10
-			MessageBundle.getMessage("angal.medicalstock.origin.col").toUpperCase(), // 11
-			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(), // 12
-			MessageBundle.getMessage("angal.common.total.txt").toUpperCase(), // 13
-			MessageBundle.getMessage("angal.common.userid").toUpperCase() // 14
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(), // 6
+			MessageBundle.getMessage("angal.medicalstock.pharmaceutical.col").toUpperCase(), // 7
+			MessageBundle.getMessage("angal.medicalstock.medtype.col").toUpperCase(), // 8
+			MessageBundle.getMessage("angal.medicalstock.lot.col").toUpperCase(), // 9
+			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(), // 10
+			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(), // 11
+			MessageBundle.getMessage("angal.medicalstock.origin.col").toUpperCase(), // 12
+			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(), // 13
+			MessageBundle.getMessage("angal.common.total.txt").toUpperCase(), // 14
+			MessageBundle.getMessage("angal.common.userid").toUpperCase() // 15
 	};
-	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
-			SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
+			SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.CENTER };
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
-	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
+	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
 			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, !isSingleUser };
 
-	private int[] pColumnWidth = { 50, 90, 45, 130, 50, 150, 70, 70, 80, 80, 50, 50, 70, 70 };
+	private int[] pColumnWidth = { 50, 90, 45, 130, 50, 30, 150, 70, 70, 80, 80, 50, 50, 70, 70 };
 
 	/*
 	 * Adds to facilitate the selection of products
@@ -1126,6 +1127,7 @@ public class MovStockBrowser extends ModalJFrame {
 		@Override
 		public Object getValueAt(int r, int c) {
 			Movement movement = moves.get(r);
+			Medical medical = movement.getMedical();
 			Lot lot = movement.getLot();
 			BigDecimal cost = lot.getCost();
 			int qty = movement.getQuantity();
@@ -1148,9 +1150,11 @@ public class MovStockBrowser extends ModalJFrame {
 			} else if (c == ++col) {
 				return qty;
 			} else if (c == ++col) {
-				return movement.getMedical().getDescription();
+				return medical.getProdCode();
 			} else if (c == ++col) {
-				return movement.getMedical().getType().getDescription();
+				return medical.getDescription();
+			} else if (c == ++col) {
+				return medical.getType().getDescription();
 			} else if (c == ++col) {
 				if (isAutomaticLot()) {
 					return MessageBundle.getMessage("angal.medicalstock.generated");
