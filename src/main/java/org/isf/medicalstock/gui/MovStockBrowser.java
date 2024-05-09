@@ -475,14 +475,15 @@ public class MovStockBrowser extends ModalJFrame {
 		wardBox = new JComboBox();
 		wardBox.setPreferredSize(new Dimension(200, 25));
 		wardBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
-		List<Ward> wardList;
+		List<Ward> wardsList;
 		try {
-			wardList = wardBrowserManager.getWards();
+			wardsList = wardBrowserManager.getWards();
+			wardsList.sort(new Ward.WardDescriptionComparator());
 		} catch (OHServiceException e) {
-			wardList = new ArrayList<>();
+			wardsList = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		for (Ward elem : wardList) {
+		for (Ward elem : wardsList) {
 			wardBox.addItem(elem);
 		}
 		wardBox.setEnabled(false);
