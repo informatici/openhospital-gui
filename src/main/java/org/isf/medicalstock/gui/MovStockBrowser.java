@@ -496,7 +496,7 @@ public class MovStockBrowser extends ModalJFrame {
 			medicalBox.removeAllItems();
 			List<Medical> medicals;
 			try {
-				medicals = medicalBrowsingManager.getMedicals();
+				medicals = medicalBrowsingManager.getMedicalsSortedByName();
 			} catch (OHServiceException e1) {
 				medicals = null;
 				OHServiceExceptionUtil.showMessages(e1);
@@ -547,7 +547,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalBox.setPreferredSize(new Dimension(200, 25));
 		List<Medical> medical;
 		try {
-			medical = medicalBrowsingManager.getMedicals();
+			medical = medicalBrowsingManager.getMedicalsSortedByName();
 		} catch (OHServiceException e1) {
 			medical = null;
 			OHServiceExceptionUtil.showMessages(e1);
