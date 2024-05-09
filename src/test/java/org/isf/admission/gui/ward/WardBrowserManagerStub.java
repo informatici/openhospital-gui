@@ -37,7 +37,6 @@ public class WardBrowserManagerStub extends WardBrowserManager {
 
 	public WardBrowserManagerStub(AdmissionBrowserManager admissionBrowserManager, WardIoOperations wardIoOperations) {
 		super(admissionBrowserManager, wardIoOperations);
-		// TODO Auto-generated constructor stub
 	}
 
 	private final List<Ward> wards = new ArrayList<>();
