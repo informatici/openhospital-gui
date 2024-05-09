@@ -31,13 +31,18 @@ import java.util.List;
 import org.isf.accounting.TestBill;
 import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
+import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 class BillDataLoaderTest {
 	
 	private static final String NO_USERNAME = null;
+
+    @Mock
+    private AccountingIoOperations accountingIoOperations;
 
     @Test
     void shouldLoadPendingBillsFromManagerForParentPatient() throws OHServiceException {
@@ -48,7 +53,7 @@ class BillDataLoaderTest {
                 Collections.emptyList(),
                 Collections.emptyList(),
                 patientParent,
-                new BillBrowserManager() {
+                new BillBrowserManager(accountingIoOperations) {
                     @Override
                     public List<Bill> getPendingBillsAffiliate(int patID) throws OHServiceException {
                         return new ArrayList<>(Arrays.asList(
@@ -80,7 +85,7 @@ class BillDataLoaderTest {
                         TestBill.notDeletedBillWithStatus(3, "O")
                 ),
                 null,
-                new BillBrowserManager()
+                new BillBrowserManager(accountingIoOperations)
         );
 
         // when:
@@ -103,7 +108,7 @@ class BillDataLoaderTest {
                         TestBill.notDeletedBillWithStatus(3, "C")
                 ),
                 null,
-                new BillBrowserManager()
+                new BillBrowserManager(accountingIoOperations)
         );
 
         // when:
@@ -126,7 +131,7 @@ class BillDataLoaderTest {
                         TestBill.notDeletedBillWithStatus(3, "C")
                 ),
                 null,
-                new BillBrowserManager()
+                new BillBrowserManager(accountingIoOperations)
         );
 
         // when:
@@ -135,6 +140,5 @@ class BillDataLoaderTest {
         // then:
         assertThat(result).hasSize(1);
     }
-
 
 }
