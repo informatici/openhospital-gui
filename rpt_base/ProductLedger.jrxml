@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProductLedger" pageWidth="842" pageHeight="595" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="ProductLedger" whenResourceMissingType="Key" uuid="de31a0bf-4eb3-43f4-8b32-8ee425584a64">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -7,6 +7,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -57,7 +58,7 @@
 				LEFT JOIN OH_MEDICALDSRSTOCKMOV ON MDSR_ID = MMV_MDSR_ID
 				LEFT JOIN OH_MEDICALDSRTYPE ON MDSRT_ID_A = MDSR_MDSRT_ID_A
 				LEFT JOIN OH_MEDICALDSRSTOCKMOVTYPE ON MMV_MMVT_ID_A = MMVT_ID_A
-				WHERE DATE(MMV_DATE) <= DATE($P{fromdate})
+				WHERE DATE(MMV_DATE) < DATE($P{fromdate})
 				AND MDSR_ID = $P{productID}
 				GROUP BY MDSR_ID, MMV_LT_ID_A, MMV_MMVT_ID_A) AS QUANTITY
 			JOIN OH_MEDICALDSRLOT ON MMV_LT_ID_A = LT_ID_A
@@ -70,7 +71,7 @@
 				LEFT JOIN OH_MEDICALDSRSTOCKMOV ON MDSR_ID = MMV_MDSR_ID
 				LEFT JOIN OH_MEDICALDSRTYPE ON MDSRT_ID_A = MDSR_MDSRT_ID_A
 				LEFT JOIN OH_MEDICALDSRSTOCKMOVTYPE ON MMV_MMVT_ID_A = MMVT_ID_A
-				WHERE DATE(MMV_DATE) <= DATE($P{fromdate})
+				WHERE DATE(MMV_DATE) < DATE($P{fromdate})
 				AND MDSR_ID = $P{productID}
 				GROUP BY MDSR_ID, MMV_LT_ID_A, MMV_MMVT_ID_A) AS QUANTITY
 			JOIN OH_MEDICALDSRLOT ON MMV_LT_ID_A = LT_ID_A
@@ -83,7 +84,7 @@
 				LEFT JOIN OH_MEDICALDSRSTOCKMOV ON MDSR_ID = MMV_MDSR_ID
 				LEFT JOIN OH_MEDICALDSRTYPE ON MDSRT_ID_A = MDSR_MDSRT_ID_A
 				LEFT JOIN OH_MEDICALDSRSTOCKMOVTYPE ON MMV_MMVT_ID_A = MMVT_ID_A
-				WHERE DATE(MMV_DATE) <= DATE($P{fromdate})
+				WHERE DATE(MMV_DATE) < DATE($P{fromdate})
 				AND MDSR_ID = $P{productID}
 				GROUP BY MDSR_ID, MMV_LT_ID_A, MMV_MMVT_ID_A) AS QUANTITY
 			JOIN OH_MEDICALDSRLOT ON MMV_LT_ID_A = LT_ID_A
@@ -206,6 +207,16 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 	</variable>
 	<variable name="BALANCE" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[new Double( $V{IN_QTY}.doubleValue() - $V{OUT_QTY}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="TOT_IN" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{ORDERING_FIELD}.equals("2") ?
+ 	$V{IN_QTY}.doubleValue() == 0 ? null : $V{IN_QTY} :
+ 	new Double(0)]]></variableExpression>
+	</variable>
+	<variable name="TOT_OUT" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{ORDERING_FIELD}.equals("2") ?
+	$V{OUT_QTY}.doubleValue() == 0 ? null : $V{OUT_QTY} :
+	new Double(0)]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -732,7 +743,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MMV_FROM} == null ? $F{WRD_NAME} : $F{SUP_NAME}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.0" isBlankWhenNull="true">
+			<textField pattern="#,###" isBlankWhenNull="true">
 				<reportElement key="textField" style="Opening" x="593" y="0" width="51" height="16" forecolor="#000000" uuid="c0bb1e92-c501-4820-873d-59d362bb6a14"/>
 				<box leftPadding="5" rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -743,9 +754,11 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{OUT_QTY}.doubleValue() == 0 ? null : $V{OUT_QTY}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ORDERING_FIELD}.equals("1") ? null :
+	$F{ORDERING_FIELD}.equals("2") ? $V{OUT_QTY}.doubleValue() == 0 ? null : $V{OUT_QTY} :
+	$V{TOT_OUT}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" pattern="#,###.00" isBlankWhenNull="true">
 				<reportElement key="textField" style="Opening" x="711" y="0" width="71" height="16" forecolor="#000000" uuid="29e3fe21-71c8-4086-831d-374bf7033a43"/>
 				<box leftPadding="5" rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -758,7 +771,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{START_VALUE} == null ? $V{INC_VALUE} : $F{START_VALUE}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.0" isBlankWhenNull="true">
+			<textField pattern="#,###" isBlankWhenNull="true">
 				<reportElement key="textField-10" style="Opening" x="540" y="0" width="53" height="16" forecolor="#000000" uuid="7366e948-ae5b-42f4-82d0-93b434bc3663"/>
 				<box leftPadding="5" rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -769,9 +782,11 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{IN_QTY}.doubleValue() == 0 ? null : $V{IN_QTY}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ORDERING_FIELD}.equals("1") ? null : 
+	$F{ORDERING_FIELD}.equals("2") ? $V{IN_QTY}.doubleValue() == 0 ? null : $V{IN_QTY} :
+	$V{TOT_IN}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" pattern="#,###" isBlankWhenNull="true">
 				<reportElement key="textField-13" style="Opening" x="644" y="0" width="67" height="16" forecolor="#000000" uuid="1cf63e54-d7f0-422e-b5bd-f4a81fb27837"/>
 				<box leftPadding="5" rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
