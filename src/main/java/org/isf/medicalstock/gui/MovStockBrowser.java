@@ -117,10 +117,11 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private final JFrame myFrame;
 	private JButton filterButton;
+	private JButton resetButton;
 	private JCheckBox jCheckBoxKeepFilter;
 	private JComboBox medicalBox;
 	private JComboBox medicalTypeBox;
-	private JComboBox typeBox;
+	private JComboBox movementTypeBox;
 	private JComboBox wardBox;
 	private GoodDateChooser movDateFrom;
 	private GoodDateChooser movDateTo;
@@ -361,6 +362,7 @@ public class MovStockBrowser extends ModalJFrame {
 		filterContentPanel.add(getLotDueDatePanel());
 		JPanel filterButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		filterButtonPanel.add(getFilterButton());
+		filterButtonPanel.add(getResetButton());
 		filterButtonPanel.add(getJCheckBoxKeepFilter());
 		filterContentPanel.add(filterButtonPanel);
 		return filterContentPanel;
@@ -636,8 +638,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JComboBox getMovementTypeBox() {
-		typeBox = new JComboBox();
-		typeBox.setPreferredSize(new Dimension(200, 25));
+		movementTypeBox = new JComboBox();
+		movementTypeBox.setPreferredSize(new Dimension(200, 25));
 		List<MovementType> type;
 		try {
 			type = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
@@ -645,15 +647,15 @@ public class MovStockBrowser extends ModalJFrame {
 			type = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
-		typeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
+		movementTypeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 		if (null != type) {
 			for (MovementType movementType : type) {
-				typeBox.addItem(movementType);
+				movementTypeBox.addItem(movementType);
 			}
 		}
-		typeBox.addActionListener(actionEvent -> {
-			if (!(typeBox.getSelectedItem() instanceof String)) {
-				MovementType selected = (MovementType) typeBox.getSelectedItem();
+		movementTypeBox.addActionListener(actionEvent -> {
+			if (!(movementTypeBox.getSelectedItem() instanceof String)) {
+				MovementType selected = (MovementType) movementTypeBox.getSelectedItem();
 				if (selected.getType().contains("-")) {
 					wardBox.setEnabled(true);
 				} else {
@@ -665,7 +667,7 @@ public class MovStockBrowser extends ModalJFrame {
 				wardBox.setEnabled(false);
 			}
 		});
-		return typeBox;
+		return movementTypeBox;
 	}
 
 	private JTable getMovTable() {
@@ -845,8 +847,8 @@ public class MovStockBrowser extends ModalJFrame {
 										.getSelectedItem()).getCode();
 					}
 				}
-				if (!(typeBox.getSelectedItem() instanceof String)) {
-					typeSelected = ((MovementType) typeBox
+				if (!(movementTypeBox.getSelectedItem() instanceof String)) {
+					typeSelected = ((MovementType) movementTypeBox
 									.getSelectedItem()).getCode();
 				}
 				if (!(wardBox.getSelectedItem() instanceof String)) {
@@ -884,6 +886,35 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 		});
 		return filterButton;
+	}
+
+	private JButton getResetButton() {
+		resetButton = new JButton("Reset");
+		resetButton.setMnemonic(KeyEvent.VK_R);
+		resetButton.addActionListener(actionEvent -> {
+
+			searchTextField.setText("");
+			searchButton.doClick();
+			medicalTypeBox.setSelectedIndex(0);
+			movementTypeBox.setSelectedItem(MessageBundle.getMessage("angal.common.all.txt"));
+			wardBox.setSelectedItem(MessageBundle.getMessage("angal.common.all.txt"));
+
+			movDateFrom.setDate(LocalDate.now().minusWeeks(1));
+			movDateTo.setDate(LocalDate.now());
+
+			if (!isAutomaticLot()) {
+				lotPrepFrom.setDate(null);
+				lotPrepTo.setDate(null);
+			}
+			lotDueFrom.setDate(null);
+			lotDueTo.setDate(null);
+
+			if (jCheckBoxKeepFilter.isSelected()) {
+				filterButton.doClick();
+			}
+		});
+		return resetButton;
+
 	}
 
 	/**
@@ -1035,9 +1066,9 @@ public class MovStockBrowser extends ModalJFrame {
 
 			filename.append('_').append(medicalTypeBox.getSelectedItem());
 		}
-		if (typeBox.isEnabled() &&
-						!typeBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
-			filename.append('_').append(typeBox.getSelectedItem());
+		if (movementTypeBox.isEnabled() &&
+						!movementTypeBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
+			filename.append('_').append(movementTypeBox.getSelectedItem());
 		}
 		if (wardBox.isEnabled() &&
 						!wardBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
