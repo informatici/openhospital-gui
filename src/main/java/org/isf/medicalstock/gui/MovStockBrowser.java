@@ -889,8 +889,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JButton getResetButton() {
-		resetButton = new JButton("Reset");
-		resetButton.setMnemonic(KeyEvent.VK_R);
+		resetButton = new JButton(MessageBundle.getMessage("angal.medicalstock.reset.btn"));
+		resetButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.reset.btn.key"));
 		resetButton.addActionListener(actionEvent -> {
 
 			searchTextField.setText("");
