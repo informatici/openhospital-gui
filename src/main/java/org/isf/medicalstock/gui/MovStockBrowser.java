@@ -49,6 +49,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -56,6 +57,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -63,6 +65,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -106,6 +110,9 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
  * 					  and insert a new movements
  */
 public class MovStockBrowser extends ModalJFrame {
+
+	private static final int defaultInitDelay = ToolTipManager.sharedInstance().getInitialDelay();
+	private static final Color defaultBackgroundColor = (Color) UIManager.get("ToolTip.background");
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(MovStockBrowser.class);
@@ -379,7 +386,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
 						.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.medicalstock.pharmaceutical")));
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt")));
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.codeordescription.txt")));
 		medicalPanel.add(label1Panel);
 		medicalPanel.add(getMedicalSearchPanel());
 		JPanel medicalDescPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -546,6 +553,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private JComboBox getMedicalBox() {
 		medicalBox = new JComboBox();
+		medicalBox.setRenderer(new ToolTipListCellRenderer());
 		medicalBox.setPreferredSize(new Dimension(200, 25));
 		List<Medical> medical;
 		try {
@@ -560,14 +568,21 @@ public class MovStockBrowser extends ModalJFrame {
 				medicalBox.addItem(aMedical);
 			}
 		}
+		medicalBox.addActionListener(actionEvent -> {
+			medicalBox.setToolTipText(getTooltipFromObject(medicalBox.getSelectedItem()));
+		});
 		medicalBox.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseExited(MouseEvent e) {
+				ToolTipManager.sharedInstance().setInitialDelay(defaultInitDelay);
+				UIManager.put("ToolTip.background", defaultBackgroundColor);
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				ToolTipManager.sharedInstance().setInitialDelay(0);
+				UIManager.put("ToolTip.background", Color.white);
 			}
 
 			@Override
@@ -1248,5 +1263,31 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 			return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		}
+	}
+
+	private String getTooltipFromObject(Object value) {
+		String tooltip = "";
+		if (value instanceof Medical) {
+			tooltip = ((Medical) value).getDescription();
+		} else if (value instanceof String) {
+			tooltip = (String) value;
+		}
+		return tooltip;
+	}
+
+	public class ToolTipListCellRenderer extends DefaultListCellRenderer {
+
+		@Override
+		public Component getListCellRendererComponent(JList< ? > list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			// I'd extract the basic "text" representation of the value
+			// and pass that to the super call, which will apply it to the
+			// JLabel via the setText method, otherwise it will use the
+			// objects toString method to generate a representation
+			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			String tooltip = getTooltipFromObject(value);
+			setToolTipText(tooltip);
+			return this;
+		}
+
 	}
 }
