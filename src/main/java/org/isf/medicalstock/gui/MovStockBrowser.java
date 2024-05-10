@@ -645,8 +645,8 @@ public class MovStockBrowser extends ModalJFrame {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 		movementTypeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
-		movementTypeBox.addItem(MessageBundle.getMessage("angal.medicalstock.allcharges"));
-		movementTypeBox.addItem(MessageBundle.getMessage("angal.medicalstock.alldischarges"));
+		movementTypeBox.addItem(MessageBundle.getMessage("angal.medicalstock.allcharges.txt"));
+		movementTypeBox.addItem(MessageBundle.getMessage("angal.medicalstock.alldischarges.txt"));
 		if (null != movementTypeList) {
 			for (MovementType movementType : movementTypeList) {
 				movementTypeBox.addItem(movementType);
@@ -663,7 +663,7 @@ public class MovStockBrowser extends ModalJFrame {
 					wardBox.setSelectedIndex(0);
 					wardBox.setEnabled(false);
 				}
-			} else if (MessageBundle.getMessage("angal.medicalstock.alldischarges").equals(selectedMovementType)) {
+			} else if (MessageBundle.getMessage("angal.medicalstock.alldischarges.txt").equals(selectedMovementType)) {
 				wardBox.setEnabled(true);
 			} else {
 				wardBox.setSelectedIndex(0);
@@ -857,9 +857,9 @@ public class MovStockBrowser extends ModalJFrame {
 					movementTypeSelected = (String) movementTypeBox.getSelectedItem();
 					if (movementTypeSelected.equals(MessageBundle.getMessage("angal.common.all.txt"))) {
 						movementTypeSelected = null;
-					} else if (movementTypeSelected.equals(MessageBundle.getMessage("angal.medicalstock.allcharges"))) {
+					} else if (movementTypeSelected.equals(MessageBundle.getMessage("angal.medicalstock.allcharges.txt"))) {
 						movementTypeSelected = "+";
-					} else if (movementTypeSelected.equals(MessageBundle.getMessage("angal.medicalstock.alldischarges"))) {
+					} else if (movementTypeSelected.equals(MessageBundle.getMessage("angal.medicalstock.alldischarges.txt"))) {
 						movementTypeSelected = "-";
 					}
 				}
