@@ -112,6 +112,9 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private static final String FROM_LABEL = MessageBundle.getMessage("angal.common.from.txt") + ':';
 	private static final String TO_LABEL = MessageBundle.getMessage("angal.common.to.txt") + ':';
+	private static final String TEXT_ALL = MessageBundle.getMessage("angal.common.all.txt");
+	private static final String TEXT_ALLCHARGES = MessageBundle.getMessage("angal.medicalstock.allcharges.txt");
+	private static final String TEXT_ALLDISCHARGES = MessageBundle.getMessage("angal.medicalstock.alldischarges.txt");
 
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
 
@@ -315,7 +318,7 @@ public class MovStockBrowser extends ModalJFrame {
 		totalAmount = new BigDecimal(0);
 
 		// quantity
-		if (!medicalBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
+		if (!medicalBox.getSelectedItem().equals(TEXT_ALL)) {
 			for (Movement mov : moves) {
 				if (mov.getType().getType().contains("+")) {
 					totalQti += mov.getQuantity();
@@ -476,7 +479,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JComboBox getWardBox() {
 		wardBox = new JComboBox();
 		wardBox.setPreferredSize(new Dimension(200, 25));
-		wardBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
+		wardBox.addItem(TEXT_ALL);
 		List<Ward> wardsList;
 		try {
 			wardsList = wardBrowserManager.getWards();
@@ -510,7 +513,7 @@ public class MovStockBrowser extends ModalJFrame {
 				int originalSize = medicals.size();
 				int resultsSize = results.size();
 				if (originalSize == resultsSize) {
-					medicalBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
+					medicalBox.addItem(TEXT_ALL);
 				}
 				for (Medical aMedical : results) {
 					medicalBox.addItem(aMedical);
@@ -556,7 +559,7 @@ public class MovStockBrowser extends ModalJFrame {
 			medical = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
-		medicalBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
+		medicalBox.addItem(TEXT_ALL);
 		if (null != medical) {
 			for (Medical aMedical : medical) {
 				medicalBox.addItem(aMedical);
@@ -596,7 +599,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalTypeBox.setPreferredSize(new Dimension(200, 25));
 		List<MedicalType> medical;
 
-		medicalTypeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
+		medicalTypeBox.addItem(TEXT_ALL);
 
 		try {
 			medical = medicalTypeBrowserManager.getMedicalType();
@@ -640,28 +643,34 @@ public class MovStockBrowser extends ModalJFrame {
 	private JComboBox getMovementTypeBox() {
 		movementTypeBox = new JComboBox();
 		movementTypeBox.setPreferredSize(new Dimension(200, 25));
-		List<MovementType> type;
+		List<MovementType> movementTypeList;
 		try {
-			type = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
+			movementTypeList = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
 		} catch (OHServiceException e1) {
-			type = null;
+			movementTypeList = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
-		movementTypeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
-		if (null != type) {
-			for (MovementType movementType : type) {
+		movementTypeBox.addItem(TEXT_ALL);
+		movementTypeBox.addItem(TEXT_ALLCHARGES);
+		movementTypeBox.addItem(TEXT_ALLDISCHARGES);
+		if (null != movementTypeList) {
+			for (MovementType movementType : movementTypeList) {
 				movementTypeBox.addItem(movementType);
 			}
 		}
 		movementTypeBox.addActionListener(actionEvent -> {
-			if (!(movementTypeBox.getSelectedItem() instanceof String)) {
-				MovementType selected = (MovementType) movementTypeBox.getSelectedItem();
+			Object selectedMovementType = movementTypeBox.getSelectedItem();
+
+			if (!(selectedMovementType instanceof String)) {
+				MovementType selected = (MovementType) selectedMovementType;
 				if (selected.getType().contains("-")) {
 					wardBox.setEnabled(true);
 				} else {
 					wardBox.setSelectedIndex(0);
 					wardBox.setEnabled(false);
 				}
+			} else if (TEXT_ALLDISCHARGES.equals(selectedMovementType)) {
+				wardBox.setEnabled(true);
 			} else {
 				wardBox.setSelectedIndex(0);
 				wardBox.setEnabled(false);
@@ -793,7 +802,7 @@ public class MovStockBrowser extends ModalJFrame {
 		filterButton.addActionListener(actionEvent -> {
 			Integer medicalSelected = null;
 			String medicalTypeSelected = null;
-			String typeSelected = null;
+			String movementTypeSelected = null;
 			String wardSelected = null;
 			boolean dateOk = true;
 
@@ -848,8 +857,17 @@ public class MovStockBrowser extends ModalJFrame {
 					}
 				}
 				if (!(movementTypeBox.getSelectedItem() instanceof String)) {
-					typeSelected = ((MovementType) movementTypeBox
+					movementTypeSelected = ((MovementType) movementTypeBox
 									.getSelectedItem()).getCode();
+				} else {
+					movementTypeSelected = (String) movementTypeBox.getSelectedItem();
+					if (movementTypeSelected.equals(TEXT_ALL)) {
+						movementTypeSelected = null;
+					} else if (movementTypeSelected.equals(TEXT_ALLCHARGES)) {
+						movementTypeSelected = "+";
+					} else if (movementTypeSelected.equals(TEXT_ALLDISCHARGES)) {
+						movementTypeSelected = "-";
+					}
 				}
 				if (!(wardBox.getSelectedItem() instanceof String)) {
 					wardSelected = ((Ward) wardBox.getSelectedItem())
@@ -857,7 +875,7 @@ public class MovStockBrowser extends ModalJFrame {
 				}
 				if (!isAutomaticLot()) {
 					model = new MovBrowserModel(medicalSelected,
-									medicalTypeSelected, wardSelected, typeSelected,
+									medicalTypeSelected, wardSelected, movementTypeSelected,
 									movDateFrom.getDateStartOfDay(),
 									movDateTo.getDateStartOfDay(),
 									lotPrepFrom.getDateStartOfDay(),
@@ -866,7 +884,7 @@ public class MovStockBrowser extends ModalJFrame {
 									lotDueTo.getDateStartOfDay());
 				} else {
 					model = new MovBrowserModel(medicalSelected,
-									medicalTypeSelected, wardSelected, typeSelected,
+									medicalTypeSelected, wardSelected, movementTypeSelected,
 									movDateFrom.getDateStartOfDay(),
 									movDateTo.getDateStartOfDay(),
 									null,
@@ -1056,22 +1074,22 @@ public class MovStockBrowser extends ModalJFrame {
 		StringBuilder filename = new StringBuilder("Stock Ledger");
 		if (medicalBox.isEnabled()
 						&& !medicalBox.getSelectedItem().equals(
-										MessageBundle.getMessage("angal.common.all.txt"))) {
+										TEXT_ALL)) {
 
 			filename.append('_').append(medicalBox.getSelectedItem());
 		}
 		if (medicalTypeBox.isEnabled()
 						&& !medicalTypeBox.getSelectedItem().equals(
-										MessageBundle.getMessage("angal.common.all.txt"))) {
+										TEXT_ALL)) {
 
 			filename.append('_').append(medicalTypeBox.getSelectedItem());
 		}
 		if (movementTypeBox.isEnabled() &&
-						!movementTypeBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
+						!movementTypeBox.getSelectedItem().equals(TEXT_ALL)) {
 			filename.append('_').append(movementTypeBox.getSelectedItem());
 		}
 		if (wardBox.isEnabled() &&
-						!wardBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
+						!wardBox.getSelectedItem().equals(TEXT_ALL)) {
 			filename.append('_').append(wardBox.getSelectedItem());
 		}
 		filename.append('_').append(TimeTools.formatDateTime(movDateFrom.getDateStartOfDay(), DATE_FORMAT_YYYYMMDD))
