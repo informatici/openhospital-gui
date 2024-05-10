@@ -120,6 +120,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private final JFrame myFrame;
 	private JButton filterButton;
+	private JButton resetButton;
 	private JCheckBox jCheckBoxKeepFilter;
 	private JComboBox medicalBox;
 	private JComboBox medicalTypeBox;
@@ -364,6 +365,7 @@ public class MovStockBrowser extends ModalJFrame {
 		filterContentPanel.add(getLotDueDatePanel());
 		JPanel filterButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		filterButtonPanel.add(getFilterButton());
+		filterButtonPanel.add(getResetButton());
 		filterButtonPanel.add(getJCheckBoxKeepFilter());
 		filterContentPanel.add(filterButtonPanel);
 		return filterContentPanel;
@@ -902,6 +904,35 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 		});
 		return filterButton;
+	}
+
+	private JButton getResetButton() {
+		resetButton = new JButton(MessageBundle.getMessage("angal.medicalstock.reset.btn"));
+		resetButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.reset.btn.key"));
+		resetButton.addActionListener(actionEvent -> {
+
+			searchTextField.setText("");
+			searchButton.doClick();
+			medicalTypeBox.setSelectedIndex(0);
+			movementTypeBox.setSelectedItem(MessageBundle.getMessage("angal.common.all.txt"));
+			wardBox.setSelectedItem(MessageBundle.getMessage("angal.common.all.txt"));
+
+			movDateFrom.setDate(LocalDate.now().minusWeeks(1));
+			movDateTo.setDate(LocalDate.now());
+
+			if (!isAutomaticLot()) {
+				lotPrepFrom.setDate(null);
+				lotPrepTo.setDate(null);
+			}
+			lotDueFrom.setDate(null);
+			lotDueTo.setDate(null);
+
+			if (jCheckBoxKeepFilter.isSelected()) {
+				filterButton.doClick();
+			}
+		});
+		return resetButton;
+
 	}
 
 	/**
