@@ -478,14 +478,15 @@ public class MovStockBrowser extends ModalJFrame {
 		wardBox = new JComboBox();
 		wardBox.setPreferredSize(new Dimension(200, 25));
 		wardBox.addItem(TEXT_ALL);
-		List<Ward> wardList;
+		List<Ward> wardsList;
 		try {
-			wardList = wardBrowserManager.getWards();
+			wardsList = wardBrowserManager.getWards();
+			wardsList.sort(new Ward.WardDescriptionComparator());
 		} catch (OHServiceException e) {
-			wardList = new ArrayList<>();
+			wardsList = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		for (Ward elem : wardList) {
+		for (Ward elem : wardsList) {
 			wardBox.addItem(elem);
 		}
 		wardBox.setEnabled(false);
@@ -1247,7 +1248,6 @@ public class MovStockBrowser extends ModalJFrame {
 	class DecimalFormatRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
-		private final DecimalFormat formatter100 = new DecimalFormat("#,##0.000");
 		private final DecimalFormat formatter10 = new DecimalFormat("#,##0.00");
 		private final DecimalFormat formatter1 = new DecimalFormat("#,##0");
 
@@ -1259,7 +1259,7 @@ public class MovStockBrowser extends ModalJFrame {
 				value = formatter1.format(value);
 			}
 			if (column == 11 && value instanceof Number) {
-				value = formatter100.format(value);
+				value = formatter10.format(value);
 			}
 			if (column == 12 && value instanceof Number) {
 				value = formatter10.format(value);
