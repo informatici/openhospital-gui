@@ -43,7 +43,7 @@ class WardComboBoxInitializerTest {
 
 	@BeforeEach
 	void setUp() {
-		wardBrowserManager = new WardBrowserManagerStub();
+		wardBrowserManager = new WardBrowserManagerStub(null, null);
 		wardComboBox = new JComboBox();
 	}
 
@@ -57,13 +57,12 @@ class WardComboBoxInitializerTest {
 
 		// when:
 		new WardComboBoxInitializer(
-				wardComboBox,
-				wardBrowserManager,
-				patient,
-				null,
-				false,
-				TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())
-		).initialize();
+						wardComboBox,
+						wardBrowserManager,
+						patient,
+						null,
+						false,
+						TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())).initialize();
 
 		// then:
 		assertThat(wardComboBox.getItemCount()).isEqualTo(2);
@@ -82,13 +81,12 @@ class WardComboBoxInitializerTest {
 
 		// when:
 		new WardComboBoxInitializer(
-				wardComboBox,
-				wardBrowserManager,
-				patient,
-				null,
-				false,
-				TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())
-		).initialize();
+						wardComboBox,
+						wardBrowserManager,
+						patient,
+						null,
+						false,
+						TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())).initialize();
 
 		// then:
 		assertThat(wardComboBox.getItemCount()).isEqualTo(2);
@@ -106,13 +104,12 @@ class WardComboBoxInitializerTest {
 
 		// when:
 		new WardComboBoxInitializer(
-				wardComboBox,
-				wardBrowserManager,
-				patient,
-				null,
-				false,
-				TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())
-		).initialize();
+						wardComboBox,
+						wardBrowserManager,
+						patient,
+						null,
+						false,
+						TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())).initialize();
 
 		// then:
 		assertThat(wardComboBox.getItemCount()).isEqualTo(2);
@@ -131,13 +128,12 @@ class WardComboBoxInitializerTest {
 
 		// when:
 		new WardComboBoxInitializer(
-				wardComboBox,
-				wardBrowserManager,
-				patient,
-				recentlySavedWard,
-				false,
-				TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())
-		).initialize();
+						wardComboBox,
+						wardBrowserManager,
+						patient,
+						recentlySavedWard,
+						false,
+						TestAdmission.withAdmAndDisDate(TimeTools.getNow(), TimeTools.getNow())).initialize();
 
 		// then:
 		assertThat(((Ward) wardComboBox.getSelectedItem()).getCode()).isEqualTo(recentlySavedWard.getCode());
@@ -152,18 +148,17 @@ class WardComboBoxInitializerTest {
 		wardBrowserManager.newWard(editedWard);
 		wardBrowserManager.newWard(TestWard.femaleWardWithBeds("2"));
 		Admission admission = TestAdmission.withAdmAndDisDateAndWard(TimeTools.getNow(),
-				TimeTools.getNow(),
-				editedWard);
+						TimeTools.getNow(),
+						editedWard);
 
 		// when:
 		new WardComboBoxInitializer(
-				wardComboBox,
-				wardBrowserManager,
-				patient,
-				null,
-				true,
-				admission
-		).initialize();
+						wardComboBox,
+						wardBrowserManager,
+						patient,
+						null,
+						true,
+						admission).initialize();
 
 		// then:
 		assertThat(((Ward) wardComboBox.getSelectedItem()).getCode()).isEqualTo(editedWard.getCode());
