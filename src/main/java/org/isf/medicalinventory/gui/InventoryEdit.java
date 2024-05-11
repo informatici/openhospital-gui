@@ -26,6 +26,7 @@ import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -57,6 +58,7 @@ import java.util.stream.Collectors;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -73,6 +75,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.GeneralData;
@@ -159,6 +162,7 @@ public class InventoryEdit extends ModalJFrame {
 	private int[] pColumwidth = { 100, 200, 100, 100, 100, 80, 80, 80 };
 	private boolean[] columnEditable = { false, false, true, true, false, true, true, false };
 	private boolean[] columnEditableView = { false, false, false, false, false, false, false, false };
+	private boolean[] pColumnVisible = { true, true, !GeneralData.AUTOMATICLOT_IN, true, true, true, GeneralData.LOTWITHCOST, true };
 	private MedicalInventory inventory = null;
 	private JRadioButton specificRadio;
 	private JRadioButton allRadio;
@@ -171,9 +175,10 @@ public class InventoryEdit extends ModalJFrame {
 	private JTextField referenceTextField;
 	private JTextField jTetFieldEditor;
 	private JButton moreData;
-	private final int MAX_COUNT = 30;
+	private final int MAX_COUNT = 50;
 	private int currentIndex = 0;
 	private final boolean MORE_DATA = true;
+	JLabel data = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private MedicalInventoryRowManager medicalInventoryRowManager = Context.getApplicationContext().getBean(MedicalInventoryRowManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
@@ -209,7 +214,6 @@ public class InventoryEdit extends ModalJFrame {
 		} else {
 			setTitle(MessageBundle.getMessage("angal.inventory.editinventory.title"));
 		}
-
 		getContentPane().setLayout(new BorderLayout());
 
 		panelHeader = getPanelHeader();
@@ -556,6 +560,15 @@ public class InventoryEdit extends ModalJFrame {
 			jTetFieldEditor = new JTextField();
 			jTableInventoryRow.setFillsViewportHeight(true);
 			jTableInventoryRow.setModel(new InventoryRowModel());
+			for (int i = 0; i < pColums.length; i++) {
+				jTableInventoryRow.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
+				jTableInventoryRow.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
+				if (!pColumnVisible[i]) {
+					jTableInventoryRow.getColumnModel().getColumn(i).setMinWidth(0);
+					jTableInventoryRow.getColumnModel().getColumn(i).setMaxWidth(0);
+					jTableInventoryRow.getColumnModel().getColumn(i).setWidth(0);
+				}
+			}
 			jTableInventoryRow.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 				@Override
@@ -573,6 +586,16 @@ public class InventoryEdit extends ModalJFrame {
 		return jTableInventoryRow;
 	}
 
+	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			return cell;
+		}
+	}
 	class InventoryRowModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
@@ -1038,7 +1061,9 @@ public class InventoryEdit extends ModalJFrame {
 			if (MORE_DATA && inventory == null) {
 				List<Medical> medicalList = new ArrayList<Medical>();
 				try {
-					medicalList = medicalBrowsingManager.getMedicals();
+					currentIndex = currentIndex + 1;
+					Page<Medical> medicalsPageable = medicalBrowsingManager.getMedicalsPageable(currentIndex, MAX_COUNT);
+					medicalList = medicalsPageable.getContent();
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
@@ -1300,7 +1325,6 @@ public class InventoryEdit extends ModalJFrame {
 			referenceTextField.setColumns(10);
 			if (inventory != null && !mode.equals("new")) {
 				referenceTextField.setText(inventory.getInventoryReference());
-				referenceTextField.setEnabled(false);
 			}
 		}
 		return referenceTextField;
