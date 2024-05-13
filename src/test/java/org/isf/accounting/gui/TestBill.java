@@ -19,24 +19,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package org.isf.accounting;
+package org.isf.accounting.gui;
 
 import org.isf.accounting.model.Bill;
-import org.isf.accounting.model.BillPayments;
 
-public class TestPayment {
+public class TestBill {
 
-	public static BillPayments withAmountAndBill(double amount, Bill bill) {
-		BillPayments billPayments = new BillPayments();
-		billPayments.setAmount(amount);
-		billPayments.setBill(bill);
-		return billPayments;
+	public static Bill notDeletedBillWithBalance(int id, double amount) {
+		Bill bill = new Bill();
+		bill.setId(id);
+		bill.setBalance(amount);
+		return bill;
 	}
 
-	public static BillPayments withAmountBillAndUser(double amount, Bill bill, String user) {
-		BillPayments billPayments = withAmountAndBill(amount, bill);
-		billPayments.setUser(user);
-		return billPayments;
+	public static Bill notDeletedBillWithStatus(int id, String status) {
+		Bill bill = new Bill();
+		bill.setId(id);
+		bill.setStatus(status);
+		bill.setBalance(100d);
+		return bill;
+	}
+
+	public static Bill deletedBillWithBalance(int id, double amount) {
+		Bill bill = new Bill();
+		bill.setId(id);
+		bill.setBalance(amount);
+		bill.setStatus("D");
+		return bill;
 	}
 
 }

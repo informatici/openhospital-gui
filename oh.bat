@@ -346,7 +346,7 @@ REM ###### Start Open Hospital #####
 echo Starting Open Hospital GUI...
 
 cd /d %OH_PATH%\%OH_DIR%
-%JAVA_BIN% -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=%NATIVE_LIB_PATH% -cp %CLASSPATH% org.isf.menu.gui.Menu
+%JAVA_BIN% -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=%NATIVE_LIB_PATH% -cp %CLASSPATH% org.isf.Application
 
 REM # Shutdown MySQL
 echo Shutting down MySQL...

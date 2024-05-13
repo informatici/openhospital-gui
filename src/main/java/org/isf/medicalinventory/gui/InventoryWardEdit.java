@@ -128,8 +128,9 @@ public class InventoryWardEdit extends ModalJFrame {
         };
 
         EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
-        for (int i = 0; i < listeners.length; i++)
+        for (int i = 0; i < listeners.length; i++) {
             ((InventoryListener) listeners[i]).InventoryUpdated(event);
+        }
     }
 
     private GoodDateChooser jCalendarInventory;
@@ -208,7 +209,13 @@ public class InventoryWardEdit extends ModalJFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setMinimumSize(new DimensionUIResource(950, 580));
         setLocationRelativeTo(null); // center
-        setTitle(MessageBundle.getMessage("angal.inventory.edit.title"));
+        if (mode.equals("update")) {
+            setTitle(MessageBundle.getMessage("angal.inventory.edit.title"));
+        } else if (mode.equals("view")) {
+            setTitle(MessageBundle.getMessage("angal.inventory.view.title"));
+        } else {
+            setTitle(MessageBundle.getMessage("angal.inventory.new.title"));
+        }
 
         panelHeader = getPanelHeader();
         getContentPane().add(panelHeader, BorderLayout.NORTH);
@@ -355,7 +362,6 @@ public class InventoryWardEdit extends ModalJFrame {
         saveButton = new JButton(MessageBundle.getMessage("angal.common.save"));
         saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
         saveButton.addActionListener(actionEvent -> {
-            String State = InventoryStatus.draft.toString();
             String user = UserBrowsingManager.getCurrentUser();
             int checkResults = 0;
             if (inventoryRowSearchList == null || inventoryRowSearchList.size() < 1) {
@@ -381,9 +387,16 @@ public class InventoryWardEdit extends ModalJFrame {
                 inventory = new MedicalInventory();
                 inventory.setInventoryReference(reference);
                 inventory.setInventoryDate(dateInventory);
-                inventory.setStatus(State);
+                inventory.setStatus(InventoryStatus.draft.toString());
                 inventory.setUser(user);
-                inventory.setInventoryType(InventoryType.main.toString());
+                inventory.setInventoryType(InventoryType.ward.toString());
+                if (!wardComboBox.getSelectedItem().equals("") && wardComboBox.getSelectedItem() != null) {
+                    Ward selectedWard = (Ward) wardComboBox.getSelectedItem();
+                    inventory.setWard(selectedWard.getCode());
+                } else {
+                    MessageDialog.error(null, "angal.inventory.youmustselectaward.msg");
+                    return;
+                }
                 MedicalInventory meInventory;
                 try {
                     meInventory = medicalInventoryManager.newMedicalInventory(inventory);
@@ -418,6 +431,50 @@ public class InventoryWardEdit extends ModalJFrame {
                 } catch (OHServiceException e) {
                     OHServiceExceptionUtil.showMessages(e);
                 }
+            } else if (inventory != null && mode.equals("update")) {
+                checkResults = 0;
+                boolean toUpdate = false;
+                MedicalInventory result = new MedicalInventory();
+                if (!inventory.getInventoryDate().equals(dateInventory)) {
+                    inventory.setInventoryDate(dateInventory);
+                    toUpdate = true;
+                }
+                if (!inventory.getUser().equals(user)) {
+                    inventory.setUser(user);
+                    toUpdate = true;
+                }
+                if (toUpdate) {
+                    try {
+                        result = medicalInventoryManager.updateMedicalInventory(inventory);
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
+                }
+
+                if (result != null) {
+                    try {
+                        for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator
+                                .hasNext();) {
+                            MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
+                            if (medicalInventoryRowManager.updateMedicalInventoryRow(medicalInventoryRow) == null) {
+                                checkResults++;
+                            }
+                        }
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
+
+                    if (checkResults == 0) {
+                        MessageDialog.info(this, "angal.inventory.updatesucces.msg");
+                        validateButton.setEnabled(true);
+                        fireInventoryUpdated();
+                    } else {
+                        MessageDialog.error(null, "angal.inventory.updaterowerror.msg");
+                    }
+                } else {
+                    MessageDialog.error(null, "angal.inventory.updateerror.msg");
+                }
+
             }
         });
         return saveButton;
@@ -543,19 +600,36 @@ public class InventoryWardEdit extends ModalJFrame {
         private static final long serialVersionUID = 1L;
 
         public InventoryRowModel() {
-            if (allRadio.isSelected()) {
-                try {
-                    inventoryRowList = loadNewInventoryTable(null);
-                } catch (OHServiceException e) {
-                    inventoryRowList = new ArrayList<>();
-                    OHServiceExceptionUtil.showMessages(e);
+            inventoryRowList = new ArrayList<>();
+            if (inventory == null) {
+                if (allRadio.isSelected()) {
+                    try {
+                        inventoryRowList = loadNewInventoryTable(null);
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
+                } else if (specificRadio.isSelected() && code != null && !code.trim().equals("")) {
+                    try {
+                        inventoryRowList = loadNewInventoryTable(code.trim());
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
                 }
-            } else if (specificRadio.isSelected() && code != null && !code.trim().equals("")) {
-                try {
-                    inventoryRowList = loadNewInventoryTable(code.trim());
-                } catch (OHServiceException e) {
-                    inventoryRowList = new ArrayList<>();
-                    OHServiceExceptionUtil.showMessages(e);
+            } else if (inventory != null) {
+                if (allRadio.isSelected()) {
+                    try {
+                        inventoryRowList = medicalInventoryRowManager
+                                .getMedicalInventoryRowByInventoryId(inventory.getId());
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
+                } else if (specificRadio.isSelected() && code != null && !code.trim().equals("")) {
+                    try {
+                        inventoryRowList = medicalInventoryRowManager
+                                .getMedicalInventoryRowByInventoryIdAndMedicalCode(inventory.getId(), code.trim());
+                    } catch (OHServiceException e) {
+                        OHServiceExceptionUtil.showMessages(e);
+                    }
                 }
             }
 
@@ -1024,10 +1098,21 @@ public class InventoryWardEdit extends ModalJFrame {
                 wardList = new ArrayList<>();
                 OHServiceExceptionUtil.showMessages(e);
             }
-            for (Ward elem : wardList) {
-                wardComboBox.addItem(elem);
+            if (!mode.equals("new")) {
+                String wardId = inventory.getWard();
+                for (Ward ward : wardList) {
+                    if (ward.getCode().equals(wardId)) {
+                        wardComboBox.addItem(ward);
+                        wardSelected = ward;
+                    }
+                }
+                wardComboBox.setEnabled(false);
+            } else {
+                for (Ward elem : wardList) {
+                    wardComboBox.addItem(elem);
+                }
+                wardComboBox.setSelectedIndex(-1);
             }
-            wardComboBox.setSelectedIndex(-1);
 
             wardComboBox.addItemListener(itemEvent -> {
 
