@@ -728,6 +728,7 @@ public class MovStockMultipleCharging extends JDialog {
 			List<Supplier> suppliers = null;
 			try {
 				suppliers = supplierBrowserManager.getList();
+				suppliers.sort(new Supplier.SupplierNameComparator());
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -420,19 +420,16 @@ public class MedicalEdit extends JDialog {
 	private JComboBox<MedicalType> getTypeComboBox() {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox<>();
-			if (insert) {
-				List<MedicalType> types;
-				try {
-					types = medicalTypeManager.getMedicalType();
-					for (MedicalType elem : types) {
-						typeComboBox.addItem(elem);
-					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
+			try {
+				List<MedicalType> types = medicalTypeManager.getMedicalType();
+				for (MedicalType elem : types) {
+					typeComboBox.addItem(elem);
 				}
-			} else {
-				typeComboBox.addItem(medical.getType());
-				typeComboBox.setEnabled(false);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
+			if (!insert) {
+				typeComboBox.setSelectedItem(medical.getType());
 			}
 		}
 		return typeComboBox;
