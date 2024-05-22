@@ -58,7 +58,6 @@ import java.util.stream.Collectors;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -561,7 +560,7 @@ public class InventoryEdit extends ModalJFrame {
 			jTetFieldEditor = new JTextField();
 			jTableInventoryRow.setFillsViewportHeight(true);
 			jTableInventoryRow.setModel(new InventoryRowModel());
-			for (int i = 0; i < pColums.length; i++) {
+			for (int i = 0; i < pColumnVisible.length; i++) {
 				jTableInventoryRow.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
 				jTableInventoryRow.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
 				if (!pColumnVisible[i]) {
@@ -574,7 +573,7 @@ public class InventoryEdit extends ModalJFrame {
 
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
-					if (!e.getValueIsAdjusting()) {
+					if (e.getValueIsAdjusting()) {
 						jTableInventoryRow.editCellAt(jTableInventoryRow.getSelectedRow(), jTableInventoryRow.getSelectedColumn());
 						jTetFieldEditor.selectAll();
 					}
@@ -670,7 +669,7 @@ public class InventoryEdit extends ModalJFrame {
 				if (medInvtRow.getLot() == null) {
 					return "";
 				}
-				return medInvtRow.getLot().getCode().equals("") ? "AUTO" : medInvtRow.getLot().getCode();
+				return medInvtRow.getLot().getCode();
 			} else if (c == 3) {
 				if (medInvtRow.getLot() != null) {
 					if (medInvtRow.getLot().getDueDate() != null) {
@@ -708,18 +707,21 @@ public class InventoryEdit extends ModalJFrame {
 				MedicalInventoryRow invRow = inventoryRowSearchList.get(r);
 				Medical medical= invRow.getMedical();
 				if (c == 2) {
-					// Lot (PreparationDate && ExpiringDate)
-					Lot lot = getLot();
+					Lot lot = getLot(value.toString());
+					if(lot == null) {
+						return ;
+					}
 					lot.setMedical(medical);
 					invRow.setLot(lot);
 					inventoryRowSearchList.set(r, invRow);
-					jTableInventoryRow.updateUI();
 				}
 				if (c == 3) {
-					// update due Date
 					Lot lot = invRow.getLot();
 					if (lot.getCode().equals("")) {
-						lot = getLot();
+						lot = getLot("");
+						if(lot == null) {
+							return ;
+						}
 						lot.setMedical(medical);
 					} else {
 						SimpleDateFormat dateFormatString = new SimpleDateFormat("dd/MM/yyyy hh:mm");
@@ -734,7 +736,6 @@ public class InventoryEdit extends ModalJFrame {
 					}
 					invRow.setLot(lot);
 					inventoryRowSearchList.set(r, invRow);
-					jTableInventoryRow.updateUI();
 				}
 				if (c == 5) {
 					Integer intValue = 0;
@@ -746,7 +747,6 @@ public class InventoryEdit extends ModalJFrame {
 
 					invRow.setRealqty(intValue);
 					inventoryRowSearchList.set(r, invRow);
-					jTableInventoryRow.updateUI();
 				}
 				if (c == 6) {
 					Double doubleValue = 0.0;
@@ -765,35 +765,19 @@ public class InventoryEdit extends ModalJFrame {
 					lot.setCost(new BigDecimal(doubleValue));
 					invRow.setLot(lot);
 					inventoryRowSearchList.set(r, invRow);
-					jTableInventoryRow.updateUI();
 				}
+				fireTableCellUpdated(r, c);
 			}
 
 		}
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-
-			if (columnIndex == 2) {
-				return true;
-			}
-
-			if (columnIndex == 3) {
-				return true;
-			}
-
-			if (columnIndex == 5) {
-				return true;
-			}
-			
-			if (columnIndex == 6) {
-				return true;
-			}
 			return columnEditable[columnIndex];
 		}
 	}
 	
-	private Lot getLot() {
+	private Lot getLot(String lotCode) {
 		Lot lot = null;
 		if (isAutomaticLotIn()) {
 			LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
@@ -809,12 +793,12 @@ public class InventoryEdit extends ModalJFrame {
 			}
 			lot.setCost(cost);
 		} else {
-			lot = askLot();
+			lot = askLot(lotCode);
 		}
 		return lot;
 	}
 	
-	private Lot askLot() {
+	private Lot askLot(String lotCode) {
 		LocalDateTime preparationDate;
 		LocalDateTime expiringDate;
 		Lot lot = null;
@@ -827,7 +811,9 @@ public class InventoryEdit extends ModalJFrame {
 		suggestion.setHorizontalAlignment(SwingConstants.CENTER);
 		suggestion.changeAlpha(0.5f);
 		suggestion.changeStyle(Font.BOLD + Font.ITALIC);
-
+		if (lotCode.trim().length() != 0) {
+			lotNameTextField.setText(lotCode);
+		}
 		LocalDate now = LocalDate.now();
 		GoodDateChooser preparationDateChooser = new GoodDateChooser(now);
 		GoodDateChooser expireDateChooser = new GoodDateChooser(now);
@@ -1259,13 +1245,6 @@ public class InventoryEdit extends ModalJFrame {
 	private Medical chooseMedical(String text) throws OHServiceException {
 		Map<String, Medical> medicalMap;
 		List<Medical> medicals = medicalBrowsingManager.getMedicals();
-		if (mode.equals("update")) {
-			medicals.clear();
-			List<MedicalInventoryRow> inventoryRowListTemp = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
-			for (MedicalInventoryRow medicalInventoryRow : inventoryRowListTemp) {
-				medicals.add(medicalInventoryRow.getMedical());
-			}
-		}
 		medicalMap = new HashMap<String, Medical>();
 		for (Medical med : medicals) {
 			String key = med.getProdCode().toLowerCase();
