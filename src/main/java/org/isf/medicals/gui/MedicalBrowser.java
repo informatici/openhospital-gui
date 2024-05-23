@@ -28,8 +28,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.font.TextAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -37,6 +39,7 @@ import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -100,7 +103,10 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalBrowser.class);
-	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
+	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt");
+
+	private static final String STR_ACTIVE_ONLY = MessageBundle.getMessage("angal.medicals.activeonly.txt");
+	private static final String STR_DISABLED_ONLY = MessageBundle.getMessage("angal.medicals.disabledonly.txt");
 
 	@Override
 	public void medicalInserted(Medical medical) {
@@ -122,6 +128,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 		repaint();
+		activeComboBox.setSelectedItem(activeComboBox.getSelectedItem()); // simulate selections
 		int keyCode = 0; // simulate ENTER on the search field
 		KeyEvent enterPressed = new KeyEvent(searchString, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, keyCode, '\n');
 		searchString.dispatchEvent(enterPressed);
@@ -129,6 +136,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 	private int selectedrow;
 	private JComboBox pbox;
+	private JComboBox activeComboBox;
 	private List<Medical> pMedicals;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
@@ -149,6 +157,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private final JFrame me;
 
 	private String pSelection;
+	private String activeSelection = STR_ACTIVE_ONLY;
 	private JTextField searchString;
 	protected boolean altKeyReleased = true;
 	private String lastKey = "";
@@ -211,6 +220,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 	private JPanel getJButtonPanel() {
 		JPanel buttonPanel = new JPanel(new WrapLayout());
+		buttonPanel.add(getComboBoxActive());
 		buttonPanel.add(new JLabel(MessageBundle.getMessage("angal.medicals.selecttype")));
 		buttonPanel.add(getComboBoxMedicalType());
 		buttonPanel.add(getSearchBox());
@@ -525,10 +535,32 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		return buttonNew;
 	}
 
+	private JComboBox getComboBoxActive() {
+		if (activeComboBox == null) {
+			activeComboBox = new JComboBox();
+			activeComboBox.addItem(STR_ACTIVE_ONLY);
+			activeComboBox.addItem(STR_ALL);
+			activeComboBox.addItem(STR_DISABLED_ONLY);
+			activeSelection = STR_ACTIVE_ONLY;
+		}
+		activeComboBox.addActionListener(actionEvent -> {
+			activeSelection = activeComboBox.getSelectedItem().toString();
+			if (pSelection.compareTo(STR_ALL) == 0) {
+				model = new MedicalBrowsingModel();
+			} else {
+				model = new MedicalBrowsingModel(pSelection, true);
+			}
+			table.setModel(model);
+			model.fireTableDataChanged();
+			table.updateUI();
+		});
+		return activeComboBox;
+	}
+
 	private JComboBox getComboBoxMedicalType() {
 		if (pbox == null) {
 			pbox = new JComboBox();
-			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
+			pbox.addItem(STR_ALL);
 			List<MedicalType> type;
 			try {
 				type = medicalTypeManager.getMedicalType();
@@ -538,6 +570,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
+			pSelection = STR_ALL;
 		}
 		pbox.addActionListener(actionEvent -> {
 			pSelection = pbox.getSelectedItem().toString();
@@ -658,6 +691,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			if (isType) {
 				try {
 					medicalList = pMedicals = medicalBrowsingManager.getMedicals(key, false);
+					if (activeSelection.equals(STR_ACTIVE_ONLY)) {
+						medicalList = pMedicals = new ArrayList<>(pMedicals.stream().filter(med -> med.getDeleted() == 'N').toList());
+					} else if (activeSelection.equals(STR_DISABLED_ONLY)) {
+						medicalList = pMedicals = new ArrayList<>(pMedicals.stream().filter(med -> med.getDeleted() == 'Y').toList());
+					}
 				} catch (OHServiceException e) {
 					pMedicals = null;
 					OHServiceExceptionUtil.showMessages(e);
@@ -695,6 +733,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		public MedicalBrowsingModel() {
 			try {
 				medicalList = pMedicals = medicalBrowsingManager.getMedicals(null, false);
+				if (activeSelection.equals(STR_ACTIVE_ONLY)) {
+					medicalList = pMedicals = new ArrayList<>(pMedicals.stream().filter(med -> med.getDeleted() == 'N').toList());
+				} else if (activeSelection.equals(STR_DISABLED_ONLY)) {
+					medicalList = pMedicals = new ArrayList<>(pMedicals.stream().filter(med -> med.getDeleted() == 'Y').toList());
+				}
 			} catch (OHServiceException e) {
 				pMedicals = null;
 				OHServiceExceptionUtil.showMessages(e);
@@ -787,6 +830,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			}
 			if (med.getMinqty() != 0 && actualQty <= med.getMinqty()) {
 				cell.setForeground(Color.RED); // under critical level
+			}
+			if (activeSelection.equals(STR_ALL) && med.getDeleted() == 'Y') {
+				Map attributes = cell.getFont().getAttributes();
+				attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+				cell.setFont(new Font(attributes));
 			}
 			return cell;
 		}
