@@ -87,16 +87,8 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * This class shows a complete extended list of medical drugs,
- * supplies-sundries, diagnostic kits -reagents, laboratory chemicals. It is
- * possible to filter data with a selection combo box
- * and edit-insert-delete records
- *
- * @author bob
- * 11-dic-2005
- * modified by alex:
- * - product code
- * - pieces per packet
+ * This class shows a complete extended list of medical drugs, supplies-sundries, diagnostic kits -reagents, laboratory chemicals. It is possible to filter data
+ * with a selection combo box and edit-insert-delete records
  */
 public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
