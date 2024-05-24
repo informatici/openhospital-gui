@@ -29,12 +29,12 @@ Be sure to have configured properly the classpath for the project (see [5 Instal
 
 Before running the application, you should generate the config files with the `g)` option, or manually copying and renaming the files `*.dist` files in `rsc/` folder and edit them accordingly:
 
-| Dist file                | Property file       | Properties to fill in                                         |
-|--------------------------|---------------------|---------------------------------------------------------------|
-| database.properties.dist | database.properties | DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS                      |
-| dicom.properties.dist    | dicom.properties    | OH_PATH_SUBSTITUTE/DICOM_DIR, DICOM_SIZE                      |
-| log4j.properties.dist    | log4j.properties    | LOG_DEST, DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS, LOG_LEVEL |
-| settings.properties.dist | settings.properties | OH_LANGUAGE,(SINGLEUSER=)YES_OR_NO, PHOTO_DIR, OH_DOC_DIR     |
+| Dist file                     | Property file            | Properties to fill in                                         |
+|-------------------------------|--------------------------|---------------------------------------------------------------|
+| database.properties.dist      | database.properties      | DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS                      |
+| dicom.properties.dist         | dicom.properties         | OH_PATH_SUBSTITUTE/DICOM_DIR, DICOM_SIZE                      |
+| log4j2-spring.properties.dist | log4j2-spring.properties | LOG_DEST, DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS, LOG_LEVEL |
+| settings.properties.dist      | settings.properties      | OH_LANGUAGE,(SINGLEUSER=)YES_OR_NO, PHOTO_DIR, OH_DOC_DIR     |
 
 *For further information, please refer to the Admin and User manuals in the [Doc project][openhospital-doc].*
 

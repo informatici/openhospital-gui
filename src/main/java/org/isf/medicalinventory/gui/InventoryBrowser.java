@@ -83,7 +83,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JButton jButtonEdit;
 	private JButton jButtonPrint;
 	private JButton jButtonDelete;
-	private JButton jButtonView;
 	private JScrollPane scrollPaneInventory;
 	private JTable jTableInventory;
 	private String[] pColums = { MessageBundle.getMessage("angal.common.reference.label").toUpperCase(),
@@ -262,7 +261,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			panelFooter.add(next);
 
 			panelFooter.add(getNewButton());
-			panelFooter.add(getViewButton());
 			panelFooter.add(getUpdateButton());
 			panelFooter.add(getPrintButton());
 			panelFooter.add(getDeleteButton());
@@ -351,12 +349,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 		});
 		return jButtonNew;
-	}
-
-	private JButton getViewButton() {
-		jButtonView = new JButton(MessageBundle.getMessage("angal.common.view.btn"));
-		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.common.view.btn.key"));
-		return jButtonView;
 	}
 
 	private JButton getUpdateButton() {
