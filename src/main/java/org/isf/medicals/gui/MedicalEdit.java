@@ -59,12 +59,6 @@ import org.isf.utils.layout.SpringUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * 18-ago-2008
- * added by alex:
- * 	- product code
- *  - pieces per packet
- */
 public class MedicalEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -130,8 +124,7 @@ public class MedicalEdit extends JDialog {
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 
 	/**
-	 * This is the default constructor; we pass the arraylist and the
-	 * selectedrow because we need to update them
+	 * This is the default constructor; we pass the arraylist and the selectedrow because we need to update them
 	 */
 	public MedicalEdit(Medical old, boolean inserting, JFrame owner) {
 		super(owner, true);
