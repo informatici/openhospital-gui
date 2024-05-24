@@ -742,6 +742,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			List<Ward> wardsList;
 			try {
 				wardsList = wardBrowserManager.getWards();
+				wardsList.sort(new Ward.WardDescriptionComparator());
 			} catch (OHServiceException e) {
 				wardsList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);

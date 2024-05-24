@@ -46,7 +46,7 @@ OH_API_JAR="openhospital-api-0.1.0.jar"
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
 IMAGING_SETTINGS="dicom.properties"
-LOG4J_SETTINGS="log4j.properties"
+LOG4J_SETTINGS="log4j2-spring.properties"
 API_SETTINGS="application.properties"
 HELP_FILE="OH-readme.txt"
 
