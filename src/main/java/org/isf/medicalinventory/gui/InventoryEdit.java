@@ -52,7 +52,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
@@ -192,6 +191,11 @@ public class InventoryEdit extends ModalJFrame {
 	private SupplierBrowserManager supplierManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 	private WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
+	
+	public InventoryEdit() {
+		initComponents();
+		mode = "new";
+	}
 	
 	private boolean isAutomaticLotIn() {
 		return GeneralData.AUTOMATICLOT_IN;
@@ -407,13 +411,6 @@ public class InventoryEdit extends ModalJFrame {
 			if (dateInventory.isAfter(now)) {
 				MessageDialog.error(null, "angal.inventory.notdateinfuture.msg");
 			}
-			if (!isAutomaticLotIn()) {
-				List<MedicalInventoryRow> filterMedInvs = inventoryRowSearchList.stream().filter(medInvRow -> medInvRow.getLot().getCode().equals("")) .collect(Collectors.toList());
-				if (filterMedInvs.size() > 0) {
-					MessageDialog.error(null, "angal.inventory.allrowshouldhavelot.msg");
-					return;
-				}
-			}
 			
 			if ((inventory == null) && (mode.equals("new"))) {
 				String reference = referenceTextField.getText().trim();
@@ -442,12 +439,11 @@ public class InventoryEdit extends ModalJFrame {
 							Lot lot = medicalInventoryRow.getLot();
 							String lotCode = lot.getCode();
 							Medical medical = medicalInventoryRow.getMedical();
-							if (movStockInsertingManager.getLot(lotCode) == null) {
+							if (lot.getDueDate() != null && movStockInsertingManager.getLot(lotCode) == null) {
 								Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
 								medicalInventoryRow.setLot(lotStore);
 							} else {
-								Lot lotStore = movStockInsertingManager.updateLot(lot);
-								medicalInventoryRow.setLot(lotStore);
+								medicalInventoryRow.setLot(null);
 							}
 							currentInventoryRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 							if (currentInventoryRow == null) {
@@ -495,33 +491,46 @@ public class InventoryEdit extends ModalJFrame {
 						MedicalInventoryRow updateMedicalInvRow;
 						Medical medical = medicalInventoryRow.getMedical();
 						Lot lot = medicalInventoryRow.getLot();
-						String lotCode = lot.getCode();
+						String lotCode ;
 						if (toUpdate) {
 							medicalInventoryRow.setInventory(medIventory);
 						}
 						if (medicalInventoryRow.getId() == 0) {
-							boolean isExist = false;
-							try {
-								Lot lotExist = movStockInsertingManager.getLot(lotCode);
-								if (lotExist != null) {
-									isExist = true;
+							if (lot != null) {
+								lotCode = lot.getCode();
+								boolean isExist = false;
+								try {
+									Lot lotExist = movStockInsertingManager.getLot(lotCode);
+									if (lotExist != null) {
+										isExist = true;
+									}
+								} catch (OHServiceException e) {
+									OHServiceExceptionUtil.showMessages(e);
+									return ;
 								}
-							} catch (OHServiceException e) {
-								OHServiceExceptionUtil.showMessages(e);
-							}
-							if (!isExist) {
-								Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
-								medicalInventoryRow.setLot(lotStore);
-								
-							} else {
-								Lot lotStore = movStockInsertingManager.updateLot(lot);
-								medicalInventoryRow.setLot(lotStore);
+								if (!isExist) {
+									Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
+									medicalInventoryRow.setLot(lotStore);
+									
+								} else {
+									Lot lotStore = movStockInsertingManager.updateLot(lot);
+									medicalInventoryRow.setLot(lotStore);
+								}
 							}
 							updateMedicalInvRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 						} else {
 							lot = medicalInventoryRow.getLot();
-							Lot lotStore = movStockInsertingManager.updateLot(lot);
-							medicalInventoryRow.setLot(lotStore);
+							if (lot != null ) {
+								lotCode = lot.getCode();
+								Lot lotExist = movStockInsertingManager.getLot(lotCode);
+								if (!lot.equals(lotExist)) {
+									Lot lotStore = movStockInsertingManager.updateLot(lot);
+									medicalInventoryRow.setLot(lotStore);
+								} else {
+									Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
+									medicalInventoryRow.setLot(lotStore);
+								}
+							}
 							updateMedicalInvRow = medicalInventoryRowManager.updateMedicalInventoryRow(medicalInventoryRow);
 						}
 						if (updateMedicalInvRow == null) {
@@ -529,7 +538,9 @@ public class InventoryEdit extends ModalJFrame {
 						}
 					}
 				} catch (OHServiceException e) {
+					System.out.println("error "+e.getMessage());
 					OHServiceExceptionUtil.showMessages(e);
+					return ;
 				}
 				if (checkResults == 0) {
 					MessageDialog.info(null, "angal.inventory.update.success.msg");
@@ -758,25 +769,28 @@ public class InventoryEdit extends ModalJFrame {
 				}
 				if (c == 3) {
 					Lot lot = invRow.getLot();
-					if (lot.getCode().equals("")) {
-						lot = getLot("");
-						if(lot == null) {
-							return ;
-						}
-						lot.setMedical(medical);
+					if(lot == null) {
+						return ;
 					} else {
-						SimpleDateFormat dateFormatString = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-						Date dueDate = new Date();
-						try {
-							dueDate = dateFormatString.parse(value.toString());
-						} catch (ParseException e) {
-							e.printStackTrace();
+						if (lot.getCode().equals("")) {
+							lot = getLot("");
+							lot.setMedical(medical);
+						} else {
+							SimpleDateFormat dateFormatString = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+							Date dueDate = new Date();
+							try {
+								dueDate = dateFormatString.parse(value.toString());
+							} catch (ParseException e) {
+								e.printStackTrace();
+								return ;
+							}
+							LocalDateTime date = dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+							lot.setDueDate(date);
 						}
-						LocalDateTime date = dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-						lot.setDueDate(date);
+						invRow.setLot(lot);
+						inventoryRowSearchList.set(r, invRow);
 					}
-					invRow.setLot(lot);
-					inventoryRowSearchList.set(r, invRow);
+					
 				}
 				if (c == 5) {
 					Integer intValue = 0;
@@ -784,6 +798,7 @@ public class InventoryEdit extends ModalJFrame {
 						intValue = Integer.parseInt(value.toString());
 					} catch (NumberFormatException e) {
 						intValue = 0;
+						return ;
 					}
 
 					invRow.setRealqty(intValue);
@@ -795,12 +810,14 @@ public class InventoryEdit extends ModalJFrame {
 						doubleValue = Double.parseDouble(value.toString());
 					} catch (NumberFormatException e) {
 						doubleValue = 0.0;
+						return ;
 					}
 					Lot lot = invRow.getLot();
 					if (!isAutomaticLotIn()) {
-						if (lot.getCode().equals("")) {
+						if (lot == null || lot.getCode().equals("")) {
 							MessageDialog.error(null, "angal.inventoryrow.cannotchangethepriceofproductwithoutlot.msg");
 							doubleValue = 0.0;
+							return ;
 						}
 					}
 					lot.setCost(new BigDecimal(doubleValue));
@@ -808,6 +825,7 @@ public class InventoryEdit extends ModalJFrame {
 					inventoryRowSearchList.set(r, invRow);
 				}
 				fireTableCellUpdated(r, c);
+				jTableInventoryRow.updateUI();
 			}
 
 		}
@@ -1024,7 +1042,7 @@ public class InventoryEdit extends ModalJFrame {
 		}
 		return dateInventoryLabel;
 	}
-
+	
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
 			codeTextField = new JTextField();
