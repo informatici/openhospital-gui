@@ -198,6 +198,12 @@ public class InventoryEdit extends ModalJFrame {
 		if (!mode.equals("new")) {
 			resetButton.setVisible(false);
 		}
+		if (mode.equals("view")) {
+			saveButton.setVisible(false);
+			deleteButton.setVisible(false);
+			columnEditable = columnEditableView;
+			codeTextField.setEditable(false);
+		}
 	}
 
 	private void initComponents() {
@@ -605,7 +611,7 @@ public class InventoryEdit extends ModalJFrame {
 		resetButton = new JButton(MessageBundle.getMessage("angal.inventory.clean.btn"));
 		resetButton.setMnemonic(MessageBundle.getMnemonic("angal.inventory.clean.btn.key"));
 		resetButton.addActionListener(actionEvent -> {
-			int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttodeletethisinventoryrow.msg");
+			int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttocleanthistable.msg");
 			if (reset == JOptionPane.YES_OPTION) {
 				if (inventory == null) {
 					if (inventoryRowList != null) {

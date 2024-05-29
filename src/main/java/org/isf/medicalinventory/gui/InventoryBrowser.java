@@ -29,6 +29,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -45,6 +47,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -83,6 +86,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JButton jButtonEdit;
 	private JButton jButtonPrint;
 	private JButton jButtonDelete;
+	private JButton jButtonView;
 	private JScrollPane scrollPaneInventory;
 	private JTable jTableInventory;
 	private String[] pColums = { MessageBundle.getMessage("angal.common.reference.label").toUpperCase(),
@@ -262,6 +266,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 			panelFooter.add(getNewButton());
 			panelFooter.add(getUpdateButton());
+			panelFooter.add(getViewButton());
 			panelFooter.add(getPrintButton());
 			panelFooter.add(getDeleteButton());
 			panelFooter.add(getCloseButton());
@@ -381,6 +386,30 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		return jButtonEdit;
 	}
 
+	private JButton getViewButton() {
+		jButtonView = new JButton(MessageBundle.getMessage("angal.common.view.btn"));
+		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.common.view.btn.key"));
+		jButtonView.addActionListener(actionEvent -> {
+				MedicalInventory inventory = new MedicalInventory();
+				if (jTableInventory.getSelectedRowCount() > 1) {
+					MessageDialog.error(this, "angal.inventory.pleaseselectonlyoneinventory.msg");
+					return;
+				}
+				int selectedRow = jTableInventory.getSelectedRow();
+				if (selectedRow == -1) {
+					MessageDialog.error(this, "angal.inventory.pleaseselectinventory.msg");
+					return;
+				}
+				if(selectedRow > -1) {
+					inventory = inventoryList.get(selectedRow);
+					InventoryEdit inventoryEdit = new InventoryEdit(inventory,"view");
+					InventoryEdit.addInventoryListener(InventoryBrowser.this);
+					inventoryEdit.showAsModal(InventoryBrowser.this);
+				}
+		});
+		return jButtonView;
+	}
+	
 	private JButton getPrintButton() {
 		jButtonPrint = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
 		jButtonPrint.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
