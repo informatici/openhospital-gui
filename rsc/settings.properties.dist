@@ -53,7 +53,7 @@ LOTWITHCOST=yes
 PHARMACEUTICALORDER=PharmaceuticalOrder
 PHARMACEUTICALSTOCK=PharmaceuticalStock_ver4
 PHARMACEUTICALSTOCKLOT=PharmaceuticalStock_ver5
-PHARMACEUTICALAMC=PharmaceuticalAMC
+PHARMACEUTICALAMC=PharmaceuticalAMC_ver2
 
 # dicom / imaging settings
 DICOMMODULEENABLED=yes
