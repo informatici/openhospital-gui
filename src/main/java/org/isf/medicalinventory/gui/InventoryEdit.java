@@ -581,24 +581,25 @@ public class InventoryEdit extends ModalJFrame {
 		deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		deleteButton.addActionListener(actionEvent -> {
-			if (jTableInventoryRow.getSelectedRowCount() > 1) {
-				MessageDialog.error(this, "angal.inventoryrow.pleaseselectonlyoneinventoryrow.msg");
+			int[] selectedRows = jTableInventoryRow.getSelectedRows();
+			if (selectedRows.length == 0) {
+				MessageDialog.error(this, "angal.inventoryrow.pleaseselectatleastoneinventoryrow.msg");
 				return;
 			}
-			int selectedRow = jTableInventoryRow.getSelectedRow();
-			if (selectedRow == -1) {
-				MessageDialog.error(this, "angal.inventoryrow.pleaseselectonlyoneinventoryrow.msg");
-				return;
-			}
-			MedicalInventoryRow selectedInventory = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
 			int delete = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttodeletethisinventoryrow.msg");
 			if (delete == JOptionPane.YES_OPTION) {
-				if (selectedInventory.getInventory() == null) {
-					inventoryRowSearchList.remove(selectedRow);
+				if (inventory == null) {
+					for (int i = selectedRows.length - 1; i >= 0; i--) {
+						MedicalInventoryRow selectedInventory = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
+						inventoryRowSearchList.remove(selectedInventory);
+	                }
 				} else {
 					try {
-						medicalInventoryRowManager.deleteMedicalInventoryRow(selectedInventory);
-						inventoryRowSearchList.remove(selectedRow);
+						for (int i = selectedRows.length - 1; i >= 0; i--) {
+							MedicalInventoryRow selectedInventory = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
+							medicalInventoryRowManager.deleteMedicalInventoryRow(selectedInventory);
+							inventoryRowSearchList.remove(selectedInventory);
+		                }
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -1188,7 +1189,11 @@ public class InventoryEdit extends ModalJFrame {
 		}
 		for (MedicalInventoryRow inventoryRow : inventoryRowsList) {
 			int position = getPosition(inventoryRow);
-			inventoryRowSearchList.add(position + 1, inventoryRow);
+			if (position == -1) {
+				inventoryRowSearchList.add(inventoryRow);
+			} else {
+				inventoryRowSearchList.add(position + 1, inventoryRow);
+			}
 		}
 		jTableInventoryRow.updateUI();
 	}
@@ -1354,10 +1359,10 @@ public class InventoryEdit extends ModalJFrame {
 	}
 	
 	private int getPosition (MedicalInventoryRow inventoryRow) {
-		int position = 0;
+		int position = -1;
 		int i = 0;
 		for (MedicalInventoryRow invR: inventoryRowSearchList) {
-			if (invR.getMedical().getCode() == inventoryRow.getMedical().getCode()) {
+			if (invR.getMedical().getCode().equals(inventoryRow.getMedical().getCode())) {
 				position = i;
 			}
 			i = i + 1;
@@ -1365,17 +1370,16 @@ public class InventoryEdit extends ModalJFrame {
 		return position;
 	}
 	private List<MedicalInventoryRow> checkDuplicateLotForSameMedical() {
-		List<MedicalInventoryRow> invRwithSameLots = new ArrayList<>();
-		for (MedicalInventoryRow invRow: inventoryRowSearchList) {
-			List<MedicalInventoryRow> listes = inventoryRowSearchList.stream().filter(invR -> invRow.getLot() != null && invR.getLot() != null && invR.getLot().getCode().equals(invRow.getLot().getCode())).collect(Collectors.toList());
-			if (listes.size() > 1) {
-				List<MedicalInventoryRow> invRs = invRwithSameLots.stream().filter(invR -> invR.getLot().getCode().equals(invRow.getLot().getCode())).collect(Collectors.toList());
-				if (invRs.size() == 0) {
-					invRwithSameLots.add(invRow);
-				}
-				
-			}
-		}
-		return invRwithSameLots;
+		 Map<MedicalInventoryRow, Integer> frequencyMap = new HashMap<>();
+	     List<MedicalInventoryRow> duplicates = new ArrayList<>();
+	     for (MedicalInventoryRow invRow : inventoryRowSearchList) {
+	         frequencyMap.put(invRow, frequencyMap.getOrDefault(invRow, 0) + 1);
+	     }
+	     for (Map.Entry<MedicalInventoryRow, Integer> entry : frequencyMap.entrySet()) {
+	    	 if (entry.getValue() > 1) {
+	    		 duplicates.add(entry.getKey());
+	    	 }
+	     }
+	     return duplicates;
 	}
 }
