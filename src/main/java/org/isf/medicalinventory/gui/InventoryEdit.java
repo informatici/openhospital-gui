@@ -594,14 +594,16 @@ public class InventoryEdit extends ModalJFrame {
 						inventoryRowSearchList.remove(selectedInventory);
 	                }
 				} else {
-					try {
-						for (int i = selectedRows.length - 1; i >= 0; i--) {
+					for (int i = selectedRows.length - 1; i >= 0; i--) {
+						try {
 							MedicalInventoryRow selectedInventory = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
 							medicalInventoryRowManager.deleteMedicalInventoryRow(selectedInventory);
 							inventoryRowSearchList.remove(selectedInventory);
-		                }
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
+							return ;
+						}
+							
 					}
 				}
 			} else {
@@ -818,7 +820,12 @@ public class InventoryEdit extends ModalJFrame {
 				if (c == 3) {
 					Lot lot = invRow.getLot();
 					if(lot == null) {
-						return ;
+						Lot lotTosotore = getLot(value.toString());
+						if(lotTosotore == null) {
+							return ;
+						}
+						lotTosotore.setMedical(medical);
+						invRow.setLot(lotTosotore);
 					} else {
 						if (lot.getCode().equals("")) {
 							lot = getLot("");
@@ -836,9 +843,8 @@ public class InventoryEdit extends ModalJFrame {
 							lot.setDueDate(date);
 						}
 						invRow.setLot(lot);
-						inventoryRowSearchList.set(r, invRow);
 					}
-					
+					inventoryRowSearchList.set(r, invRow);
 				}
 				if (c == 5) {
 					Integer intValue = 0;
