@@ -49,9 +49,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
@@ -402,12 +404,22 @@ public class InventoryEdit extends ModalJFrame {
 			int checkResults = 0;
 			if (inventoryRowSearchList == null || inventoryRowSearchList.size() < 1) {
 				MessageDialog.error(null, "angal.inventory.noproduct.msg");
+				return;
 			}
 			LocalDateTime now = LocalDateTime.now();
 			if (dateInventory.isAfter(now)) {
 				MessageDialog.error(null, "angal.inventory.notdateinfuture.msg");
+				return;
 			}
-			
+			List<MedicalInventoryRow> invRowWithSameLots = checkDuplicateLotForSameMedical();
+			if (invRowWithSameLots.size() > 0) {
+				String message = "";
+				for (MedicalInventoryRow invR: invRowWithSameLots) {
+					message = message.concat(invR.getMedical().getDescription()+",\n ");
+				}
+				MessageDialog.error(null, "angal.inventory.thosemedicalhavethesamelot.fmt.msg", message);
+				return ;
+			}
 			if ((inventory == null) && (mode.equals("new"))) {
 				String reference = referenceTextField.getText().trim();
 				if (reference.equals("")) {
@@ -1351,5 +1363,19 @@ public class InventoryEdit extends ModalJFrame {
 			i = i + 1;
 		}
 		return position;
+	}
+	private List<MedicalInventoryRow> checkDuplicateLotForSameMedical() {
+		List<MedicalInventoryRow> invRwithSameLots = new ArrayList<>();
+		for (MedicalInventoryRow invRow: inventoryRowSearchList) {
+			List<MedicalInventoryRow> listes = inventoryRowSearchList.stream().filter(invR -> invRow.getLot() != null && invR.getLot() != null && invR.getLot().getCode().equals(invRow.getLot().getCode())).collect(Collectors.toList());
+			if (listes.size() > 1) {
+				List<MedicalInventoryRow> invRs = invRwithSameLots.stream().filter(invR -> invR.getLot().getCode().equals(invRow.getLot().getCode())).collect(Collectors.toList());
+				if (invRs.size() == 0) {
+					invRwithSameLots.add(invRow);
+				}
+				
+			}
+		}
+		return invRwithSameLots;
 	}
 }
