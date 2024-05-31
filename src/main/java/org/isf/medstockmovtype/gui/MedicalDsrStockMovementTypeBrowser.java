@@ -118,7 +118,7 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				MovementType mdsr = new MovementType("", "", "");
+				MovementType mdsr = new MovementType("", "", "", "");
 				MedicalDsrStockMovementTypeBrowserEdit newrecord = new MedicalDsrStockMovementTypeBrowserEdit(myFrame, mdsr, true);
 				newrecord.addMedicalDsrStockMovementTypeListener(this);
 				newrecord.setVisible(true);
