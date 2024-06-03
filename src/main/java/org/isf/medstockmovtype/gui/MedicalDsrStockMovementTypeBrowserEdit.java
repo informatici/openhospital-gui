@@ -279,7 +279,7 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes typeTextField
+	 * This method initializes typeComboBox
 	 * 
 	 * @return javax.swing.JTextField
 	 */
@@ -297,7 +297,7 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes typeTextField
+	 * This method initializes categoryComboBox
 	 * 
 	 * @return javax.swing.JTextField
 	 */
