@@ -49,11 +49,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
@@ -197,9 +195,6 @@ public class InventoryEdit extends ModalJFrame {
 		this.inventory = inventory;
 		mode = modee;
 		initComponents();
-		if (!mode.equals("new")) {
-			resetButton.setVisible(false);
-		}
 		if (mode.equals("view")) {
 			saveButton.setVisible(false);
 			deleteButton.setVisible(false);
@@ -458,6 +453,7 @@ public class InventoryEdit extends ModalJFrame {
 									if (lot.getDueDate() != null) {
 										Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
 										medicalInventoryRow.setLot(lotStore);
+										medicalInventoryRow.setNewLot(true);
 									} else {
 										medicalInventoryRow.setLot(null);
 									}
@@ -528,6 +524,7 @@ public class InventoryEdit extends ModalJFrame {
 									if (lot.getDueDate() != null) {
 										Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
 										medicalInventoryRow.setLot(lotStore);
+										medicalInventoryRow.setNewLot(true);
 									} else {
 										medicalInventoryRow.setLot(null);
 									}
@@ -543,13 +540,17 @@ public class InventoryEdit extends ModalJFrame {
 								lotCode = lot.getCode();
 								Lot lotExist = movStockInsertingManager.getLot(lotCode);
 								if (lotExist != null) {
-									Lot lotStore = null;
-									lotStore = movStockInsertingManager.updateLot(lot);
+									Lot lotStore;
+									lotExist.setDueDate(lot.getDueDate());
+									lotExist.setPreparationDate(lot.getPreparationDate());
+									lotExist.setCost(lot.getCost());
+									lotStore = movStockInsertingManager.updateLot(lotExist);
 									medicalInventoryRow.setLot(lotStore);
 								} else {
 									if (lot.getDueDate() != null) {
 										Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
 										medicalInventoryRow.setLot(lotStore);
+										medicalInventoryRow.setNewLot(true);
 									} else {
 										medicalInventoryRow.setLot(null);
 									}
@@ -590,20 +591,21 @@ public class InventoryEdit extends ModalJFrame {
 			if (delete == JOptionPane.YES_OPTION) {
 				if (inventory == null) {
 					for (int i = selectedRows.length - 1; i >= 0; i--) {
-						MedicalInventoryRow selectedInventory = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
-						inventoryRowSearchList.remove(selectedInventory);
+						MedicalInventoryRow selectedInventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
+						inventoryRowSearchList.remove(selectedInventoryRow);
 	                }
 				} else {
+					List<MedicalInventoryRow> inventoryRowsToDelete = new ArrayList<>();
 					for (int i = selectedRows.length - 1; i >= 0; i--) {
-						try {
-							MedicalInventoryRow selectedInventory = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
-							medicalInventoryRowManager.deleteMedicalInventoryRow(selectedInventory);
-							inventoryRowSearchList.remove(selectedInventory);
-						} catch (OHServiceException e) {
-							OHServiceExceptionUtil.showMessages(e);
-							return ;
-						}
-							
+						MedicalInventoryRow inventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
+						inventoryRowsToDelete.add(inventoryRow);
+					}
+					try {
+						medicalInventoryRowManager.deleteMedicalInventoryRows(inventoryRowsToDelete);
+						inventoryRowSearchList.removeAll(inventoryRowsToDelete);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+						return ;
 					}
 				}
 			} else {
@@ -634,6 +636,18 @@ public class InventoryEdit extends ModalJFrame {
 					}
 					if (inventoryRowSearchList != null) {
 						inventoryRowSearchList.clear();
+					}
+				} else {
+					List<MedicalInventoryRow> inventoryRowsToDelete = new ArrayList<>();
+					for (MedicalInventoryRow invRoww : inventoryRowSearchList) {
+						inventoryRowsToDelete.add(invRoww);
+					}
+					try {
+						medicalInventoryRowManager.deleteMedicalInventoryRows(inventoryRowsToDelete);
+						inventoryRowSearchList.clear();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+						return ;
 					}
 				}
 				jTableInventoryRow.updateUI();
