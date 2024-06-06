@@ -824,7 +824,7 @@ public class InventoryEdit extends ModalJFrame {
 				Medical medical= invRow.getMedical();
 				if (c == 2) {
 					Lot lot = getLot(value.toString());
-					if(lot == null) {
+					if (lot == null) {
 						return ;
 					}
 					lot.setMedical(medical);
@@ -833,29 +833,25 @@ public class InventoryEdit extends ModalJFrame {
 				}
 				if (c == 3) {
 					Lot lot = invRow.getLot();
-					if(lot == null) {
-						Lot lotTosotore = getLot(value.toString());
-						if(lotTosotore == null) {
+					if (lot == null) {
+						Lot lotToStore = getLot(value.toString());
+						if (lotToStore == null) {
 							return ;
 						}
-						lotTosotore.setMedical(medical);
-						invRow.setLot(lotTosotore);
+						lotToStore.setMedical(medical);
+						invRow.setLot(lotToStore);
 					} else {
-						if (lot.getCode().equals("")) {
-							lot = getLot("");
-							lot.setMedical(medical);
-						} else {
-							SimpleDateFormat dateFormatString = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-							Date dueDate = new Date();
-							try {
-								dueDate = dateFormatString.parse(value.toString());
-							} catch (ParseException e) {
-								e.printStackTrace();
-								return ;
-							}
-							LocalDateTime date = dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-							lot.setDueDate(date);
+						SimpleDateFormat dateFormatString = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+						Date dueDate = new Date();
+						try {
+							dueDate = dateFormatString.parse(value.toString());
+						} catch (ParseException e) {
+							e.printStackTrace();
+							return ;
 						}
+						LocalDateTime date = dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+						lot.setDueDate(date);
+						lot.setMedical(medical);
 						invRow.setLot(lot);
 					}
 					inventoryRowSearchList.set(r, invRow);
