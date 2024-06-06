@@ -164,7 +164,7 @@ public class MovStockMultipleDischarging extends JDialog {
 
 		List<Medical> medicals;
 		try {
-			medicals = medicalBrowsingManager.getMedicals();
+			medicals = new ArrayList<>(medicalBrowsingManager.getMedicals().stream().filter(med -> med.getDeleted() == 'N').toList());
 		} catch (OHServiceException e) {
 			medicals = null;
 			OHServiceExceptionUtil.showMessages(e);
