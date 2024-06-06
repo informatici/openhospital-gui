@@ -29,6 +29,7 @@ import java.util.EventListener;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -58,12 +59,6 @@ import org.isf.utils.layout.SpringUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * 18-ago-2008
- * added by alex:
- * 	- product code
- *  - pieces per packet
- */
 public class MedicalEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -71,19 +66,20 @@ public class MedicalEdit extends JDialog {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalEdit.class);
 
 	private EventListenerList medicalListeners = new EventListenerList();
-	
+
 	public interface MedicalListener extends EventListener {
-        void medicalUpdated(AWTEvent e);
-        void medicalInserted(Medical medical);
-    }
 
-    public void addMedicalListener(MedicalListener l) {
-    	medicalListeners.add(MedicalListener.class, l);
-    }
+		void medicalUpdated(AWTEvent e);
+		void medicalInserted(Medical medical);
+	}
 
-    public void removeMedicalListener(MedicalListener listener) {
-    	medicalListeners.remove(MedicalListener.class, listener);
-    }
+	public void addMedicalListener(MedicalListener l) {
+		medicalListeners.add(MedicalListener.class, l);
+	}
+
+	public void removeMedicalListener(MedicalListener listener) {
+		medicalListeners.remove(MedicalListener.class, listener);
+	}
 
 	private void fireMedicalInserted(Medical medical) {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -119,6 +115,7 @@ public class MedicalEdit extends JDialog {
 	private VoLimitedTextField codeTextField;
 	private VoDoubleTextField minQtiField;
 	private JComboBox<MedicalType> typeComboBox;
+	private JCheckBox activeCheckbox;
 	private Medical oldMedical;
 	private Medical medical;
 	private boolean insert;
@@ -127,8 +124,7 @@ public class MedicalEdit extends JDialog {
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 
 	/**
-	 * This is the default constructor; we pass the arraylist and the
-	 * selectedrow because we need to update them
+	 * This is the default constructor; we pass the arraylist and the selectedrow because we need to update them
 	 */
 	public MedicalEdit(Medical old, boolean inserting, JFrame owner) {
 		super(owner, true);
@@ -184,8 +180,9 @@ public class MedicalEdit extends JDialog {
 			JLabel typeLabel = new JLabel(MessageBundle.getMessage("angal.medicals.type") + ':');
 			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
 			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
-			JLabel pcsperpckLabel = new JLabel(MessageBundle.getMessage("angal.medicals.pcsperpckExt") + ':');
-			JLabel criticLabel = new JLabel(MessageBundle.getMessage("angal.medicals.criticallevel") + ':');
+			JLabel pcsperpckLabel = new JLabel(MessageBundle.getMessage("angal.medicals.pcsperpck.txt") + ':');
+			JLabel criticLabel = new JLabel(MessageBundle.getMessage("angal.medicals.criticallevel.txt") + ':');
+			JLabel activeLabel = new JLabel(MessageBundle.getMessage("angal.medicals.active.txt") + ':');
 
 			dataPanel.add(typeLabel);
 			dataPanel.add(getTypeComboBox());
@@ -197,9 +194,19 @@ public class MedicalEdit extends JDialog {
 			dataPanel.add(getPcsperpckField());
 			dataPanel.add(criticLabel);
 			dataPanel.add(getMinQtiField());
-			SpringUtilities.makeCompactGrid(dataPanel, 5, 2, 5, 5, 5, 5);
+			dataPanel.add(activeLabel);
+			dataPanel.add(getActiveField());
+			SpringUtilities.makeCompactGrid(dataPanel, 6, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
+	}
+
+	private JCheckBox getActiveField() {
+		if (activeCheckbox == null) {
+			activeCheckbox = new JCheckBox("Active");
+			activeCheckbox.setSelected(medical.getDeleted() == 'N');
+		}
+		return activeCheckbox;
 	}
 
 	/**
@@ -240,6 +247,7 @@ public class MedicalEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new ActionListener() {
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					boolean result = false;
@@ -252,6 +260,7 @@ public class MedicalEdit extends JDialog {
 							newMedical.setProdCode(codeTextField.getText());
 							newMedical.setPcsperpck(pcsperpckField.getValue());
 							newMedical.setMinqty(minQtiField.getValue());
+							newMedical.setDeleted(activeCheckbox.isSelected() ? 'N' : 'Y');
 						} catch (CloneNotSupportedException cloneNotSupportedException) {
 							LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
 						}
@@ -293,6 +302,7 @@ public class MedicalEdit extends JDialog {
 						oldMedical.setProdCode(codeTextField.getText());
 						oldMedical.setPcsperpck(pcsperpckField.getValue());
 						oldMedical.setMinqty(minQtiField.getValue());
+						oldMedical.setDeleted(activeCheckbox.isSelected() ? 'N' : 'Y');
 						try {
 							Medical updatedMedical = medicalBrowsingManager.updateMedical(oldMedical);
 							if (updatedMedical != null) {
@@ -335,6 +345,7 @@ public class MedicalEdit extends JDialog {
 							medical.setPcsperpck(pcsperpckField.getValue());
 							medical.setMinqty(minQtiField.getValue());
 							medical.setLock(updatedMedical.getLock());
+							medical.setDeleted(updatedMedical.getDeleted());
 							fireMedicalUpdated();
 							dispose();
 						}
@@ -345,10 +356,10 @@ public class MedicalEdit extends JDialog {
 				}
 
 				private int manageSimilarFoundWarning(OHExceptionMessage error) {
-					/* Already shown by OHServiceExceptionUtil
-					int messageType = error.getLevel().getSwingSeverity();
-					JOptionPane.showMessageDialog(MedicalEdit.this, error.getMessage(),
-							error.getTitle(), messageType);*/
+					/*
+					 * Already shown by OHServiceExceptionUtil int messageType = error.getLevel().getSwingSeverity();
+					 * JOptionPane.showMessageDialog(MedicalEdit.this, error.getMessage(), error.getTitle(), messageType);
+					 */
 					return MessageDialog.yesNoCancel(MedicalEdit.this, "angal.common.doyouwanttoproceed.msg");
 				}
 			});
