@@ -834,12 +834,12 @@ public class InventoryEdit extends ModalJFrame {
 				if (c == 3) {
 					Lot lot = invRow.getLot();
 					if(lot == null) {
-						Lot lotTosotore = getLot(value.toString());
-						if(lotTosotore == null) {
+						Lot lotToStore = getLot(value.toString());
+						if(lotToStore == null) {
 							return ;
 						}
-						lotTosotore.setMedical(medical);
-						invRow.setLot(lotTosotore);
+						lotToStore.setMedical(medical);
+						invRow.setLot(lotToStore);
 					} else {
 						if (lot.getCode().equals("")) {
 							lot = getLot("");
