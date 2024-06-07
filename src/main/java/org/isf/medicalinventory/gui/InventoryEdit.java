@@ -441,7 +441,7 @@ public class InventoryEdit extends ModalJFrame {
 							MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
 							medicalInventoryRow.setInventory(meInventory);
 							Lot lot = medicalInventoryRow.getLot();
-							String lotCode = lot.getCode();
+							String lotCode;
 							Medical medical = medicalInventoryRow.getMedical();
 							if (lot != null) {
 								lotCode = lot.getCode();
@@ -653,6 +653,7 @@ public class InventoryEdit extends ModalJFrame {
 					}
 				}
 				specificRadio.setSelected(true);
+				codeTextField.setEnabled(true);
 				jTableInventoryRow.updateUI();
 				ajustWidth();
 			}
