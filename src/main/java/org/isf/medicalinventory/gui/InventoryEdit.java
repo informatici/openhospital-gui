@@ -452,9 +452,6 @@ public class InventoryEdit extends ModalJFrame {
 									medicalInventoryRow.setLot(lotStore);
 								} else {
 									if (lot.getDueDate() != null) {
-										if (lot.getCode().equals("")) {
-											lotCode = this.generateLotCode();
-										}
 										Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
 										medicalInventoryRow.setLot(lotStore);
 										medicalInventoryRow.setNewLot(true);
@@ -526,9 +523,6 @@ public class InventoryEdit extends ModalJFrame {
 								}
 								if (!isExist) {
 									if (lot.getDueDate() != null) {
-										if (lot.getCode().equals("")) {
-											lotCode = this.generateLotCode();
-										}
 										Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
 										medicalInventoryRow.setLot(lotStore);
 										medicalInventoryRow.setNewLot(true);
@@ -555,9 +549,6 @@ public class InventoryEdit extends ModalJFrame {
 									medicalInventoryRow.setLot(lotStore);
 								} else {
 									if (lot.getDueDate() != null) {
-										if (lot.getCode().equals("")) {
-											lotCode = this.generateLotCode();
-										}
 										Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
 										System.out.println("lot code "+lotStore);
 										medicalInventoryRow.setLot(lotStore);
@@ -1395,17 +1386,5 @@ public class InventoryEdit extends ModalJFrame {
 	    	 }
 	     }
 	     return duplicates;
-	}
-	private String generateLotCode() throws OHServiceException {
-		Random random = new Random();
-		long candidateCode;
-		Lot lot;
-
-		do {
-			candidateCode = Math.abs(random.nextLong());
-			lot = movStockInsertingManager.getLot(String.valueOf(candidateCode));
-		} while (lot != null);
-
-		return String.valueOf(candidateCode);
 	}
 }
