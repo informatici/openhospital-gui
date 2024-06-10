@@ -626,13 +626,22 @@ public class InventoryEdit extends ModalJFrame {
 				return;
 			}
 			MedicalInventoryRow selectedInventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
-			Lot lot = this.getLot("");
+			String lotCode = selectedInventoryRow.getLot() != null ? selectedInventoryRow.getLot().getCode() : "";
+			Lot lot = this.getLot(lotCode);
 			if (lot != null) {
-				selectedInventoryRow.setLot(lot);
+				final String code = lot.getCode();
+				List<MedicalInventoryRow> invRows = inventoryRowSearchList.stream().filter(inv -> inv.getLot() != null && inv.getLot().getCode().equals(code)).collect(Collectors.toList());
+				if (invRows.size() == 0) {
+					selectedInventoryRow.setLot(lot);
+				} else {
+					MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
+					return ;
+				}
 				inventoryRowSearchList.set(selectedRow, selectedInventoryRow);
 				jTableInventoryRow.updateUI();
 			}
 		});
+		lotButton.setEnabled(false);
 		return lotButton;
 	}
 	
@@ -714,6 +723,13 @@ public class InventoryEdit extends ModalJFrame {
 					if (e.getValueIsAdjusting()) {
 						jTableInventoryRow.editCellAt(jTableInventoryRow.getSelectedRow(), jTableInventoryRow.getSelectedColumn());
 						jTetFieldEditor.selectAll();
+						int selectedRow = jTableInventoryRow.getSelectedRow();
+						MedicalInventoryRow medInvRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
+						if (medInvRow.getLot() == null || medInvRow.isNewLot()) {
+							lotButton.setEnabled(true);
+		                } else {
+		                	lotButton.setEnabled(false);
+		                }
 					}
 
 				}
@@ -813,7 +829,7 @@ public class InventoryEdit extends ModalJFrame {
 			} else if (c == 1) {
 				return medInvtRow.getMedical() == null ? "" : medInvtRow.getMedical().getDescription();
 			} else if (c == 2) {
-				if (medInvtRow.getLot() == null) {
+				if (medInvtRow.getLot() == null || medInvtRow.isNewLot()) {
 					return "N";
 				}
 				return "";
