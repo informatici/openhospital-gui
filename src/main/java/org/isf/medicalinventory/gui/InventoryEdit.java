@@ -161,6 +161,7 @@ public class InventoryEdit extends ModalJFrame {
 	private String code = null;
 	private String mode = null;
 	private JLabel referenceLabel;
+	private JLabel statusLabel;
 	private JLabel chargeTypeLabel;
 	private JLabel dischargeTypeLabel;
 	private JLabel supplierLabel;
@@ -341,6 +342,12 @@ public class InventoryEdit extends ModalJFrame {
 			ButtonGroup group = new ButtonGroup();
 			group.add(specificRadio);
 			group.add(allRadio);
+			GridBagConstraints gbc_statusLabel = new GridBagConstraints();
+			gbc_statusLabel.anchor = GridBagConstraints.EAST;
+			gbc_statusLabel.insets = new Insets(0, 0, 5, 5);
+			gbc_statusLabel.gridx = 3;
+			gbc_statusLabel.gridy = 3;
+			panelHeader.add(getStatusLabel(), gbc_statusLabel);
 		}
 		return panelHeader;
 	}
@@ -369,8 +376,8 @@ public class InventoryEdit extends ModalJFrame {
 			panelFooter.add(getNewButton());
 			panelFooter.add(getDeleteButton());
 			panelFooter.add(getLotButton());
-			panelFooter.add(getCloseButton());
 			panelFooter.add(getCleanTableButton());
+			panelFooter.add(getCloseButton());
 		}
 		return panelFooter;
 	}
@@ -548,7 +555,6 @@ public class InventoryEdit extends ModalJFrame {
 								} else {
 									if (lot.getDueDate() != null) {
 										Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
-										System.out.println("lot code "+lotStore);
 										medicalInventoryRow.setLot(lotStore);
 										medicalInventoryRow.setNewLot(true);
 									} else {
@@ -1263,6 +1269,15 @@ public class InventoryEdit extends ModalJFrame {
 			referenceLabel = new JLabel(MessageBundle.getMessage("angal.common.reference.label"));
 		}
 		return referenceLabel;
+	}
+	
+	private JLabel getStatusLabel() {
+		if (statusLabel == null) {
+			String currentStatus = inventory == null ? "draft" : inventory.getStatus();
+			statusLabel = new JLabel(MessageBundle.getMessage("angal.inventory.status.label")+" "+MessageBundle.getMessage("angal.inventory."+currentStatus)));
+			statusLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		}
+		return statusLabel;
 	}
 
 	private JLabel getChargeLabel() {
