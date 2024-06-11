@@ -58,7 +58,7 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.medstockmovtype.category.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = { 80, 200, 40, 80 };
+	private int[] pColumnWidth = { 80, 200, 40, 100 };
 
 	private JPanel jContainPanel;
 	private JPanel jButtonPanel;
@@ -200,8 +200,9 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 		if (jTable == null) {
 			model = new MedicalDsrStockMovementTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
+			for (int i = 0; i < pColumnWidth.length; i++) {
+				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
+			}
 		}
 		return jTable;
 	}
