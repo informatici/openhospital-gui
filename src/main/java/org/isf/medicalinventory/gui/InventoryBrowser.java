@@ -91,7 +91,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			MessageBundle.getMessage("angal.inventory.status.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.user.col").toUpperCase() };
 	private int[] pColumwidth = { 150, 150, 150, 200 };
-	private JComboBox<String> stateComboBox;
+	private JComboBox<String> statusComboBox;
 	private JLabel statusLabel;
 	JButton next;
 	JButton previous;
@@ -450,7 +450,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 		public InventoryBrowsingModel() {
 			inventoryList = new ArrayList<>();
-			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
+			String state = statusComboBox.getSelectedIndex() > 0 ? statusComboBox.getSelectedItem().toString().toLowerCase() : null;
 			String type = InventoryType.main.toString();
 			try {
 				inventoryList = medicalInventoryManager.getMedicalInventoryByParams(dateFrom, dateTo, state, type);
@@ -461,7 +461,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 		public InventoryBrowsingModel(int startIndex, int pageSize) {
 			inventoryList = new ArrayList<>();
-			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
+			String state = statusComboBox.getSelectedIndex() > 0 ? statusComboBox.getSelectedItem().toString().toLowerCase() : null;
 			String type = InventoryType.main.toString();
 			try {
 				Page<MedicalInventory> medInventorypage = medicalInventoryManager.getMedicalInventoryByParamsPageable(dateFrom, dateTo, state, type, startIndex,
@@ -535,13 +535,13 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	}
 
 	private JComboBox<String> getComboBox() {
-		if (stateComboBox == null) {
-			stateComboBox = new JComboBox<String>();
-			stateComboBox.addItem("");
+		if (statusComboBox == null) {
+			statusComboBox = new JComboBox<String>();
+			statusComboBox.addItem("");
 			for (InventoryStatus currentStatus : InventoryStatus.values()) {
-				stateComboBox.addItem(MessageBundle.getMessage("angal.inventory." + currentStatus));
+				statusComboBox.addItem(MessageBundle.getMessage("angal.inventory." + currentStatus));
 			}
-			stateComboBox.addActionListener(actionEvent -> {
+			statusComboBox.addActionListener(actionEvent -> {
 				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
 				totalRows = inventoryModel.getRowCount();
 				startIndex = 0;
@@ -555,7 +555,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				initialiseCombo(totalRows);
 			});
 		}
-		return stateComboBox;
+		return statusComboBox;
 	}
 
 	private JLabel getStateLabel() {
@@ -584,25 +584,16 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 	@Override
 	public void InventoryCancelled(AWTEvent e) {
-		if (inventoryList != null) {
-			inventoryList.clear();
-		}
 		jTableInventory.setModel(new InventoryBrowsingModel());
 	}
 
 	@Override
 	public void InventoryInserted(AWTEvent e) {
-		if (inventoryList != null) {
-			inventoryList.clear();
-		}
 		jTableInventory.setModel(new InventoryBrowsingModel());
 	}
 
 	@Override
 	public void InventoryUpdated(AWTEvent e) {
-		if (inventoryList != null) {
-			inventoryList.clear();
-		}
 		jTableInventory.setModel(new InventoryBrowsingModel());
 	}
 }

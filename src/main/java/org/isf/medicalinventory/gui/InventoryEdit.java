@@ -126,6 +126,29 @@ public class InventoryEdit extends ModalJFrame {
 		InventoryListeners.remove(InventoryListener.class, listener);
 	}
 
+	private void fireInventoryInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+			private static final long serialVersionUID = 1L;
+		};
+		
+		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
+		for (int i = 0; i < listeners.length; i++) {
+			((InventoryListener) listeners[i]).InventoryInserted(event);
+		}	
+	}
+
+	private void fireInventoryUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+			private static final long serialVersionUID = 1L;
+		};
+		
+		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
+		for (int i = 0; i < listeners.length; i++) {
+			((InventoryListener) listeners[i]).InventoryUpdated(event);
+		}
+			
+	}
+	
 	private GoodDateChooser jCalendarInventory;
 	private LocalDateTime dateInventory = TimeTools.getNow();
 	private JPanel panelHeader;
@@ -139,7 +162,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JScrollPane scrollPaneInventory;
 	private JTable jTableInventoryRow;
 	private List<MedicalInventoryRow> inventoryRowList;
-	private List<MedicalInventoryRow> inventoryRowSearchList;
+	private List<MedicalInventoryRow> inventoryRowSearchList = new ArrayList<MedicalInventoryRow>();
 	private String[] pColums = { MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.product.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.new.col").toUpperCase(),
@@ -476,6 +499,7 @@ public class InventoryEdit extends ModalJFrame {
 							// enable validation
 							mode = "update";
 							MessageDialog.info(this, "angal.inventory.savesuccess.msg");
+							fireInventoryInserted();
 							closeButton.doClick();
 						} else {
 							MessageDialog.error(null, "angal.inventory.error.msg");
@@ -576,6 +600,7 @@ public class InventoryEdit extends ModalJFrame {
 				}
 				if (checkResults == 0) {
 					MessageDialog.info(null, "angal.inventory.update.success.msg");
+					fireInventoryUpdated();
 					closeButton.doClick();
 				} else {
 					MessageDialog.error(null, "angal.inventory.update.error.msg");
@@ -618,6 +643,8 @@ public class InventoryEdit extends ModalJFrame {
 				return;
 			}
 			jTableInventoryRow.updateUI();
+			ajustWidth();
+			fireInventoryUpdated();
 		});
 		return deleteButton;
 	}
@@ -690,6 +717,7 @@ public class InventoryEdit extends ModalJFrame {
 				codeTextField.setEnabled(true);
 				jTableInventoryRow.updateUI();
 				ajustWidth();
+				fireInventoryUpdated();
 			}
 		});
 		return resetButton;
@@ -782,7 +810,6 @@ public class InventoryEdit extends ModalJFrame {
 				}
 			}
 			if(inventoryRowList != null) {
-				inventoryRowSearchList = new ArrayList<MedicalInventoryRow>();
 				inventoryRowSearchList.addAll(inventoryRowList);
 				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
 			}
@@ -887,12 +914,13 @@ public class InventoryEdit extends ModalJFrame {
 						intValue = 0;
 						return ;
 					}
-
+					if (intValue < 0) {
+						MessageDialog.error(null,  "angal.inventoryrow.invalidquantity.msg");
+						return;
+					}
 					invRow.setRealqty(intValue);
 					inventoryRowSearchList.set(r, invRow);
 				}
-				fireTableCellUpdated(r, c);
-				jTableInventoryRow.updateUI();
 			}
 
 		}
@@ -1150,8 +1178,8 @@ public class InventoryEdit extends ModalJFrame {
 		for (Iterator<Medical> iterator = medicalList.iterator(); iterator.hasNext();) {
 			medical = iterator.next();
 			lots = movStockInsertingManager.getLotByMedical(medical);
-			if ((lots.size() == 0)) {
-				inventoryRowTemp = new MedicalInventoryRow(0, 0.0, 0.0, null, medical, new Lot("", null, null));
+			if (lots.size() == 0) {
+				inventoryRowTemp = new MedicalInventoryRow(0, 0.0, 0.0, null, medical, null);
 				inventoryRowsList.add(inventoryRowTemp);
 			}
 			for (Iterator<Lot> iterator2 = lots.iterator(); iterator2.hasNext();) {
@@ -1274,7 +1302,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JLabel getStatusLabel() {
 		if (statusLabel == null) {
 			String currentStatus = inventory == null ? "draft" : inventory.getStatus();
-			statusLabel = new JLabel(MessageBundle.getMessage("angal.inventory.status.label")+" "+MessageBundle.getMessage("angal.inventory."+currentStatus)));
+			statusLabel = new JLabel(MessageBundle.getMessage("angal.inventory.status.label")+" "+MessageBundle.getMessage("angal.inventory."+currentStatus));
 			statusLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		}
 		return statusLabel;
