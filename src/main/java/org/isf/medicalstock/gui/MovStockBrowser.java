@@ -106,7 +106,7 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * MovStockBrowser - list medicals movement. let the user search for movements and insert a new movements
+ * MovStockBrowser - list medicals movement. Let the user search for movements and insert a new movement.
  */
 public class MovStockBrowser extends ModalJFrame {
 
