@@ -801,17 +801,22 @@ public class InventoryEdit extends ModalJFrame {
 				}
 			} else { // updating
 				if (allRadio.isSelected()) {
-					inventoryRowList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
-					if (inventoryRowList.size() == 0) {
-						inventoryRowList = loadNewInventoryTable(null);
+					inventoryRowList = loadNewInventoryTable(null);
+				} else {
+					if (specificRadio.isSelected() && code != null && !code.trim().equals("")) {
+						inventoryRowList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId()).stream().filter(medRow -> medRow.getMedical().getProdCode().equals(code)).toList();
+					} else {
+						inventoryRowList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
 					}
-				} else if (specificRadio.isSelected() && code != null && !code.trim().equals("")) {
-					inventoryRowList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId()).stream().filter(medRow -> medRow.getMedical().getProdCode().equals(code)).toList();
+					
 				}
 			}
 			if(inventoryRowList != null) {
+				if (inventoryRowSearchList.size() != 0) {
+					inventoryRowList = removeInventoryRows(inventoryRowList);
+				}
+				inventoryRowList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
 				inventoryRowSearchList.addAll(inventoryRowList);
-				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
 			}
 				
 		}
@@ -1080,11 +1085,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JRadioButton getSpecificRadio() {
 		if (specificRadio == null) {
 			specificRadio = new JRadioButton(MessageBundle.getMessage("angal.inventory.specificproduct.txt"));
-			if (inventory != null) {
-				specificRadio.setSelected(false);
-			} else {
-				specificRadio.setSelected(true);
-			}
+			specificRadio.setSelected(true);
 			specificRadio.addActionListener(actionEvent -> {
 				if (specificRadio.isSelected()) {
 					codeTextField.setEnabled(true);
@@ -1098,7 +1099,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JRadioButton getAllRadio() {
 		if (allRadio == null) {
 			allRadio = new JRadioButton(MessageBundle.getMessage("angal.inventory.allproduct.txt"));
-			allRadio.setSelected(true);
+			allRadio.setSelected(false);
 			allRadio.addActionListener(actionEvent -> {
 				if (allRadio.isSelected()) {
 					codeTextField.setEnabled(false);
@@ -1435,4 +1436,16 @@ public class InventoryEdit extends ModalJFrame {
 	     }
 	     return duplicates;
 	}
+	
+	private List<MedicalInventoryRow> removeInventoryRows(List<MedicalInventoryRow> invRows) {
+        List<MedicalInventoryRow> invRowsCopy = new ArrayList<>(invRows);
+        for (MedicalInventoryRow invRow : invRowsCopy) {
+            for (MedicalInventoryRow invRo : inventoryRowSearchList) {
+            	if (invRow.getMedical().getCode() == invRo.getMedical().getCode()) {
+                	invRows.remove(invRow);
+            	}
+            }
+        }
+        return invRows;
+    }
 }
