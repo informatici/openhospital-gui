@@ -24,6 +24,7 @@ package org.isf.medstockmovtype.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -62,9 +63,9 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 		medicalDsrStockMovementTypeListeners.add(MedicalDsrStockMovementTypeListener.class, l);
 	}
 
-    public void removeMedicalDsrStockMovementTypeListener(MedicalDsrStockMovementTypeListener listener) {
-    	medicalDsrStockMovementTypeListeners.remove(MedicalDsrStockMovementTypeListener.class, listener);
-    }
+	public void removeMedicalDsrStockMovementTypeListener(MedicalDsrStockMovementTypeListener listener) {
+		medicalDsrStockMovementTypeListeners.remove(MedicalDsrStockMovementTypeListener.class, listener);
+	}
 
 	private void fireMedicaldsrstockmovInserted(MovementType anMedicalDsrStockMovementType) {
 		AWTEvent event = new AWTEvent(anMedicalDsrStockMovementType, AWTEvent.RESERVED_ID_MAX + 1) {
@@ -89,7 +90,7 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 			((MedicalDsrStockMovementTypeListener) listener).medicalDsrStockMovementTypeUpdated(event);
 		}
 	}
-    
+
 	private JPanel jContentPane;
 	private JPanel dataPanel;
 	private JPanel buttonPanel;
@@ -98,11 +99,14 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 	private JTextField descriptionTextField;
 	private VoLimitedTextField codeTextField;
 	private JComboBox<String> typeComboBox;
+	private JComboBox<String> categoryComboBox;
 	private String lastdescription;
+	private String lastCategory;
 	private MovementType medicalDsrStockMovementType;
 	private boolean insert;
 	private JPanel jDataPanel;
-	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
+	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext()
+					.getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 
 	/**
 	 * This is the default constructor
@@ -110,8 +114,9 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 	public MedicalDsrStockMovementTypeBrowserEdit(JFrame owner, MovementType old, boolean inserting) {
 		super(owner, true);
 		insert = inserting;
-		medicalDsrStockMovementType = old;//disease will be used for every operation
+		medicalDsrStockMovementType = old;// disease will be used for every operation
 		lastdescription = medicalDsrStockMovementType.getDescription();
+		lastCategory = medicalDsrStockMovementType.getCategory();
 		initialize();
 	}
 
@@ -147,9 +152,9 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes dataPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes dataPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
@@ -160,9 +165,9 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes buttonPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes buttonPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
@@ -174,9 +179,9 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes cancelButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes cancelButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
@@ -199,13 +204,16 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 			okButton.addActionListener(actionEvent -> {
 
 				String description = descriptionTextField.getText();
+				String category = medicalDsrStockMovementTypeBrowserManager.getCategoryKey((String) categoryComboBox.getSelectedItem());
 				medicalDsrStockMovementType.setDescription(description);
 				medicalDsrStockMovementType.setCode(codeTextField.getText());
 				medicalDsrStockMovementType.setType((String) typeComboBox.getSelectedItem());
+				medicalDsrStockMovementType.setCategory(category);
 
 				if (insert) { // inserting
 					try {
-						MovementType insertedMovementType = medicalDsrStockMovementTypeBrowserManager.newMedicalDsrStockMovementType(medicalDsrStockMovementType);
+						MovementType insertedMovementType = medicalDsrStockMovementTypeBrowserManager
+										.newMedicalDsrStockMovementType(medicalDsrStockMovementType);
 						if (insertedMovementType != null) {
 							fireMedicaldsrstockmovInserted(medicalDsrStockMovementType);
 							dispose();
@@ -216,11 +224,12 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
 				} else { // updating
-					if (description.equals(lastdescription)) {
+					if (description.equals(lastdescription) && category.equals(lastCategory)) {
 						dispose();
 					} else {
 						try {
-							MovementType updatedMovementType = medicalDsrStockMovementTypeBrowserManager.updateMedicalDsrStockMovementType(medicalDsrStockMovementType);
+							MovementType updatedMovementType = medicalDsrStockMovementTypeBrowserManager
+											.updateMedicalDsrStockMovementType(medicalDsrStockMovementType);
 							if (updatedMovementType != null) {
 								fireMedicaldsrstockmovUpdated();
 								dispose();
@@ -238,25 +247,25 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes descriptionTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes descriptionTextField
+	 * 
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getDescriptionTextField() {
 		if (descriptionTextField == null) {
 			descriptionTextField = new JTextField(20);
 			if (!insert) {
 				descriptionTextField.setText(medicalDsrStockMovementType.getDescription());
-				lastdescription=medicalDsrStockMovementType.getDescription();
-			} 
+				lastdescription = medicalDsrStockMovementType.getDescription();
+			}
 		}
 		return descriptionTextField;
 	}
-	
+
 	/**
-	 * This method initializes codeTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes codeTextField
+	 * 
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
@@ -268,11 +277,11 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 		}
 		return codeTextField;
 	}
-	
+
 	/**
-	 * This method initializes typeTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes typeComboBox
+	 * 
+	 * @return javax.swing.JTextField
 	 */
 	private JComboBox<String> getTypeComboBox() {
 		if (typeComboBox == null) {
@@ -288,9 +297,29 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes jDataPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes categoryComboBox
+	 * 
+	 * @return javax.swing.JTextField
+	 */
+	private JComboBox<String> getCategoryComboBox() {
+		if (categoryComboBox == null) {
+			categoryComboBox = new JComboBox<>();
+			List<String> categoryList = medicalDsrStockMovementTypeBrowserManager.getCategoryList();
+			for (String description : categoryList) {
+				categoryComboBox.addItem(description);
+			}
+			if (!insert) {
+				categoryComboBox.setSelectedItem(medicalDsrStockMovementTypeBrowserManager.getCategoryTranslated(medicalDsrStockMovementType.getCategory()));
+				lastCategory = medicalDsrStockMovementType.getCategory();
+			}
+		}
+		return categoryComboBox;
+	}
+
+	/**
+	 * This method initializes jDataPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
@@ -301,7 +330,9 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 			jDataPanel.add(getDescriptionTextField());
 			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.medstockmovtype.type") + ':'));
 			jDataPanel.add(getTypeComboBox());
-			SpringUtilities.makeCompactGrid(jDataPanel, 3, 2, 5, 5, 5, 5);
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.medstockmovtype.category.txt") + ':'));
+			jDataPanel.add(getCategoryComboBox());
+			SpringUtilities.makeCompactGrid(jDataPanel, 4, 2, 5, 5, 5, 5);
 		}
 		return jDataPanel;
 	}
