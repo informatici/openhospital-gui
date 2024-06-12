@@ -29,8 +29,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -47,7 +45,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -94,8 +91,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			MessageBundle.getMessage("angal.inventory.status.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.user.col").toUpperCase() };
 	private int[] pColumwidth = { 150, 150, 150, 200 };
-	private JComboBox<String> stateComboBox;
-	private JLabel stateLabel;
+	private JComboBox<String> statusComboBox;
+	private JLabel statusLabel;
 	JButton next;
 	JButton previous;
 	JComboBox pagesCombo = new JComboBox();
@@ -453,7 +450,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 		public InventoryBrowsingModel() {
 			inventoryList = new ArrayList<>();
-			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
+			String state = statusComboBox.getSelectedIndex() > 0 ? statusComboBox.getSelectedItem().toString().toLowerCase() : null;
 			String type = InventoryType.main.toString();
 			try {
 				inventoryList = medicalInventoryManager.getMedicalInventoryByParams(dateFrom, dateTo, state, type);
@@ -464,7 +461,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 		public InventoryBrowsingModel(int startIndex, int pageSize) {
 			inventoryList = new ArrayList<>();
-			String state = stateComboBox.getSelectedIndex() > 0 ? stateComboBox.getSelectedItem().toString().toLowerCase() : null;
+			String state = statusComboBox.getSelectedIndex() > 0 ? statusComboBox.getSelectedItem().toString().toLowerCase() : null;
 			String type = InventoryType.main.toString();
 			try {
 				Page<MedicalInventory> medInventorypage = medicalInventoryManager.getMedicalInventoryByParamsPageable(dateFrom, dateTo, state, type, startIndex,
@@ -538,13 +535,13 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	}
 
 	private JComboBox<String> getComboBox() {
-		if (stateComboBox == null) {
-			stateComboBox = new JComboBox<String>();
-			stateComboBox.addItem("");
-			for (InventoryStatus currentState : InventoryStatus.values()) {
-				stateComboBox.addItem(MessageBundle.getMessage("angal.inventory." + currentState));
+		if (statusComboBox == null) {
+			statusComboBox = new JComboBox<String>();
+			statusComboBox.addItem("");
+			for (InventoryStatus currentStatus : InventoryStatus.values()) {
+				statusComboBox.addItem(MessageBundle.getMessage("angal.inventory." + currentStatus));
 			}
-			stateComboBox.addActionListener(actionEvent -> {
+			statusComboBox.addActionListener(actionEvent -> {
 				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
 				totalRows = inventoryModel.getRowCount();
 				startIndex = 0;
@@ -558,15 +555,15 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				initialiseCombo(totalRows);
 			});
 		}
-		return stateComboBox;
+		return statusComboBox;
 	}
 
 	private JLabel getStateLabel() {
-		if (stateLabel == null) {
-			stateLabel = new JLabel(MessageBundle.getMessage("angal.inventory.status.txt"));
-			stateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		if (statusLabel == null) {
+			statusLabel = new JLabel(MessageBundle.getMessage("angal.inventory.status.txt"));
+			statusLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		}
-		return stateLabel;
+		return statusLabel;
 	}
 
 	public void initialiseCombo(int total_rows) {
@@ -587,25 +584,16 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 	@Override
 	public void InventoryCancelled(AWTEvent e) {
-		if (inventoryList != null) {
-			inventoryList.clear();
-		}
 		jTableInventory.setModel(new InventoryBrowsingModel());
 	}
 
 	@Override
 	public void InventoryInserted(AWTEvent e) {
-		if (inventoryList != null) {
-			inventoryList.clear();
-		}
 		jTableInventory.setModel(new InventoryBrowsingModel());
 	}
 
 	@Override
 	public void InventoryUpdated(AWTEvent e) {
-		if (inventoryList != null) {
-			inventoryList.clear();
-		}
 		jTableInventory.setModel(new InventoryBrowsingModel());
 	}
 }
