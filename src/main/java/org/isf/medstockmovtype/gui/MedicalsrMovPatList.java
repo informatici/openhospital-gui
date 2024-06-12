@@ -40,6 +40,9 @@ import org.isf.utils.jobjects.OhTableDrugsModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/*
+ * TODO: Move under package org.isf.medicalstockward.gui
+ */
 public class MedicalsrMovPatList extends JPanel {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalsrMovPatList.class);
@@ -58,11 +61,11 @@ public class MedicalsrMovPatList extends JPanel {
 
 		JScrollPane scrollPaneData = new JScrollPane();
 		panelData.add(scrollPaneData);
-	
+
 		if (object instanceof Patient) {
 			myPatient = (Patient) object;
 		}
-		
+
 		if (myPatient != null) {
 			try {
 				List<MovementWard> movPat = movWardBrowserManager.getMovementToPatient(myPatient);
@@ -88,7 +91,7 @@ public class MedicalsrMovPatList extends JPanel {
 		dialogDrug.setLocationRelativeTo(null);
 		dialogDrug.setModal(true);
 	}
-	
+
 	public List<MovementWard> getDrugsData() {
 		return drugsData;
 	}
