@@ -69,6 +69,7 @@ import org.isf.medtype.model.MedicalType;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.stat.gui.report.GenericReportFromDateToDate;
+import org.isf.stat.gui.report.GenericReportPharmaceuticalAMC;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalOrder;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalStock;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalStockCard;
@@ -239,7 +240,46 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		if (buttonAMC == null) {
 			buttonAMC = new JButton(MessageBundle.getMessage("angal.medicals.averagemonthlyconsumption.btn"));
 			buttonAMC.setMnemonic(MessageBundle.getMnemonic("angal.medicals.averagemonthlyconsumption.btn.key"));
-			buttonAMC.addActionListener(actionEvent -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALAMC));
+			buttonAMC.addActionListener(actionEvent -> {
+
+				List<String> dateOptions = new ArrayList<>();
+				dateOptions.add(MessageBundle.getMessage("angal.medicals.today"));
+				dateOptions.add(MessageBundle.getMessage("angal.common.date.txt"));
+
+				Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
+				String dateOption = (String) MessageDialog.inputDialog(this,
+								icon,
+								dateOptions.toArray(),
+								dateOptions.get(0),
+								"angal.medicals.pleaseselectareport.msg");
+
+				if (dateOption == null) {
+					return;
+				}
+				int i = 0;
+				if (dateOptions.indexOf(dateOption) == i) {
+					new GenericReportPharmaceuticalAMC(null, GeneralData.PHARMACEUTICALAMC, false);
+					new GenericReportPharmaceuticalAMC(null, GeneralData.PHARMACEUTICALAMC, true);
+					return;
+				}
+				if (dateOptions.indexOf(dateOption) == ++i) {
+
+					icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
+
+					GoodDateChooser dateChooser = new GoodDateChooser(LocalDate.now(), true, false);
+					int r = JOptionPane.showConfirmDialog(this,
+									dateChooser,
+									MessageBundle.getMessage("angal.common.date.txt"),
+									JOptionPane.OK_CANCEL_OPTION,
+									JOptionPane.PLAIN_MESSAGE,
+									icon);
+
+					if (r == JOptionPane.OK_OPTION) {
+						new GenericReportPharmaceuticalAMC(dateChooser.getDateEndOfDay(), GeneralData.PHARMACEUTICALAMC, false);
+						new GenericReportPharmaceuticalAMC(dateChooser.getDateEndOfDay(), GeneralData.PHARMACEUTICALAMC, true);
+					}
+				}
+			});
 		}
 		return buttonAMC;
 	}
