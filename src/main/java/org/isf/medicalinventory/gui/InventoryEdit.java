@@ -162,7 +162,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JScrollPane scrollPaneInventory;
 	private JTable jTableInventoryRow;
 	private List<MedicalInventoryRow> inventoryRowList;
-	private List<MedicalInventoryRow> inventoryRowSearchList = new ArrayList<MedicalInventoryRow>();
+	private List<MedicalInventoryRow> inventoryRowSearchList = new ArrayList<>();
 	private String[] pColums = { MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.product.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.new.col").toUpperCase(),
@@ -460,6 +460,22 @@ public class InventoryEdit extends ModalJFrame {
 				inventory.setStatus(State);
 				inventory.setUser(user);
 				inventory.setInventoryType(InventoryType.main.toString());
+				MovementType charge = (MovementType) chargeCombo.getSelectedItem();
+				if (charge != null) {
+					inventory.setChangeType(charge.getCode());
+				}
+				MovementType discharge = (MovementType) dischargeCombo.getSelectedItem();
+				if (discharge != null) {
+					inventory.setDischangeType(discharge.getCode());
+				}
+				Supplier supplier = (Supplier) supplierCombo.getSelectedItem();
+				if (supplier != null) {
+					inventory.setSupplier(supplier.getSupId());
+				}
+				Ward destination = (Ward) destinationCombo.getSelectedItem();
+				if (destination != null) {
+					inventory.setDestination(destination.getCode());
+				}
 				MedicalInventory meInventory;
 				try {
 					meInventory = medicalInventoryManager.newMedicalInventory(inventory);
@@ -511,6 +527,22 @@ public class InventoryEdit extends ModalJFrame {
 					OHServiceExceptionUtil.showMessages(e);
 				}
 			} else if ((inventory != null) && (mode.equals("update"))) {
+				MovementType charge = (MovementType) chargeCombo.getSelectedItem();
+				if (charge != null) {
+					inventory.setChangeType(charge.getCode());
+				}
+				MovementType discharge = (MovementType) dischargeCombo.getSelectedItem();
+				if (discharge != null) {
+					inventory.setDischangeType(discharge.getCode());
+				}
+				Supplier supplier = (Supplier) supplierCombo.getSelectedItem();
+				if (supplier != null) {
+					inventory.setSupplier(supplier.getSupId());
+				}
+				Ward destination = (Ward) destinationCombo.getSelectedItem();
+				if (destination != null) {
+					inventory.setDestination(destination.getCode());
+				}
 				checkResults = 0;
 				boolean toUpdate = false;
 				if (!inventory.getInventoryDate().equals(dateInventory)) {
@@ -634,6 +666,7 @@ public class InventoryEdit extends ModalJFrame {
 					try {
 						medicalInventoryRowManager.deleteMedicalInventoryRows(inventoryRowsToDelete);
 						inventoryRowSearchList.removeAll(inventoryRowsToDelete);
+						jTableInventoryRow.clearSelection();
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 						return ;
@@ -660,7 +693,13 @@ public class InventoryEdit extends ModalJFrame {
 			}
 			MedicalInventoryRow selectedInventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
 			String lotCode = selectedInventoryRow.getLot() != null ? selectedInventoryRow.getLot().getCode() : "";
-			Lot lot = this.getLot(lotCode);
+			Lot lot = new Lot();
+			try {
+				lot = this.getLot(lotCode);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+				return ;
+			} 
 			if (lot != null) {
 				final String code = lot.getCode();
 				List<MedicalInventoryRow> invRows = inventoryRowSearchList.stream().filter(inv -> inv.getLot() != null && inv.getLot().getCode().equals(code)).collect(Collectors.toList());
@@ -936,7 +975,7 @@ public class InventoryEdit extends ModalJFrame {
 		}
 	}
 	
-	private Lot getLot(String lotCode) {
+	private Lot getLot(String lotCode) throws OHServiceException {
 		Lot lot = null;
 		if (isAutomaticLotIn()) {
 			LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
@@ -953,6 +992,12 @@ public class InventoryEdit extends ModalJFrame {
 			lot.setCost(cost);
 		} else {
 			lot = askLot(lotCode);
+			if (!lot.getCode().equals(lotCode)) {
+				Lot lotDelete = movStockInsertingManager.getLot(lotCode);
+				if (lotDelete != null) {
+					movStockInsertingManager.deleteLot(lotDelete);
+				}	
+			}
 		}
 		return lot;
 	}
@@ -1085,11 +1130,11 @@ public class InventoryEdit extends ModalJFrame {
 	private JRadioButton getSpecificRadio() {
 		if (specificRadio == null) {
 			specificRadio = new JRadioButton(MessageBundle.getMessage("angal.inventory.specificproduct.txt"));
-			specificRadio.setSelected(true);
 			specificRadio.addActionListener(actionEvent -> {
 				if (specificRadio.isSelected()) {
 					codeTextField.setEnabled(true);
 					codeTextField.setText("");
+					allRadio.setSelected(false);
 				}
 			});
 		}
@@ -1099,15 +1144,41 @@ public class InventoryEdit extends ModalJFrame {
 	private JRadioButton getAllRadio() {
 		if (allRadio == null) {
 			allRadio = new JRadioButton(MessageBundle.getMessage("angal.inventory.allproduct.txt"));
-			allRadio.setSelected(false);
+			if (inventory != null) {
+				allRadio.setSelected(true);
+				specificRadio.setSelected(false);
+			} else {
+				allRadio.setSelected(false);
+				specificRadio.setSelected(true);
+			}
 			allRadio.addActionListener(actionEvent -> {
 				if (allRadio.isSelected()) {
 					codeTextField.setEnabled(false);
 					codeTextField.setText("");
-					try {
-						jTableInventoryRow.setModel(new InventoryRowModel());
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
+					if (inventoryRowSearchList.size() > 0) {
+						JPanel panel = new JPanel();
+						panel.add(new JLabel(MessageBundle.getMessage("angal.inveentoryrow.doyouwanttoaddallnotyetlistedproducts.msg")));
+						int ok = JOptionPane.showConfirmDialog(this, panel,
+										MessageBundle.getMessage("angal.inventoryrow.addnotyetlistedproducts.title"),
+										JOptionPane.OK_CANCEL_OPTION);
+
+						if (ok == JOptionPane.OK_OPTION) {
+							try {
+								jTableInventoryRow.setModel(new InventoryRowModel());
+							} catch (OHServiceException e) {
+								OHServiceExceptionUtil.showMessages(e);
+							}
+						} else {
+							allRadio.setSelected(false);
+							specificRadio.setSelected(true);
+						}
+						
+					} else {
+						try {
+							jTableInventoryRow.setModel(new InventoryRowModel());
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
+						}
 					}
 					jTableInventoryRow.updateUI();
 					code = null;
@@ -1338,64 +1409,96 @@ public class InventoryEdit extends ModalJFrame {
 	}
 	
 	private JComboBox<MovementType> getJComboCharge() {
+		MovementType movementSelected = null;
 		if (chargeCombo == null) {
 			chargeCombo = new JComboBox<MovementType>();
 			try {
-				List<MovementType> movementTypes = movTypeManager.getMedicalDsrStockMovementType();
+				List<MovementType> movementTypes = movTypeManager.getMedicalDsrStockMovementType();	
+				chargeCombo.addItem(null);
 				for(MovementType movType: movementTypes) {
-					if(movType.getType().equals("+")) {
+					if (movType.getType().equals("+")) {
 						chargeCombo.addItem(movType);
+						if (inventory != null && movType.getCode().equals(inventory.getChangeType())) {
+							movementSelected = movType;
+						}
 					}
 				}
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
+			}
+			if (inventory != null) {
+				chargeCombo.setSelectedItem(movementSelected);
 			}
 		}
 		return chargeCombo;
 	}
 	
 	private JComboBox<MovementType> getJComboDischarge() {
+		MovementType movementSelected = null;
 		if (dischargeCombo == null) {
 			dischargeCombo = new JComboBox<MovementType>();
 			try {
 				List<MovementType> movementTypes = movTypeManager.getMedicalDsrStockMovementType();
+				dischargeCombo.addItem(null);
 				for(MovementType movType: movementTypes) {
 					if(movType.getType().equals("-")) {
 						dischargeCombo.addItem(movType);
+						if (inventory != null && movType.getCode().equals(inventory.getDischangeType())) {
+							movementSelected = movType;
+						}
 					}	
 				}
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
+			}
+			if (inventory != null) {
+				dischargeCombo.setSelectedItem(movementSelected);
 			}
 		}
 		return dischargeCombo;
 	}
 	
 	private JComboBox<Supplier> getJComboSupplier() {
+		Supplier supplierSelected = null;
 		if (supplierCombo == null) {
 			supplierCombo = new JComboBox<Supplier>();
 			try {
 				List<Supplier> suppliers = supplierManager.getList();
+				supplierCombo.addItem(null);
 				for(Supplier supplier: suppliers) {
 					supplierCombo.addItem(supplier);
+					if (inventory != null && supplier.getSupId() == inventory.getSupplier()) {
+						supplierSelected = supplier;
+					}
 				}
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
+			}
+			if (inventory != null) {
+				supplierCombo.setSelectedItem(supplierSelected);
 			}
 		}
 		return supplierCombo;
 	}
 	
 	private JComboBox<Ward> getJComboDestination() {
+		Ward destinationSelected = null;
 		if (destinationCombo == null) {
 			destinationCombo = new JComboBox<Ward>();
 			try {
 				List<Ward> wards = wardManager.getWards();
+				destinationCombo.addItem(null);
 				for(Ward ward: wards) {
 					destinationCombo.addItem(ward);
+					if (inventory != null && ward.getCode().equals(inventory.getDestination()) ) {
+						destinationSelected = ward;
+					}
 				}
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
+			}
+			if (inventory != null) {
+				destinationCombo.setSelectedItem(destinationSelected);
 			}
 		}
 		return destinationCombo;
