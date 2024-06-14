@@ -176,7 +176,7 @@ public class InventoryEdit extends ModalJFrame {
 	private int[] pColumwidth = { 50, 50, 200, 100, 100, 100, 100, 80, 80, 80 };
 	private boolean[] columnEditable = { false, false, false, false, false, false, false, true, false, false };
 	private boolean[] columnEditableView = { false, false, false, false, false, false, false, false, false, false };
-	private boolean[] pColumnVisible = { false, true, true, true, !GeneralData.AUTOMATICLOT_IN, true, true, true, GeneralData.LOTWITHCOST, true };
+	private boolean[] pColumnVisible = { true, true, true, true, !GeneralData.AUTOMATICLOT_IN, true, true, true, GeneralData.LOTWITHCOST, true };
 	private MedicalInventory inventory = null;
 	private JRadioButton specificRadio;
 	private JRadioButton allRadio;
@@ -248,8 +248,6 @@ public class InventoryEdit extends ModalJFrame {
 
 		panelFooter = getPanelFooter();
 		getContentPane().add(panelFooter, BorderLayout.SOUTH);
-
-		ajustWidth();
 
 		addWindowListener(new WindowAdapter() {
 
@@ -419,7 +417,6 @@ public class InventoryEdit extends ModalJFrame {
 		return jCalendarInventory;
 	}
 
-	@SuppressWarnings("unused")
 	private JButton getNewButton() {
 		saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
@@ -677,7 +674,6 @@ public class InventoryEdit extends ModalJFrame {
 				return;
 			}
 			jTableInventoryRow.updateUI();
-			ajustWidth();
 			fireInventoryUpdated();
 		});
 		return deleteButton;
@@ -764,7 +760,6 @@ public class InventoryEdit extends ModalJFrame {
 				specificRadio.setSelected(true);
 				codeTextField.setEnabled(true);
 				jTableInventoryRow.updateUI();
-				ajustWidth();
 				fireInventoryUpdated();
 			}
 		});
@@ -798,6 +793,9 @@ public class InventoryEdit extends ModalJFrame {
 					jTableInventoryRow.getColumnModel().getColumn(i).setWidth(0);
 				}
 			}
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+	        jTableInventoryRow.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 			jTableInventoryRow.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 				@Override
@@ -818,9 +816,6 @@ public class InventoryEdit extends ModalJFrame {
 			});
 			DefaultCellEditor cellEditor = new DefaultCellEditor(jTetFieldEditor);
 			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
-			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-	        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-	        jTableInventoryRow.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 		}
 		return jTableInventoryRow;
 	}
@@ -895,8 +890,9 @@ public class InventoryEdit extends ModalJFrame {
 		}
 
 		public int getRowCount() {
-			if (inventoryRowSearchList == null)
+			if (inventoryRowSearchList == null) {
 				return 0;
+			}
 			return inventoryRowSearchList.size();
 		}
 
@@ -1166,7 +1162,7 @@ public class InventoryEdit extends ModalJFrame {
 					codeTextField.setText("");
 					if (inventoryRowSearchList.size() > 0) {
 						JPanel panel = new JPanel();
-						panel.add(new JLabel(MessageBundle.getMessage("angal.inveentoryrow.doyouwanttoaddallnotyetlistedproducts.msg")));
+						panel.add(new JLabel(MessageBundle.getMessage("angal.inventoryrow.doyouwanttoaddallnotyetlistedproducts.msg")));
 						int ok = JOptionPane.showConfirmDialog(this, panel,
 										MessageBundle.getMessage("angal.inventoryrow.addnotyetlistedproducts.title"),
 										JOptionPane.OK_CANCEL_OPTION);
@@ -1191,7 +1187,6 @@ public class InventoryEdit extends ModalJFrame {
 					}
 					jTableInventoryRow.updateUI();
 					code = null;
-					ajustWidth();
 				}
 			});
 		}
@@ -1362,12 +1357,6 @@ public class InventoryEdit extends ModalJFrame {
 			return med;
 		}
 		return null;
-	}
-
-	private void ajustWidth() {
-		for (int i = 0; i < pColumwidth.length; i++) {
-			jTableInventoryRow.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
-		}
 	}
 
 	public EventListenerList getInventoryListeners() {
