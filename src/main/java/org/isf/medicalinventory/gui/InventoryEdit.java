@@ -714,6 +714,7 @@ public class InventoryEdit extends ModalJFrame {
 				final String code = lot.getCode();
 				List<MedicalInventoryRow> invRows = inventoryRowSearchList.stream().filter(inv -> inv.getLot() != null && inv.getLot().getCode().equals(code)).collect(Collectors.toList());
 				if (invRows.size() == 0) {
+					selectedInventoryRow.setNewLot(true);
 					selectedInventoryRow.setLot(lot);
 				} else {
 					MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
