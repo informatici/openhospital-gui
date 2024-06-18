@@ -45,9 +45,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventListener;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
@@ -840,15 +842,17 @@ public class InventoryEdit extends ModalJFrame {
 		private static final long serialVersionUID = 1L;
 		
 		public InventoryRowModel(boolean add) throws OHServiceException {
-			if (allRadio.isSelected()) {
-				inventoryRowList = loadNewInventoryTable(null, inventory, add);
+			inventoryRowList = loadNewInventoryTable(null, inventory, add);
+			if (!inventoryRowSearchList.isEmpty()) {
+				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
 			}
-			if (inventoryRowList != null) {
-				if (inventoryRowSearchList.size() != 0) {
-					inventoryRowList = removeInventoryRows(inventoryRowList);
+			if (!inventoryRowList.isEmpty()) {
+				for (MedicalInventoryRow invRow : inventoryRowList) {
+					List<MedicalInventoryRow> founds = inventoryRowSearchList.stream().filter(inv -> inv.getMedical().getCode().equals(invRow.getMedical().getCode())).collect(Collectors.toList());
+					if (founds.size() == 0) {
+						inventoryRowSearchList.add(invRow);
+					}
 				}
-				inventoryRowList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
-				inventoryRowSearchList.addAll(inventoryRowList);
 			}
 		}
 
@@ -869,17 +873,19 @@ public class InventoryEdit extends ModalJFrame {
 					} else {
 						inventoryRowList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
 					}
-					
 				}
 			}
-			if (inventoryRowList != null) {
-				if (inventoryRowSearchList.size() != 0) {
-					inventoryRowList = removeInventoryRows(inventoryRowList);
-				}
-				inventoryRowList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
-				inventoryRowSearchList.addAll(inventoryRowList);
+			if (!inventoryRowSearchList.isEmpty()) {
+				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
 			}
-				
+			if (!inventoryRowList.isEmpty()) {
+				for (MedicalInventoryRow invRow : inventoryRowList) {
+					List<MedicalInventoryRow> founds = inventoryRowSearchList.stream().filter(inv -> inv.getMedical().getCode().equals(invRow.getMedical().getCode())).collect(Collectors.toList());
+					if (founds.size() == 0) {
+						inventoryRowSearchList.add(invRow);
+					}
+				}
+			}
 		}
 
 		public Class< ? > getColumnClass(int c) {
@@ -991,7 +997,7 @@ public class InventoryEdit extends ModalJFrame {
 						return ;
 					}
 					invRow.setRealqty(intValue);
-					if (invRow.getLot() != null) {
+					if (invRow.getLot() != null && invRow.getLot().getCost() != null) {
 						double total = invRow.getRealQty() * invRow.getLot().getCost().doubleValue();
 						invRow.setTotal(total);
 					}
@@ -1009,14 +1015,17 @@ public class InventoryEdit extends ModalJFrame {
 	}
 	
 	private void ajustWith() {
-		 for (int i = 0; i < jTableInventoryRow.getColumnModel().getColumnCount(); i++) {
-			 	jTableInventoryRow.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
-			 	if (i == 0 || !pColumnVisible[i]) {
-					jTableInventoryRow.getColumnModel().getColumn(i).setMinWidth(0);
-					jTableInventoryRow.getColumnModel().getColumn(i).setMaxWidth(0);
-					jTableInventoryRow.getColumnModel().getColumn(i).setPreferredWidth(0);
-				}
-	        }
+		for (int i = 0; i < jTableInventoryRow.getColumnModel().getColumnCount(); i++) {
+			jTableInventoryRow.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
+			if (i == 0 || !pColumnVisible[i]) {
+				jTableInventoryRow.getColumnModel().getColumn(i).setMinWidth(0);
+				jTableInventoryRow.getColumnModel().getColumn(i).setMaxWidth(0);
+				jTableInventoryRow.getColumnModel().getColumn(i).setPreferredWidth(0);
+			}
+		}
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        jTableInventoryRow.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 	}
 	private Lot getLot(String lotCode) throws OHServiceException {
 		Lot lot = null;
@@ -1226,7 +1235,7 @@ public class InventoryEdit extends ModalJFrame {
 							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
-					jTableInventoryRow.updateUI();
+					fireInventoryUpdated();
 					code = null;
 					ajustWith();
 				}
@@ -1279,12 +1288,11 @@ public class InventoryEdit extends ModalJFrame {
 
 	private List<MedicalInventoryRow> loadNewInventoryTable(String code, MedicalInventory inventory, boolean add) throws OHServiceException {	
 		List<MedicalInventoryRow> inventoryRowsList = new ArrayList<>();
-		if (inventory != null ) {
+		if (inventory != null) {
 			int id = inventory.getId();
 			inventoryRowsList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(id);
 			if (add) {
-				List<MedicalInventoryRow> medInventoryRows = getMedicalInventoryRows(code);
-				inventoryRowsList.addAll(medInventoryRows);
+				inventoryRowsList = getMedicalInventoryRows(code);
 			}
 		} else {
 			inventoryRowsList = getMedicalInventoryRows(code);
@@ -1595,15 +1603,17 @@ public class InventoryEdit extends ModalJFrame {
 	     return duplicates;
 	}
 	
-	private List<MedicalInventoryRow> removeInventoryRows(List<MedicalInventoryRow> invRows) {
-        List<MedicalInventoryRow> invRowsCopy = new ArrayList<>(invRows);
-        for (MedicalInventoryRow invRow : invRowsCopy) {
-            for (MedicalInventoryRow invRo : inventoryRowSearchList) {
-            	if (invRow.getMedical().getCode() == invRo.getMedical().getCode()) {
-                	invRows.remove(invRow);
-            	}
-            }
-        }
-        return invRows;
+	private boolean elementExist(MedicalInventoryRow mdeInvRow) {
+		for (MedicalInventoryRow invR: inventoryRowSearchList) {
+			if (invR.getMedical().getCode() == mdeInvRow.getMedical().getCode()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static List<MedicalInventoryRow> retirerDoublons(List<MedicalInventoryRow> liste) {
+        Set<MedicalInventoryRow> set = new HashSet<MedicalInventoryRow>(liste);
+        return new ArrayList<>(set);
     }
 }
