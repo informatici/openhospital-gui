@@ -45,11 +45,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventListener;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
@@ -167,6 +165,10 @@ public class InventoryEdit extends ModalJFrame {
 	private JTable jTableInventoryRow;
 	private List<MedicalInventoryRow> inventoryRowList;
 	private List<MedicalInventoryRow> inventoryRowSearchList = new ArrayList<>();
+	private List<MedicalInventoryRow> inventoryRowListAdded = new ArrayList<>();
+	private List<Lot> lotSaves = new ArrayList<>();
+	private HashMap<Integer, Lot> lotDeletes = new HashMap<>();
+	List<MedicalInventoryRow> inventoryRowsToDelete = new ArrayList<>();
 	private String[] pColums = { MessageBundle.getMessage("angal.inventory.id.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.product.col").toUpperCase(),
@@ -446,6 +448,31 @@ public class InventoryEdit extends ModalJFrame {
 				MessageDialog.error(null, "angal.inventory.thosemedicalhavethesamelot.fmt.msg", message);
 				return ;
 			}
+			if (!lotDeletes.isEmpty() || !inventoryRowsToDelete.isEmpty()) {
+				System.out.println("lot to delete is not empty"+ lotDeletes.size());
+				for (Map.Entry<Integer, Lot> entry : lotDeletes.entrySet()) {
+					MedicalInventoryRow invRow = medicalInventoryRowManager.getMedicalInventoryRowById(entry.getKey());
+					invRow.setLot(null);
+					try {
+						medicalInventoryRowManager.updateMedicalInventoryRow(invRow);
+						movStockInsertingManager.deleteLot(entry.getValue());
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+						return ;
+					}
+					
+		        }
+				lotDeletes.clear();
+				System.out.println("inventoryRowsToDelete to delete is not empty"+ inventoryRowsToDelete.size());
+				try {
+					medicalInventoryRowManager.deleteMedicalInventoryRows(inventoryRowsToDelete);
+					inventoryRowsToDelete.clear();
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+					return ;
+				}
+				return ;
+			}
 			if ((inventory == null) && (mode.equals("new"))) {
 				String reference = referenceTextField.getText().trim();
 				if (reference.equals("")) {
@@ -518,7 +545,7 @@ public class InventoryEdit extends ModalJFrame {
 							mode = "update";
 							MessageDialog.info(this, "angal.inventory.savesuccess.msg");
 							fireInventoryInserted();
-							closeButton.doClick();
+							dispose();
 						} else {
 							MessageDialog.error(null, "angal.inventory.error.msg");
 						}
@@ -639,7 +666,7 @@ public class InventoryEdit extends ModalJFrame {
 				if (checkResults == 0) {
 					MessageDialog.info(null, "angal.inventory.update.success.msg");
 					fireInventoryUpdated();
-					closeButton.doClick();
+					dispose();
 				} else {
 					MessageDialog.error(null, "angal.inventory.update.error.msg");
 				}
@@ -669,13 +696,7 @@ public class InventoryEdit extends ModalJFrame {
 						MedicalInventoryRow inventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
 						inventoryRowsToDelete.add(inventoryRow);
 					}
-					try {
-						medicalInventoryRowManager.deleteMedicalInventoryRows(inventoryRowsToDelete);
-						inventoryRowSearchList.removeAll(inventoryRowsToDelete);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-						return ;
-					}
+					inventoryRowSearchList.removeAll(inventoryRowsToDelete);
 				}
 				jTableInventoryRow.clearSelection();
 			} else {
@@ -703,9 +724,7 @@ public class InventoryEdit extends ModalJFrame {
 				if (!lot.getCode().equals(lotCode)) {
 					Lot lotDelete = movStockInsertingManager.getLot(lotCode);
 					if (lotDelete != null) {
-						selectedInventoryRow.setLot(null);
-						medicalInventoryRowManager.updateMedicalInventoryRow(selectedInventoryRow);
-						movStockInsertingManager.deleteLot(lotDelete);
+						lotDeletes.put(selectedInventoryRow.getId(), lotDelete);
 					}	
 				}
 			} catch (OHServiceException e) {
@@ -718,6 +737,7 @@ public class InventoryEdit extends ModalJFrame {
 				if (invRows.size() == 0) {
 					selectedInventoryRow.setNewLot(true);
 					selectedInventoryRow.setLot(lot);
+					lotSaves.add(lot);
 				} else {
 					MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
 					return ;
@@ -734,6 +754,10 @@ public class InventoryEdit extends ModalJFrame {
 		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		closeButton.addActionListener(actionEvent -> {
+			int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttosavethechanges.msg");
+			if (reset == JOptionPane.YES_OPTION) {
+				this.saveButton.doClick();
+			}
 			dispose();
 		});
 		return closeButton;
@@ -745,23 +769,9 @@ public class InventoryEdit extends ModalJFrame {
 		resetButton.addActionListener(actionEvent -> {
 			int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttocleanthistable.msg");
 			if (reset == JOptionPane.YES_OPTION) {
-				if (inventory == null) {
-					if (inventoryRowList != null) {
-						inventoryRowList.clear();
-					}
-					if (inventoryRowSearchList != null) {
-						inventoryRowSearchList.clear();
-					}
-				} else {
-					List<MedicalInventoryRow> inventoryRowsToDelete = new ArrayList<>();
+				if (inventory != null) {
 					for (MedicalInventoryRow invRoww : inventoryRowSearchList) {
 						inventoryRowsToDelete.add(invRoww);
-					}
-					try {
-						medicalInventoryRowManager.deleteMedicalInventoryRows(inventoryRowsToDelete);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-						return ;
 					}
 				}
 				specificRadio.setSelected(true);
@@ -810,13 +820,15 @@ public class InventoryEdit extends ModalJFrame {
 					if (e.getValueIsAdjusting()) {
 						jTableInventoryRow.editCellAt(jTableInventoryRow.getSelectedRow(), jTableInventoryRow.getSelectedColumn());
 						jTetFieldEditor.selectAll();
-						int selectedRow = jTableInventoryRow.getSelectedRow();
-						MedicalInventoryRow medInvRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
-						if (medInvRow.getLot() == null || medInvRow.isNewLot()) {
-							lotButton.setEnabled(true);
-		                } else {
-		                	lotButton.setEnabled(false);
-		                }
+						int[] selectedRows = jTableInventoryRow.getSelectedRows();
+						if (selectedRows.length == 1) {
+							MedicalInventoryRow medInvRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[0], -1);
+							if (medInvRow.getLot() == null || medInvRow.isNewLot()) {
+								lotButton.setEnabled(true);
+			                }
+						} else {
+							lotButton.setEnabled(false);
+						}
 					}
 
 				}
@@ -851,7 +863,7 @@ public class InventoryEdit extends ModalJFrame {
 					List<MedicalInventoryRow> founds = inventoryRowSearchList.stream().filter(inv -> inv.getMedical().getCode().equals(invRow.getMedical().getCode())).collect(Collectors.toList());
 					if (founds.size() == 0) {
 						inventoryRowSearchList.add(invRow);
-					}
+						inventoryRowListAdded.add(invRow);					}
 				}
 			}
 		}
@@ -864,6 +876,7 @@ public class InventoryEdit extends ModalJFrame {
 				} else if (specificRadio.isSelected() && code != null && !code.trim().equals("")) {
 					inventoryRowList = loadNewInventoryTable(code, null, false);
 				}
+				inventoryRowListAdded = inventoryRowList;
 			} else { // updating
 				if (allRadio.isSelected()) {
 					inventoryRowList = loadNewInventoryTable(null, inventory, false);
@@ -1602,18 +1615,4 @@ public class InventoryEdit extends ModalJFrame {
 	     }
 	     return duplicates;
 	}
-	
-	private boolean elementExist(MedicalInventoryRow mdeInvRow) {
-		for (MedicalInventoryRow invR: inventoryRowSearchList) {
-			if (invR.getMedical().getCode() == mdeInvRow.getMedical().getCode()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static List<MedicalInventoryRow> retirerDoublons(List<MedicalInventoryRow> liste) {
-        Set<MedicalInventoryRow> set = new HashSet<MedicalInventoryRow>(liste);
-        return new ArrayList<>(set);
-    }
 }
