@@ -233,6 +233,16 @@ public class InventoryEdit extends ModalJFrame {
 			deleteButton.setVisible(false);
 			columnEditable = columnEditableView;
 			codeTextField.setEditable(false);
+			resetButton.setVisible(false);
+			referenceTextField.setEditable(false);
+			jCalendarInventory.setEnabled(false);
+			specificRadio.setEnabled(false);
+			allRadio.setEnabled(false);
+			chargeCombo.setEnabled(false);
+			dischargeCombo.setEnabled(false);
+			supplierCombo.setEnabled(false);
+			destinationCombo.setEnabled(false);
+			lotButton.setVisible(false);
 		}
 	}
 
@@ -439,15 +449,7 @@ public class InventoryEdit extends ModalJFrame {
 				MessageDialog.error(null, "angal.inventory.notdateinfuture.msg");
 				return ;
 			}
-			List<MedicalInventoryRow> invRowWithSameLots = checkDuplicateLotForSameMedical();
-			if (invRowWithSameLots.size() > 0) {
-				String message = "";
-				for (MedicalInventoryRow invR: invRowWithSameLots) {
-					message = message.concat(invR.getMedical().getDescription()+",\n ");
-				}
-				MessageDialog.error(null, "angal.inventory.thosemedicalhavethesamelot.fmt.msg", message);
-				return ;
-			}
+			
 			if (!lotDeletes.isEmpty() || !inventoryRowsToDelete.isEmpty()) {
 				for (Map.Entry<Integer, Lot> entry : lotDeletes.entrySet()) {
 					MedicalInventoryRow invRow = medicalInventoryRowManager.getMedicalInventoryRowById(entry.getKey());
@@ -852,17 +854,12 @@ public class InventoryEdit extends ModalJFrame {
 		
 		public InventoryRowModel(boolean add) throws OHServiceException {
 			inventoryRowList = loadNewInventoryTable(null, inventory, add);
-			if (!inventoryRowSearchList.isEmpty()) {
-				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
-			}
 			if (!inventoryRowList.isEmpty()) {
 				for (MedicalInventoryRow invRow : inventoryRowList) {
-					List<MedicalInventoryRow> founds = inventoryRowSearchList.stream().filter(inv -> inv.getMedical().getCode().equals(invRow.getMedical().getCode())).collect(Collectors.toList());
-					if (founds.size() == 0) {
-						inventoryRowSearchList.add(invRow);
-						inventoryRowListAdded.add(invRow);					
-					}
+					inventoryRowSearchList.add(invRow);
+					inventoryRowListAdded.add(invRow);
 				}
+				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
 			}
 		}
 
@@ -885,16 +882,12 @@ public class InventoryEdit extends ModalJFrame {
 					}
 				}
 			}
-			if (!inventoryRowSearchList.isEmpty()) {
-				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
-			}
 			if (!inventoryRowList.isEmpty()) {
 				for (MedicalInventoryRow invRow : inventoryRowList) {
-					List<MedicalInventoryRow> founds = inventoryRowSearchList.stream().filter(inv -> inv.getMedical().getCode().equals(invRow.getMedical().getCode())).collect(Collectors.toList());
-					if (founds.size() == 0) {
-						inventoryRowSearchList.add(invRow);
-					}
+					inventoryRowSearchList.add(invRow);
+					inventoryRowListAdded.add(invRow);
 				}
+				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
 			}
 		}
 
@@ -1613,18 +1606,5 @@ public class InventoryEdit extends ModalJFrame {
 			i = i + 1;
 		}
 		return position;
-	}
-	private List<MedicalInventoryRow> checkDuplicateLotForSameMedical() {
-		 Map<MedicalInventoryRow, Integer> frequencyMap = new HashMap<>();
-	     List<MedicalInventoryRow> duplicates = new ArrayList<>();
-	     for (MedicalInventoryRow invRow : inventoryRowSearchList) {
-	         frequencyMap.put(invRow, frequencyMap.getOrDefault(invRow, 0) + 1);
-	     }
-	     for (Map.Entry<MedicalInventoryRow, Integer> entry : frequencyMap.entrySet()) {
-	    	 if (entry.getValue() > 1) {
-	    		 duplicates.add(entry.getKey());
-	    	 }
-	     }
-	     return duplicates;
 	}
 }
