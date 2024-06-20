@@ -206,6 +206,8 @@ public class InventoryEdit extends ModalJFrame {
 	private MovementType dischargeType = null;
 	private Supplier supplier = null;
 	private Ward destination = null;
+	private boolean selectAll = false;
+	private boolean start = true;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private MedicalInventoryRowManager medicalInventoryRowManager = Context.getApplicationContext().getBean(MedicalInventoryRowManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
@@ -773,6 +775,7 @@ public class InventoryEdit extends ModalJFrame {
 						inventoryRowsToDelete.add(invRoww);
 					}
 				}
+				selectAll = false;
 				specificRadio.setSelected(true);
 				codeTextField.setEnabled(true);
 				inventoryRowSearchList.clear();
@@ -857,7 +860,9 @@ public class InventoryEdit extends ModalJFrame {
 			if (!inventoryRowList.isEmpty()) {
 				for (MedicalInventoryRow invRow : inventoryRowList) {
 					inventoryRowSearchList.add(invRow);
-					inventoryRowListAdded.add(invRow);
+					if (!start) {
+						inventoryRowListAdded.add(invRow);
+					}
 				}
 				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
 			}
@@ -885,8 +890,11 @@ public class InventoryEdit extends ModalJFrame {
 			if (!inventoryRowList.isEmpty()) {
 				for (MedicalInventoryRow invRow : inventoryRowList) {
 					inventoryRowSearchList.add(invRow);
-					inventoryRowListAdded.add(invRow);
+					if (!start || inventory == null) {
+						inventoryRowListAdded.add(invRow);
+					}
 				}
+				start = false;
 				inventoryRowSearchList.sort((p1, p2) -> p1.getMedical().getDescription().compareTo(p2.getMedical().getDescription()));
 			}
 		}
@@ -1202,46 +1210,49 @@ public class InventoryEdit extends ModalJFrame {
 				specificRadio.setSelected(true);
 			}
 			allRadio.addActionListener(actionEvent -> {
-				if (allRadio.isSelected()) {
-					codeTextField.setEnabled(false);
-					codeTextField.setText("");
-					if (inventoryRowSearchList.size() > 0) {
-						JPanel panel = new JPanel();
-						panel.add(new JLabel(MessageBundle.getMessage("angal.inventoryrow.doyouwanttoaddallnotyetlistedproducts.msg")));
-						int ok = JOptionPane.showConfirmDialog(this, panel,
-										MessageBundle.getMessage("angal.inventoryrow.addnotyetlistedproducts.title"),
-										JOptionPane.OK_CANCEL_OPTION);
+				if (!selectAll) {
+					if (allRadio.isSelected()) {
+						codeTextField.setEnabled(false);
+						codeTextField.setText("");
+						if (inventoryRowSearchList.size() > 0) {
+							JPanel panel = new JPanel();
+							panel.add(new JLabel(MessageBundle.getMessage("angal.inventoryrow.doyouwanttoaddallnotyetlistedproducts.msg")));
+							int ok = JOptionPane.showConfirmDialog(this, panel,
+											MessageBundle.getMessage("angal.inventoryrow.addnotyetlistedproducts.title"),
+											JOptionPane.OK_CANCEL_OPTION);
 
-						if (ok == JOptionPane.OK_OPTION) {
-							try {
-								allRadio.setSelected(true);
-								jTableInventoryRow.setModel(new InventoryRowModel(true));
-							} catch (OHServiceException e) {
-								OHServiceExceptionUtil.showMessages(e);
+							if (ok == JOptionPane.OK_OPTION) {
+								try {
+									allRadio.setSelected(true);
+									jTableInventoryRow.setModel(new InventoryRowModel(true));
+								} catch (OHServiceException e) {
+									OHServiceExceptionUtil.showMessages(e);
+								}
+							} else {
+								allRadio.setSelected(false);
+								specificRadio.setSelected(true);
 							}
+							
 						} else {
-							allRadio.setSelected(false);
-							specificRadio.setSelected(true);
-						}
-						
-					} else {
-						if (mode.equals("update")) {
+							if (mode.equals("update")) {
+								try {
+									allRadio.setSelected(true);
+									jTableInventoryRow.setModel(new InventoryRowModel(true));
+								} catch (OHServiceException e) {
+									OHServiceExceptionUtil.showMessages(e);
+								}
+							}
 							try {
-								allRadio.setSelected(true);
-								jTableInventoryRow.setModel(new InventoryRowModel(true));
+								jTableInventoryRow.setModel(new InventoryRowModel());
 							} catch (OHServiceException e) {
 								OHServiceExceptionUtil.showMessages(e);
 							}
 						}
-						try {
-							jTableInventoryRow.setModel(new InventoryRowModel());
-						} catch (OHServiceException e) {
-							OHServiceExceptionUtil.showMessages(e);
-						}
+						fireInventoryUpdated();
+						code = null;
+						ajustWith();
 					}
-					fireInventoryUpdated();
-					code = null;
-					ajustWith();
+					selectAll = true;
 				}
 			});
 		}
