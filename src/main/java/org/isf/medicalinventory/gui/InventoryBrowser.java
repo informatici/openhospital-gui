@@ -45,17 +45,21 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicalinventory.gui.InventoryEdit.InventoryListener;
 import org.isf.medicalinventory.manager.MedicalInventoryManager;
 import org.isf.medicalinventory.model.MedicalInventory;
+import org.isf.medicalinventory.model.MedicalInventoryRow;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -356,6 +360,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JButton getUpdateButton() {
 		jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+		jButtonEdit.setEnabled(false);
 		jButtonEdit.addActionListener(actionEvent -> {
 			MedicalInventory inventory = new MedicalInventory();
 			if (jTableInventory.getSelectedRowCount() > 1) {
@@ -386,6 +391,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JButton getViewButton() {
 		jButtonView = new JButton(MessageBundle.getMessage("angal.common.view.btn"));
 		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.common.view.btn.key"));
+		jButtonView.setEnabled(false);
 		jButtonView.addActionListener(actionEvent -> {
 				MedicalInventory inventory = new MedicalInventory();
 				if (jTableInventory.getSelectedRowCount() > 1) {
@@ -410,17 +416,20 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JButton getPrintButton() {
 		jButtonPrint = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
 		jButtonPrint.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
+		jButtonPrint.setEnabled(false);
 		return jButtonPrint;
 	}
+	
 	private JButton getDeleteButton() {
 		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+		jButtonDelete.setEnabled(false);
 		return jButtonDelete;
 	}
 
 	private JButton getCloseButton() {
-		jButtonClose = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
-		jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+		jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		jButtonClose.addActionListener(actionEvent -> {
 			dispose();
 		});
@@ -440,10 +449,31 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			jTableInventory = new JTable();
 			jTableInventory.setFillsViewportHeight(true);
 			jTableInventory.setModel(new InventoryBrowsingModel());
+			jTableInventory.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+					if (e.getValueIsAdjusting()) {
+						int[] selectedRows = jTableInventory.getSelectedRows();
+						if (selectedRows.length == 1) {
+							jButtonEdit.setEnabled(true);
+							jButtonView.setEnabled(true);
+							jButtonPrint.setEnabled(true);
+							jButtonDelete.setEnabled(true);
+						} else {
+							jButtonEdit.setEnabled(false);
+							jButtonView.setEnabled(false);
+							jButtonPrint.setEnabled(false);
+							jButtonDelete.setEnabled(false);
+						}
+					}
+
+				}
+			});
 		}
 		return jTableInventory;
 	}
-
+	
 	class InventoryBrowsingModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
