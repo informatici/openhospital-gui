@@ -217,48 +217,18 @@ public class InventoryEdit extends ModalJFrame {
 
 	
 	public InventoryEdit() {
-		initComponents();
 		mode = "new";
+		initComponents();
 	}
 	
 	private boolean isAutomaticLotIn() {
 		return GeneralData.AUTOMATICLOT_IN;
 	}
 	
-	public InventoryEdit(MedicalInventory inventory, String modee) {
+	public InventoryEdit(MedicalInventory inventory, String mod) {
 		this.inventory = inventory;
-		mode = modee;
+		mode = mod;
 		initComponents();
-		if (mode.equals("view")) {
-			saveButton.setVisible(false);
-			deleteButton.setVisible(false);
-			columnEditable = columnEditableView;
-			codeTextField.setEditable(false);
-			resetButton.setVisible(false);
-			referenceTextField.setEditable(false);
-			jCalendarInventory.setEnabled(false);
-			specificRadio.setEnabled(false);
-			allRadio.setEnabled(false);
-			chargeCombo.setEnabled(false);
-			dischargeCombo.setEnabled(false);
-			supplierCombo.setEnabled(false);
-			destinationCombo.setEnabled(false);
-			lotButton.setVisible(false);
-		} else {
-			saveButton.setVisible(true);
-			deleteButton.setVisible(true);
-			codeTextField.setEditable(true);
-			resetButton.setVisible(true);
-			referenceTextField.setEditable(true);
-			jCalendarInventory.setEnabled(true);
-			specificRadio.setEnabled(true);
-			allRadio.setEnabled(true);
-			chargeCombo.setEnabled(true);
-			dischargeCombo.setEnabled(true);
-			supplierCombo.setEnabled(true);
-			destinationCombo.setEnabled(true);
-			lotButton.setVisible(true);
-		}
 	}
 
 	private void initComponents() {
@@ -294,6 +264,36 @@ public class InventoryEdit extends ModalJFrame {
 				closeButton.doClick();
 			}
 		});
+		if (mode.equals("view")) {
+			saveButton.setVisible(false);
+			deleteButton.setVisible(false);
+			columnEditable = columnEditableView;
+			codeTextField.setEditable(false);
+			resetButton.setVisible(false);
+			referenceTextField.setEditable(false);
+			jCalendarInventory.setEnabled(false);
+			specificRadio.setEnabled(false);
+			allRadio.setEnabled(false);
+			chargeCombo.setEnabled(false);
+			dischargeCombo.setEnabled(false);
+			supplierCombo.setEnabled(false);
+			destinationCombo.setEnabled(false);
+			lotButton.setVisible(false);
+		} else {
+			saveButton.setVisible(true);
+			deleteButton.setVisible(true);
+			codeTextField.setEditable(true);
+			resetButton.setVisible(true);
+			referenceTextField.setEditable(true);
+			jCalendarInventory.setEnabled(true);
+			specificRadio.setEnabled(true);
+			allRadio.setEnabled(true);
+			chargeCombo.setEnabled(true);
+			dischargeCombo.setEnabled(true);
+			supplierCombo.setEnabled(true);
+			destinationCombo.setEnabled(true);
+			lotButton.setVisible(true);
+		}
 	}
 
 	private JPanel getPanelHeader() {
@@ -562,6 +562,7 @@ public class InventoryEdit extends ModalJFrame {
 							inventoryRowsToDelete.clear();
 							lotDeletes.clear();
 							inventoryRowListAdded.clear();
+							lotSaves.clear();
 							int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinues.msg");
 							if (info != JOptionPane.YES_OPTION) {
 								dispose() ; 
@@ -688,6 +689,7 @@ public class InventoryEdit extends ModalJFrame {
 					inventoryRowsToDelete.clear();
 					lotDeletes.clear();
 					inventoryRowListAdded.clear();
+					lotSaves.clear();
 					fireInventoryUpdated();
 					int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinues.msg");
 					if (info != JOptionPane.YES_OPTION) {
@@ -782,7 +784,7 @@ public class InventoryEdit extends ModalJFrame {
 		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		closeButton.addActionListener(actionEvent -> {
-			if (!inventoryRowListAdded.isEmpty() || !lotDeletes.isEmpty() || !inventoryRowsToDelete.isEmpty() || destination != null ||  chargeType != null ||  dischargeType != null || supplier != null) {
+			if (!lotSaves.isEmpty() || !inventoryRowListAdded.isEmpty() || !lotDeletes.isEmpty() || !inventoryRowsToDelete.isEmpty() || destination != null ||  chargeType != null ||  dischargeType != null || supplier != null) {
 				int reset = MessageDialog.yesNoCancel(null, "angal.inventoryrow.doyouwanttosavethechanges.msg");
 				if (reset == JOptionPane.YES_OPTION) {
 					this.saveButton.doClick();
@@ -926,8 +928,13 @@ public class InventoryEdit extends ModalJFrame {
 		}
 
 		public InventoryRowModel() throws OHServiceException {
-			
-			inventoryRowList = loadNewInventoryTable(null, inventory, false);
+			if (inventory != null) {
+				inventoryRowList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
+			} else {
+				if (allRadio.isSelected()) {
+					inventoryRowList = loadNewInventoryTable(null, inventory, false);
+				}
+			}
 			if (!inventoryRowList.isEmpty()) {
 				for (MedicalInventoryRow invRow : inventoryRowList) {
 					addMedInRowInInventorySearchList(invRow);
