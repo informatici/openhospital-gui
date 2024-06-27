@@ -45,7 +45,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -59,7 +58,6 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.medicalinventory.gui.InventoryEdit.InventoryListener;
 import org.isf.medicalinventory.manager.MedicalInventoryManager;
 import org.isf.medicalinventory.model.MedicalInventory;
-import org.isf.medicalinventory.model.MedicalInventoryRow;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -276,7 +274,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	}
 	private GoodDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
-			jCalendarTo = new GoodDateChooser(LocalDate.now());
+			jCalendarTo = new GoodDateChooser(LocalDate.now(), false, false);
 			jCalendarTo.addDateChangeListener(event -> {
 				dateTo = jCalendarTo.getDateEndOfDay();
 				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
@@ -297,7 +295,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 	private GoodDateChooser getJCalendarFrom() {
 		if (jCalendarFrom == null) {
-			jCalendarFrom = new GoodDateChooser(LocalDate.now());
+			jCalendarFrom = new GoodDateChooser(LocalDate.now(), false, false);
 			jCalendarFrom.addDateChangeListener(event -> {
 				dateFrom = jCalendarFrom.getDateStartOfDay();
 				InventoryBrowsingModel inventoryModel = new InventoryBrowsingModel();
