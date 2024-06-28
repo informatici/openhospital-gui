@@ -853,7 +853,7 @@ public class InventoryEdit extends ModalJFrame {
 			if (lot != null) {
 				final String code = lot.getCode();
 				List<MedicalInventoryRow> invRows = inventoryRowSearchList.stream().filter(inv -> inv.getLot() != null && inv.getLot().getCode().equals(code)).collect(Collectors.toList());
-				if (invRows.size() == 0) {
+				if (invRows.size() == 0 || code.equals("")) {
 					selectedInventoryRow.setNewLot(true);
 					selectedInventoryRow.setLot(lot);
 					lotSaves.add(lot);
@@ -1474,8 +1474,9 @@ public class InventoryEdit extends ModalJFrame {
 		for (Iterator<Medical> iterator = medicalList.iterator(); iterator.hasNext();) {
 			Medical med = (Medical) iterator.next();
 			lots = movStockInsertingManager.getAllLotsByMedical(med);
+			double actualQty = med.getInitialqty() + med.getInqty() - med.getOutqty();
 			if (lots.size() == 0) {
-				inventoryRowTemp = new MedicalInventoryRow(0, 0.0, 0.0, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
 				}
@@ -1811,5 +1812,14 @@ public class InventoryEdit extends ModalJFrame {
 		lotDeletes.clear();
 		inventoryRowListAdded.clear();
 		lotSaves.clear();
+	}
+	
+	private double getQtyInALot(ArrayList<Lot> lots) {
+		double qty = 0.0;
+		for (Iterator<Lot> iterator = lots.iterator(); iterator.hasNext();) {
+			Lot lot = (Lot) iterator.next();
+			qty = qty + lot.getMainStoreQuantity();
+		}
+		return qty;
 	}
 }
