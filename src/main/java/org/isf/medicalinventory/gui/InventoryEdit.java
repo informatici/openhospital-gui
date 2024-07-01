@@ -466,7 +466,7 @@ public class InventoryEdit extends ModalJFrame {
 			LocalDateTime now = LocalDateTime.now();
 			if (dateInventory.isAfter(now)) {
 				MessageDialog.error(null, "angal.inventory.notdateinfuture.msg");
-				return ;
+				return;
 			}
 			if (!lotDeletes.isEmpty() || !inventoryRowsToDelete.isEmpty()) {
 				for (Map.Entry<Integer, Lot> entry : lotDeletes.entrySet()) {
