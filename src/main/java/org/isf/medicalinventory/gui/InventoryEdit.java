@@ -568,7 +568,7 @@ public class InventoryEdit extends ModalJFrame {
 							MessageDialog.info(this, "angal.inventory.savesuccess.msg");
 							fireInventoryInserted();
 							resetVariable();
-							int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinues.msg");
+							int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
 							if (info != JOptionPane.YES_OPTION) {
 								dispose() ; 
 							}
