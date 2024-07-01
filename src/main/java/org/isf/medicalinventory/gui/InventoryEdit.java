@@ -1483,7 +1483,7 @@ public class InventoryEdit extends ModalJFrame {
 			} else {
 				for (Iterator<Lot> iterator2 = lots.iterator(); iterator2.hasNext();) {
 					Lot lot = (Lot) iterator2.next();
-					inventoryRowTemp = new MedicalInventoryRow(0, lot.getOverallQuantity(), lot.getOverallQuantity(), null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(0, lot.getMainStoreQuantity(), lot.getMainStoreQuantity(), null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1530,7 +1530,7 @@ public class InventoryEdit extends ModalJFrame {
 				medicalWithLot = med;
 				for (Iterator<Lot> iterator2 = lots.iterator(); iterator2.hasNext();) {
 					Lot lot = (Lot) iterator2.next();
-					inventoryRowTemp = new MedicalInventoryRow(0, lot.getOverallQuantity(), lot.getOverallQuantity(), null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(0, lot.getMainStoreQuantity(), lot.getMainStoreQuantity(), null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 						numberOfMedicalWithoutSameLotAdded = numberOfMedicalWithoutSameLotAdded + 1;
