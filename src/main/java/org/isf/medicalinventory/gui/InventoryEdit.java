@@ -175,7 +175,7 @@ public class InventoryEdit extends ModalJFrame {
 			MessageBundle.getMessage("angal.inventory.new.col").toUpperCase(),
 			MessageBundle.getMessage("angal.wardpharmacy.lotnumber.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),
-			MessageBundle.getMessage("angal.inventoryrow.theorticqty.col").toUpperCase(),
+			MessageBundle.getMessage("angal.inventoryrow.theoreticqty.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventoryrow.realqty.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventoryrow.unitprice.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.totalprice").toUpperCase() };
@@ -458,7 +458,6 @@ public class InventoryEdit extends ModalJFrame {
 		saveButton.addActionListener(actionEvent -> {
 			String State = InventoryStatus.draft.toString();
 			String user = UserBrowsingManager.getCurrentUser();
-			int checkResults = 0;
 			if (inventoryRowSearchList == null || inventoryRowSearchList.isEmpty()) {
 				MessageDialog.error(null, "angal.inventory.cannotsaveinventorywithoutproducts.msg");
 				return;
@@ -531,7 +530,6 @@ public class InventoryEdit extends ModalJFrame {
 				try {
 					newInventory = medicalInventoryManager.newMedicalInventory(inventory);
 					if (newInventory != null) {
-						MedicalInventoryRow currentInventoryRow;
 						for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator.hasNext();) {
 							MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
 							medicalInventoryRow.setInventory(newInventory);
@@ -557,23 +555,16 @@ public class InventoryEdit extends ModalJFrame {
 							} else {
 								medicalInventoryRow.setLot(null);
 							}
-							currentInventoryRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
-							if (currentInventoryRow == null) {
-								checkResults++;
-							}
+							medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 						}
-						if (checkResults == 0) {
-							// enable validation
-							mode = "update";
-							MessageDialog.info(this, "angal.inventory.savesuccess.msg");
-							fireInventoryInserted();
-							resetVariable();
-							int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
-							if (info != JOptionPane.YES_OPTION) {
-								dispose() ; 
-							}
-						} else {
-							MessageDialog.error(null, "angal.inventory.error.msg");
+						// enable validation
+						mode = "update";
+						MessageDialog.info(this, "angal.inventory.savesuccess.msg");
+						fireInventoryInserted();
+						resetVariable();
+						int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
+						if (info != JOptionPane.YES_OPTION) {
+							dispose() ; 
 						}
 					} else {
 						MessageDialog.error(null, "angal.inventory.error.msg");
@@ -597,7 +588,6 @@ public class InventoryEdit extends ModalJFrame {
 					MessageDialog.error(null, "angal.inventory.referencealreadyused.msg");
 					return ;
 				}
-				checkResults = 0;
 				try {
 					if (inventoryRowListAdded.isEmpty() && lotsSaved.isEmpty() && lotsDeleted.isEmpty()) {
 						if ((destination != null && !destination.getCode().equals(lastDestination)) || (chargeType != null && !chargeType.getCode().equals(lastCharge)) || (dischargeType != null && !dischargeType.getCode().equals(lastDischarge)) || (supplier != null && !supplier.getSupId().equals(lastSupplier)) || (destination == null && lastDestination != null) || (chargeType == null && lastCharge != null) || (dischargeType == null && lastDischarge != null) || (supplier == null && lastSupplier != null) || !lastReference.equals(newReference) || !lastDate.toLocalDate().equals(dateInventory.toLocalDate())) {
@@ -657,7 +647,7 @@ public class InventoryEdit extends ModalJFrame {
 									dispose() ; 
 								}
 							} else {
-								MessageDialog.info(null, "angal.inventory.inventoryisalreadysave.msg");
+								MessageDialog.info(null, "angal.inventory.inventoryisalreadysaved.msg");
 								return ;
 							}
 							
@@ -705,7 +695,6 @@ public class InventoryEdit extends ModalJFrame {
 				try {
 					for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator.hasNext();) {
 						MedicalInventoryRow medicalInventoryRow = iterator.next();
-						MedicalInventoryRow updateMedicalInvRow;
 						Medical medical = medicalInventoryRow.getMedical();
 						Lot lot = medicalInventoryRow.getLot();
 						String lotCode ;
@@ -736,7 +725,7 @@ public class InventoryEdit extends ModalJFrame {
 									medicalInventoryRow.setLot(lotStore);
 								}
 							}
-							updateMedicalInvRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
+							medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 						} else {
 							lot = medicalInventoryRow.getLot();
 							if (lot != null) {
@@ -762,20 +751,12 @@ public class InventoryEdit extends ModalJFrame {
 								medicalInventoryRow.setLot(null);
 							}
 							if (medicalInventoryRow.getId() == 0) {
-								updateMedicalInvRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
+								medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 							} else {
-								updateMedicalInvRow = medicalInventoryRowManager.updateMedicalInventoryRow(medicalInventoryRow);
+								medicalInventoryRowManager.updateMedicalInventoryRow(medicalInventoryRow);
 							}
 						}
-						if (updateMedicalInvRow == null) {
-							checkResults++;
-						}
 					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-					return ;
-				}
-				if (checkResults == 0) {
 					MessageDialog.info(null, "angal.inventory.update.success.msg");
 					resetVariable();
 					fireInventoryUpdated();
@@ -783,8 +764,8 @@ public class InventoryEdit extends ModalJFrame {
 					if (info != JOptionPane.YES_OPTION) {
 						dispose() ; 
 					}
-				} else {
-					MessageDialog.error(null, "angal.inventory.update.error.msg");
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 					return ;
 				}
 			}
