@@ -625,7 +625,7 @@ public class MovStockMultipleCharging extends JDialog {
 	protected Lot chooseLot(Medical med) {
 		List<Lot> lots;
 		try {
-			lots = movStockInsertingManager.getLotByMedical(med);
+			lots = movStockInsertingManager.getLotByMedical(med, true);
 		} catch (OHServiceException e) {
 			lots = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
