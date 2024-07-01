@@ -527,7 +527,7 @@ public class InventoryEdit extends ModalJFrame {
 				} else {
 					inventory.setDestination(null);
 				}
-				MedicalInventory meInventory;
+				MedicalInventory newInventory;
 				try {
 					meInventory = medicalInventoryManager.newMedicalInventory(inventory);
 					if (meInventory != null) {
