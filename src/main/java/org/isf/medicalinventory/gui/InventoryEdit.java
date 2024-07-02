@@ -529,45 +529,41 @@ public class InventoryEdit extends ModalJFrame {
 				MedicalInventory newInventory;
 				try {
 					newInventory = medicalInventoryManager.newMedicalInventory(inventory);
-					if (newInventory != null) {
-						for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator.hasNext();) {
-							MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
-							medicalInventoryRow.setInventory(newInventory);
-							Lot lot = medicalInventoryRow.getLot();
-							String lotCode;
-							Medical medical = medicalInventoryRow.getMedical();
-							if (lot != null) {
-								lotCode = lot.getCode();
-								Lot lotExist = movStockInsertingManager.getLot(lotCode);
-								if (lotExist != null) {
-									Lot lotStore = null;
-									lotStore = movStockInsertingManager.updateLot(lot);
-									medicalInventoryRow.setLot(lotStore);
-								} else {
-									if (lot.getDueDate() != null) {
-										Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
-										medicalInventoryRow.setLot(lotStore);
-										medicalInventoryRow.setNewLot(true);
-									} else {
-										medicalInventoryRow.setLot(null);
-									}
-								}
+					for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator.hasNext();) {
+						MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
+						medicalInventoryRow.setInventory(newInventory);
+						Lot lot = medicalInventoryRow.getLot();
+						String lotCode;
+						Medical medical = medicalInventoryRow.getMedical();
+						if (lot != null) {
+							lotCode = lot.getCode();
+							Lot lotExist = movStockInsertingManager.getLot(lotCode);
+							if (lotExist != null) {
+								Lot lotStore = null;
+								lotStore = movStockInsertingManager.updateLot(lot);
+								medicalInventoryRow.setLot(lotStore);
 							} else {
-								medicalInventoryRow.setLot(null);
+								if (lot.getDueDate() != null) {
+									Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
+									medicalInventoryRow.setLot(lotStore);
+									medicalInventoryRow.setNewLot(true);
+								} else {
+									medicalInventoryRow.setLot(null);
+								}
 							}
-							medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
+						} else {
+							medicalInventoryRow.setLot(null);
 						}
-						// enable validation
-						mode = "update";
-						MessageDialog.info(this, "angal.inventory.savesuccess.msg");
-						fireInventoryInserted();
-						resetVariable();
-						int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
-						if (info != JOptionPane.YES_OPTION) {
-							dispose() ; 
-						}
-					} else {
-						MessageDialog.error(null, "angal.inventory.error.msg");
+						medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
+					}
+					// enable validation
+					mode = "update";
+					MessageDialog.info(this, "angal.inventory.savesuccess.msg");
+					fireInventoryInserted();
+					resetVariable();
+					int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
+					if (info != JOptionPane.YES_OPTION) {
+						dispose() ; 
 					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
