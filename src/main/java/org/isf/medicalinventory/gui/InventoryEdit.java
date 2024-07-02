@@ -462,11 +462,6 @@ public class InventoryEdit extends ModalJFrame {
 				MessageDialog.error(null, "angal.inventory.cannotsaveinventorywithoutproducts.msg");
 				return;
 			}
-			LocalDateTime now = LocalDateTime.now();
-			if (dateInventory.isAfter(now)) {
-				MessageDialog.error(null, "angal.inventory.notdateinfuture.msg");
-				return;
-			}
 			if (!lotsDeleted.isEmpty() || !inventoryRowsToDelete.isEmpty()) {
 				for (Map.Entry<Integer, Lot> entry : lotsDeleted.entrySet()) {
 					MedicalInventoryRow invRow = medicalInventoryRowManager.getMedicalInventoryRowById(entry.getKey());
@@ -492,14 +487,6 @@ public class InventoryEdit extends ModalJFrame {
 			
 			if ((inventory == null) && (mode.equals("new"))) {
 				newReference = referenceTextField.getText().trim();
-				if (newReference.equals("")) {
-					MessageDialog.error(null, "angal.inventory.mustenterareference.msg");
-					return ;
-				}
-				if (medicalInventoryManager.referenceExists(newReference)) {
-					MessageDialog.error(null, "angal.inventory.referencealreadyused.msg");
-					return ;
-				}
 				inventory = new MedicalInventory();
 				inventory.setInventoryReference(newReference);
 				inventory.setInventoryDate(dateInventory);
@@ -575,18 +562,9 @@ public class InventoryEdit extends ModalJFrame {
 				String lastDestination = inventory.getDestination();
 				String lastReference = inventory.getInventoryReference();
 				newReference = referenceTextField.getText().trim();
-				LocalDateTime lastDate = inventory.getInventoryDate();
-				if (newReference.equals("")) {
-					MessageDialog.error(null, "angal.inventory.mustenterareference.msg");
-					return ;
-				}
-				if (medicalInventoryManager.referenceExists(newReference) && !newReference.equals(lastReference)) {
-					MessageDialog.error(null, "angal.inventory.referencealreadyused.msg");
-					return ;
-				}
 				try {
 					if (inventoryRowListAdded.isEmpty() && lotsSaved.isEmpty() && lotsDeleted.isEmpty()) {
-						if ((destination != null && !destination.getCode().equals(lastDestination)) || (chargeType != null && !chargeType.getCode().equals(lastCharge)) || (dischargeType != null && !dischargeType.getCode().equals(lastDischarge)) || (supplier != null && !supplier.getSupId().equals(lastSupplier)) || (destination == null && lastDestination != null) || (chargeType == null && lastCharge != null) || (dischargeType == null && lastDischarge != null) || (supplier == null && lastSupplier != null) || !lastReference.equals(newReference) || !lastDate.toLocalDate().equals(dateInventory.toLocalDate())) {
+						if ((destination != null && !destination.getCode().equals(lastDestination)) || (chargeType != null && !chargeType.getCode().equals(lastCharge)) || (dischargeType != null && !dischargeType.getCode().equals(lastDischarge)) || (supplier != null && !supplier.getSupId().equals(lastSupplier)) || (destination == null && lastDestination != null) || (chargeType == null && lastCharge != null) || (dischargeType == null && lastDischarge != null) || (supplier == null && lastSupplier != null) || !lastReference.equals(newReference)) {
 							if (!inventory.getInventoryDate().equals(dateInventory)) {
 								inventory.setInventoryDate(dateInventory);
 							}
