@@ -460,12 +460,18 @@ public class InventoryEdit extends ModalJFrame {
 			String user = UserBrowsingManager.getCurrentUser();
 			if (inventoryRowSearchList == null || inventoryRowSearchList.isEmpty()) {
 				MessageDialog.error(null, "angal.inventory.cannotsaveinventorywithoutproducts.msg");
-				return;
+				return ;
 			}
 			if (!lotsDeleted.isEmpty() || !inventoryRowsToDelete.isEmpty()) {
 				for (Map.Entry<Integer, Lot> entry : lotsDeleted.entrySet()) {
-					MedicalInventoryRow invRow = medicalInventoryRowManager.getMedicalInventoryRowById(entry.getKey());
-					if (invRow != null) {
+					MedicalInventoryRow invRow = null;
+					try {
+						invRow = medicalInventoryRowManager.getMedicalInventoryRowById(entry.getKey());
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+						return ;
+					}
+					if (invRow != null ) {
 						invRow.setLot(null);
 						try {
 							medicalInventoryRowManager.updateMedicalInventoryRow(invRow);
@@ -487,6 +493,17 @@ public class InventoryEdit extends ModalJFrame {
 			
 			if ((inventory == null) && (mode.equals("new"))) {
 				newReference = referenceTextField.getText().trim();
+				boolean refExist = false;
+				try {
+					refExist =  medicalInventoryManager.referenceExists(newReference);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+					return ;
+				}
+				if (refExist) {
+					MessageDialog.error(null, "angal.inventory.referencealreadyused.msg");
+					return;
+				}
 				inventory = new MedicalInventory();
 				inventory.setInventoryReference(newReference);
 				inventory.setInventoryDate(dateInventory);
@@ -513,47 +530,70 @@ public class InventoryEdit extends ModalJFrame {
 				} else {
 					inventory.setDestination(null);
 				}
-				MedicalInventory newInventory;
 				try {
-					newInventory = medicalInventoryManager.newMedicalInventory(inventory);
-					for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator.hasNext();) {
-						MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
-						medicalInventoryRow.setInventory(newInventory);
-						Lot lot = medicalInventoryRow.getLot();
-						String lotCode;
-						Medical medical = medicalInventoryRow.getMedical();
-						if (lot != null) {
-							lotCode = lot.getCode();
-							Lot lotExist = movStockInsertingManager.getLot(lotCode);
-							if (lotExist != null) {
-								Lot lotStore = null;
-								lotStore = movStockInsertingManager.updateLot(lot);
-								medicalInventoryRow.setLot(lotStore);
-							} else {
-								if (lot.getDueDate() != null) {
-									Lot lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
-									medicalInventoryRow.setLot(lotStore);
-									medicalInventoryRow.setNewLot(true);
-								} else {
-									medicalInventoryRow.setLot(null);
-								}
-							}
-						} else {
-							medicalInventoryRow.setLot(null);
-						}
-						medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
-					}
-					// enable validation
-					mode = "update";
-					MessageDialog.info(this, "angal.inventory.savesuccess.msg");
-					fireInventoryInserted();
-					resetVariable();
-					int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
-					if (info != JOptionPane.YES_OPTION) {
-						dispose() ; 
-					}
+					inventory = medicalInventoryManager.newMedicalInventory(inventory);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
+					return ;
+				}
+				for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator.hasNext();) {
+					MedicalInventoryRow medicalInventoryRow = (MedicalInventoryRow) iterator.next();
+					medicalInventoryRow.setInventory(inventory);
+					Lot lot = medicalInventoryRow.getLot();
+					String lotCode;
+					Medical medical = medicalInventoryRow.getMedical();
+					if (lot != null) {
+						lotCode = lot.getCode();
+						Lot lotExist = null;
+						try {
+							lotExist = movStockInsertingManager.getLot(lotCode);
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
+							return ;
+						}
+						if (lotExist != null) {
+							Lot lotStore = null;
+							try {
+								lotStore = movStockInsertingManager.updateLot(lot);
+							} catch (OHServiceException e) {
+								OHServiceExceptionUtil.showMessages(e);
+								return ;
+							}
+							medicalInventoryRow.setLot(lotStore);
+						} else {
+							if (lot.getDueDate() != null) {
+								Lot lotStore = null;
+								try {
+									lotStore = movStockInsertingManager.storeLot(lotCode, lot, medical);
+								} catch (OHServiceException e) {
+									OHServiceExceptionUtil.showMessages(e);
+									return ;
+								} 
+								medicalInventoryRow.setLot(lotStore);
+								medicalInventoryRow.setNewLot(true);
+							} else {
+								medicalInventoryRow.setLot(null);
+							}
+						}
+					} else {
+						medicalInventoryRow.setLot(null);
+					}
+					try {
+						medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+						return ;
+					}
+					
+				}
+				// enable validation
+				mode = "update";
+				MessageDialog.info(this, "angal.inventory.savesuccess.msg");
+				fireInventoryInserted();
+				resetVariable();
+				int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
+				if (info != JOptionPane.YES_OPTION) {
+					dispose() ; 
 				}
 			} else if ((inventory != null) && (mode.equals("update"))) {
 				String lastCharge = inventory.getChargeType();
@@ -562,110 +602,127 @@ public class InventoryEdit extends ModalJFrame {
 				String lastDestination = inventory.getDestination();
 				String lastReference = inventory.getInventoryReference();
 				newReference = referenceTextField.getText().trim();
+				boolean refExist = false;
 				try {
-					if (inventoryRowListAdded.isEmpty() && lotsSaved.isEmpty() && lotsDeleted.isEmpty()) {
-						if ((destination != null && !destination.getCode().equals(lastDestination)) || (chargeType != null && !chargeType.getCode().equals(lastCharge)) || (dischargeType != null && !dischargeType.getCode().equals(lastDischarge)) || (supplier != null && !supplier.getSupId().equals(lastSupplier)) || (destination == null && lastDestination != null) || (chargeType == null && lastCharge != null) || (dischargeType == null && lastDischarge != null) || (supplier == null && lastSupplier != null) || !lastReference.equals(newReference)) {
-							if (!inventory.getInventoryDate().equals(dateInventory)) {
-								inventory.setInventoryDate(dateInventory);
-							}
-							if (!inventory.getUser().equals(user)) {
-								inventory.setUser(user);
-							}
-							if (!lastReference.equals(newReference)) {
-								inventory.setInventoryReference(newReference);
-							}
-							MovementType charge = (MovementType) chargeCombo.getSelectedItem();
-							if (charge != null) {
-								inventory.setChargeType(charge.getCode());
-							} else {
-								inventory.setChargeType(null);
-							}
-							MovementType discharge = (MovementType) dischargeCombo.getSelectedItem();
-							if (discharge != null) {
-								inventory.setDischargeType(discharge.getCode());
-							} else {
-								inventory.setDischargeType(null);
-							}
-							Supplier supplier = (Supplier) supplierCombo.getSelectedItem();
-							if (supplier != null) {
-								inventory.setSupplier(supplier.getSupId());
-							} else {
-								inventory.setSupplier(null);
-							}
-							Ward destination = (Ward) destinationCombo.getSelectedItem();
-							if (destination != null) {
-								inventory.setDestination(destination.getCode());
-							} else {
-								inventory.setDestination(null);
-							}
+					refExist =  medicalInventoryManager.referenceExists(newReference);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+					return ;
+				}
+				if (refExist) {
+					MessageDialog.error(null, "angal.inventory.referencealreadyused.msg");
+					return;
+				}
+				if (inventoryRowListAdded.isEmpty() && lotsSaved.isEmpty() && lotsDeleted.isEmpty()) {
+					if ((destination != null && !destination.getCode().equals(lastDestination)) || (chargeType != null && !chargeType.getCode().equals(lastCharge)) || (dischargeType != null && !dischargeType.getCode().equals(lastDischarge)) || (supplier != null && !supplier.getSupId().equals(lastSupplier)) || (destination == null && lastDestination != null) || (chargeType == null && lastCharge != null) || (dischargeType == null && lastDischarge != null) || (supplier == null && lastSupplier != null) || !lastReference.equals(newReference)) {
+						if (!inventory.getInventoryDate().equals(dateInventory)) {
+							inventory.setInventoryDate(dateInventory);
+						}
+						if (!inventory.getUser().equals(user)) {
+							inventory.setUser(user);
+						}
+						if (!lastReference.equals(newReference)) {
+							inventory.setInventoryReference(newReference);
+						}
+						MovementType charge = (MovementType) chargeCombo.getSelectedItem();
+						if (charge != null) {
+							inventory.setChargeType(charge.getCode());
+						} else {
+							inventory.setChargeType(null);
+						}
+						MovementType discharge = (MovementType) dischargeCombo.getSelectedItem();
+						if (discharge != null) {
+							inventory.setDischargeType(discharge.getCode());
+						} else {
+							inventory.setDischargeType(null);
+						}
+						Supplier supplier = (Supplier) supplierCombo.getSelectedItem();
+						if (supplier != null) {
+							inventory.setSupplier(supplier.getSupId());
+						} else {
+							inventory.setSupplier(null);
+						}
+						Ward destination = (Ward) destinationCombo.getSelectedItem();
+						if (destination != null) {
+							inventory.setDestination(destination.getCode());
+						} else {
+							inventory.setDestination(null);
+						}
+						try {
 							inventory = medicalInventoryManager.updateMedicalInventory(inventory);
-							if (inventory != null) {
-								MessageDialog.info(null, "angal.inventory.update.success.msg");
-								resetVariable();
-								fireInventoryUpdated();
-								int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
-								if (info != JOptionPane.YES_OPTION) {
-									dispose() ; 
-								}
-							} else {
-								MessageDialog.error(null, "angal.inventory.update.error.msg");
-								return ;
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
+							return ;
+						}
+						if (inventory != null) {
+							MessageDialog.info(null, "angal.inventory.update.success.msg");
+							resetVariable();
+							fireInventoryUpdated();
+							int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
+							if (info != JOptionPane.YES_OPTION) {
+								dispose() ; 
 							}
 						} else {
-							if (!inventoryRowsToDelete.isEmpty()) {
-								MessageDialog.info(null, "angal.inventory.update.success.msg");
-								resetVariable();
-								fireInventoryUpdated();
-								int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
-								if (info != JOptionPane.YES_OPTION) {
-									dispose() ; 
-								}
-							} else {
-								MessageDialog.info(null, "angal.inventory.inventoryisalreadysaved.msg");
-								return ;
-							}
-							
+							MessageDialog.error(null, "angal.inventory.update.error.msg");
+							return ;
 						}
-						return ;
-					}
-					if (!inventory.getInventoryDate().equals(dateInventory)) {
-						inventory.setInventoryDate(dateInventory);
-					}
-					if (!inventory.getUser().equals(user)) {
-						inventory.setUser(user);
-					}
-					if (!lastReference.equals(newReference)) {
-						inventory.setInventoryReference(newReference);
-					}
-					MovementType charge = (MovementType) chargeCombo.getSelectedItem();
-					if (charge != null) {
-						inventory.setChargeType(charge.getCode());
 					} else {
-						inventory.setChargeType(null);
+						if (!inventoryRowsToDelete.isEmpty()) {
+							MessageDialog.info(null, "angal.inventory.update.success.msg");
+							resetVariable();
+							fireInventoryUpdated();
+							int info = MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttocontinueediting.msg");
+							if (info != JOptionPane.YES_OPTION) {
+								dispose() ; 
+							}
+						} else {
+							MessageDialog.info(null, "angal.inventory.inventoryisalreadysaved.msg");
+							return ;
+						}
+						
 					}
-					MovementType discharge = (MovementType) dischargeCombo.getSelectedItem();
-					if (discharge != null) {
-						inventory.setDischargeType(discharge.getCode());
-					} else {
-						inventory.setDischargeType(null);
-					}
-					Supplier supplier = (Supplier) supplierCombo.getSelectedItem();
-					if (supplier != null) {
-						inventory.setSupplier(supplier.getSupId());
-					} else {
-						inventory.setSupplier(null);
-					}
-					Ward destination = (Ward) destinationCombo.getSelectedItem();
-					if (destination != null) {
-						inventory.setDestination(destination.getCode());
-					} else {
-						inventory.setDestination(null);
-					}
+					return ;
+				}
+				if (!inventory.getInventoryDate().equals(dateInventory)) {
+					inventory.setInventoryDate(dateInventory);
+				}
+				if (!inventory.getUser().equals(user)) {
+					inventory.setUser(user);
+				}
+				if (!lastReference.equals(newReference)) {
+					inventory.setInventoryReference(newReference);
+				}
+				MovementType charge = (MovementType) chargeCombo.getSelectedItem();
+				if (charge != null) {
+					inventory.setChargeType(charge.getCode());
+				} else {
+					inventory.setChargeType(null);
+				}
+				MovementType discharge = (MovementType) dischargeCombo.getSelectedItem();
+				if (discharge != null) {
+					inventory.setDischargeType(discharge.getCode());
+				} else {
+					inventory.setDischargeType(null);
+				}
+				Supplier supplier = (Supplier) supplierCombo.getSelectedItem();
+				if (supplier != null) {
+					inventory.setSupplier(supplier.getSupId());
+				} else {
+					inventory.setSupplier(null);
+				}
+				Ward destination = (Ward) destinationCombo.getSelectedItem();
+				if (destination != null) {
+					inventory.setDestination(destination.getCode());
+				} else {
+					inventory.setDestination(null);
+				}
+				try {
 					inventory = medicalInventoryManager.updateMedicalInventory(inventory);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 					return ;
 				}
+					
 				try {
 					for (Iterator<MedicalInventoryRow> iterator = inventoryRowSearchList.iterator(); iterator.hasNext();) {
 						MedicalInventoryRow medicalInventoryRow = iterator.next();
@@ -724,10 +781,15 @@ public class InventoryEdit extends ModalJFrame {
 							} else {
 								medicalInventoryRow.setLot(null);
 							}
-							if (medicalInventoryRow.getId() == 0) {
-								medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
-							} else {
-								medicalInventoryRowManager.updateMedicalInventoryRow(medicalInventoryRow);
+							try {
+								if (medicalInventoryRow.getId() == 0) {
+									medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
+								} else {
+									medicalInventoryRowManager.updateMedicalInventoryRow(medicalInventoryRow);
+								}
+							} catch (OHServiceException e) {
+								OHServiceExceptionUtil.showMessages(e);
+								return ;
 							}
 						}
 					}
@@ -849,11 +911,14 @@ public class InventoryEdit extends ModalJFrame {
 					this.saveButton.doClick();
 				}
 				if (reset == JOptionPane.NO_OPTION) {
+					resetVariable();
 					dispose();
 				} else {
+					resetVariable();
 					return ;
 				}
 			} else {
+				resetVariable();
 				dispose();
 			}
 		});
@@ -1763,6 +1828,11 @@ public class InventoryEdit extends ModalJFrame {
 		}
 	}
 	private void resetVariable() {
+		chargeType = null;
+		dischargeType = null;
+		supplier = null;
+		destination = null;
+		newReference = null;
 		inventoryRowsToDelete.clear();
 		lotsDeleted.clear();
 		inventoryRowListAdded.clear();
