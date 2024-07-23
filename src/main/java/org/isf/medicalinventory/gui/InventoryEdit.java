@@ -733,7 +733,7 @@ public class InventoryEdit extends ModalJFrame {
 				}
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-				return ;
+				return;
 			}
 		});
 		return saveButton;
