@@ -487,7 +487,7 @@ public class InventoryEdit extends ModalJFrame {
 					inventory = new MedicalInventory();
 					inventory.setInventoryReference(newReference);
 					inventory.setInventoryDate(dateInventory);
-					inventory.setStatus(State);
+					inventory.setStatus(state);
 					inventory.setUser(user);
 					inventory.setInventoryType(InventoryType.main.toString());
 					if (chargeType != null) {
