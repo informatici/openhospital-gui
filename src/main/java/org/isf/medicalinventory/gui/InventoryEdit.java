@@ -456,7 +456,7 @@ public class InventoryEdit extends ModalJFrame {
 		saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		saveButton.addActionListener(actionEvent -> {
-			String State = InventoryStatus.draft.toString();
+			String state = InventoryStatus.draft.toString();
 			String user = UserBrowsingManager.getCurrentUser();
 			if (inventoryRowSearchList == null || inventoryRowSearchList.isEmpty()) {
 				MessageDialog.error(null, "angal.inventory.cannotsaveinventorywithoutproducts.msg");
