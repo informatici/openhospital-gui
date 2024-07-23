@@ -666,7 +666,8 @@ public class InventoryEdit extends ModalJFrame {
 						Lot lot = medicalInventoryRow.getLot();
 						String lotCode ;
 						medicalInventoryRow.setInventory(inventory);
-						if (medicalInventoryRow.getId() == 0) {
+						int id = medicalInventoryRow.getId();
+						if (id == 0) {
 							if (lot != null) {
 								lotCode = lot.getCode();
 								boolean isExist = false;
@@ -690,8 +691,9 @@ public class InventoryEdit extends ModalJFrame {
 							medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 						} else {
 							lot = medicalInventoryRow.getLot();
-							int id = medicalInventoryRow.getId();
+							double reatQty = medicalInventoryRow.getRealQty();
 							medicalInventoryRow = medicalInventoryRowManager.getMedicalInventoryRowById(id);
+							medicalInventoryRow.setRealqty(reatQty);
 							if (lot != null) {
 								lotCode = lot.getCode();
 								Lot lotExist = movStockInsertingManager.getLot(lotCode);
@@ -1075,53 +1077,27 @@ public class InventoryEdit extends ModalJFrame {
 		public void setValueAt(Object value, int r, int c) {
 			if (r < inventoryRowSearchList.size()) {
 				MedicalInventoryRow invRow = inventoryRowSearchList.get(r);
-				if (GeneralData.LOTWITHCOST) {
-					if (c == 7) {
-						Integer intValue = 0;
-						if (value != null) {
-							try {
-								intValue = Integer.parseInt(value.toString());
-							} catch (NumberFormatException e) {
-								intValue = 0;
-								return ;
-							}
-						}
-						if (intValue < 0) {
-							MessageDialog.error(null,  "angal.inventoryrow.invalidquantity.msg");
+				if (c == 7) {
+					Integer intValue = 0;
+					if (value != null) {
+						try {
+							intValue = Integer.parseInt(value.toString());
+						} catch (NumberFormatException e) {
+							intValue = 0;
 							return ;
 						}
-						invRow.setRealqty(intValue);
-						if (invRow.getLot() != null && invRow.getLot().getCost() != null) {
-							double total = invRow.getRealQty() * invRow.getLot().getCost().doubleValue();
-							invRow.setTotal(total);
-						}
-						inventoryRowListAdded.add(invRow);
-						inventoryRowSearchList.set(r, invRow);
 					}
-				} else {
-					if (c == 5) {
-						Integer intValue = 0;
-						if (value != null) {
-							try {
-								intValue = Integer.parseInt(value.toString());
-							} catch (NumberFormatException e) {
-								intValue = 0;
-								return ;
-							}
-						}
-						if (intValue < 0) {
-							MessageDialog.error(null,  "angal.inventoryrow.invalidquantity.msg");
-							return ;
-						}
-						invRow.setRealqty(intValue);
-						if (invRow.getLot() != null && invRow.getLot().getCost() != null) {
-							double total = invRow.getRealQty() * invRow.getLot().getCost().doubleValue();
-							invRow.setTotal(total);
-						}
-						inventoryRowListAdded.add(invRow);
-						inventoryRowSearchList.set(r, invRow);
+					if (intValue < 0) {
+						MessageDialog.error(null,  "angal.inventoryrow.invalidquantity.msg");
+						return ;
 					}
-					
+					invRow.setRealqty(intValue);
+					if (invRow.getLot() != null && invRow.getLot().getCost() != null) {
+						double total = invRow.getRealQty() * invRow.getLot().getCost().doubleValue();
+						invRow.setTotal(total);
+					}
+					inventoryRowListAdded.add(invRow);
+					inventoryRowSearchList.set(r, invRow);
 				}
 			}
 
