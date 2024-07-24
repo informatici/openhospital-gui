@@ -591,7 +591,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private boolean checkQuantityInLot(Lot lot, double qty) {
 		double lotQty = lot.getMainStoreQuantity();
 		if (qty > lotQty) {
-			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.msg", qty, lotQty);
+			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.fmt.msg", qty, lotQty);
 			return false;
 		}
 		return true;
