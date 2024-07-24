@@ -559,7 +559,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(actionEvent -> {
 			// medical will reference the new record
-			medical = new Medical(null, new MedicalType("", ""), "", "", 0, 0, 0, 0, 0);
+			medical = new Medical(null, new MedicalType("", ""), "", "", 0, 0, 0, 0);
 			MedicalEdit newrecord = new MedicalEdit(medical, true, me);
 			newrecord.addMedicalListener(this);
 			newrecord.setVisible(true);
