@@ -147,8 +147,7 @@ public class InventoryEdit extends ModalJFrame {
 		for (int i = 0; i < listeners.length; i++) {
 			((InventoryListener) listeners[i]).InventoryUpdated(event);
 		}
-		jTableInventoryRow.updateUI();
-			
+		jTableInventoryRow.updateUI();	
 	}
 	
 	private GoodDateChooser jCalendarInventory;
@@ -215,7 +214,6 @@ public class InventoryEdit extends ModalJFrame {
 	private MedicalDsrStockMovementTypeBrowserManager movTypeManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private SupplierBrowserManager supplierManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 	private WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-
 	
 	public InventoryEdit() {
 		mode = "new";
@@ -476,7 +474,7 @@ public class InventoryEdit extends ModalJFrame {
 			        }
 					medicalInventoryRowManager.deleteMedicalInventoryRows(inventoryRowsToDelete);
 				}
-				if ((inventory == null) && (mode.equals("new"))) {
+				if (mode.equals("new")) {
 					newReference = referenceTextField.getText().trim();
 					boolean refExist = false;
 					refExist =  medicalInventoryManager.referenceExists(newReference);
@@ -549,7 +547,7 @@ public class InventoryEdit extends ModalJFrame {
 					if (info != JOptionPane.YES_OPTION) {
 						dispose(); 
 					}
-				} else if ((inventory != null) && (mode.equals("update"))) {
+				} else if (mode.equals("update")) {
 					String lastCharge = inventory.getChargeType();
 					String lastDischarge = inventory.getDischargeType();
 					Integer lastSupplier = inventory.getSupplier();
@@ -992,6 +990,7 @@ public class InventoryEdit extends ModalJFrame {
 					}
 				}
 			}
+				
 		}
 
 		public Class< ? > getColumnClass(int c) {
