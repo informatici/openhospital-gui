@@ -164,7 +164,7 @@ public class MovStockMultipleDischarging extends JDialog {
 
 		List<Medical> medicals;
 		try {
-			medicals = medicalBrowsingManager.getMedicals();
+			medicals = new ArrayList<>(medicalBrowsingManager.getMedicals().stream().filter(med -> med.getDeleted() == 'N').toList());
 		} catch (OHServiceException e) {
 			medicals = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -287,7 +287,7 @@ public class MovStockMultipleDischarging extends JDialog {
 					// Lot (PreparationDate && ExpiringDate)
 					List<Lot> lots;
 					try {
-						lots = movStockInsertingManager.getLotByMedical(med);
+						lots = movStockInsertingManager.getLotByMedical(med, true);
 					} catch (OHServiceException e1) {
 						lots = null;
 						OHServiceExceptionUtil.showMessages(e1);

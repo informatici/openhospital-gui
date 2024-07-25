@@ -106,8 +106,7 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * MovStockBrowser - list medicals movement. let the user search for movements
- * 					  and insert a new movements
+ * MovStockBrowser - list medicals movement. Let the user search for movements and insert a new movement.
  */
 public class MovStockBrowser extends ModalJFrame {
 
@@ -148,6 +147,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.medicalstock.refno.col").toUpperCase(), // 1
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(), // 2
+			MessageBundle.getMessage("angal.medicalstock.category.col").toUpperCase(), // 3
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(), // 3
 			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(), // 4
 			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(), // 5
@@ -162,15 +162,16 @@ public class MovStockBrowser extends ModalJFrame {
 			MessageBundle.getMessage("angal.common.total.txt").toUpperCase(), // 14
 			MessageBundle.getMessage("angal.common.userid").toUpperCase() // 15
 	};
-	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
-			SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
+			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.CENTER };
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
-	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
+	private boolean[] pColumnVisible = { true, true, false, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN,
+			true, true,
 			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, !isSingleUser };
 
-	private int[] pColumnWidth = { 50, 90, 45, 130, 50, 30, 150, 70, 70, 80, 80, 50, 50, 70, 70 };
+	private int[] pColumnWidth = { 50, 90, 45, 45, 130, 50, 30, 150, 70, 70, 80, 80, 50, 50, 70, 70 };
 
 	/*
 	 * Adds to facilitate the selection of products
@@ -1203,6 +1204,8 @@ public class MovStockBrowser extends ModalJFrame {
 				return movement.getRefNo();
 			} else if (c == ++col) {
 				return formatDateTime(movement.getDate());
+			} else if (c == ++col) {
+				return movement.getType().getCategory();
 			} else if (c == ++col) {
 				return movement.getType().toString();
 			} else if (c == ++col) {
