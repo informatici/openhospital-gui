@@ -218,11 +218,6 @@ public class InventoryEdit extends ModalJFrame {
 	public InventoryEdit() {
 		mode = "new";
 		initComponents();
-		if (mode.equals("view")) {
-			saveButton.setVisible(false);
-			deleteButton.setVisible(false);
-			columnEditable = columnEditableView;
-		}
 	}
 	
 	private boolean isAutomaticLotIn() {
@@ -479,7 +474,7 @@ public class InventoryEdit extends ModalJFrame {
 			        }
 					medicalInventoryRowManager.deleteMedicalInventoryRows(inventoryRowsToDelete);
 				}
-				if ((inventory == null) && (mode.equals("new"))) {
+				if (mode.equals("new")) {
 					newReference = referenceTextField.getText().trim();
 					boolean refExist = false;
 					refExist =  medicalInventoryManager.referenceExists(newReference);
@@ -552,7 +547,7 @@ public class InventoryEdit extends ModalJFrame {
 					if (info != JOptionPane.YES_OPTION) {
 						dispose(); 
 					}
-				} else if ((inventory != null) && (mode.equals("update"))) {
+				} else if (mode.equals("update")) {
 					String lastCharge = inventory.getChargeType();
 					String lastDischarge = inventory.getDischargeType();
 					Integer lastSupplier = inventory.getSupplier();
