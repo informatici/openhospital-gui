@@ -114,7 +114,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			MessageBundle.getMessage("angal.medicalstock.multipledischarging.expiringdate").toUpperCase()
 	};
 	private final Class[] columnClasses = { String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, String.class, String.class };
-	private boolean[] columnEditable = { false, false, false, false, true, false, false, false };
+	private boolean[] columnEditable = { false, false, false, true, true, false, false, false };
 	private int[] columnWidth = { 50, 100, 70, 50, 70, 50, 100, 80 };
 	private boolean[] columnResizable = { false, true, false, false, false, false, false, false };
 	private boolean[] columnVisible = { true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_OUT, !GeneralData.AUTOMATICLOT_OUT };
@@ -315,12 +315,7 @@ public class MovStockMultipleDischarging extends JDialog {
 					String refNo = jTextFieldReference.getText();
 
 					Movement movement = new Movement(med, (MovementType) jComboBoxDischargeType.getSelectedItem(), null, lot, date, qty, null, refNo);
-					if (med.getPcsperpck() > 1) {
-						model.addItem(movement, PACKETS);
-					} else {
-						model.addItem(movement, UNITS);
-					}
-
+					model.addItem(movement, UNITS);
 					jTextFieldSearch.setText(""); //$NON-NLS-1$
 					jTextFieldSearch.requestFocus();
 				}
@@ -596,7 +591,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private boolean checkQuantityInLot(Lot lot, double qty) {
 		double lotQty = lot.getMainStoreQuantity();
 		if (qty > lotQty) {
-			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.msg");
+			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.fmt.msg", qty, lotQty);
 			return false;
 		}
 		return true;
@@ -862,6 +857,15 @@ public class MovStockMultipleDischarging extends JDialog {
 		@Override
 		public void setValueAt(Object value, int r, int c) {
 			Movement movement = movements.get(r);
+			if (c == 3) {
+				int oldQuantity = movement.getQuantity();
+				movement.setQuantity((int) value);
+
+				int total = calcTotal(movement, units.get(r));
+				if (!checkQuantityInMovement(movement, total)) {
+					movement.setQuantity(oldQuantity);
+				}
+			}
 			if (c == 4) {
 				int newOption = 0;
 				if (qtyOption[1].equals(value)) {
