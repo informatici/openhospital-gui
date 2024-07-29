@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -28,8 +28,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.font.TextAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -37,6 +39,7 @@ import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -66,6 +69,7 @@ import org.isf.medtype.model.MedicalType;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.stat.gui.report.GenericReportFromDateToDate;
+import org.isf.stat.gui.report.GenericReportPharmaceuticalAMC;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalOrder;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalStock;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalStockCard;
@@ -84,23 +88,18 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * This class shows a complete extended list of medical drugs,
- * supplies-sundries, diagnostic kits -reagents, laboratory chemicals. It is
- * possible to filter data with a selection combo box
- * and edit-insert-delete records
- *
- * @author bob
- * 11-dic-2005
- * modified by alex:
- * - product code
- * - pieces per packet
+ * This class shows a complete extended list of medical drugs, supplies-sundries, diagnostic kits -reagents, laboratory chemicals. It is possible to filter data
+ * with a selection combo box and edit-insert-delete records
  */
 public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalBrowser.class);
-	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
+	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt");
+
+	private static final String STR_ACTIVE_ONLY = MessageBundle.getMessage("angal.medicals.activeonly.txt");
+	private static final String STR_DISABLED_ONLY = MessageBundle.getMessage("angal.medicals.disabledonly.txt");
 
 	@Override
 	public void medicalInserted(Medical medical) {
@@ -122,17 +121,21 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 		repaint();
-
+		activeComboBox.setSelectedItem(activeComboBox.getSelectedItem()); // simulate selections
+		int keyCode = 0; // simulate ENTER on the search field
+		KeyEvent enterPressed = new KeyEvent(searchString, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, keyCode, '\n');
+		searchString.dispatchEvent(enterPressed);
 	}
 
 	private int selectedrow;
 	private JComboBox pbox;
+	private JComboBox activeComboBox;
 	private List<Medical> pMedicals;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.medicals.pcsperpck.col"),      // not uppercased so column reads better
+			MessageBundle.getMessage("angal.medicals.pcsperpck.col"), // not uppercased so column reads better
 			MessageBundle.getMessage("angal.medicals.stock.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicals.critlevel.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicals.outofstock.col").toUpperCase()
@@ -147,6 +150,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private final JFrame me;
 
 	private String pSelection;
+	private String activeSelection = STR_ACTIVE_ONLY;
 	private JTextField searchString;
 	protected boolean altKeyReleased = true;
 	private String lastKey = "";
@@ -195,6 +199,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			model = new MedicalBrowsingModel();
 			table = new JTable(model);
 			table.setAutoCreateRowSorter(true);
+			table.setAutoCreateColumnsFromModel(false);
 			table.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
 			for (int i = 0; i < pColumnWidth.length; i++) {
 				table.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
@@ -208,6 +213,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 	private JPanel getJButtonPanel() {
 		JPanel buttonPanel = new JPanel(new WrapLayout());
+		buttonPanel.add(getComboBoxActive());
 		buttonPanel.add(new JLabel(MessageBundle.getMessage("angal.medicals.selecttype")));
 		buttonPanel.add(getComboBoxMedicalType());
 		buttonPanel.add(getSearchBox());
@@ -234,7 +240,46 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		if (buttonAMC == null) {
 			buttonAMC = new JButton(MessageBundle.getMessage("angal.medicals.averagemonthlyconsumption.btn"));
 			buttonAMC.setMnemonic(MessageBundle.getMnemonic("angal.medicals.averagemonthlyconsumption.btn.key"));
-			buttonAMC.addActionListener(actionEvent -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALAMC));
+			buttonAMC.addActionListener(actionEvent -> {
+
+				List<String> dateOptions = new ArrayList<>();
+				dateOptions.add(MessageBundle.getMessage("angal.medicals.today"));
+				dateOptions.add(MessageBundle.getMessage("angal.common.date.txt"));
+
+				Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
+				String dateOption = (String) MessageDialog.inputDialog(this,
+								icon,
+								dateOptions.toArray(),
+								dateOptions.get(0),
+								"angal.medicals.pleaseselectareport.msg");
+
+				if (dateOption == null) {
+					return;
+				}
+				int i = 0;
+				if (dateOptions.indexOf(dateOption) == i) {
+					new GenericReportPharmaceuticalAMC(null, GeneralData.PHARMACEUTICALAMC, false);
+					new GenericReportPharmaceuticalAMC(null, GeneralData.PHARMACEUTICALAMC, true);
+					return;
+				}
+				if (dateOptions.indexOf(dateOption) == ++i) {
+
+					icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
+
+					GoodDateChooser dateChooser = new GoodDateChooser(LocalDate.now(), true, false);
+					int r = JOptionPane.showConfirmDialog(this,
+									dateChooser,
+									MessageBundle.getMessage("angal.common.date.txt"),
+									JOptionPane.OK_CANCEL_OPTION,
+									JOptionPane.PLAIN_MESSAGE,
+									icon);
+
+					if (r == JOptionPane.OK_OPTION) {
+						new GenericReportPharmaceuticalAMC(dateChooser.getDateEndOfDay(), GeneralData.PHARMACEUTICALAMC, false);
+						new GenericReportPharmaceuticalAMC(dateChooser.getDateEndOfDay(), GeneralData.PHARMACEUTICALAMC, true);
+					}
+				}
+			});
 		}
 		return buttonAMC;
 	}
@@ -306,10 +351,10 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 			Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 			String dateOption = (String) MessageDialog.inputDialog(this,
-					icon,
-					dateOptions.toArray(),
-					dateOptions.get(0),
-					"angal.medicals.pleaseselectareport.msg");
+							icon,
+							dateOptions.toArray(),
+							dateOptions.get(0),
+							"angal.medicals.pleaseselectareport.msg");
 
 			if (dateOption == null) {
 				return;
@@ -320,10 +365,10 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			lotOptions.add(MessageBundle.getMessage("angal.medicals.withlot"));
 
 			String lotOption = (String) MessageDialog.inputDialog(this,
-					icon,
-					lotOptions.toArray(),
-					lotOptions.get(0),
-					"angal.medicals.pleaseselectareport.msg");
+							icon,
+							lotOptions.toArray(),
+							lotOptions.get(0),
+							"angal.medicals.pleaseselectareport.msg");
 
 			/* Getting Report parameters */
 			String sortBy;
@@ -332,7 +377,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			if (pbox.getSelectedItem() instanceof MedicalType) {
 				groupBy = ((MedicalType) pbox.getSelectedItem()).getDescription();
 			}
-			List<?> sortedKeys = table.getRowSorter().getSortKeys();
+			List< ? > sortedKeys = table.getRowSorter().getSortKeys();
 			if (!sortedKeys.isEmpty()) {
 				int sortedColumn = ((SortKey) sortedKeys.get(0)).getColumn();
 				SortOrder sortedOrder = ((SortKey) sortedKeys.get(0)).getSortOrder();
@@ -349,7 +394,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 					sortBy = columnName + ' ' + columnOrder;
 				}
 
-			} else { //default values
+			} else { // default values
 				groupBy = "%%";
 				sortBy = "MDSRT_DESC, MDSR_DESC";
 			}
@@ -375,11 +420,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 				GoodDateChooser dateChooser = new GoodDateChooser(LocalDate.now(), true, false);
 				int r = JOptionPane.showConfirmDialog(this,
-						dateChooser,
-						MessageBundle.getMessage("angal.common.date.txt"),
-						JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.PLAIN_MESSAGE,
-						icon);
+								dateChooser,
+								MessageBundle.getMessage("angal.common.date.txt"),
+								JOptionPane.OK_CANCEL_OPTION,
+								JOptionPane.PLAIN_MESSAGE,
+								icon);
 
 				if (r == JOptionPane.OK_OPTION) {
 					new GenericReportPharmaceuticalStock(dateChooser.getDateEndOfDay(), report, filter, groupBy, sortBy, false);
@@ -411,7 +456,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 				if (!dataRange.isCancel()) {
 					new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX), medical,
-							null, toExcel);
+									null, toExcel);
 				}
 			}
 		});
@@ -446,9 +491,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 					}
 				} catch (IOException exc) {
 					JOptionPane.showMessageDialog(this,
-							exc.getMessage(),
-							MessageBundle.getMessage("angal.messagedialog.error.title"),
-							JOptionPane.PLAIN_MESSAGE);
+									exc.getMessage(),
+									MessageBundle.getMessage("angal.messagedialog.error.title"),
+									JOptionPane.PLAIN_MESSAGE);
 					LOGGER.error("Export to excel error : {}", exc.getMessage());
 				}
 			}
@@ -459,8 +504,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private String compileFileName() {
 		StringBuilder filename = new StringBuilder(MessageBundle.getMessage("angal.medicals.stock.txt"));
 		if (pbox.isEnabled()
-				&& !pbox.getSelectedItem().equals(
-				MessageBundle.getMessage("angal.common.all.txt").toUpperCase())) {
+						&& !pbox.getSelectedItem().equals(
+										MessageBundle.getMessage("angal.common.all.txt").toUpperCase())) {
 
 			filename.append('_').append(pbox.getSelectedItem());
 		}
@@ -514,7 +559,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(actionEvent -> {
 			// medical will reference the new record
-			medical = new Medical(null, new MedicalType("", ""), "", "", 0, 0, 0, 0, 0);
+			medical = new Medical(null, new MedicalType("", ""), "", "", 0, 0, 0, 0);
 			MedicalEdit newrecord = new MedicalEdit(medical, true, me);
 			newrecord.addMedicalListener(this);
 			newrecord.setVisible(true);
@@ -522,10 +567,32 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		return buttonNew;
 	}
 
+	private JComboBox getComboBoxActive() {
+		if (activeComboBox == null) {
+			activeComboBox = new JComboBox();
+			activeComboBox.addItem(STR_ACTIVE_ONLY);
+			activeComboBox.addItem(STR_ALL);
+			activeComboBox.addItem(STR_DISABLED_ONLY);
+			activeSelection = STR_ACTIVE_ONLY;
+		}
+		activeComboBox.addActionListener(actionEvent -> {
+			activeSelection = activeComboBox.getSelectedItem().toString();
+			if (pSelection.compareTo(STR_ALL) == 0) {
+				model = new MedicalBrowsingModel();
+			} else {
+				model = new MedicalBrowsingModel(pSelection, true);
+			}
+			table.setModel(model);
+			model.fireTableDataChanged();
+			table.updateUI();
+		});
+		return activeComboBox;
+	}
+
 	private JComboBox getComboBoxMedicalType() {
 		if (pbox == null) {
 			pbox = new JComboBox();
-			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
+			pbox.addItem(STR_ALL);
 			List<MedicalType> type;
 			try {
 				type = medicalTypeManager.getMedicalType();
@@ -535,6 +602,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
+			pSelection = STR_ALL;
 		}
 		pbox.addActionListener(actionEvent -> {
 			pSelection = pbox.getSelectedItem().toString();
@@ -562,10 +630,10 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 		Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 		String option = (String) MessageDialog.inputDialog(this,
-				icon,
-				options.toArray(),
-				options.get(0),
-				"angal.medicals.pleaseselectperiod.msg");
+						icon,
+						options.toArray(),
+						options.get(0),
+						"angal.medicals.pleaseselectperiod.msg");
 
 		if (option == null) {
 			return;
@@ -581,7 +649,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			to = from;
 		}
 		if (options.indexOf(option) == ++i) {
-			//this month
+			// this month
 			LocalDate gc = getFromDate();
 			from = TimeTools.formatDateTime(gc.atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
 
@@ -590,17 +658,17 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		}
 		if (options.indexOf(option) == ++i) {
 			from = TimeTools.formatDateTime(getFromDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
-			//next month
+			// next month
 			to = TimeTools.formatDateTime(getToDatePlusMonth(1).atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 		}
 		if (options.indexOf(option) == ++i) {
 			from = TimeTools.formatDateTime(getFromDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
-			//next two month
+			// next two month
 			to = TimeTools.formatDateTime(getToDatePlusMonth(2).atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 		}
 		if (options.indexOf(option) == ++i) {
 			from = TimeTools.formatDateTime(getFromDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
-			//next three month
+			// next three month
 			to = TimeTools.formatDateTime(getToDatePlusMonth(3).atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 		}
 		if (options.indexOf(option) == ++i) {
@@ -608,11 +676,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 			JMonthYearChooser monthYearChooser = new JMonthYearChooser();
 			int r = JOptionPane.showConfirmDialog(this,
-					monthYearChooser,
-					MessageBundle.getMessage("angal.billbrowser.month.txt"),
-					JOptionPane.OK_CANCEL_OPTION,
-					JOptionPane.PLAIN_MESSAGE,
-					icon);
+							monthYearChooser,
+							MessageBundle.getMessage("angal.billbrowser.month.txt"),
+							JOptionPane.OK_CANCEL_OPTION,
+							JOptionPane.PLAIN_MESSAGE,
+							icon);
 
 			if (r == JOptionPane.OK_OPTION) {
 				monthYear = monthYearChooser.getLocalDate();
@@ -623,17 +691,17 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			LocalDate fromDate = getFromDate();
 			from = TimeTools.formatDateTime(fromDate.atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
 			LocalDate toDate = monthYear;
-			toDate = toDate.with (TemporalAdjusters.lastDayOfMonth());
+			toDate = toDate.with(TemporalAdjusters.lastDayOfMonth());
 			to = TimeTools.formatDateTime(toDate.atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 		}
 
 		new GenericReportFromDateToDate(
-				from,
-				to,
-				"rpt_base", 
-				"PharmaceuticalExpiration",
-				MessageBundle.getMessage("angal.medicals.expiringreport"),
-				false);
+						from,
+						to,
+						"rpt_base",
+						"PharmaceuticalExpiration",
+						MessageBundle.getMessage("angal.medicals.expiringreport"),
+						false);
 	}
 
 	private LocalDate getToDatePlusMonth(int monthsToMove) {
@@ -655,6 +723,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			if (isType) {
 				try {
 					medicalList = pMedicals = medicalBrowsingManager.getMedicals(key, false);
+					if (activeSelection.equals(STR_ACTIVE_ONLY)) {
+						medicalList = pMedicals = new ArrayList<>(pMedicals.stream().filter(med -> med.getDeleted() == 'N').toList());
+					} else if (activeSelection.equals(STR_DISABLED_ONLY)) {
+						medicalList = pMedicals = new ArrayList<>(pMedicals.stream().filter(med -> med.getDeleted() == 'Y').toList());
+					}
 				} catch (OHServiceException e) {
 					pMedicals = null;
 					OHServiceExceptionUtil.showMessages(e);
@@ -692,6 +765,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		public MedicalBrowsingModel() {
 			try {
 				medicalList = pMedicals = medicalBrowsingManager.getMedicals(null, false);
+				if (activeSelection.equals(STR_ACTIVE_ONLY)) {
+					medicalList = pMedicals = new ArrayList<>(pMedicals.stream().filter(med -> med.getDeleted() == 'N').toList());
+				} else if (activeSelection.equals(STR_DISABLED_ONLY)) {
+					medicalList = pMedicals = new ArrayList<>(pMedicals.stream().filter(med -> med.getDeleted() == 'Y').toList());
+				}
 			} catch (OHServiceException e) {
 				pMedicals = null;
 				OHServiceExceptionUtil.showMessages(e);
@@ -699,7 +777,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		}
 
 		@Override
-		public Class<?> getColumnClass(int c) {
+		public Class< ? > getColumnClass(int c) {
 			if (c == 0) {
 				return String.class;
 			} else if (c == 1) {
@@ -774,16 +852,21 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-				boolean hasFocus, int row, int column) {
+						boolean hasFocus, int row, int column) {
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			cell.setForeground(Color.BLACK);
-			Medical med = pMedicals.get(row);
+			Medical med = (Medical) table.getValueAt(row, -1);
 			double actualQty = med.getInitialqty() + med.getInqty() - med.getOutqty();
 			if ((boolean) table.getValueAt(row, 6)) {
 				cell.setForeground(Color.GRAY); // out of stock
 			}
 			if (med.getMinqty() != 0 && actualQty <= med.getMinqty()) {
 				cell.setForeground(Color.RED); // under critical level
+			}
+			if (activeSelection.equals(STR_ALL) && med.getDeleted() == 'Y') {
+				Map attributes = cell.getFont().getAttributes();
+				attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+				cell.setFont(new Font(attributes));
 			}
 			return cell;
 		}

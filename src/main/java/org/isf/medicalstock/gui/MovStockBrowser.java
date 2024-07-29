@@ -49,6 +49,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -56,6 +57,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -63,6 +65,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -102,25 +106,31 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * MovStockBrowser - list medicals movement. let the user search for movements
- * 					  and insert a new movements
+ * MovStockBrowser - list medicals movement. Let the user search for movements and insert a new movement.
  */
 public class MovStockBrowser extends ModalJFrame {
+
+	private static final int defaultInitDelay = ToolTipManager.sharedInstance().getInitialDelay();
+	private static final Color defaultBackgroundColor = (Color) UIManager.get("ToolTip.background");
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(MovStockBrowser.class);
 
 	private static final String FROM_LABEL = MessageBundle.getMessage("angal.common.from.txt") + ':';
 	private static final String TO_LABEL = MessageBundle.getMessage("angal.common.to.txt") + ':';
+	private static final String TEXT_ALL = MessageBundle.getMessage("angal.common.all.txt");
+	private static final String TEXT_ALLCHARGES = MessageBundle.getMessage("angal.medicalstock.allcharges.txt");
+	private static final String TEXT_ALLDISCHARGES = MessageBundle.getMessage("angal.medicalstock.alldischarges.txt");
 
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
 
 	private final JFrame myFrame;
 	private JButton filterButton;
+	private JButton resetButton;
 	private JCheckBox jCheckBoxKeepFilter;
 	private JComboBox medicalBox;
 	private JComboBox medicalTypeBox;
-	private JComboBox typeBox;
+	private JComboBox movementTypeBox;
 	private JComboBox wardBox;
 	private GoodDateChooser movDateFrom;
 	private GoodDateChooser movDateTo;
@@ -137,28 +147,31 @@ public class MovStockBrowser extends ModalJFrame {
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.medicalstock.refno.col").toUpperCase(), // 1
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(), // 2
+			MessageBundle.getMessage("angal.medicalstock.category.col").toUpperCase(), // 3
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(), // 3
 			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(), // 4
 			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(), // 5
-			MessageBundle.getMessage("angal.medicalstock.pharmaceutical.col").toUpperCase(), // 6
-			MessageBundle.getMessage("angal.medicalstock.medtype.col").toUpperCase(), // 7
-			MessageBundle.getMessage("angal.medicalstock.lot.col").toUpperCase(), // 8
-			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(), // 9
-			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(), // 10
-			MessageBundle.getMessage("angal.medicalstock.origin.col").toUpperCase(), // 11
-			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(), // 12
-			MessageBundle.getMessage("angal.common.total.txt").toUpperCase(), // 13
-			MessageBundle.getMessage("angal.common.userid").toUpperCase() // 14
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(), // 6
+			MessageBundle.getMessage("angal.medicalstock.pharmaceutical.col").toUpperCase(), // 7
+			MessageBundle.getMessage("angal.medicalstock.medtype.col").toUpperCase(), // 8
+			MessageBundle.getMessage("angal.medicalstock.lot.col").toUpperCase(), // 9
+			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(), // 10
+			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(), // 11
+			MessageBundle.getMessage("angal.medicalstock.origin.col").toUpperCase(), // 12
+			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(), // 13
+			MessageBundle.getMessage("angal.common.total.txt").toUpperCase(), // 14
+			MessageBundle.getMessage("angal.common.userid").toUpperCase() // 15
 	};
-	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
-			SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
+			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.CENTER };
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
-	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
+	private boolean[] pColumnVisible = { true, true, false, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN,
+			true, true,
 			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, !isSingleUser };
 
-	private int[] pColumnWidth = { 50, 90, 45, 130, 50, 150, 70, 70, 80, 80, 50, 50, 70, 70 };
+	private int[] pColumnWidth = { 50, 90, 45, 45, 130, 50, 30, 150, 70, 70, 80, 80, 50, 50, 70, 70 };
 
 	/*
 	 * Adds to facilitate the selection of products
@@ -313,7 +326,7 @@ public class MovStockBrowser extends ModalJFrame {
 		totalAmount = new BigDecimal(0);
 
 		// quantity
-		if (!medicalBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
+		if (!medicalBox.getSelectedItem().equals(TEXT_ALL)) {
 			for (Movement mov : moves) {
 				if (mov.getType().getType().contains("+")) {
 					totalQti += mov.getQuantity();
@@ -360,6 +373,7 @@ public class MovStockBrowser extends ModalJFrame {
 		filterContentPanel.add(getLotDueDatePanel());
 		JPanel filterButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		filterButtonPanel.add(getFilterButton());
+		filterButtonPanel.add(getResetButton());
 		filterButtonPanel.add(getJCheckBoxKeepFilter());
 		filterContentPanel.add(filterButtonPanel);
 		return filterContentPanel;
@@ -378,7 +392,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
 						.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.medicalstock.pharmaceutical")));
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt")));
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.codeordescription.txt")));
 		medicalPanel.add(label1Panel);
 		medicalPanel.add(getMedicalSearchPanel());
 		JPanel medicalDescPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -473,15 +487,16 @@ public class MovStockBrowser extends ModalJFrame {
 	private JComboBox getWardBox() {
 		wardBox = new JComboBox();
 		wardBox.setPreferredSize(new Dimension(200, 25));
-		wardBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
-		List<Ward> wardList;
+		wardBox.addItem(TEXT_ALL);
+		List<Ward> wardsList;
 		try {
-			wardList = wardBrowserManager.getWards();
+			wardsList = wardBrowserManager.getWards();
+			wardsList.sort(new Ward.WardDescriptionComparator());
 		} catch (OHServiceException e) {
-			wardList = new ArrayList<>();
+			wardsList = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		for (Ward elem : wardList) {
+		for (Ward elem : wardsList) {
 			wardBox.addItem(elem);
 		}
 		wardBox.setEnabled(false);
@@ -496,7 +511,7 @@ public class MovStockBrowser extends ModalJFrame {
 			medicalBox.removeAllItems();
 			List<Medical> medicals;
 			try {
-				medicals = medicalBrowsingManager.getMedicals();
+				medicals = medicalBrowsingManager.getMedicalsSortedByName();
 			} catch (OHServiceException e1) {
 				medicals = null;
 				OHServiceExceptionUtil.showMessages(e1);
@@ -506,7 +521,7 @@ public class MovStockBrowser extends ModalJFrame {
 				int originalSize = medicals.size();
 				int resultsSize = results.size();
 				if (originalSize == resultsSize) {
-					medicalBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
+					medicalBox.addItem(TEXT_ALL);
 				}
 				for (Medical aMedical : results) {
 					medicalBox.addItem(aMedical);
@@ -544,28 +559,36 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private JComboBox getMedicalBox() {
 		medicalBox = new JComboBox();
+		medicalBox.setRenderer(new ToolTipListCellRenderer());
 		medicalBox.setPreferredSize(new Dimension(200, 25));
 		List<Medical> medical;
 		try {
-			medical = medicalBrowsingManager.getMedicals();
+			medical = medicalBrowsingManager.getMedicalsSortedByName();
 		} catch (OHServiceException e1) {
 			medical = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
-		medicalBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
+		medicalBox.addItem(TEXT_ALL);
 		if (null != medical) {
 			for (Medical aMedical : medical) {
 				medicalBox.addItem(aMedical);
 			}
 		}
+		medicalBox.addActionListener(actionEvent -> {
+			medicalBox.setToolTipText(getTooltipFromObject(medicalBox.getSelectedItem()));
+		});
 		medicalBox.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseExited(MouseEvent e) {
+				ToolTipManager.sharedInstance().setInitialDelay(defaultInitDelay);
+				UIManager.put("ToolTip.background", defaultBackgroundColor);
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				ToolTipManager.sharedInstance().setInitialDelay(0);
+				UIManager.put("ToolTip.background", Color.white);
 			}
 
 			@Override
@@ -592,7 +615,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalTypeBox.setPreferredSize(new Dimension(200, 25));
 		List<MedicalType> medical;
 
-		medicalTypeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
+		medicalTypeBox.addItem(TEXT_ALL);
 
 		try {
 			medical = medicalTypeBrowserManager.getMedicalType();
@@ -634,36 +657,42 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JComboBox getMovementTypeBox() {
-		typeBox = new JComboBox();
-		typeBox.setPreferredSize(new Dimension(200, 25));
-		List<MovementType> type;
+		movementTypeBox = new JComboBox();
+		movementTypeBox.setPreferredSize(new Dimension(200, 25));
+		List<MovementType> movementTypeList;
 		try {
-			type = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
+			movementTypeList = medicalDsrStockMovementTypeBrowserManager.getMedicalDsrStockMovementType();
 		} catch (OHServiceException e1) {
-			type = null;
+			movementTypeList = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
-		typeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
-		if (null != type) {
-			for (MovementType movementType : type) {
-				typeBox.addItem(movementType);
+		movementTypeBox.addItem(TEXT_ALL);
+		movementTypeBox.addItem(TEXT_ALLCHARGES);
+		movementTypeBox.addItem(TEXT_ALLDISCHARGES);
+		if (null != movementTypeList) {
+			for (MovementType movementType : movementTypeList) {
+				movementTypeBox.addItem(movementType);
 			}
 		}
-		typeBox.addActionListener(actionEvent -> {
-			if (!(typeBox.getSelectedItem() instanceof String)) {
-				MovementType selected = (MovementType) typeBox.getSelectedItem();
+		movementTypeBox.addActionListener(actionEvent -> {
+			Object selectedMovementType = movementTypeBox.getSelectedItem();
+
+			if (!(selectedMovementType instanceof String)) {
+				MovementType selected = (MovementType) selectedMovementType;
 				if (selected.getType().contains("-")) {
 					wardBox.setEnabled(true);
 				} else {
 					wardBox.setSelectedIndex(0);
 					wardBox.setEnabled(false);
 				}
+			} else if (TEXT_ALLDISCHARGES.equals(selectedMovementType)) {
+				wardBox.setEnabled(true);
 			} else {
 				wardBox.setSelectedIndex(0);
 				wardBox.setEnabled(false);
 			}
 		});
-		return typeBox;
+		return movementTypeBox;
 	}
 
 	private JTable getMovTable() {
@@ -789,7 +818,7 @@ public class MovStockBrowser extends ModalJFrame {
 		filterButton.addActionListener(actionEvent -> {
 			Integer medicalSelected = null;
 			String medicalTypeSelected = null;
-			String typeSelected = null;
+			String movementTypeSelected = null;
 			String wardSelected = null;
 			boolean dateOk = true;
 
@@ -843,9 +872,18 @@ public class MovStockBrowser extends ModalJFrame {
 										.getSelectedItem()).getCode();
 					}
 				}
-				if (!(typeBox.getSelectedItem() instanceof String)) {
-					typeSelected = ((MovementType) typeBox
+				if (!(movementTypeBox.getSelectedItem() instanceof String)) {
+					movementTypeSelected = ((MovementType) movementTypeBox
 									.getSelectedItem()).getCode();
+				} else {
+					movementTypeSelected = (String) movementTypeBox.getSelectedItem();
+					if (movementTypeSelected.equals(TEXT_ALL)) {
+						movementTypeSelected = null;
+					} else if (movementTypeSelected.equals(TEXT_ALLCHARGES)) {
+						movementTypeSelected = "+";
+					} else if (movementTypeSelected.equals(TEXT_ALLDISCHARGES)) {
+						movementTypeSelected = "-";
+					}
 				}
 				if (!(wardBox.getSelectedItem() instanceof String)) {
 					wardSelected = ((Ward) wardBox.getSelectedItem())
@@ -853,7 +891,7 @@ public class MovStockBrowser extends ModalJFrame {
 				}
 				if (!isAutomaticLot()) {
 					model = new MovBrowserModel(medicalSelected,
-									medicalTypeSelected, wardSelected, typeSelected,
+									medicalTypeSelected, wardSelected, movementTypeSelected,
 									movDateFrom.getDateStartOfDay(),
 									movDateTo.getDateStartOfDay(),
 									lotPrepFrom.getDateStartOfDay(),
@@ -862,7 +900,7 @@ public class MovStockBrowser extends ModalJFrame {
 									lotDueTo.getDateStartOfDay());
 				} else {
 					model = new MovBrowserModel(medicalSelected,
-									medicalTypeSelected, wardSelected, typeSelected,
+									medicalTypeSelected, wardSelected, movementTypeSelected,
 									movDateFrom.getDateStartOfDay(),
 									movDateTo.getDateStartOfDay(),
 									null,
@@ -882,6 +920,35 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 		});
 		return filterButton;
+	}
+
+	private JButton getResetButton() {
+		resetButton = new JButton(MessageBundle.getMessage("angal.medicalstock.reset.btn"));
+		resetButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.reset.btn.key"));
+		resetButton.addActionListener(actionEvent -> {
+
+			searchTextField.setText("");
+			searchButton.doClick();
+			medicalTypeBox.setSelectedIndex(0);
+			movementTypeBox.setSelectedItem(MessageBundle.getMessage("angal.common.all.txt"));
+			wardBox.setSelectedItem(MessageBundle.getMessage("angal.common.all.txt"));
+
+			movDateFrom.setDate(LocalDate.now().minusWeeks(1));
+			movDateTo.setDate(LocalDate.now());
+
+			if (!isAutomaticLot()) {
+				lotPrepFrom.setDate(null);
+				lotPrepTo.setDate(null);
+			}
+			lotDueFrom.setDate(null);
+			lotDueTo.setDate(null);
+
+			if (jCheckBoxKeepFilter.isSelected()) {
+				filterButton.doClick();
+			}
+		});
+		return resetButton;
+
 	}
 
 	/**
@@ -1023,22 +1090,22 @@ public class MovStockBrowser extends ModalJFrame {
 		StringBuilder filename = new StringBuilder("Stock Ledger");
 		if (medicalBox.isEnabled()
 						&& !medicalBox.getSelectedItem().equals(
-										MessageBundle.getMessage("angal.common.all.txt"))) {
+										TEXT_ALL)) {
 
 			filename.append('_').append(medicalBox.getSelectedItem());
 		}
 		if (medicalTypeBox.isEnabled()
 						&& !medicalTypeBox.getSelectedItem().equals(
-										MessageBundle.getMessage("angal.common.all.txt"))) {
+										TEXT_ALL)) {
 
 			filename.append('_').append(medicalTypeBox.getSelectedItem());
 		}
-		if (typeBox.isEnabled() &&
-						!typeBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
-			filename.append('_').append(typeBox.getSelectedItem());
+		if (movementTypeBox.isEnabled() &&
+						!movementTypeBox.getSelectedItem().equals(TEXT_ALL)) {
+			filename.append('_').append(movementTypeBox.getSelectedItem());
 		}
 		if (wardBox.isEnabled() &&
-						!wardBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
+						!wardBox.getSelectedItem().equals(TEXT_ALL)) {
 			filename.append('_').append(wardBox.getSelectedItem());
 		}
 		filename.append('_').append(TimeTools.formatDateTime(movDateFrom.getDateStartOfDay(), DATE_FORMAT_YYYYMMDD))
@@ -1126,6 +1193,7 @@ public class MovStockBrowser extends ModalJFrame {
 		@Override
 		public Object getValueAt(int r, int c) {
 			Movement movement = moves.get(r);
+			Medical medical = movement.getMedical();
 			Lot lot = movement.getLot();
 			BigDecimal cost = lot.getCost();
 			int qty = movement.getQuantity();
@@ -1136,6 +1204,8 @@ public class MovStockBrowser extends ModalJFrame {
 				return movement.getRefNo();
 			} else if (c == ++col) {
 				return formatDateTime(movement.getDate());
+			} else if (c == ++col) {
+				return movement.getType().getCategory();
 			} else if (c == ++col) {
 				return movement.getType().toString();
 			} else if (c == ++col) {
@@ -1148,9 +1218,11 @@ public class MovStockBrowser extends ModalJFrame {
 			} else if (c == ++col) {
 				return qty;
 			} else if (c == ++col) {
-				return movement.getMedical().getDescription();
+				return medical.getProdCode();
 			} else if (c == ++col) {
-				return movement.getMedical().getType().getDescription();
+				return medical.getDescription();
+			} else if (c == ++col) {
+				return medical.getType().getDescription();
 			} else if (c == ++col) {
 				if (isAutomaticLot()) {
 					return MessageBundle.getMessage("angal.medicalstock.generated");
@@ -1225,7 +1297,6 @@ public class MovStockBrowser extends ModalJFrame {
 	class DecimalFormatRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
-		private final DecimalFormat formatter100 = new DecimalFormat("#,##0.000");
 		private final DecimalFormat formatter10 = new DecimalFormat("#,##0.00");
 		private final DecimalFormat formatter1 = new DecimalFormat("#,##0");
 
@@ -1237,12 +1308,38 @@ public class MovStockBrowser extends ModalJFrame {
 				value = formatter1.format(value);
 			}
 			if (column == 11 && value instanceof Number) {
-				value = formatter100.format(value);
+				value = formatter10.format(value);
 			}
 			if (column == 12 && value instanceof Number) {
 				value = formatter10.format(value);
 			}
 			return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		}
+	}
+
+	private String getTooltipFromObject(Object value) {
+		String tooltip = "";
+		if (value instanceof Medical) {
+			tooltip = ((Medical) value).getDescription();
+		} else if (value instanceof String) {
+			tooltip = (String) value;
+		}
+		return tooltip;
+	}
+
+	public class ToolTipListCellRenderer extends DefaultListCellRenderer {
+
+		@Override
+		public Component getListCellRendererComponent(JList< ? > list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			// I'd extract the basic "text" representation of the value
+			// and pass that to the super call, which will apply it to the
+			// JLabel via the setText method, otherwise it will use the
+			// objects toString method to generate a representation
+			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			String tooltip = getTooltipFromObject(value);
+			setToolTipText(tooltip);
+			return this;
+		}
+
 	}
 }
