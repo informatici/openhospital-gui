@@ -30,6 +30,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,10 +39,15 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -63,6 +69,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -76,6 +83,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicalinventory.manager.MedicalInventoryManager;
 import org.isf.medicalinventory.manager.MedicalInventoryRowManager;
@@ -93,10 +101,12 @@ import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.InventoryStatus;
 import org.isf.utils.jobjects.InventoryType;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
 import org.isf.utils.time.TimeTools;
@@ -157,7 +167,10 @@ public class InventoryWardEdit extends ModalJFrame {
             MessageBundle.getMessage("angal.inventory.totalprice.col").toUpperCase()
     };
     private int[] pColumwidth = { 100, 200, 100, 100, 100, 80, 80, 80 };
-    private boolean[] columnEditable = { false, false, false, false, false, true, true, false };
+    private boolean[] columnEditable = { false, false, true, true, false, true, true, false };
+    private boolean[] columnEditableView = { false, false, false, false, false, false, false, false };
+    private boolean[] pColumnVisible = { true, true, !GeneralData.AUTOMATICLOT_IN, true, true, true,
+            GeneralData.LOTWITHCOST, true };
     private MedicalInventory inventory = null;
     private JRadioButton specificRadio;
     private JRadioButton allRadio;
@@ -186,6 +199,10 @@ public class InventoryWardEdit extends ModalJFrame {
     private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext()
             .getBean(MovStockInsertingManager.class);
 
+    public boolean isAutomaticLotIn() {
+        return GeneralData.AUTOMATICLOT_IN;
+    }
+
     public InventoryWardEdit() {
         mode = "new";
         initComponents();
@@ -202,6 +219,7 @@ public class InventoryWardEdit extends ModalJFrame {
             saveButton.setVisible(false);
             cancelButton.setVisible(false);
             wardComboBox.setEnabled(false);
+            columnEditable = columnEditableView;
         }
     }
 
@@ -459,11 +477,11 @@ public class InventoryWardEdit extends ModalJFrame {
                             if (medicalInventoryRowManager.updateMedicalInventoryRow(medicalInventoryRow) == null) {
                                 checkResults++;
                             }
+                            movStockInsertingManager.updateLot(medicalInventoryRow.getLot());
                         }
                     } catch (OHServiceException e) {
                         OHServiceExceptionUtil.showMessages(e);
                     }
-
                     if (checkResults == 0) {
                         MessageDialog.info(this, "angal.inventory.updatesucces.msg");
                         validateButton.setEnabled(true);
@@ -536,17 +554,30 @@ public class InventoryWardEdit extends ModalJFrame {
     private JScrollPane getScrollPaneInventory() {
         if (scrollPaneInventory == null) {
             scrollPaneInventory = new JScrollPane();
-            scrollPaneInventory.setViewportView(getJTableInventoryRow());
+            try {
+                scrollPaneInventory.setViewportView(getJTableInventoryRow());
+            } catch (OHServiceException e) {
+                OHServiceExceptionUtil.showMessages(e);
+            }
         }
         return scrollPaneInventory;
     }
 
-    private JTable getJTableInventoryRow() {
+    private JTable getJTableInventoryRow() throws OHServiceException {
         if (jTableInventoryRow == null) {
             jTableInventoryRow = new JTable();
             jTetFieldEditor = new JTextField();
             jTableInventoryRow.setFillsViewportHeight(true);
             jTableInventoryRow.setModel(new InventoryRowModel());
+            for (int i = 0; i < pColums.length; i++) {
+                jTableInventoryRow.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
+                jTableInventoryRow.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
+                if (!pColumnVisible[i]) {
+                    jTableInventoryRow.getColumnModel().getColumn(i).setMinWidth(0);
+                    jTableInventoryRow.getColumnModel().getColumn(i).setMaxWidth(0);
+                    jTableInventoryRow.getColumnModel().getColumn(i).setWidth(0);
+                }
+            }
             jTableInventoryRow.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
                 @Override
@@ -593,6 +624,17 @@ public class InventoryWardEdit extends ModalJFrame {
             jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
         }
         return jTableInventoryRow;
+    }
+
+    class EnabledTableCellRenderer extends DefaultTableCellRenderer {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            return cell;
+        }
     }
 
     class InventoryRowModel extends DefaultTableModel {
@@ -718,17 +760,47 @@ public class InventoryWardEdit extends ModalJFrame {
         public void setValueAt(Object value, int r, int c) {
             if (r < inventoryRowSearchList.size()) {
                 MedicalInventoryRow invRow = inventoryRowSearchList.get(r);
+                Medical medical = invRow.getMedical();
+                if (c == 2) {
+                    Lot lot = getLot();
+                    if (lot != null) {
+                        lot.setMedical(medical);
+                        invRow.setLot(lot);
+                        inventoryRowSearchList.set(r, invRow);
+                        fireTableCellUpdated(r, c);
+                    }
+                }
+                if (c == 3) {
+                    Lot lot = invRow.getLot();
+                    if (lot.getCode().equals("")) {
+                        lot = getLot();
+                        lot.setMedical(medical);
+                    } else {
+                        SimpleDateFormat dateFormatString = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                        Date dueDate = new Date();
+                        try {
+                            dueDate = dateFormatString.parse(value.toString());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        LocalDateTime date = dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                        lot.setDueDate(date);
+                    }
+                    invRow.setLot(lot);
+                    inventoryRowSearchList.set(r, invRow);
+                    fireTableCellUpdated(r, c);
+                }
                 if (c == 5) {
-                    Integer intValue = 0;
+                    Double intValue = 0.0;
                     try {
-                        intValue = Integer.parseInt(value.toString());
+                        intValue = Double.parseDouble(value.toString());
                     } catch (NumberFormatException e) {
-                        intValue = 0;
+                        intValue = 0.0;
                     }
 
                     invRow.setRealqty(intValue);
                     inventoryRowSearchList.set(r, invRow);
-                    jTableInventoryRow.updateUI();
+                    fireTableCellUpdated(r, c);
                 }
                 if (c == 6) {
                     Double doubleValue = 0.0;
@@ -738,21 +810,16 @@ public class InventoryWardEdit extends ModalJFrame {
                         doubleValue = 0.0;
                     }
                     Lot lot = invRow.getLot();
-                    if (lot != null) {
+                    if (!isAutomaticLotIn()) {
                         if (lot.getCode().equals("")) {
                             MessageDialog.error(null, "angal.inventoryrow.cannotchangethepriceofproductwithoutlot.msg");
-                        } else {
-                            lot.setCost(new BigDecimal(doubleValue));
-                            try {
-                                Lot saveLot = movStockInsertingManager.updateLot(lot);
-                                invRow.setLot(saveLot);
-                            } catch (OHServiceException e) {
-                                OHServiceExceptionUtil.showMessages(e);
-                            }
+                            doubleValue = 0.0;
                         }
                     }
+                    lot.setCost(new BigDecimal(doubleValue));
+                    invRow.setLot(lot);
                     inventoryRowSearchList.set(r, invRow);
-                    jTableInventoryRow.updateUI();
+                    fireTableCellUpdated(r, c);
                 }
             }
         }
@@ -761,6 +828,144 @@ public class InventoryWardEdit extends ModalJFrame {
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return columnEditable[columnIndex];
         }
+    }
+
+    private Lot getLot() {
+        Lot lot = null;
+        if (isAutomaticLotIn()) {
+            LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
+            LocalDateTime expiringDate = askExpiringDate();
+            lot = new Lot("", preparationDate, expiringDate);
+            // Cost
+            BigDecimal cost = new BigDecimal(0);
+            if (GeneralData.LOTWITHCOST) {
+                cost = askCost(2);
+                if (cost.compareTo(new BigDecimal(0)) == 0) {
+                    return null;
+                }
+            }
+            lot.setCost(cost);
+        } else {
+            lot = askLot();
+        }
+        return lot;
+    }
+
+    private Lot askLot() {
+        LocalDateTime preparationDate;
+        LocalDateTime expiringDate;
+        Lot lot = null;
+
+        JTextField lotNameTextField = new JTextField(15);
+        lotNameTextField.addAncestorListener(new RequestFocusListener());
+        TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotid"),
+                lotNameTextField);
+        suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
+        suggestion.setForeground(Color.GRAY);
+        suggestion.setHorizontalAlignment(SwingConstants.CENTER);
+        suggestion.changeAlpha(0.5f);
+        suggestion.changeStyle(Font.BOLD + Font.ITALIC);
+
+        LocalDate now = LocalDate.now();
+        GoodDateChooser preparationDateChooser = new GoodDateChooser(now);
+        GoodDateChooser expireDateChooser = new GoodDateChooser(now);
+        JPanel panel = new JPanel(new GridLayout(3, 2));
+        panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotnumberabb"))); //$NON-NLS-1$
+        panel.add(lotNameTextField);
+        panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.preparationdate"))); //$NON-NLS-1$
+        panel.add(preparationDateChooser);
+        panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate"))); //$NON-NLS-1$
+        panel.add(expireDateChooser);
+        do {
+            int ok = JOptionPane.showConfirmDialog(
+                    this,
+                    panel,
+                    MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotinformations"), //$NON-NLS-1$
+                    JOptionPane.OK_CANCEL_OPTION);
+
+            if (ok == JOptionPane.OK_OPTION) {
+                String lotName = lotNameTextField.getText();
+                if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
+                    MessageDialog.error(this, "angal.medicalstock.multiplecharging.expirydatebeforepreparationdate");
+                } else {
+                    expiringDate = expireDateChooser.getDateEndOfDay();
+                    preparationDate = preparationDateChooser.getDateStartOfDay();
+                    lot = new Lot(lotName, preparationDate, expiringDate);
+                    if (GeneralData.LOTWITHCOST) {
+                        BigDecimal cost = askCost(2);
+                        if (cost.compareTo(new BigDecimal(0)) == 0) {
+                            return null;
+                        } else {
+                            lot.setCost(cost);
+                        }
+                    }
+                }
+            } else {
+                return null;
+            }
+        } while (lot == null);
+        return lot;
+    }
+
+    private BigDecimal askCost(int qty) {
+        double cost = 0.;
+        do {
+            String input = JOptionPane.showInputDialog(this,
+                    MessageBundle.getMessage("angal.medicalstock.multiplecharging.unitcost"), //$NON-NLS-1$
+                    0.);
+            if (input != null) {
+                try {
+                    cost = Double.parseDouble(input);
+                    if (cost < 0) {
+                        throw new NumberFormatException();
+                    } else if (cost == 0.) {
+                        double total = askTotalCost();
+                        // if (total == 0.) return;
+                        cost = total / qty;
+                    }
+                } catch (NumberFormatException nfe) {
+                    MessageDialog.error(this, "angal.medicalstock.multiplecharging.pleaseinsertavalidvalue");
+                }
+            } else {
+                return BigDecimal.valueOf(cost);
+            }
+        } while (cost == 0.);
+        return BigDecimal.valueOf(cost);
+    }
+
+    protected LocalDateTime askExpiringDate() {
+        LocalDateTime date = TimeTools.getNow();
+        GoodDateTimeSpinnerChooser expireDateChooser = new GoodDateTimeSpinnerChooser(date);
+        JPanel panel = new JPanel(new GridLayout(1, 2));
+        panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate"))); //$NON-NLS-1$
+        panel.add(expireDateChooser);
+
+        int ok = JOptionPane.showConfirmDialog(this, panel,
+                MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate"), //$NON-NLS-1$
+                JOptionPane.OK_CANCEL_OPTION);
+
+        if (ok == JOptionPane.OK_OPTION) {
+            date = expireDateChooser.getLocalDateTime();
+        }
+        return date;
+    }
+
+    protected double askTotalCost() {
+        String input = JOptionPane.showInputDialog(this,
+                MessageBundle.getMessage("angal.medicalstock.multiplecharging.totalcost"), //$NON-NLS-1$
+                0.);
+        double total = 0.;
+        if (input != null) {
+            try {
+                total = Double.parseDouble(input);
+                if (total < 0) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException nfe) {
+                MessageDialog.error(this, "angal.medicalstock.multiplecharging.pleaseinsertavalidvalue");
+            }
+        }
+        return total;
     }
 
     private List<MedicalInventoryRow> loadNewInventoryTable(String code) throws OHServiceException {
