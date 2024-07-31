@@ -95,7 +95,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	}
 	
 	private void initialize() {
-		maxLength = SmsManager.MAX_LENGHT;
+		maxLength = SmsManager.MAX_LENGTH;
 	}
 
 	private void initComponents() {
