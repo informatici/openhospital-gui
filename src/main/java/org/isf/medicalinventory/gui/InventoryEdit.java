@@ -915,56 +915,45 @@ public class InventoryEdit extends ModalJFrame {
 					MessageDialog.info(null, "angal.inventory.allinventoryrowshouldhavelotbeforevalidate.msg");
 					return;
 				}
-				String dischargeCode = inventory.getDischargeType();
-				String chargeCode = inventory.getChargeType();
-				Integer supplierId = inventory.getSupplier();
-				String wardCode = inventory.getDestination();
-				if (dischargeCode == null || dischargeCode.equals("")) {
-					MessageDialog.info(null, "angal.inventory.choosedischargetypebeforevalidate.msg");
-					return;
-				}
-				if (chargeCode == null || chargeCode.equals("")) {
-					MessageDialog.info(null, "angal.inventory.choosechargetypebeforevalidate.msg");
-					return;
-				}
-				if (supplierId == null || supplierId == 0) {
-					MessageDialog.info(null, "angal.inventory.choosesupplierbeforevalidate.msg");
-					return;
-				}
-				if (wardCode == null || wardCode.equals("")) {
-					MessageDialog.info(null, "angal.inventory.choosesupplierbeforevalidate.msg");
-					return;
-				}
-				// validate inventory
-				boolean validated = false;
-				try {
-					validated = medicalInventoryManager.validateInventory(inventory, inventoryRowSearchList);
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-					return;
-				}
-				// change state of inventory
-				if (validated) {
-					inventory.setStatus(InventoryStatus.validated.toString());
+				int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttovalidatethisinventory.msg");
+				if (reset == JOptionPane.YES_OPTION) {
+					String dischargeCode = inventory.getDischargeType();
+					String chargeCode = inventory.getChargeType();
+					Integer supplierId = inventory.getSupplier();
+					String wardCode = inventory.getDestination();
+					if (dischargeCode == null || dischargeCode.equals("")) {
+						MessageDialog.info(null, "angal.inventory.choosedischargetypebeforevalidate.msg");
+						return;
+					}
+					if (chargeCode == null || chargeCode.equals("")) {
+						MessageDialog.info(null, "angal.inventory.choosechargetypebeforevalidate.msg");
+						return;
+					}
+					if (supplierId == null || supplierId == 0) {
+						MessageDialog.info(null, "angal.inventory.choosesupplierbeforevalidate.msg");
+						return;
+					}
+					if (wardCode == null || wardCode.equals("")) {
+						MessageDialog.info(null, "angal.inventory.choosesupplierbeforevalidate.msg");
+						return;
+					}
+					// validate inventory
 					try {
-						inventory = medicalInventoryManager.updateMedicalInventory(inventory);
+						 medicalInventoryManager.validateInventory(inventory, inventoryRowSearchList);
+						 inventory.setStatus(InventoryStatus.validated.toString());
+						 inventory = medicalInventoryManager.updateMedicalInventory(inventory);
+						if (inventory != null) {
+							MessageDialog.info(null, "angal.inventory.validate.success.msg");
+							jTableInventoryRow.setModel(new InventoryRowModel());
+							columnEditable = columnEditableView;
+						} else {
+							MessageDialog.info(null, "angal.inventory.validate.error.msg");
+							return;
+						}
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 						return;
 					}
-					if (inventory != null) {
-						MessageDialog.info(null, "angal.inventory.validate.success.msg");
-						columnEditable = columnEditableView;
-						jTableInventoryRow.updateUI();
-						fireInventoryUpdated();
-						saveButton.setEnabled(false);
-					} else {
-						MessageDialog.info(null, "angal.inventory.validate.error.msg");
-						return;
-					}
-				} else {
-					MessageDialog.info(null, "angal.inventory.validateajustinventoryerror.msg");
-					return;
 				}
 			}
 		);
@@ -1056,6 +1045,9 @@ public class InventoryEdit extends ModalJFrame {
 		}
 
 		public InventoryRowModel() throws OHServiceException {
+			if (!inventoryRowSearchList.isEmpty()) {
+				inventoryRowSearchList.clear();
+			}
 			if (inventory != null) {
 				inventoryRowList = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
 			} else {
