@@ -107,7 +107,7 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 import com.github.lgooddatepicker.zinternaltools.TimeChangeEvent;
 
 /**
- * Create a single Patient Bill it affects tables BILLS, BILLITEMS and BILLPAYMENTS
+ * Create a single Patient Bill which affects tables BILLS, BILLITEMS and BILLPAYMENTS
  *
  * @author Mwithi
  */
