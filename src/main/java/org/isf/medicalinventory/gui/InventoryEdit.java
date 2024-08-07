@@ -904,12 +904,6 @@ public class InventoryEdit extends ModalJFrame {
 					MessageDialog.info(null, "angal.inventory.inventorymustsavebeforevalidate.msg");
 					return;
 				}
-				if (inventory != null) {
-					if (inventory.getStatus().equals(InventoryStatus.validated.toString())) {
-						MessageDialog.info(null, "angal.inventory.inventoryalreadyvalidate.msg");
-						return;
-					}
-				}
 				List<MedicalInventoryRow> invRowWithoutLot = inventoryRowSearchList.stream().filter(invRow -> invRow.getLot() == null).collect(Collectors.toList());
 				if (invRowWithoutLot.size() > 0) {
 					MessageDialog.info(null, "angal.inventory.allinventoryrowshouldhavelotbeforevalidate.msg");
@@ -946,6 +940,7 @@ public class InventoryEdit extends ModalJFrame {
 							MessageDialog.info(null, "angal.inventory.validate.success.msg");
 							jTableInventoryRow.setModel(new InventoryRowModel());
 							columnEditable = columnEditableView;
+							fireInventoryUpdated();
 						} else {
 							MessageDialog.info(null, "angal.inventory.validate.error.msg");
 							return;
@@ -1421,6 +1416,9 @@ public class InventoryEdit extends ModalJFrame {
 								}	
 							}
 						}
+						if (inventory != null && !inventory.getStatus().equals(InventoryStatus.draft.toString())) {
+							inventory.setStatus(InventoryStatus.draft.toString());
+						}
 						fireInventoryUpdated();
 						code = null;
 						ajustWith();
@@ -1466,6 +1464,9 @@ public class InventoryEdit extends ModalJFrame {
 							addInventoryRow(code);
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
+						}
+						if (inventory != null && !inventory.getStatus().equals(InventoryStatus.draft.toString())) {
+							inventory.setStatus(InventoryStatus.draft.toString());
 						}
 						codeTextField.setText("");
 					}
