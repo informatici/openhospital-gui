@@ -41,14 +41,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -416,11 +409,42 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonPrint.setEnabled(false);
 		return jButtonPrint;
 	}
-	
+
 	private JButton getDeleteButton() {
 		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		jButtonDelete.setEnabled(false);
+
+		jButtonDelete.addActionListener(actionEvent -> {
+			int selectedRow = jTableInventory.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.error(this, MessageBundle.getMessage("angal.inventory.pleaseselectinventory.msg"));
+				return;
+			}
+
+			MedicalInventory inventory = inventoryList.get(selectedRow);
+			String status = inventory.getStatus().toLowerCase();
+
+			if ("draft".equals(status) || "validated".equals(status)) {
+				int confirm = JOptionPane.showConfirmDialog(this,
+						MessageBundle.getMessage("angal.inventory.deletion.confirm.msg"),
+						MessageBundle.getMessage("angal.inventory.deletion.confirm.title"),
+						JOptionPane.YES_NO_OPTION);
+
+				if (confirm == JOptionPane.YES_OPTION) {
+					try {
+						medicalInventoryManager.deleteInventory(inventory.getId());
+						MessageDialog.info(this, MessageBundle.getMessage("angal.inventory.deletion.success.msg"));
+						jTableInventory.setModel(new InventoryBrowsingModel(startIndex, PAGE_SIZE));
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
+				}
+			} else {
+				MessageDialog.error(this, MessageBundle.getMessage("angal.inventory.deletion.error.msg"));
+			}
+		});
+
 		return jButtonDelete;
 	}
 
