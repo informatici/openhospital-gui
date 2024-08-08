@@ -941,6 +941,7 @@ public class InventoryEdit extends ModalJFrame {
 							jTableInventoryRow.setModel(new InventoryRowModel());
 							columnEditable = columnEditableView;
 							fireInventoryUpdated();
+							closeButton.doClick();
 						} else {
 							MessageDialog.info(null, "angal.inventory.validate.error.msg");
 							return;
