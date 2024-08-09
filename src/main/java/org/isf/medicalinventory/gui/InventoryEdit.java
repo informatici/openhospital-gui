@@ -1583,7 +1583,7 @@ public class InventoryEdit extends ModalJFrame {
 				if (currentStatus.equalsIgnoreCase(InventoryStatus.canceled.toString())) {
 					statusLabel.setForeground(Color.RED);
 				}
-				if (currentStatus.equalsIgnoreCase(InventoryStatus.canceled.toString())) {
+				if (currentStatus.equalsIgnoreCase(InventoryStatus.done.toString())) {
 					statusLabel.setForeground(Color.GREEN);
 				}
 			}
