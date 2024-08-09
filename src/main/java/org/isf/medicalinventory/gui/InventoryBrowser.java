@@ -414,39 +414,39 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		jButtonDelete.setEnabled(false);
-
 		jButtonDelete.addActionListener(actionEvent -> {
-			int selectedRow = jTableInventory.getSelectedRow();
-			if (selectedRow == -1) {
-				MessageDialog.error(this, MessageBundle.getMessage("angal.inventory.pleaseselectinventory.msg"));
+			if (jTableInventory.getSelectedRowCount() > 1) {
+				MessageDialog.error(this, "angasl.inventory.pleaseselectonlyoneinventory.msg");
 				return;
 			}
-
+			int selectedRow = jTableInventory.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.error(this, "angal.inventory.pleaseselectinventory.msg");
+				return;
+			}
 			MedicalInventory inventory = inventoryList.get(selectedRow);
-			String status = inventory.getStatus().toLowerCase();
-
-			if ("draft".equals(status) || "validated".equals(status)) {
-				int confirm = JOptionPane.showConfirmDialog(this,
+			if (inventory.getStatus().equals(InventoryStatus.validated.toString()) ||
+					inventory.getStatus().equals(InventoryStatus.draft.toString())) {
+				int response = JOptionPane.showConfirmDialog(this,
 						MessageBundle.getMessage("angal.inventory.deletion.confirm.msg"),
-						MessageBundle.getMessage("angal.inventory.deletion.confirm.title"),
+						MessageBundle.getMessage("angal.deletion.confirm.title"),
 						JOptionPane.YES_NO_OPTION);
-
-				if (confirm == JOptionPane.YES_OPTION) {
+				if (response == JOptionPane.YES_OPTION) {
 					try {
 						medicalInventoryManager.deleteInventory(inventory.getId());
-						MessageDialog.info(this, MessageBundle.getMessage("angal.inventory.deletion.success.msg"));
-						jTableInventory.setModel(new InventoryBrowsingModel(startIndex, PAGE_SIZE));
+						MessageDialog.info(this, "angal.inventory.deletion.success.msg");
+						jTableInventory.setModel(new InventoryBrowsingModel());
 					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
+						MessageDialog.error(this, "angal.inventory.deletion.error.msg");
 					}
 				}
 			} else {
-				MessageDialog.error(this, MessageBundle.getMessage("angal.inventory.deletion.error.msg"));
+				MessageDialog.error(this, "angal.inventory.deletion.error.msg");
 			}
 		});
-
 		return jButtonDelete;
 	}
+
 
 	private JButton getCloseButton() {
 		jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
