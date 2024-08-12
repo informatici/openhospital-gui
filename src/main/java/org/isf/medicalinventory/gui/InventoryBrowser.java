@@ -414,6 +414,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		jButtonDelete.setEnabled(false);
+
 		jButtonDelete.addActionListener(actionEvent -> {
 			if (jTableInventory.getSelectedRowCount() > 1) {
 				MessageDialog.error(this, "angasl.inventory.pleaseselectonlyoneinventory.msg");
@@ -427,10 +428,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			MedicalInventory inventory = inventoryList.get(selectedRow);
 			if (inventory.getStatus().equals(InventoryStatus.validated.toString()) ||
 					inventory.getStatus().equals(InventoryStatus.draft.toString())) {
-				int response = JOptionPane.showConfirmDialog(this,
-						MessageBundle.getMessage("angal.inventory.deletion.confirm.msg"),
-						MessageBundle.getMessage("angal.deletion.confirm.title"),
-						JOptionPane.YES_NO_OPTION);
+				int response = MessageDialog.yesNo(this,
+						"angal.inventory.deletion.confirm.msg");
 				if (response == JOptionPane.YES_OPTION) {
 					try {
 						medicalInventoryManager.deleteInventory(inventory.getId());
@@ -446,6 +445,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		});
 		return jButtonDelete;
 	}
+
 
 
 	private JButton getCloseButton() {
