@@ -118,8 +118,8 @@ public class InventoryEdit extends ModalJFrame {
 		public void InventoryCancelled(AWTEvent e);
 	}
 
-	public static void addInventoryListener(InventoryListener l) {
-		InventoryListeners.add(InventoryListener.class, l);
+	public static void addInventoryListener(InventoryListener listener) {
+		InventoryListeners.add(InventoryListener.class, listener);
 	}
 
 	public static void removeInventoryListener(InventoryListener listener) {
@@ -135,7 +135,9 @@ public class InventoryEdit extends ModalJFrame {
 		for (int i = 0; i < listeners.length; i++) {
 			((InventoryListener) listeners[i]).InventoryInserted(event);
 		}
-		jTableInventoryRow.updateUI();
+		if (jTableInventoryRow != null) {
+			jTableInventoryRow.updateUI();	
+		}
 	}
 
 	private void fireInventoryUpdated() {
@@ -147,7 +149,9 @@ public class InventoryEdit extends ModalJFrame {
 		for (int i = 0; i < listeners.length; i++) {
 			((InventoryListener) listeners[i]).InventoryUpdated(event);
 		}
-		jTableInventoryRow.updateUI();	
+		if (jTableInventoryRow != null) {
+			jTableInventoryRow.updateUI();	
+		}
 	}
 	
 	private GoodDateChooser jCalendarInventory;
@@ -765,11 +769,11 @@ public class InventoryEdit extends ModalJFrame {
 						}
 					}
 				}
+				fireInventoryUpdated();
 				jTableInventoryRow.clearSelection();
 			} else {
 				return;
 			}
-			fireInventoryUpdated();
 		});
 		return deleteButton;
 	}
@@ -932,16 +936,21 @@ public class InventoryEdit extends ModalJFrame {
 						return;
 					}
 					// validate inventory
+					int inventoryRowsSize = inventoryRowSearchList.size();
 					try {
 						 medicalInventoryManager.validateInventory(inventory, inventoryRowSearchList);
 						 inventory.setStatus(InventoryStatus.validated.toString());
 						 inventory = medicalInventoryManager.updateMedicalInventory(inventory);
 						if (inventory != null) {
+							List<MedicalInventoryRow> invRows = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
 							MessageDialog.info(null, "angal.inventory.validate.success.msg");
 							jTableInventoryRow.setModel(new InventoryRowModel());
 							columnEditable = columnEditableView;
 							fireInventoryUpdated();
-							closeButton.doClick();
+							if (invRows.size() > inventoryRowsSize) {
+								MessageDialog.info(null, "angal.inventory.theoreticalqtyhavebeenupdatedforsomemedical.msg");
+							}
+							dispose();
 						} else {
 							MessageDialog.info(null, "angal.inventory.validate.error.msg");
 							return;
@@ -1164,7 +1173,6 @@ public class InventoryEdit extends ModalJFrame {
 						try {
 							intValue = Integer.parseInt(value.toString());
 						} catch (NumberFormatException e) {
-							intValue = 0;
 							return;
 						}
 					}
