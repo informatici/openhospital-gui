@@ -1821,8 +1821,6 @@ public class InventoryWardEdit extends ModalJFrame {
 
     private void addMedInRowInInventorySearchList(MedicalInventoryRow inventoryRow) {
         int position = getPosition(inventoryRow);
-        MessageDialog.info(null, position + "");
-        MessageDialog.info(null, inventoryRow.getMedical().getDescription());
         if (position == -1) {
             position = inventoryRowSearchList.size();
             inventoryRowSearchList.add(position, inventoryRow);
