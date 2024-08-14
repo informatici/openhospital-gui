@@ -55,9 +55,10 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.common.type.txt").toUpperCase()
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.medstockmovtype.category.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = { 80, 200, 40 };
+	private int[] pColumnWidth = { 80, 200, 40, 100 };
 
 	private JPanel jContainPanel;
 	private JPanel jButtonPanel;
@@ -68,10 +69,11 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 	private JTable jTable;
 	private MedicalDsrStockMovementTypeBrowserModel model;
 	private int selectedrow;
-	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
+	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext()
+					.getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private MovementType medicalDsrStockMovementType;
 	private final JFrame myFrame;
-	
+
 	/**
 	 * This method initializes
 	 */
@@ -88,7 +90,7 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 		pack();
 		setLocationRelativeTo(null);
 	}
-	
+
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
@@ -99,7 +101,7 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 		}
 		return jContainPanel;
 	}
-	
+
 	private JPanel getJButtonPanel() {
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
@@ -116,7 +118,7 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				MovementType mdsr = new MovementType("", "", "");
+				MovementType mdsr = new MovementType("", "", "", "");
 				MedicalDsrStockMovementTypeBrowserEdit newrecord = new MedicalDsrStockMovementTypeBrowserEdit(myFrame, mdsr, true);
 				newrecord.addMedicalDsrStockMovementTypeListener(this);
 				newrecord.setVisible(true);
@@ -126,9 +128,9 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 	}
 
 	/**
-	 * This method initializes jEditButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes jEditButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getJEditButton() {
 		if (jEditButton == null) {
@@ -148,11 +150,11 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 		}
 		return jEditButton;
 	}
-	
+
 	/**
-	 * This method initializes jCloseButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes jCloseButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
@@ -162,11 +164,11 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 		}
 		return jCloseButton;
 	}
-	
+
 	/**
 	 * This method initializes jDeleteButton
-	 * 	
-	 * @return javax.swing.JButton	
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getJDeleteButton() {
 		if (jDeleteButton == null) {
@@ -198,12 +200,13 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 		if (jTable == null) {
 			model = new MedicalDsrStockMovementTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
+			for (int i = 0; i < pColumnWidth.length; i++) {
+				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
+			}
 		}
 		return jTable;
 	}
-	
+
 	class MedicalDsrStockMovementTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
@@ -246,6 +249,8 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 				return movType.getDescription();
 			} else if (c == 2) {
 				return movType.getType();
+			} else if (c == 3) {
+				return medicalDsrStockMovementTypeBrowserManager.getCategoryTranslated(movType.getCategory());
 			}
 			return null;
 		}
@@ -256,7 +261,6 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 		}
 	}
 
-
 	@Override
 	public void medicalDsrStockMovementTypeUpdated(AWTEvent e) {
 		pMedicalDsrStockMovementType.set(selectedrow, medicalDsrStockMovementType);
@@ -266,11 +270,10 @@ public class MedicalDsrStockMovementTypeBrowser extends ModalJFrame implements M
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
-	
-	
+
 	@Override
 	public void medicalDsrStockMovementTypeInserted(AWTEvent e) {
-		medicalDsrStockMovementType = (MovementType)e.getSource();
+		medicalDsrStockMovementType = (MovementType) e.getSource();
 		pMedicalDsrStockMovementType.add(0, medicalDsrStockMovementType);
 		((MedicalDsrStockMovementTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		if (jTable.getRowCount() > 0) {

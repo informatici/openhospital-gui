@@ -163,7 +163,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private void initialize() {
 		List<Medical> medicals;
 		try {
-			medicals = medicalBrowsingManager.getMedicals();
+			medicals = new ArrayList<>(medicalBrowsingManager.getMedicals().stream().filter(med -> med.getDeleted() == 'N').toList());
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 			medicals = null;
@@ -728,6 +728,7 @@ public class MovStockMultipleCharging extends JDialog {
 			List<Supplier> suppliers = null;
 			try {
 				suppliers = supplierBrowserManager.getList();
+				suppliers.sort(new Supplier.SupplierNameComparator());
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
