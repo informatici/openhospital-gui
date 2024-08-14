@@ -905,12 +905,12 @@ public class InventoryEdit extends ModalJFrame {
 		}
 		validateButton.addActionListener(actionEvent -> {
 				if (inventory == null) {
-					MessageDialog.info(null, "angal.inventory.inventorymustsavebeforevalidate.msg");
+					MessageDialog.error(null, "angal.inventory.inventorymustsavebeforevalidate.msg");
 					return;
 				}
 				List<MedicalInventoryRow> invRowWithoutLot = inventoryRowSearchList.stream().filter(invRow -> invRow.getLot() == null).collect(Collectors.toList());
 				if (invRowWithoutLot.size() > 0) {
-					MessageDialog.info(null, "angal.inventory.allinventoryrowshouldhavelotbeforevalidate.msg");
+					MessageDialog.error(null, "angal.inventory.allinventoryrowshouldhavelotbeforevalidate.msg");
 					return;
 				}
 				int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttovalidatethisinventory.msg");
@@ -920,19 +920,19 @@ public class InventoryEdit extends ModalJFrame {
 					Integer supplierId = inventory.getSupplier();
 					String wardCode = inventory.getDestination();
 					if (dischargeCode == null || dischargeCode.equals("")) {
-						MessageDialog.info(null, "angal.inventory.choosedischargetypebeforevalidate.msg");
+						MessageDialog.error(null, "angal.inventory.choosedischargetypebeforevalidate.msg");
 						return;
 					}
 					if (chargeCode == null || chargeCode.equals("")) {
-						MessageDialog.info(null, "angal.inventory.choosechargetypebeforevalidate.msg");
+						MessageDialog.error(null, "angal.inventory.choosechargetypebeforevalidate.msg");
 						return;
 					}
 					if (supplierId == null || supplierId == 0) {
-						MessageDialog.info(null, "angal.inventory.choosesupplierbeforevalidate.msg");
+						MessageDialog.error(null, "angal.inventory.choosesupplierbeforevalidate.msg");
 						return;
 					}
 					if (wardCode == null || wardCode.equals("")) {
-						MessageDialog.info(null, "angal.inventory.choosesupplierbeforevalidate.msg");
+						MessageDialog.error(null, "angal.inventory.choosesupplierbeforevalidate.msg");
 						return;
 					}
 					// validate inventory
@@ -948,7 +948,7 @@ public class InventoryEdit extends ModalJFrame {
 							columnEditable = columnEditableView;
 							fireInventoryUpdated();
 							if (invRows.size() > inventoryRowsSize) {
-								MessageDialog.info(null, "angal.inventory.theoreticalqtyhavebeenupdatedforsomemedical.msg");
+								MessageDialog.error(null, "angal.inventory.theoreticalqtyhavebeenupdatedforsomemedical.msg");
 							}
 							dispose();
 						} else {
