@@ -70,6 +70,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -906,7 +908,8 @@ public class InventoryEdit extends ModalJFrame {
 			jTableInventoryRow = new JTable();
 			jTetFieldEditor = new JTextField();
 			jTableInventoryRow.setFillsViewportHeight(true);
-			jTableInventoryRow.setModel(new InventoryRowModel());
+			DefaultTableModel model = new InventoryRowModel();
+			jTableInventoryRow.setModel(model);
 			for (int i = 0; i < pColumnVisible.length; i++) {
 				jTableInventoryRow.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
 				jTableInventoryRow.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
@@ -941,6 +944,8 @@ public class InventoryEdit extends ModalJFrame {
 
 				}
 			});
+			TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
+			jTableInventoryRow.setRowSorter(sorter);
 			DefaultCellEditor cellEditor = new DefaultCellEditor(jTetFieldEditor);
 			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
 		}
