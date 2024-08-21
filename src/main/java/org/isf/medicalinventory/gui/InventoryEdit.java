@@ -87,6 +87,8 @@ import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
+import org.isf.stat.dto.JasperReportResultDto;
+import org.isf.stat.manager.JasperReportsManager;
 import org.isf.supplier.manager.SupplierBrowserManager;
 import org.isf.supplier.model.Supplier;
 import org.isf.utils.db.NormalizeString;
@@ -102,6 +104,8 @@ import org.isf.utils.jobjects.TextPrompt.Show;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InventoryEdit extends ModalJFrame {
 
@@ -156,6 +160,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JPanel panelFooter;
 	private JPanel panelContent;
 	private JButton closeButton;
+	private JButton printButton;
 	private JButton deleteButton;
 	private JButton saveButton;
 	private JButton resetButton;
@@ -214,7 +219,8 @@ public class InventoryEdit extends ModalJFrame {
 	private MedicalDsrStockMovementTypeBrowserManager movTypeManager = Context.getApplicationContext().getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private SupplierBrowserManager supplierManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 	private WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-	
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
+
 	public InventoryEdit() {
 		mode = "new";
 		initComponents();
@@ -278,6 +284,7 @@ public class InventoryEdit extends ModalJFrame {
 			supplierCombo.setEnabled(false);
 			destinationCombo.setEnabled(false);
 			lotButton.setVisible(false);
+			printButton.setVisible(true);
 		} else {
 			saveButton.setVisible(true);
 			deleteButton.setVisible(true);
@@ -292,6 +299,7 @@ public class InventoryEdit extends ModalJFrame {
 			supplierCombo.setEnabled(true);
 			destinationCombo.setEnabled(true);
 			lotButton.setVisible(true);
+			printButton.setVisible(false);
 		}
 	}
 
@@ -431,6 +439,7 @@ public class InventoryEdit extends ModalJFrame {
 			panelFooter.add(getDeleteButton());
 			panelFooter.add(getLotButton());
 			panelFooter.add(getCleanTableButton());
+			panelFooter.add(getPrintButton());
 			panelFooter.add(getCloseButton());
 		}
 		return panelFooter;
@@ -865,8 +874,44 @@ public class InventoryEdit extends ModalJFrame {
 		});
 		return closeButton;
 	}
-	
-	private JButton getCleanTableButton() {
+
+	private JButton getPrintButton() {
+		printButton = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
+		printButton.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
+		printButton.setEnabled(true);
+
+		printButton.addActionListener(e -> {
+			if (inventory == null || inventory.getId() <= 0) {
+				MessageDialog.info(this, "angal.inventory.pleasesavebeforprinting");
+				return;
+			}
+
+			if (InventoryStatus.done.name().equals(inventory.getStatus())) {
+				int printQtyReal = 0;
+				int response = MessageDialog.yesNo(this, "angal.inventorywardedit.askforrealquantityempty");
+				if (response == JOptionPane.YES_OPTION) {
+					printQtyReal = 1;
+				}
+
+				try {
+					JasperReportResultDto reportResult = jasperReportsManager.getInventoryReportPdf(inventory, "Inventory", printQtyReal);
+					if (reportResult != null) {
+						MessageDialog.info(this, "angal.inventory.print.success.msg");
+					} else {
+						MessageDialog.error(this, "angal.inventory.printing.error.msg");
+					}
+				} catch (OHServiceException ex) {
+					MessageDialog.error(this, "angal.inventory.printing.error.msg");
+				}
+			} else {
+				MessageDialog.info(this, "angal.inventory.pleasesavebeforprinting");
+			}
+		});
+
+		return printButton;
+	}
+
+	private  JButton getCleanTableButton() {
 		resetButton = new JButton(MessageBundle.getMessage("angal.inventory.clean.btn"));
 		resetButton.setMnemonic(MessageBundle.getMnemonic("angal.inventory.clean.btn.key"));
 		resetButton.addActionListener(actionEvent -> {

@@ -266,7 +266,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			panelFooter.add(getNewButton());
 			panelFooter.add(getUpdateButton());
 			panelFooter.add(getViewButton());
-			panelFooter.add(getPrintButton());
 			panelFooter.add(getDeleteButton());
 			panelFooter.add(getCloseButton());
 		}
@@ -455,12 +454,10 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 						if (selectedRows.length == 1) {
 							jButtonEdit.setEnabled(true);
 							jButtonView.setEnabled(true);
-							jButtonPrint.setEnabled(true);
 							jButtonDelete.setEnabled(true);
 						} else {
 							jButtonEdit.setEnabled(false);
 							jButtonView.setEnabled(false);
-							jButtonPrint.setEnabled(false);
 							jButtonDelete.setEnabled(false);
 						}
 					}
