@@ -1532,7 +1532,7 @@ public class InventoryEdit extends ModalJFrame {
 		for (Iterator<Medical> iterator = medicalList.iterator(); iterator.hasNext();) {
 			Medical med = (Medical) iterator.next();
 			lots = movStockInsertingManager.getLotByMedical(med, false);
-			double actualQty = med.getInitialqty() + med.getInqty() - med.getOutqty();
+			double actualQty = med.getInqty() - med.getOutqty();
 			if (lots.size() == 0) {
 				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
 				if (!existInInventorySearchList(inventoryRowTemp)) {
