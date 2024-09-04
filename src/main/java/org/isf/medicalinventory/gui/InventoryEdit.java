@@ -201,7 +201,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JLabel supplierLabel;
 	private JLabel destinationLabel;
 	private JTextField referenceTextField;
-	private JTextField jTetFieldEditor;
+	private JTextField jTextFieldEditor;
 	private JComboBox<MovementType> chargeCombo;
 	private JComboBox<MovementType> dischargeCombo;
 	private JComboBox<Supplier> supplierCombo;
@@ -979,7 +979,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JTable getJTableInventoryRow() throws OHServiceException {
 		if (jTableInventoryRow == null) {
 			jTableInventoryRow = new JTable();
-			jTetFieldEditor = new JTextField();
+			jTextFieldEditor = new JTextField();
 			jTableInventoryRow.setFillsViewportHeight(true);
 			jTableInventoryRow.setModel(new InventoryRowModel());
 			for (int i = 0; i < pColumnVisible.length; i++) {
@@ -1000,7 +1000,7 @@ public class InventoryEdit extends ModalJFrame {
 				public void valueChanged(ListSelectionEvent e) {
 					if (e.getValueIsAdjusting()) {
 						jTableInventoryRow.editCellAt(jTableInventoryRow.getSelectedRow(), jTableInventoryRow.getSelectedColumn());
-						jTetFieldEditor.selectAll();
+						jTextFieldEditor.selectAll();
 						int[] selectedRows = jTableInventoryRow.getSelectedRows();
 						if (selectedRows.length == 1) {
 							MedicalInventoryRow medInvRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[0], -1);
@@ -1016,7 +1016,7 @@ public class InventoryEdit extends ModalJFrame {
 
 				}
 			});
-			DefaultCellEditor cellEditor = new DefaultCellEditor(jTetFieldEditor);
+			DefaultCellEditor cellEditor = new DefaultCellEditor(jTextFieldEditor);
 			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
 		}
 		return jTableInventoryRow;
