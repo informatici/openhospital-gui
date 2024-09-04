@@ -63,6 +63,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
@@ -1197,7 +1198,9 @@ public class InventoryEdit extends ModalJFrame {
 					}
 					inventoryRowListAdded.add(invRow);
 					inventoryRowSearchList.set(r, invRow);
-					jTableInventoryRow.updateUI();
+					SwingUtilities.invokeLater(() -> {
+						jTableInventoryRow.updateUI();
+					});
 				}
 			}
 
