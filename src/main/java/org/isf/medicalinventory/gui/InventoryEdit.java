@@ -207,6 +207,7 @@ public class InventoryEdit extends ModalJFrame {
 	private Ward destination = null;
 	private boolean selectAll = false;
 	private String newReference = null;
+	private static final Dimension STATUS_DIMENSION = new Dimension(220, 20);
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private MedicalInventoryRowManager medicalInventoryRowManager = Context.getApplicationContext().getBean(MedicalInventoryRowManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
@@ -329,6 +330,12 @@ public class InventoryEdit extends ModalJFrame {
 			gbc_referenceTextField.gridx = 3;
 			gbc_referenceTextField.gridy = 0;
 			panelHeader.add(getReferenceTextField(), gbc_referenceTextField);
+			GridBagConstraints gbc_statusLabel = new GridBagConstraints();
+			gbc_statusLabel.anchor = GridBagConstraints.WEST;
+			gbc_statusLabel.insets = new Insets(0, 0, 5, 5);
+			gbc_statusLabel.gridx = 4;
+			gbc_statusLabel.gridy = 0;
+			panelHeader.add(getStatusLabel(), gbc_statusLabel);
 			GridBagConstraints gbc_chargeLabel = new GridBagConstraints();
 			gbc_chargeLabel.insets = new Insets(0, 0, 5, 5);
 			gbc_chargeLabel.gridx = 0;
@@ -396,12 +403,6 @@ public class InventoryEdit extends ModalJFrame {
 			ButtonGroup group = new ButtonGroup();
 			group.add(specificRadio);
 			group.add(allRadio);
-			GridBagConstraints gbc_statusLabel = new GridBagConstraints();
-			gbc_statusLabel.anchor = GridBagConstraints.EAST;
-			gbc_statusLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_statusLabel.gridx = 3;
-			gbc_statusLabel.gridy = 3;
-			panelHeader.add(getStatusLabel(), gbc_statusLabel);
 		}
 		return panelHeader;
 	}
@@ -1567,9 +1568,28 @@ public class InventoryEdit extends ModalJFrame {
 	
 	private JLabel getStatusLabel() {
 		if (statusLabel == null) {
-			String currentStatus = inventory == null ? "draft" : inventory.getStatus();
-			statusLabel = new JLabel(MessageBundle.getMessage("angal.inventory.status.label")+" "+MessageBundle.getMessage("angal.inventory."+currentStatus));
-			statusLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+			if (inventory == null) {
+				statusLabel = new JLabel(InventoryStatus.draft.toString());
+				statusLabel.setForeground(Color.WHITE);
+			} else {
+				String currentStatus = inventory.getStatus().toUpperCase();
+				statusLabel = new JLabel(currentStatus);
+				if (currentStatus.equalsIgnoreCase(InventoryStatus.draft.toString())) {
+					statusLabel.setForeground(Color.WHITE);
+				}
+				if (currentStatus.equalsIgnoreCase(InventoryStatus.validated.toString())) {
+					statusLabel.setForeground(Color.BLUE);
+				}
+				if (currentStatus.equalsIgnoreCase(InventoryStatus.canceled.toString())) {
+					statusLabel.setForeground(Color.RED);
+				}
+				if (currentStatus.equalsIgnoreCase(InventoryStatus.done.toString())) {
+					statusLabel.setForeground(Color.GREEN);
+				}
+			}
+			statusLabel.setPreferredSize(STATUS_DIMENSION); // improve Layouts avoiding fixed dimensions
+			statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			statusLabel.setFont(new Font(statusLabel.getFont().getName(), Font.BOLD, statusLabel.getFont().getSize() + 8));
 		}
 		return statusLabel;
 	}
