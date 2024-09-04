@@ -938,7 +938,29 @@ public class InventoryEdit extends ModalJFrame {
 					// validate inventory
 					int inventoryRowsSize = inventoryRowSearchList.size();
 					try {
-						 medicalInventoryManager.validateInventory(inventory, inventoryRowSearchList);
+						 Map<String, List<MedicalInventoryRow>> results = medicalInventoryManager.updateTheoreticQty(inventory, inventoryRowSearchList);
+						 List<MedicalInventoryRow> inventoryUpdated = results.get("updated");
+						 List<MedicalInventoryRow> inventoryAdded = results.get("new");
+						 if (!inventoryUpdated.isEmpty()) {
+							 
+						 }
+						 if (!inventoryAdded.isEmpty()) {
+							 String medicalDescriptions = "";
+							 for (MedicalInventoryRow inv : inventoryAdded) {
+								 medicalDescriptions = medicalDescriptions + inv.getMedical().getDescription() +",";
+								}
+							int response = MessageDialog.yesNo(null, "angal.inventory.newinvenotryrowtoadd.msg", medicalDescriptions);
+							 if (response == JOptionPane.YES_OPTION) {
+								try {
+									for (MedicalInventoryRow inv : inventoryAdded) {
+										medicalInventoryRowManager.newMedicalInventoryRow(inv);
+									}
+								} catch (OHServiceException e) {
+										OHServiceExceptionUtil.showMessages(e);
+								}
+							 }
+							 MessageDialog.info(null, "angal.invetory.allmedicaladdedsuccessfully.msg");
+						 }
 						 inventory.setStatus(InventoryStatus.validated.toString());
 						 inventory = medicalInventoryManager.updateMedicalInventory(inventory);
 						if (inventory != null) {
