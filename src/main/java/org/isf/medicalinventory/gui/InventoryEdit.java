@@ -1590,7 +1590,7 @@ public class InventoryEdit extends ModalJFrame {
 		if (statusLabel == null) {
 			if (inventory == null) {
 				statusLabel = new JLabel(InventoryStatus.draft.toString());
-				statusLabel.setForeground(Color.WHITE);
+				statusLabel.setForeground(Color.GRAY);
 			} else {
 				String currentStatus = inventory.getStatus().toUpperCase();
 				statusLabel = new JLabel(currentStatus);
