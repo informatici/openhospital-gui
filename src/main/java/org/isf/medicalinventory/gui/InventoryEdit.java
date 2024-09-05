@@ -309,17 +309,17 @@ public class InventoryEdit extends ModalJFrame {
 			panelHeader = new JPanel();
 			panelHeader.setBorder(new EmptyBorder(5, 0, 5, 0));
 			GridBagLayout gbl_panelHeader = new GridBagLayout();
-			gbl_panelHeader.columnWidths = new int[] { 159, 191, 192, 218, 51, 0 };
-			gbl_panelHeader.rowHeights = new int[] { 30, 30, 0 };
+			gbl_panelHeader.columnWidths = new int[] { 159, 191, 192, 218, 218, 0 };
+			gbl_panelHeader.rowHeights = new int[] { 30, 30, 30, 30, 0 };
 			gbl_panelHeader.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-			gbl_panelHeader.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+			gbl_panelHeader.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 			panelHeader.setLayout(gbl_panelHeader);
 			GridBagConstraints gbc_dateInventoryLabel = new GridBagConstraints();
+			gbc_dateInventoryLabel.anchor = GridBagConstraints.EAST;
 			gbc_dateInventoryLabel.insets = new Insets(0, 0, 5, 5);
 			gbc_dateInventoryLabel.gridx = 0;
 			gbc_dateInventoryLabel.gridy = 0;
 			panelHeader.add(getDateInventoryLabel(), gbc_dateInventoryLabel);
-
 			GridBagConstraints gbc_jCalendarInventory = new GridBagConstraints();
 			gbc_jCalendarInventory.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jCalendarInventory.insets = new Insets(0, 0, 5, 5);
@@ -338,7 +338,15 @@ public class InventoryEdit extends ModalJFrame {
 			gbc_referenceTextField.gridx = 3;
 			gbc_referenceTextField.gridy = 0;
 			panelHeader.add(getReferenceTextField(), gbc_referenceTextField);
+			GridBagConstraints gbc_statusLabel = new GridBagConstraints();
+			gbc_statusLabel.anchor = GridBagConstraints.CENTER;
+			gbc_statusLabel.insets = new Insets(0, 0, 5, 5);
+			gbc_statusLabel.gridx = 4;
+			gbc_statusLabel.gridy = 0;
+			gbc_statusLabel.gridheight = 3;
+			panelHeader.add(getStatusLabel(), gbc_statusLabel);
 			GridBagConstraints gbc_chargeLabel = new GridBagConstraints();
+			gbc_chargeLabel.anchor = GridBagConstraints.EAST;
 			gbc_chargeLabel.insets = new Insets(0, 0, 5, 5);
 			gbc_chargeLabel.gridx = 0;
 			gbc_chargeLabel.gridy = 1;
@@ -362,6 +370,7 @@ public class InventoryEdit extends ModalJFrame {
 			gbc_supplierCombo.gridy = 1;
 			panelHeader.add(getJComboSupplier(), gbc_supplierCombo);
 			GridBagConstraints gbc_dischargeLabel = new GridBagConstraints();
+			gbc_dischargeLabel.anchor = GridBagConstraints.EAST;
 			gbc_dischargeLabel.insets = new Insets(0, 0, 5, 5);
 			gbc_dischargeLabel.gridx = 0;
 			gbc_dischargeLabel.gridy = 2;
@@ -405,12 +414,6 @@ public class InventoryEdit extends ModalJFrame {
 			ButtonGroup group = new ButtonGroup();
 			group.add(specificRadio);
 			group.add(allRadio);
-			GridBagConstraints gbc_statusLabel = new GridBagConstraints();
-			gbc_statusLabel.anchor = GridBagConstraints.EAST;
-			gbc_statusLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_statusLabel.gridx = 3;
-			gbc_statusLabel.gridy = 3;
-			panelHeader.add(getStatusLabel(), gbc_statusLabel);
 		}
 		return panelHeader;
 	}
@@ -1688,10 +1691,26 @@ public class InventoryEdit extends ModalJFrame {
 
 	private JLabel getStatusLabel() {
 		if (statusLabel == null) {
-			String currentStatus = inventory == null ? "draft" : inventory.getStatus();
-			statusLabel = new JLabel(
-							MessageBundle.getMessage("angal.inventory.status.label") + " " + MessageBundle.getMessage("angal.inventory." + currentStatus));
-			statusLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+			if (inventory == null) {
+				statusLabel = new JLabel(InventoryStatus.draft.toString());
+				statusLabel.setForeground(Color.GRAY);
+			} else {
+				String currentStatus = inventory.getStatus().toUpperCase();
+				statusLabel = new JLabel(currentStatus);
+				if (currentStatus.equalsIgnoreCase(InventoryStatus.draft.toString())) {
+					statusLabel.setForeground(Color.GRAY);
+				}
+				if (currentStatus.equalsIgnoreCase(InventoryStatus.validated.toString())) {
+					statusLabel.setForeground(Color.BLUE);
+				}
+				if (currentStatus.equalsIgnoreCase(InventoryStatus.canceled.toString())) {
+					statusLabel.setForeground(Color.RED);
+				}
+				if (currentStatus.equalsIgnoreCase(InventoryStatus.done.toString())) {
+					statusLabel.setForeground(Color.GREEN);
+				}
+			}
+			statusLabel.setFont(new Font(statusLabel.getFont().getName(), Font.BOLD, statusLabel.getFont().getSize() + 8));
 		}
 		return statusLabel;
 	}
