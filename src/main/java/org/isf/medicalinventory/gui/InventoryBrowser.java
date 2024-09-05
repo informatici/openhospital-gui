@@ -41,14 +41,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -412,13 +405,43 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonPrint.setEnabled(false);
 		return jButtonPrint;
 	}
-	
+
 	private JButton getDeleteButton() {
 		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		jButtonDelete.setEnabled(false);
+
+		jButtonDelete.addActionListener(actionEvent -> {
+			if (jTableInventory.getSelectedRowCount() > 1) {
+				MessageDialog.error(this, "angasl.inventory.pleaseselectonlyoneinventory.msg");
+				return;
+			}
+			int selectedRow = jTableInventory.getSelectedRow();
+			if (selectedRow == -1) {
+				MessageDialog.error(this, "angal.inventory.pleaseselectinventory.msg");
+				return;
+			}
+			MedicalInventory inventory = inventoryList.get(selectedRow);
+			if (inventory.getStatus().equalsIgnoreCase(InventoryStatus.validated.toString()) ||
+					inventory.getStatus().equalsIgnoreCase(InventoryStatus.draft.toString())) {
+				int response = MessageDialog.yesNo(this, "angal.inventory.deletion.confirm.msg");
+				if (response == JOptionPane.YES_OPTION) {
+					try {
+						medicalInventoryManager.deleteInventory(inventory);
+						MessageDialog.info(this, "angal.inventory.deletion.success.msg");
+						jTableInventory.setModel(new InventoryBrowsingModel());
+					} catch (OHServiceException e) {
+						MessageDialog.error(this, "angal.inventory.deletion.error.msg");
+					}
+				}
+			} else {
+				MessageDialog.error(this, "angal.inventory.deletion.error.msg");
+			}
+		});
 		return jButtonDelete;
 	}
+
+
 
 	private JButton getCloseButton() {
 		jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
