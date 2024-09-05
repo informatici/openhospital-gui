@@ -178,7 +178,7 @@ public class InventoryEdit extends ModalJFrame {
 	private String[] pColums = { MessageBundle.getMessage("angal.inventory.id.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.product.col").toUpperCase(),
-			MessageBundle.getMessage("angal.inventory.new.col").toUpperCase(),
+			MessageBundle.getMessage("angal.inventory.newlot.col").toUpperCase(),
 			MessageBundle.getMessage("angal.wardpharmacy.lotnumber.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventoryrow.theoreticqty.col").toUpperCase(),
