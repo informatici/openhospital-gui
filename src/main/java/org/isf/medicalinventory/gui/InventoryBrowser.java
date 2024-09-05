@@ -430,8 +430,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				return;
 			}
 			MedicalInventory inventory = inventoryList.get(selectedRow);
-			if (inventory.getStatus().equalsIgnoreCase(InventoryStatus.validated.toString()) ||
-					inventory.getStatus().equalsIgnoreCase(InventoryStatus.draft.toString())) {
+			String currentStatus = inventory.getStatus();
+			if (currentStatus.equalsIgnoreCase(InventoryStatus.validated.toString()) || currentStatus.equalsIgnoreCase(InventoryStatus.draft.toString())) {
 				int response = MessageDialog.yesNo(this, "angal.inventory.deletion.confirm.msg");
 				if (response == JOptionPane.YES_OPTION) {
 					try {
