@@ -1039,7 +1039,7 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS").replace("DBNAME","$DATABASE_NAME") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
 
 		# direct creation of $DATABASE_SETTINGS - deprecated
-		#Set-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.url=jdbc:mysql://"$DATABASE_SERVER":$DATABASE_PORT/$DATABASE_NAME"
+		#Set-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.url=jdbc:mariadb://"$DATABASE_SERVER":$DATABASE_PORT/$DATABASE_NAME"
 		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.username=$DATABASE_USER"
 		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.password=$DATABASE_PASSWORD"
 	}
