@@ -799,9 +799,16 @@ public class InventoryEdit extends ModalJFrame {
 			}
 			MedicalInventoryRow selectedInventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
 			Lot lotToUpdate = selectedInventoryRow.getLot() != null ? selectedInventoryRow.getLot() : null;
+			int medicalCode = selectedInventoryRow.getMedical().getCode();
 			Lot lot = new Lot();
 			try {
 				lot = this.getLot(lotToUpdate);
+				String code = lot.getCode();
+				List<Integer> medicalIds = movStockInsertingManager.getMedicalsFromLot(code).stream().filter(med -> med != medicalCode).collect(Collectors.toList());
+				if (medicalIds.size() > 0) {
+					MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
+					lotButton.doClick();
+				}
 				String lotCode = lotToUpdate != null ? lotToUpdate.getCode() : "";
 				if (lot != null && !lot.getCode().equals(lotCode)) {
 					Lot lotDelete = movStockInsertingManager.getLot(lotCode);
@@ -957,31 +964,12 @@ public class InventoryEdit extends ModalJFrame {
 				// validate inventory
 				int inventoryRowsSize = inventoryRowSearchList.size();
 				try {
-					//medicalInventoryManager.validateInventory(inventory, inventoryRowSearchList);
-					 Map<String, List<MedicalInventoryRow>> results = medicalInventoryManager.updateTheoreticQty(inventory, inventoryRowSearchList);
-					 List<MedicalInventoryRow> inventoryUpdated = results.get("updated");
-					 List<MedicalInventoryRow> inventoryAdded = results.get("new");
-					 if (!inventoryUpdated.isEmpty()) {
-						 
-					 }
-					 if (!inventoryAdded.isEmpty()) {
-						 String medicalDescriptions = "";
-						 for (MedicalInventoryRow inv : inventoryAdded) {
-							 medicalDescriptions = medicalDescriptions + inv.getMedical().getDescription() +",";
-							}
-						int response = MessageDialog.yesNo(null, "angal.inventory.newinvenotryrowtoadd.msg", medicalDescriptions);
-						 if (response == JOptionPane.YES_OPTION) {
-							try {
-								for (MedicalInventoryRow inv : inventoryAdded) {
-									medicalInventoryRowManager.newMedicalInventoryRow(inv);
-								}
-							} catch (OHServiceException e) {
-									OHServiceExceptionUtil.showMessages(e);
-							}
-						 }
-						 MessageDialog.info(null, "angal.invetory.allmedicaladdedsuccessfully.msg");
-					 }
-					inventory.setStatus(InventoryStatus.validated.toString());
+					medicalInventoryManager.validateInventory(inventory, inventoryRowSearchList);					
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+				}
+				inventory.setStatus(InventoryStatus.validated.toString());
+				try {
 					inventory = medicalInventoryManager.updateMedicalInventory(inventory);
 					if (inventory != null) {
 						List<MedicalInventoryRow> invRows = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
