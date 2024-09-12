@@ -879,7 +879,7 @@ public class InventoryEdit extends ModalJFrame {
 							|| (dischargeType != null && !dischargeType.getCode().equals(lastDischarge))
 							|| (supplier != null && !supplier.getSupId().equals(lastSupplier)) || (destination == null && lastDestination != null)
 							|| (chargeType == null && lastCharge != null) || (dischargeType == null && lastDischarge != null)
-							|| (supplier == null && lastSupplier != null) || !lastReference.equals(newReference)
+							|| (supplier == null && lastSupplier != null) || (lastReference != null && !lastReference.equals(newReference))
 							|| !lastDate.toLocalDate().equals(dateInventory.toLocalDate())) {
 				int reset = MessageDialog.yesNoCancel(null, "angal.inventoryrow.doyouwanttosavethechanges.msg");
 				if (reset == JOptionPane.YES_OPTION) {
