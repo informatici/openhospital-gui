@@ -421,7 +421,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 
 		jButtonDelete.addActionListener(actionEvent -> {
 			if (jTableInventory.getSelectedRowCount() > 1) {
-				MessageDialog.error(this, "angasl.inventory.pleaseselectonlyoneinventory.msg");
+				MessageDialog.error(this, "angal.inventory.pleaseselectonlyoneinventory.msg");
 				return;
 			}
 			int selectedRow = jTableInventory.getSelectedRow();
