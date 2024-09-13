@@ -268,7 +268,11 @@ function write_api_config_file {
 		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
 
 		echo "Writing OH API configuration file -> $API_SETTINGS..."
-		sed -i '' -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" -e "s&OH_API_PID&"$OH_API_PID"&g" $SET_FILE.dist
+		sed -i '' \
+			-e "s/JWT_TOKEN_SECRET/$JWT_TOKEN_SECRET/g" \
+			-e "s/API_HOST:API_PORT/localhost:8080/g" \
+			-e "s&OH_API_PID&$OH_API_PID&g" \
+			$SET_FILE.dist
 		cp -f $SET_FILE.dist $SET_FILE	
 	fi
 }
