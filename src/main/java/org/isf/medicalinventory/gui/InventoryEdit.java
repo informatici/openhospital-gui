@@ -1012,13 +1012,13 @@ public class InventoryEdit extends ModalJFrame {
 			} else if (c == 5) {
 				return String.class;
 			} else if (c == 6) {
-				return Integer.class;
+				return Double.class;
 			} else if (c == 7) {
-				return Integer.class;
+				return Double.class;
 			} else if (c == 8) {
-				return Integer.class;
+				return BigDecimal.class;
 			} else if (c == 9) {
-				return Integer.class;
+				return Double.class;
 			}
 			return null;
 		}
@@ -1078,14 +1078,14 @@ public class InventoryEdit extends ModalJFrame {
 						return medInvtRow.getLot().getCost();
 					}
 				}
-				return 0;
+				return new BigDecimal("0.00");
 			} else if (c == 9) {
 				if (medInvtRow.getLot() != null) {
 					if (medInvtRow.getLot().getCost() != null) {
 						return medInvtRow.getTotal();
 					}
 				}
-				return 0;
+				return 0.0;
 			}
 			return null;
 		}
@@ -1095,12 +1095,12 @@ public class InventoryEdit extends ModalJFrame {
 			if (r < inventoryRowSearchList.size()) {
 				MedicalInventoryRow invRow = inventoryRowSearchList.get(r);
 				if (c == 7) {
-					Integer intValue = 0;
+					Double intValue = 0.0;
 					if (value != null) {
 						try {
-							intValue = Integer.parseInt(value.toString());
+							intValue = Double.parseDouble(value.toString());
 						} catch (NumberFormatException e) {
-							intValue = 0;
+							intValue = 0.0;
 							return;
 						}
 					}
