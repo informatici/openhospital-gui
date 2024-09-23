@@ -946,19 +946,19 @@ public class InventoryEdit extends ModalJFrame {
 				Integer supplierId = inventory.getSupplier();
 				String wardCode = inventory.getDestination();
 				if (dischargeCode == null || dischargeCode.equals("")) {
-					MessageDialog.error(null, "angal.inventory.choosedischargetypebeforevalidate.msg");
+					MessageDialog.error(null, "angal.inventory.choosedischargetypebeforevalidation.msg");
 					return;
 				}
 				if (chargeCode == null || chargeCode.equals("")) {
-					MessageDialog.error(null, "angal.inventory.choosechargetypebeforevalidate.msg");
+					MessageDialog.error(null, "angal.inventory.choosechargetypebeforevalidation.msg");
 					return;
 				}
 				if (supplierId == null || supplierId == 0) {
-					MessageDialog.error(null, "angal.inventory.choosesupplierbeforevalidate.msg");
+					MessageDialog.error(null, "angal.inventory.choosesupplierbeforevalidation.msg");
 					return;
 				}
 				if (wardCode == null || wardCode.equals("")) {
-					MessageDialog.error(null, "angal.inventory.choosesupplierbeforevalidate.msg");
+					MessageDialog.error(null, "angal.inventory.choosesupplierbeforevalidation.msg");
 					return;
 				}
 				// validate inventory
