@@ -337,9 +337,10 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		jButtonNew.addActionListener(actionEvent -> {
 			String status = InventoryStatus.draft.toString();
+			String inventoryType = InventoryType.main.toString();
 			List<MedicalInventory> medicalInventories = new ArrayList<>();
 			try {
-				medicalInventories = medicalInventoryManager.getMedicalInventoryByStatus(status);
+				medicalInventories = medicalInventoryManager.getMedicalInventoryByStatusAndInventoryType(status, inventoryType);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

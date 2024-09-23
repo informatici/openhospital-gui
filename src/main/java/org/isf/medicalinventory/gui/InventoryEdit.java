@@ -931,12 +931,12 @@ public class InventoryEdit extends ModalJFrame {
 		}
 		validateButton.addActionListener(actionEvent -> {
 			if (inventory == null) {
-				MessageDialog.error(null, "angal.inventory.inventorymustsavebeforevalidate.msg");
+				MessageDialog.error(null, "angal.inventory.inventorymustsavebeforevalidation.msg");
 				return;
 			}
 			List<MedicalInventoryRow> invRowWithoutLot = inventoryRowSearchList.stream().filter(invRow -> invRow.getLot() == null).collect(Collectors.toList());
 			if (invRowWithoutLot.size() > 0) {
-				MessageDialog.error(null, "angal.inventory.allinventoryrowshouldhavelotbeforevalidate.msg");
+				MessageDialog.error(null, "angal.inventory.allinventoryrowshouldhavelotbeforevalidation.msg");
 				return;
 			}
 			int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttovalidatethisinventory.msg");
