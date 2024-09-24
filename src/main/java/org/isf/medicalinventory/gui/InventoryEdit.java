@@ -971,6 +971,7 @@ public class InventoryEdit extends ModalJFrame {
 					medicalInventoryManager.validateInventory(inventory, inventoryRowSearchList);					
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
+					return;
 				}
 				inventory.setStatus(InventoryStatus.validated.toString());
 				try {
