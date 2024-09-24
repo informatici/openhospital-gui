@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -206,6 +207,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JLabel supplierLabel;
 	private JLabel destinationLabel;
 	private JTextField referenceTextField;
+	private JTextField jTextFieldEditor;
 	private JComboBox<MovementType> chargeCombo;
 	private JComboBox<MovementType> dischargeCombo;
 	private JComboBox<Supplier> supplierCombo;
@@ -1010,6 +1012,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JTable getJTableInventoryRow() throws OHServiceException {
 		if (jTableInventoryRow == null) {
 			jTableInventoryRow = new JTable();
+			jTextFieldEditor = new JTextField();
 			jTableInventoryRow.setFillsViewportHeight(true);
 			DefaultTableModel model = new InventoryRowModel();
 			jTableInventoryRow.setModel(model);
@@ -1047,7 +1050,7 @@ public class InventoryEdit extends ModalJFrame {
 			});
 			TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
 			jTableInventoryRow.setRowSorter(sorter);
-			DefaultCellEditor cellEditor = new DefaultCellEditor(jTetFieldEditor);
+			DefaultCellEditor cellEditor = new DefaultCellEditor(jTextFieldEditor);
 			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
 		}
 		return jTableInventoryRow;
