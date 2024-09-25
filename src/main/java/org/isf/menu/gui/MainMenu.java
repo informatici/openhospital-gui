@@ -180,6 +180,15 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 		if (singleUser) {
 			LOGGER.info("Logging: Single User mode.");
 			myUser = new User(ADMIN_STR, new UserGroup(ADMIN_STR, ""), ADMIN_STR, "");
+			try {
+				userBrowsingManager.setLastLogin(myUser);
+			} catch (OHServiceException e) {
+				LOGGER.error("Unable to update last login time for {}.", myUser.getUserName());
+			}
+			if (myUser.getFailedAttempts() > 0) {
+				userBrowsingManager.resetFailedAttempts(myUser);
+			}
+			RestartUserSession.setUser(myUser);
 		} else {
 			// get an user
 			LOGGER.info("Logging: Multi User mode.");
@@ -211,7 +220,7 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 		try {
 			this.sessionAuditId = sessionAuditManager.newSessionAudit(new SessionAudit(myUser.getUserName(), LocalDateTime.now(), null));
 		} catch (OHServiceException e1) {
-			LOGGER.error("Unable to log user login in the session_audit table");
+			LOGGER.error("Unable to log user login in the session_audit table.");
 		}
 		// get menu items
 		try {
