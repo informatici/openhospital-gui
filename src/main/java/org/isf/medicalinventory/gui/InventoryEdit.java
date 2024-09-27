@@ -920,8 +920,11 @@ public class InventoryEdit extends ModalJFrame {
 				selectAll = false;
 				specificRadio.setSelected(true);
 				codeTextField.setEnabled(true);
-				inventoryRowSearchList.clear();
-				fireInventoryUpdated();
+				inventoryRowSearchList = new ArrayList<>();
+				DefaultTableModel model = (DefaultTableModel) jTableInventoryRow.getModel();
+				model.setRowCount(0);
+				model.setColumnCount(0);
+				jTableInventoryRow.updateUI();
 			}
 		});
 		return resetButton;
@@ -1051,8 +1054,6 @@ public class InventoryEdit extends ModalJFrame {
 			});
 			TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
 			jTableInventoryRow.setRowSorter(sorter);
-			DefaultCellEditor cellEditor = new DefaultCellEditor(jTextFieldEditor);
-			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
 		}
 		return jTableInventoryRow;
 	}
