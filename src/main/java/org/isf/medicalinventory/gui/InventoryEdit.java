@@ -769,11 +769,16 @@ public class InventoryEdit extends ModalJFrame {
 			}
 			int delete = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttodeletethisinventoryrow.msg");
 			if (delete == JOptionPane.YES_OPTION) {
+				if (selectedRows.length == inventoryRowSearchList.size()) {
+					resetButton.doClick();
+					return;
+				}
 				if (inventory == null) {
 					for (int i = selectedRows.length - 1; i >= 0; i--) {
 						MedicalInventoryRow selectedInventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
 						inventoryRowSearchList.remove(selectedInventoryRow);
 					}
+					
 				} else {
 					for (int i = selectedRows.length - 1; i >= 0; i--) {
 						MedicalInventoryRow inventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
@@ -974,6 +979,7 @@ public class InventoryEdit extends ModalJFrame {
 					medicalInventoryManager.validateInventory(inventory, inventoryRowSearchList);					
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
+					fireInventoryUpdated();
 					return;
 				}
 				inventory.setStatus(InventoryStatus.validated.toString());
