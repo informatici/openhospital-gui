@@ -930,6 +930,7 @@ public class InventoryEdit extends ModalJFrame {
 				model.setRowCount(0);
 				model.setColumnCount(0);
 				jTableInventoryRow.updateUI();
+				ajustWith();
 			}
 		});
 		return resetButton;
@@ -994,7 +995,6 @@ public class InventoryEdit extends ModalJFrame {
 						if (invRows.size() > inventoryRowsSize) {
 							MessageDialog.error(null, "angal.inventory.theoreticalqtyhavebeenupdatedforsomemedical.msg");
 						}
-						dispose();
 					} else {
 						MessageDialog.info(null, "angal.inventory.validate.error.msg");
 						return;
