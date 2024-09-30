@@ -172,6 +172,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JButton validateButton;
 	private JScrollPane scrollPaneInventory;
 	private JTable jTableInventoryRow;
+	private DefaultTableModel model;
 	private List<MedicalInventoryRow> inventoryRowList;
 	private List<MedicalInventoryRow> inventoryRowSearchList = new ArrayList<>();
 	private List<MedicalInventoryRow> inventoryRowListAdded = new ArrayList<>();
@@ -208,6 +209,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JLabel destinationLabel;
 	private JTextField referenceTextField;
 	private JTextField jTextFieldEditor;
+	private TableRowSorter<TableModel> sorter;
 	private JComboBox<MovementType> chargeCombo;
 	private JComboBox<MovementType> dischargeCombo;
 	private JComboBox<Supplier> supplierCombo;
@@ -788,8 +790,8 @@ public class InventoryEdit extends ModalJFrame {
 						}
 					}
 				}
-				fireInventoryUpdated();
 				jTableInventoryRow.clearSelection();
+				jTableInventoryRow.updateUI();
 			} else {
 				return;
 			}
@@ -1024,7 +1026,7 @@ public class InventoryEdit extends ModalJFrame {
 			jTableInventoryRow = new JTable();
 			jTextFieldEditor = new JTextField();
 			jTableInventoryRow.setFillsViewportHeight(true);
-			DefaultTableModel model = new InventoryRowModel();
+			model = new InventoryRowModel();
 			jTableInventoryRow.setModel(model);
 			for (int i = 0; i < pColumnVisible.length; i++) {
 				jTableInventoryRow.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
@@ -1058,8 +1060,12 @@ public class InventoryEdit extends ModalJFrame {
 					}
 				}
 			});
-			TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
+			sorter = new TableRowSorter<>(model);
 			jTableInventoryRow.setRowSorter(sorter);
+			sorter.modelStructureChanged();
+			sorter.allRowsChanged();
+			DefaultCellEditor cellEditor = new DefaultCellEditor(jTextFieldEditor);
+			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
 		}
 		return jTableInventoryRow;
 	}
@@ -1155,53 +1161,55 @@ public class InventoryEdit extends ModalJFrame {
 		}
 
 		public Object getValueAt(int r, int c) {
-			MedicalInventoryRow medInvtRow = inventoryRowSearchList.get(r);
-			if (c == -1) {
-				return medInvtRow;
-			} else if (c == 0) {
-				return medInvtRow.getId();
-			} else if (c == 1) {
-				return medInvtRow.getMedical() == null ? "" : medInvtRow.getMedical().getProdCode();
-			} else if (c == 2) {
-				return medInvtRow.getMedical() == null ? "" : medInvtRow.getMedical().getDescription();
-			} else if (c == 3) {
-				if (medInvtRow.getLot() == null || medInvtRow.isNewLot()) {
-					return "N";
-				}
-				return "";
-			} else if (c == 4) {
-				if (medInvtRow.getLot() == null) {
+			if (r < inventoryRowSearchList.size()) {
+				MedicalInventoryRow medInvtRow = inventoryRowSearchList.get(r);
+				if (c == -1) {
+					return medInvtRow;
+				} else if (c == 0) {
+					return medInvtRow.getId();
+				} else if (c == 1) {
+					return medInvtRow.getMedical() == null ? "" : medInvtRow.getMedical().getProdCode();
+				} else if (c == 2) {
+					return medInvtRow.getMedical() == null ? "" : medInvtRow.getMedical().getDescription();
+				} else if (c == 3) {
+					if (medInvtRow.getLot() == null || medInvtRow.isNewLot()) {
+						return "N";
+					}
 					return "";
-				}
-				return medInvtRow.getLot().getCode().equals("") ? "AUTO" : medInvtRow.getLot().getCode();
-			} else if (c == 5) {
-				if (medInvtRow.getLot() != null) {
-					if (medInvtRow.getLot().getDueDate() != null) {
-						return medInvtRow.getLot().getDueDate().format(DATE_TIME_FORMATTER);
+				} else if (c == 4) {
+					if (medInvtRow.getLot() == null) {
+						return "";
 					}
-				}
-				return "";
-			} else if (c == 6) {
-				Double dblVal = medInvtRow.getTheoreticQty();
-				return dblVal.intValue();
-			} else if (c == 7) {
-				Double dblValue = medInvtRow.getRealQty();
-				return dblValue.intValue();
-			} else if (c == 8) {
-				if (medInvtRow.getLot() != null) {
-					if (medInvtRow.getLot().getCost() != null) {
-						medInvtRow.setTotal(medInvtRow.getRealQty() * medInvtRow.getLot().getCost().doubleValue());
-						return medInvtRow.getLot().getCost();
+					return medInvtRow.getLot().getCode().equals("") ? "AUTO" : medInvtRow.getLot().getCode();
+				} else if (c == 5) {
+					if (medInvtRow.getLot() != null) {
+						if (medInvtRow.getLot().getDueDate() != null) {
+							return medInvtRow.getLot().getDueDate().format(DATE_TIME_FORMATTER);
+						}
 					}
-				}
-				return new BigDecimal("0.00");
-			} else if (c == 9) {
-				if (medInvtRow.getLot() != null) {
-					if (medInvtRow.getLot().getCost() != null) {
-						return medInvtRow.getTotal();
+					return "";
+				} else if (c == 6) {
+					Double dblVal = medInvtRow.getTheoreticQty();
+					return dblVal.intValue();
+				} else if (c == 7) {
+					Double dblValue = medInvtRow.getRealQty();
+					return dblValue.intValue();
+				} else if (c == 8) {
+					if (medInvtRow.getLot() != null) {
+						if (medInvtRow.getLot().getCost() != null) {
+							medInvtRow.setTotal(medInvtRow.getRealQty() * medInvtRow.getLot().getCost().doubleValue());
+							return medInvtRow.getLot().getCost();
+						}
 					}
+					return new BigDecimal("0.00");
+				} else if (c == 9) {
+					if (medInvtRow.getLot() != null) {
+						if (medInvtRow.getLot().getCost() != null) {
+							return medInvtRow.getTotal();
+						}
+					}
+					return 0.0;
 				}
-				return 0.0;
 			}
 			return null;
 		}
