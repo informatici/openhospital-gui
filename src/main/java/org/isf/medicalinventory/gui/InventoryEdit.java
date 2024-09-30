@@ -958,12 +958,12 @@ public class InventoryEdit extends ModalJFrame {
 				String chargeCode = inventory.getChargeType();
 				Integer supplierId = inventory.getSupplier();
 				String wardCode = inventory.getDestination();
-				if (dischargeCode == null || dischargeCode.equals("")) {
-					MessageDialog.error(null, "angal.inventory.choosedischargetypebeforevalidation.msg");
-					return;
-				}
 				if (chargeCode == null || chargeCode.equals("")) {
 					MessageDialog.error(null, "angal.inventory.choosechargetypebeforevalidation.msg");
+					return;
+				}
+				if (dischargeCode == null || dischargeCode.equals("")) {
+					MessageDialog.error(null, "angal.inventory.choosedischargetypebeforevalidation.msg");
 					return;
 				}
 				if (supplierId == null || supplierId == 0) {
