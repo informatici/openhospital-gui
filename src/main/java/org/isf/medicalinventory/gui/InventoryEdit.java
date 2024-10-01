@@ -779,19 +779,23 @@ public class InventoryEdit extends ModalJFrame {
 					for (int i = selectedRows.length - 1; i >= 0; i--) {
 						MedicalInventoryRow selectedInventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
 						inventoryRowSearchList.remove(selectedInventoryRow);
+						model.fireTableDataChanged();
+						jTableInventoryRow.setModel(model);
 					}
 					
 				} else {
 					for (int i = selectedRows.length - 1; i >= 0; i--) {
 						MedicalInventoryRow inventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
 						inventoryRowSearchList.remove(inventoryRow);
+						model.fireTableDataChanged();
+						jTableInventoryRow.setModel(model);
 						if (inventoryRow.getId() != 0) {
 							inventoryRowsToDelete.add(inventoryRow);
 						}
 					}
 				}
 				jTableInventoryRow.clearSelection();
-				jTableInventoryRow.updateUI();
+				adjustWidth();
 			} else {
 				return;
 			}
@@ -985,18 +989,19 @@ public class InventoryEdit extends ModalJFrame {
 					fireInventoryUpdated();
 					return;
 				}
-				inventory.setStatus(InventoryStatus.validated.toString());
+				String status = InventoryStatus.validated.toString();
+				inventory.setStatus(status);
 				try {
 					inventory = medicalInventoryManager.updateMedicalInventory(inventory);
 					if (inventory != null) {
 						List<MedicalInventoryRow> invRows = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
 						MessageDialog.info(null, "angal.inventory.validate.success.msg");
-						jTableInventoryRow.setModel(new InventoryRowModel());
-						columnEditable = columnEditableView;
-						fireInventoryUpdated();
 						if (invRows.size() > inventoryRowsSize) {
 							MessageDialog.error(null, "angal.inventory.theoreticalqtyhavebeenupdatedforsomemedical.msg");
 						}
+						fireInventoryUpdated();
+						statusLabel.setText(status.toUpperCase());
+						statusLabel.setForeground(Color.BLUE);
 					} else {
 						MessageDialog.info(null, "angal.inventory.validate.error.msg");
 						return;
@@ -1062,8 +1067,6 @@ public class InventoryEdit extends ModalJFrame {
 			});
 			sorter = new TableRowSorter<>(model);
 			jTableInventoryRow.setRowSorter(sorter);
-			sorter.modelStructureChanged();
-			sorter.allRowsChanged();
 			DefaultCellEditor cellEditor = new DefaultCellEditor(jTextFieldEditor);
 			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
 		}
@@ -1253,7 +1256,7 @@ public class InventoryEdit extends ModalJFrame {
 		}
 	}
 
-	private void ajustWith() {
+	private void adjustWidth() {
 		for (int i = 0; i < jTableInventoryRow.getColumnModel().getColumnCount(); i++) {
 			jTableInventoryRow.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
 			if (i == 0 || !pColumnVisible[i]) {
@@ -1485,7 +1488,7 @@ public class InventoryEdit extends ModalJFrame {
 						}
 						fireInventoryUpdated();
 						code = null;
-						ajustWith();
+						adjustWidth();
 					}
 				} else {
 					MessageDialog.info(null, "angal.inventory.youhavealreadyaddedallproduct.msg");
