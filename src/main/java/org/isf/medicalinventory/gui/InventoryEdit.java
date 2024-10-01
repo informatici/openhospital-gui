@@ -932,7 +932,7 @@ public class InventoryEdit extends ModalJFrame {
 				model.setRowCount(0);
 				model.setColumnCount(0);
 				jTableInventoryRow.updateUI();
-				ajustWith();
+				adjustWidth();
 			}
 		});
 		return resetButton;
