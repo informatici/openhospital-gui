@@ -236,6 +236,10 @@ public class InventoryEdit extends ModalJFrame {
 	private boolean isAutomaticLotIn() {
 		return GeneralData.AUTOMATICLOT_IN;
 	}
+	
+	private boolean isLotWithCost() {
+		return GeneralData.LOTWITHCOST;
+	}
 
 	public InventoryEdit(MedicalInventory inventory, String mod) {
 		this.inventory = inventory;
@@ -814,16 +818,9 @@ public class InventoryEdit extends ModalJFrame {
 			}
 			MedicalInventoryRow selectedInventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
 			Lot lotToUpdate = selectedInventoryRow.getLot() != null ? selectedInventoryRow.getLot() : null;
-			int medicalCode = selectedInventoryRow.getMedical().getCode();
 			Lot lot = new Lot();
 			try {
 				lot = this.getLot(lotToUpdate);
-				String code = lot.getCode();
-				List<Integer> medicalIds = movStockInsertingManager.getMedicalsFromLot(code).stream().filter(med -> med != medicalCode).collect(Collectors.toList());
-				if (medicalIds.size() > 0) {
-					MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
-					lotButton.doClick();
-				}
 				String lotCode = lotToUpdate != null ? lotToUpdate.getCode() : "";
 				if (lot != null && !lot.getCode().equals(lotCode)) {
 					Lot lotDelete = movStockInsertingManager.getLot(lotCode);
@@ -845,8 +842,15 @@ public class InventoryEdit extends ModalJFrame {
 						selectedInventoryRow.setLot(lot);
 						lotsSaved.add(lot);
 					} else {
-						MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
-						lotButton.doClick();
+						if (lotToUpdate != null && code.equals(lotToUpdate.getCode())) {
+							if (!isLotWithCost()) {
+								selectedInventoryRow.setLot(lot);
+								lotsSaved.add(lot);
+							}
+						} else {
+							MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
+							lotButton.doClick();
+						}
 					}
 				} else {
 					List<MedicalInventoryRow> invRows = inventoryRowSearchList.stream()
@@ -857,8 +861,13 @@ public class InventoryEdit extends ModalJFrame {
 						selectedInventoryRow.setLot(lot);
 						lotsSaved.add(lot);
 					} else {
-						MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
-						lotButton.doClick();
+						if (lotToUpdate != null && code.equals(lotToUpdate.getCode())) {
+							selectedInventoryRow.setLot(lot);
+							lotsSaved.add(lot);
+						} else {
+							MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
+							lotButton.doClick();
+						}
 					}
 				}
 				inventoryRowSearchList.set(selectedRow, selectedInventoryRow);
@@ -1278,7 +1287,7 @@ public class InventoryEdit extends ModalJFrame {
 			lot = new Lot("", preparationDate, expiringDate);
 			// Cost
 			BigDecimal cost = new BigDecimal(0);
-			if (GeneralData.LOTWITHCOST) {
+			if (isLotWithCost()) {
 				cost = askCost(2, cost);
 				if (cost.compareTo(new BigDecimal(0)) == 0) {
 					return null;
@@ -1335,7 +1344,7 @@ public class InventoryEdit extends ModalJFrame {
 					preparationDate = preparationDateChooser.getDateStartOfDay();
 					lot = new Lot(lotName, preparationDate, expiringDate);
 					BigDecimal cost = new BigDecimal(0);
-					if (GeneralData.LOTWITHCOST) {
+					if (isLotWithCost()) {
 						if (lotToUpdate != null) {
 							cost = askCost(2, lotToUpdate.getCost());
 						} else {
