@@ -992,7 +992,7 @@ public class InventoryEdit extends ModalJFrame {
 				// validate inventory
 				int inventoryRowsSize = inventoryRowSearchList.size();
 				try {
-					medicalInventoryManager.validateInventory(inventory, inventoryRowSearchList);					
+					medicalInventoryManager.validateMedicalInventoryRow(inventory, inventoryRowSearchList);					
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 					fireInventoryUpdated();
