@@ -995,7 +995,12 @@ public class InventoryEdit extends ModalJFrame {
 					medicalInventoryManager.validateMedicalInventoryRow(inventory, inventoryRowSearchList);					
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
-					fireInventoryUpdated();
+					try {
+						jTableInventoryRow.setModel(new InventoryRowModel());
+						adjustWidth();
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
 					return;
 				}
 				String status = InventoryStatus.validated.toString();
@@ -1481,6 +1486,7 @@ public class InventoryEdit extends ModalJFrame {
 								try {
 									allRadio.setSelected(true);
 									jTableInventoryRow.setModel(new InventoryRowModel(true));
+									
 								} catch (OHServiceException e) {
 									OHServiceExceptionUtil.showMessages(e);
 								}
