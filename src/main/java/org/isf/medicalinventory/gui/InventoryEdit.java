@@ -971,7 +971,7 @@ public class InventoryEdit extends ModalJFrame {
 				MessageDialog.error(null, "angal.inventory.allinventoryrowshouldhavelotbeforevalidation.msg");
 				return;
 			}
-			int reset = MessageDialog.yesNo(null, "angal.inventory.doyoureallywanttovalidatethisinventory.msg");
+			int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttovalidatethisinventory.msg");
 			if (reset == JOptionPane.YES_OPTION) {
 				String dischargeCode = inventory.getDischargeType();
 				String chargeCode = inventory.getChargeType();
