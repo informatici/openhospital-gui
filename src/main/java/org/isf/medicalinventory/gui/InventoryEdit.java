@@ -1085,7 +1085,7 @@ public class InventoryEdit extends ModalJFrame {
 	
 	private String checkParamsValues(String chargeCode, String dischargeCode, Integer supplierId, String wardCode) {
 	    if (chargeCode == null || chargeCode.isEmpty()) {
-			return "angal.inventory.choosechargetypebeforevalidation.msg";
+		return "angal.inventory.choosechargetypebeforevalidation.msg";
 	    }
 	    if (dischargeCode == null || dischargeCode.isEmpty()) {
 	        return "angal.inventory.choosedischargetypebeforevalidation.msg";
