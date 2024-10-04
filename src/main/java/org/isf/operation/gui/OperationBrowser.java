@@ -263,8 +263,8 @@ public class OperationBrowser extends ModalJFrame implements OperationListener {
 			} else if (c == 3) { // TODO: use bundles
 				if (opeFor != null) {
 					return switch (opeFor) {
-						case ADMISSION -> ADMISSION;
-						case OPD -> OPD;
+						case admission -> ADMISSION;
+						case opd -> OPD;
 						default -> OPD_ADMISSION;
 					};
 				} else {

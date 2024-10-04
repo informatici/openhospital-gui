@@ -176,8 +176,8 @@ public class OperationEdit extends JDialog {
 
 		if (!insert) {
 			int index = switch (operation.getOpeFor()) {
-				case ADMISSION -> 1;
-				case OPD -> 2;
+				case admission -> 1;
+				case opd -> 2;
 				default -> 0;
 			};
 			opeForBox.setSelectedIndex(index);
@@ -250,9 +250,9 @@ public class OperationEdit extends JDialog {
 						}
 					}
 					OperationTarget opeForSelection = switch (opeForBox.getSelectedIndex()) {
-						case 1 -> OperationTarget.ADMISSION;
-						case 2 -> OperationTarget.OPD;
-						default -> OperationTarget.OPD_ADMISSION;
+						case 1 -> OperationTarget.admission;
+						case 2 -> OperationTarget.opd;
+						default -> OperationTarget.opd_admission;
 					};
 					operation.setOpeFor(opeForSelection);
 					operation.setType((OperationType) operationTypeComboBox.getSelectedItem());
