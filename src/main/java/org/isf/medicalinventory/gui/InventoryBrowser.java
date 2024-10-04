@@ -336,14 +336,18 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		jButtonNew.addActionListener(actionEvent -> {
-			String status = InventoryStatus.draft.toString();
-			List<MedicalInventory> medicalInventories = new ArrayList<>();
+			String draft = InventoryStatus.draft.toString();
+			String validated = InventoryStatus.validated.toString();
+			String inventoryType = InventoryType.main.toString();
+			List<MedicalInventory> draftMedicalInventories = new ArrayList<>();
+			List<MedicalInventory> validMedicalInventories = new ArrayList<>();
 			try {
-				medicalInventories = medicalInventoryManager.getMedicalInventoryByStatus(status);
+				draftMedicalInventories = medicalInventoryManager.getMedicalInventoryByStatusAndInventoryType(draft, inventoryType);
+				validMedicalInventories =  medicalInventoryManager.getMedicalInventoryByStatusAndInventoryType(validated, inventoryType);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			if (medicalInventories.size() == 0) {
+			if (draftMedicalInventories.size() == 0 && validMedicalInventories.size() == 0) {
 				InventoryEdit inventoryEdit = new InventoryEdit();
 				InventoryEdit.addInventoryListener(InventoryBrowser.this);
 				inventoryEdit.showAsModal(InventoryBrowser.this);

@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import org.isf.generaldata.GeneralData;
-import org.isf.generaldata.MessageBundle;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.utils.jobjects.MessageDialog;
 
@@ -35,7 +34,7 @@ public class DisplayReport {
 
 	protected void showReport(JasperReportResultDto jasperReportResultDto) throws IOException {
 		if (jasperReportResultDto.getJasperPrint().getPages().isEmpty()) {
-			MessageDialog.info(null, MessageBundle.getMessage("angal.common.documenthasnopages.msg"));
+			MessageDialog.info(null, "angal.common.documenthasnopages.msg");
 			return;
 		}
 		if (GeneralData.INTERNALVIEWER) {
