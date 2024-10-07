@@ -453,11 +453,11 @@ public class InventoryEdit extends ModalJFrame {
 		if (panelFooter == null) {
 			panelFooter = new JPanel();
 			panelFooter.add(getSaveButton());
-			panelFooter.add(getValidateButton());
-			panelFooter.add(getConfirmButton());
 			panelFooter.add(getLotButton());
 			panelFooter.add(getDeleteButton());
 			panelFooter.add(getCleanTableButton());
+			panelFooter.add(getValidateButton());
+			panelFooter.add(getConfirmButton());
 			panelFooter.add(getCloseButton());
 		}
 		return panelFooter;
