@@ -983,7 +983,6 @@ public class InventoryEdit extends ModalJFrame {
 					return ;
 				}
 				// validate inventory
-				int inventoryRowsSize = inventoryRowSearchList.size();
 				try {
 					medicalInventoryManager.validateMedicalInventoryRow(inventory, inventoryRowSearchList);					
 				} catch (OHServiceException e) {
@@ -1001,14 +1000,12 @@ public class InventoryEdit extends ModalJFrame {
 				try {
 					inventory = medicalInventoryManager.updateMedicalInventory(inventory);
 					if (inventory != null) {
-						List<MedicalInventoryRow> invRows = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
+						medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
 						MessageDialog.info(null, "angal.inventory.validate.success.msg");
-						if (invRows.size() > inventoryRowsSize) {
-							MessageDialog.error(null, "angal.inventory.theoreticalqtyhavebeenupdatedforsomemedical.msg");
-						}
 						fireInventoryUpdated();
 						statusLabel.setText(status.toUpperCase());
 						statusLabel.setForeground(Color.BLUE);
+						confirmButton.setEnabled(true);
 					} else {
 						MessageDialog.info(null, "angal.inventory.validate.error.msg");
 						return;
@@ -1068,8 +1065,7 @@ public class InventoryEdit extends ModalJFrame {
 					if (inventory != null) {
 						MessageDialog.info(null, "angal.inventory.confirm.success.msg");
 						fireInventoryUpdated();
-						statusLabel.setText(status.toUpperCase());
-						statusLabel.setForeground(Color.BLUE);
+						closeButton.doClick();
 					} else {
 						MessageDialog.info(null, "angal.inventory.confirm.error.msg");
 						return;
