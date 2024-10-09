@@ -1035,7 +1035,7 @@ public class InventoryEdit extends ModalJFrame {
 				return;
 			}
 			int confirm = MessageDialog.yesNo(null, "angal.inventory.doyoureallywanttoconfirmthisinventory.msg");
-			if (reset == JOptionPane.YES_OPTION) {
+			if (confirm == JOptionPane.YES_OPTION) {
 				String dischargeCode = inventory.getDischargeType();
 				String chargeCode = inventory.getChargeType();
 				Integer supplierId = inventory.getSupplier();
