@@ -71,8 +71,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -211,7 +209,6 @@ public class InventoryEdit extends ModalJFrame {
 	private JLabel destinationLabel;
 	private JTextField referenceTextField;
 	private JTextField jTextFieldEditor;
-	private TableRowSorter<TableModel> sorter;
 	private JComboBox<MovementType> chargeCombo;
 	private JComboBox<MovementType> dischargeCombo;
 	private JComboBox<Supplier> supplierCombo;
@@ -238,7 +235,7 @@ public class InventoryEdit extends ModalJFrame {
 	private boolean isAutomaticLotIn() {
 		return GeneralData.AUTOMATICLOT_IN;
 	}
-	
+
 	private boolean isLotWithCost() {
 		return GeneralData.LOTWITHCOST;
 	}
@@ -791,7 +788,7 @@ public class InventoryEdit extends ModalJFrame {
 						model.fireTableDataChanged();
 						jTableInventoryRow.setModel(model);
 					}
-					
+
 				} else {
 					for (int i = selectedRows.length - 1; i >= 0; i--) {
 						MedicalInventoryRow inventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[i], -1);
@@ -1121,8 +1118,6 @@ public class InventoryEdit extends ModalJFrame {
 					}
 				}
 			});
-			sorter = new TableRowSorter<>(model);
-			jTableInventoryRow.setRowSorter(sorter);
 			DefaultCellEditor cellEditor = new DefaultCellEditor(jTextFieldEditor);
 			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
 		}
@@ -1528,7 +1523,7 @@ public class InventoryEdit extends ModalJFrame {
 								try {
 									allRadio.setSelected(true);
 									jTableInventoryRow.setModel(new InventoryRowModel(true));
-									
+
 								} catch (OHServiceException e) {
 									OHServiceExceptionUtil.showMessages(e);
 								}
