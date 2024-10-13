@@ -86,6 +86,7 @@ import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
+import org.isf.medicalstock.model.Movement;
 import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
@@ -984,7 +985,13 @@ public class InventoryEdit extends ModalJFrame {
 				}
 				// validate inventory
 				try {
-					medicalInventoryManager.validateMedicalInventoryRow(inventory, inventoryRowSearchList);					
+					String status = InventoryStatus.validated.toString();
+					medicalInventoryManager.validateMedicalInventoryRow(inventory, inventoryRowSearchList);
+					MessageDialog.info(null, "angal.inventory.validate.success.msg");
+					fireInventoryUpdated();
+					statusLabel.setText(status.toUpperCase());
+					statusLabel.setForeground(Color.BLUE);
+					confirmButton.setEnabled(true);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 					try {
@@ -993,25 +1000,6 @@ public class InventoryEdit extends ModalJFrame {
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					return;
-				}
-				String status = InventoryStatus.validated.toString();
-				inventory.setStatus(status);
-				try {
-					inventory = medicalInventoryManager.updateMedicalInventory(inventory);
-					if (inventory != null) {
-						medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
-						MessageDialog.info(null, "angal.inventory.validate.success.msg");
-						fireInventoryUpdated();
-						statusLabel.setText(status.toUpperCase());
-						statusLabel.setForeground(Color.BLUE);
-						confirmButton.setEnabled(true);
-					} else {
-						MessageDialog.info(null, "angal.inventory.validate.error.msg");
-						return;
-					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
 					return;
 				}
 			}
@@ -1047,7 +1035,10 @@ public class InventoryEdit extends ModalJFrame {
 				}
 				// confirm inventory
 				try {
-					medicalInventoryManager.confirmMedicalInventoryRow(inventory, inventoryRowSearchList);					
+					medicalInventoryManager.confirmMedicalInventoryRow(inventory, inventoryRowSearchList);
+					MessageDialog.info(null, "angal.inventory.confirm.success.msg");
+					fireInventoryUpdated();
+					closeButton.doClick();
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 					try {
@@ -1056,22 +1047,6 @@ public class InventoryEdit extends ModalJFrame {
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-					return;
-				}
-				String status = InventoryStatus.done.toString();
-				inventory.setStatus(status);
-				try {
-					inventory = medicalInventoryManager.updateMedicalInventory(inventory);
-					if (inventory != null) {
-						MessageDialog.info(null, "angal.inventory.confirm.success.msg");
-						fireInventoryUpdated();
-						closeButton.doClick();
-					} else {
-						MessageDialog.info(null, "angal.inventory.confirm.error.msg");
-						return;
-					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
 					return;
 				}
 			}
