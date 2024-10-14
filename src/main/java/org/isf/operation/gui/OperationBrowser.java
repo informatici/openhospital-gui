@@ -42,6 +42,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.operation.enums.OperationTarget;
 import org.isf.operation.gui.OperationEdit.OperationListener;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
@@ -53,62 +54,38 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
- * This class shows a list of operations. It is possible to filter data with a
- * selection combo box and edit-insert-delete records
- *
+ * This class shows a list of operations. It is possible to filter data with a selection combo box and edit-insert-delete records
  * @author Rick, Vero, Pupo
  */
 public class OperationBrowser extends ModalJFrame implements OperationListener {
 
-	private static final long serialVersionUID = 1L;
-	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
-
-	@Override
-	public void operationInserted(AWTEvent e) {
-		pOperation.add(0, operation);
-		((OperationBrowserModel) table.getModel()).fireTableDataChanged();
-		if (table.getRowCount() > 0) {
-			table.setRowSelectionInterval(0, 0);
-		}
-	}
-
-	@Override
-	public void operationUpdated(AWTEvent e) {
-		pOperation.set(selectedrow, operation);
-		((OperationBrowserModel) table.getModel()).fireTableDataChanged();
-		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1) {
-			table.setRowSelectionInterval(selectedrow, selectedrow);
-		}
-	}
-	
 	//TODO: replace with mapping mnemonic / translation in OperationBrowserManager
 	public static final String OPD = MessageBundle.getMessage("angal.admission.opd.txt").toUpperCase();
 	public static final String ADMISSION = MessageBundle.getMessage("angal.admission.admission.txt").toUpperCase();
 	public static final String OPD_ADMISSION = OPD + " / " + ADMISSION;
-
+	private static final long serialVersionUID = 1L;
+	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 	private static final int pfrmBase = 8;
 	private static final int pfrmWidth = 5;
 	private static final int pfrmHeight = 5;
 	private int selectedrow;
-	private JComboBox<OperationType> diseaseTypeFilter;
+	private final JComboBox<OperationType> diseaseTypeFilter;
 	private List<Operation> pOperation;
-	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.operation.operationcontext.col").toUpperCase()
+	private final String[] pColumns = {
+		MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.operation.operationcontext.col").toUpperCase()
 	};
-	private int[] pColumnWidth = { 50, 180, 200, 100 };
+	private final int[] pColumnWidth = { 50, 180, 200, 100 };
 	private Operation operation;
 	private DefaultTableModel model;
-	private JTable table;
-	private JFrame myFrame;
+	private final JTable table;
+	private final JFrame myFrame;
 	private String pSelection;
-	
-	private OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
-	
+	private final OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private final OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
 	public OperationBrowser() {
 
 		setTitle(MessageBundle.getMessage("angal.operation.operationsbrowser.title"));
@@ -117,7 +94,7 @@ public class OperationBrowser extends ModalJFrame implements OperationListener {
 		int pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
 		int pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
 		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth,
-				screensize.height / pfrmBase * pfrmHeight);
+			screensize.height / pfrmBase * pfrmHeight);
 		myFrame = this;
 		model = new OperationBrowserModel();
 		table = new JTable(model);
@@ -214,6 +191,23 @@ public class OperationBrowser extends ModalJFrame implements OperationListener {
 
 		setVisible(true);
 	}
+	@Override
+	public void operationInserted(AWTEvent e) {
+		pOperation.add(0, operation);
+		((OperationBrowserModel) table.getModel()).fireTableDataChanged();
+		if (table.getRowCount() > 0) {
+			table.setRowSelectionInterval(0, 0);
+		}
+	}
+	@Override
+	public void operationUpdated(AWTEvent e) {
+		pOperation.set(selectedrow, operation);
+		((OperationBrowserModel) table.getModel()).fireTableDataChanged();
+		table.updateUI();
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
+			table.setRowSelectionInterval(selectedrow, selectedrow);
+		}
+	}
 
 	class OperationBrowserModel extends DefaultTableModel {
 
@@ -257,7 +251,7 @@ public class OperationBrowser extends ModalJFrame implements OperationListener {
 		@Override
 		public Object getValueAt(int r, int c) {
 			Operation operation = pOperation.get(r);
-			String p = operation.getOpeFor();
+			OperationTarget opeFor = operation.getOpeFor();
 			if (c == 0) {
 				return operation.getCode();
 			} else if (c == -1) {
@@ -267,14 +261,12 @@ public class OperationBrowser extends ModalJFrame implements OperationListener {
 			} else if (c == 2) {
 				return operation.getDescription();
 			} else if (c == 3) { // TODO: use bundles
-				if (p != null) {
-					if (p.equals("1")) {
-						return OPD_ADMISSION;
-					} else if (p.equals("2")) {
-						return ADMISSION;
-					} else {
-						return OPD;
-					}
+				if (opeFor != null) {
+					return switch (opeFor) {
+						case admission -> ADMISSION;
+						case opd -> OPD;
+						default -> OPD_ADMISSION;
+					};
 				} else {
 					return MessageBundle.getMessage("angal.common.notdefined.txt");
 				}

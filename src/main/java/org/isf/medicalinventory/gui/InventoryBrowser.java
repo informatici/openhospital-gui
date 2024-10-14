@@ -379,6 +379,11 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				MessageDialog.error(null, "angal.inventory.cancelednoteditable.msg");
 				return;
 			}
+			
+			if (inventory.getStatus().equals(InventoryStatus.done.toString())) {
+				MessageDialog.error(null, "angal.inventory.donenoteditable.msg");
+				return;
+			}
 			InventoryEdit inventoryEdit = new InventoryEdit(inventory,"update");
 			InventoryEdit.addInventoryListener(InventoryBrowser.this);
 			inventoryEdit.showAsModal(InventoryBrowser.this);

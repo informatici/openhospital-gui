@@ -168,6 +168,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JButton resetButton;
 	private JButton lotButton;
 	private JButton validateButton;
+	private JButton confirmButton;
 	private JScrollPane scrollPaneInventory;
 	private JTable jTableInventoryRow;
 	private DefaultTableModel model;
@@ -280,6 +281,7 @@ public class InventoryEdit extends ModalJFrame {
 		if (mode.equals("view")) {
 			saveButton.setVisible(false);
 			validateButton.setVisible(false);
+			confirmButton.setVisible(false);
 			deleteButton.setVisible(false);
 			columnEditable = columnEditableView;
 			codeTextField.setEditable(false);
@@ -296,6 +298,7 @@ public class InventoryEdit extends ModalJFrame {
 		} else {
 			saveButton.setVisible(true);
 			validateButton.setVisible(true);
+			confirmButton.setVisible(true);
 			deleteButton.setVisible(true);
 			codeTextField.setEditable(true);
 			resetButton.setVisible(true);
@@ -447,10 +450,11 @@ public class InventoryEdit extends ModalJFrame {
 		if (panelFooter == null) {
 			panelFooter = new JPanel();
 			panelFooter.add(getSaveButton());
-			panelFooter.add(getValidateButton());
-			panelFooter.add(getDeleteButton());
 			panelFooter.add(getLotButton());
+			panelFooter.add(getDeleteButton());
 			panelFooter.add(getCleanTableButton());
+			panelFooter.add(getValidateButton());
+			panelFooter.add(getConfirmButton());
 			panelFooter.add(getCloseButton());
 		}
 		return panelFooter;
@@ -970,26 +974,20 @@ public class InventoryEdit extends ModalJFrame {
 				String chargeCode = inventory.getChargeType();
 				Integer supplierId = inventory.getSupplier();
 				String wardCode = inventory.getDestination();
-				if (chargeCode == null || chargeCode.equals("")) {
-					MessageDialog.error(null, "angal.inventory.choosechargetypebeforevalidation.msg");
-					return;
-				}
-				if (dischargeCode == null || dischargeCode.equals("")) {
-					MessageDialog.error(null, "angal.inventory.choosedischargetypebeforevalidation.msg");
-					return;
-				}
-				if (supplierId == null || supplierId == 0) {
-					MessageDialog.error(null, "angal.inventory.choosesupplierbeforevalidation.msg");
-					return;
-				}
-				if (wardCode == null || wardCode.equals("")) {
-					MessageDialog.error(null, "angal.inventory.choosesupplierbeforevalidation.msg");
-					return;
+				String errorMessage = this.checkParamsValues(chargeCode, dischargeCode, supplierId, wardCode);
+				if (errorMessage != null) {
+					MessageDialog.error(null, errorMessage);
+					return ;
 				}
 				// validate inventory
-				int inventoryRowsSize = inventoryRowSearchList.size();
 				try {
+					String status = InventoryStatus.validated.toString();
 					medicalInventoryManager.validateMedicalInventoryRow(inventory, inventoryRowSearchList);
+					MessageDialog.info(null, "angal.inventory.validate.success.msg");
+					fireInventoryUpdated();
+					statusLabel.setText(status.toUpperCase());
+					statusLabel.setForeground(Color.BLUE);
+					confirmButton.setEnabled(true);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 					try {
@@ -1000,31 +998,74 @@ public class InventoryEdit extends ModalJFrame {
 					}
 					return;
 				}
-				String status = InventoryStatus.validated.toString();
-				inventory.setStatus(status);
-				try {
-					inventory = medicalInventoryManager.updateMedicalInventory(inventory);
-					if (inventory != null) {
-						List<MedicalInventoryRow> invRows = medicalInventoryRowManager.getMedicalInventoryRowByInventoryId(inventory.getId());
-						MessageDialog.info(null, "angal.inventory.validate.success.msg");
-						if (invRows.size() > inventoryRowsSize) {
-							MessageDialog.error(null, "angal.inventory.theoreticalqtyhavebeenupdatedforsomemedical.msg");
-						}
-						fireInventoryUpdated();
-						statusLabel.setText(status.toUpperCase());
-						statusLabel.setForeground(Color.BLUE);
-					} else {
-						MessageDialog.info(null, "angal.inventory.validate.error.msg");
-						return;
-					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-					return;
-				}
 			}
 		});
 		return validateButton;
 	}
+	private JButton getConfirmButton() {
+		confirmButton = new JButton(MessageBundle.getMessage("angal.inventory.confirm.btn"));
+		confirmButton.setMnemonic(MessageBundle.getMnemonic("angal.inventory.confirm.btn.key"));
+		if (inventory == null) {
+			confirmButton.setEnabled(false);
+		}
+		confirmButton.addActionListener(actionEvent -> {
+			if (inventory == null) {
+				MessageDialog.error(null, "angal.inventory.inventorymustsavebeforevalidation.msg");
+				return;
+			}
+			List<MedicalInventoryRow> invRowWithoutLot = inventoryRowSearchList.stream().filter(invRow -> invRow.getLot() == null).collect(Collectors.toList());
+			if (invRowWithoutLot.size() > 0) {
+				MessageDialog.error(null, "angal.inventory.allinventoryrowshouldhavelotbeforevalidation.msg");
+				return;
+			}
+			int confirm = MessageDialog.yesNo(null, "angal.inventory.doyoureallywanttoconfirmthisinventory.msg");
+			if (confirm == JOptionPane.YES_OPTION) {
+				String dischargeCode = inventory.getDischargeType();
+				String chargeCode = inventory.getChargeType();
+				Integer supplierId = inventory.getSupplier();
+				String wardCode = inventory.getDestination();
+				String errorMessage = this.checkParamsValues(chargeCode, dischargeCode, supplierId, wardCode);
+				if (errorMessage != null) {
+					MessageDialog.error(null, errorMessage);
+					return ;
+				}
+				// confirm inventory
+				try {
+					medicalInventoryManager.confirmMedicalInventoryRow(inventory, inventoryRowSearchList);
+					MessageDialog.info(null, "angal.inventory.confirm.success.msg");
+					fireInventoryUpdated();
+					closeButton.doClick();
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+					try {
+						jTableInventoryRow.setModel(new InventoryRowModel());
+						adjustWidth();
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1);
+					}
+					return;
+				}
+			}
+		});
+		return confirmButton;
+	}
+	
+	private String checkParamsValues(String chargeCode, String dischargeCode, Integer supplierId, String wardCode) {
+	    if (chargeCode == null || chargeCode.isEmpty()) {
+		return "angal.inventory.choosechargetypebeforevalidation.msg";
+	    }
+	    if (dischargeCode == null || dischargeCode.isEmpty()) {
+	        return "angal.inventory.choosedischargetypebeforevalidation.msg";
+	    }
+	    if (supplierId == null || supplierId == 0) {
+	        return "angal.inventory.inventory.choosesupplierbeforevalidation.msg";
+	    }
+	    if (wardCode == null || wardCode.isEmpty()) {
+	        return "angal.inventory.choosedestinationbeforevalidation.msg";
+	    }
+	    return null;
+	}
+	
 	private JScrollPane getScrollPaneInventory() {
 		if (scrollPaneInventory == null) {
 			scrollPaneInventory = new JScrollPane();

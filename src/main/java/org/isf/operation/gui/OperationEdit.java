@@ -42,6 +42,7 @@ import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.operation.enums.OperationTarget;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.opetype.manager.OperationTypeBrowserManager;
@@ -58,22 +59,38 @@ import org.isf.utils.layout.SpringUtilities;
 public class OperationEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private EventListenerList operationListeners = new EventListenerList();
-
-	public interface OperationListener extends EventListener {
-		void operationUpdated(AWTEvent e);
-
-		void operationInserted(AWTEvent e);
+	private final EventListenerList operationListeners = new EventListenerList();
+	private final OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private final OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+	private final Operation operation;
+	private final boolean insert;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField codeTextField;
+	private JComboBox<OperationType> operationTypeComboBox;
+	private String lastdescription;
+	private JRadioButton major;
+	private JPanel radioButtonPanel;
+	private JComboBox<String> opeForBox;
+	/**
+	 * This is the default constructor; we pass the arraylist and the selectedrow because we need to update them
+	 */
+	public OperationEdit(JFrame parent, Operation old, boolean inserting) {
+		super(parent, true);
+		insert = inserting;
+		operation = old; // operation will be used for every operation
+		initialize();
 	}
-
 	public void addOperationListener(OperationListener l) {
 		operationListeners.add(OperationListener.class, l);
 	}
-
 	public void removeOperationListener(OperationListener listener) {
 		operationListeners.remove(OperationListener.class, listener);
 	}
-
 	private void fireOperationInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
@@ -85,7 +102,6 @@ public class OperationEdit extends JDialog {
 			((OperationListener) listener).operationInserted(event);
 		}
 	}
-
 	private void fireOperationUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
@@ -97,36 +113,6 @@ public class OperationEdit extends JDialog {
 			((OperationListener) listener).operationUpdated(event);
 		}
 	}
-
-	private OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
-
-	private JPanel jContentPane;
-	private JPanel dataPanel;
-	private JPanel buttonPanel;
-	private JButton cancelButton;
-	private JButton okButton;
-	private JTextField descriptionTextField;
-	private JTextField codeTextField;
-	private JComboBox<OperationType> operationTypeComboBox;
-	private String lastdescription;
-	private Operation operation;
-	private JRadioButton major;
-	private JPanel radioButtonPanel;
-	private boolean insert;
-	private JComboBox<String> operBox;
-
-	/**
-	 * This is the default constructor; we pass the arraylist and the selectedrow
-	 * because we need to update them
-	 */
-	public OperationEdit(JFrame parent, Operation old, boolean inserting) {
-		super(parent, true);
-		insert = inserting;
-		operation = old; // operation will be used for every operation
-		initialize();
-	}
-
 	/**
 	 * This method initializes this
 	 */
@@ -141,10 +127,8 @@ public class OperationEdit extends JDialog {
 		pack();
 		setLocationRelativeTo(null);
 	}
-
 	/**
 	 * This method initializes jContentPane
-	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -156,10 +140,8 @@ public class OperationEdit extends JDialog {
 		}
 		return jContentPane;
 	}
-
 	/**
 	 * This method initializes dataPanel
-	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getDataPanel() {
@@ -179,35 +161,33 @@ public class OperationEdit extends JDialog {
 			dataPanel.add(new JLabel(""));
 			dataPanel.add(getRadioButtonPanel());
 			dataPanel.add(operForLabel);
-			dataPanel.add(getOperFor());
+			dataPanel.add(getOpeFor());
 			SpringUtilities.makeCompactGrid(dataPanel, 5, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
 	}
+	private JComboBox<String> getOpeFor() {
 
-	private JComboBox<String> getOperFor() {
-		
-		operBox = new JComboBox<>();
+		opeForBox = new JComboBox<>();
 		//TODO: replace integer values with mnemonic ones
-		operBox.addItem(OperationBrowser.OPD_ADMISSION); 	// = "1"
-		operBox.addItem(OperationBrowser.ADMISSION);		// = "2"
-		operBox.addItem(OperationBrowser.OPD);				// = "3"
-		
+		opeForBox.addItem(OperationBrowser.OPD_ADMISSION);
+		opeForBox.addItem(OperationBrowser.ADMISSION);
+		opeForBox.addItem(OperationBrowser.OPD);
+
 		if (!insert) {
-			int index = operation.getOpeFor().equals("1") ? 0
-							: operation.getOpeFor().equals("2") ? 1
-											: operation.getOpeFor().equals("3") ? 2 
-															: 0; // default
-			operBox.setSelectedIndex(index);
+			int index = switch (operation.getOpeFor()) {
+				case admission -> 1;
+				case opd -> 2;
+				default -> 0;
+			};
+			opeForBox.setSelectedIndex(index);
 		}
 
-		return operBox;
+		return opeForBox;
 
 	}
-
 	/**
 	 * This method initializes buttonPanel
-	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getButtonPanel() {
@@ -218,10 +198,8 @@ public class OperationEdit extends JDialog {
 		}
 		return buttonPanel;
 	}
-
 	/**
 	 * This method initializes cancelButton
-	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getCancelButton() {
@@ -232,10 +210,8 @@ public class OperationEdit extends JDialog {
 		}
 		return cancelButton;
 	}
-
 	/**
 	 * This method initializes okButton
-	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
@@ -268,12 +244,16 @@ public class OperationEdit extends JDialog {
 					} else {
 
 						if (operationBrowserManager.descriptionControl(descriptionTextField.getText(),
-								((OperationType) operationTypeComboBox.getSelectedItem()).getCode())) {
+							((OperationType) operationTypeComboBox.getSelectedItem()).getCode())) {
 							MessageDialog.error(null, "angal.operation.operationalreadypresent");
 							return;
 						}
 					}
-					String opeForSelection = String.valueOf(operBox.getSelectedIndex()+1);
+					OperationTarget opeForSelection = switch (opeForBox.getSelectedIndex()) {
+						case 1 -> OperationTarget.admission;
+						case 2 -> OperationTarget.opd;
+						default -> OperationTarget.opd_admission;
+					};
 					operation.setOpeFor(opeForSelection);
 					operation.setType((OperationType) operationTypeComboBox.getSelectedItem());
 					operation.setDescription(descriptionTextField.getText());
@@ -300,8 +280,7 @@ public class OperationEdit extends JDialog {
 					}
 					if (!result) {
 						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-					}
-					else {
+					} else {
 						dispose();
 					}
 				} catch (OHServiceException ex) {
@@ -311,10 +290,8 @@ public class OperationEdit extends JDialog {
 		}
 		return okButton;
 	}
-
 	/**
 	 * This method initializes descriptionTextField
-	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getDescriptionTextField() {
@@ -327,10 +304,8 @@ public class OperationEdit extends JDialog {
 		}
 		return descriptionTextField;
 	}
-
 	/**
 	 * This method initializes radioButtonPanel
-	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getRadioButtonPanel() {
@@ -364,17 +339,14 @@ public class OperationEdit extends JDialog {
 		}
 		return radioButtonPanel;
 	}
-
 	private JRadioButton getRadioButton(String label, boolean active) {
 		JRadioButton rb = new JRadioButton(label);
 		rb.setSelected(active);
 		rb.setName(label);
 		return rb;
 	}
-
 	/**
 	 * This method initializes codeTextField
-	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getCodeTextField() {
@@ -387,10 +359,8 @@ public class OperationEdit extends JDialog {
 		}
 		return codeTextField;
 	}
-
 	/**
 	 * This method initializes operationTypeComboBox
-	 * 
 	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox<OperationType> getOperationTypeComboBox() {
@@ -413,7 +383,8 @@ public class OperationEdit extends JDialog {
 								selectedOperationType = elem;
 							}
 						}
-					} if (selectedOperationType != null) {
+					}
+					if (selectedOperationType != null) {
 						operationTypeComboBox.setSelectedItem(selectedOperationType);
 					}
 				}
@@ -423,6 +394,13 @@ public class OperationEdit extends JDialog {
 			}
 		}
 		return operationTypeComboBox;
+	}
+
+	public interface OperationListener extends EventListener {
+
+		void operationUpdated(AWTEvent e);
+
+		void operationInserted(AWTEvent e);
 	}
 
 }
