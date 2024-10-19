@@ -821,14 +821,27 @@ public class InventoryEdit extends ModalJFrame {
 			Lot lotToUpdate = selectedInventoryRow.getLot() != null ? selectedInventoryRow.getLot() : null;
 			Lot lot = new Lot();
 			try {
-				lot = this.getLot(lotToUpdate);
-				String lotCode = lotToUpdate != null ? lotToUpdate.getCode() : "";
-				if (lot != null && !lot.getCode().equals(lotCode)) {
-					Lot lotDelete = movStockInsertingManager.getLot(lotCode);
-					if (lotDelete != null) {
-						lotsDeleted.put(selectedInventoryRow.getId(), lotDelete);
+				if (lotToUpdate != null && !selectedInventoryRow.isNewLot()) {
+					BigDecimal cost = new BigDecimal(0);
+					if (isLotWithCost()) {
+						cost = askCost(2, cost);
+						if (cost.compareTo(new BigDecimal(0)) == 0) {
+							return;
+						}
+					}
+					lotToUpdate.setCost(cost);
+					lot = lotToUpdate;
+				} else {
+					lot = this.getLot(lotToUpdate);
+					String lotCode = lotToUpdate != null ? lotToUpdate.getCode() : "";
+					if (lot != null && !lot.getCode().equals(lotCode)) {
+						Lot lotDelete = movStockInsertingManager.getLot(lotCode);
+						if (lotDelete != null) {
+							lotsDeleted.put(selectedInventoryRow.getId(), lotDelete);
+						}
 					}
 				}
+				
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 				return;
@@ -844,10 +857,8 @@ public class InventoryEdit extends ModalJFrame {
 						lotsSaved.add(lot);
 					} else {
 						if (lotToUpdate != null && code.equals(lotToUpdate.getCode())) {
-							if (!isLotWithCost()) {
-								selectedInventoryRow.setLot(lot);
-								lotsSaved.add(lot);
-							}
+							selectedInventoryRow.setLot(lot);
+							lotsSaved.add(lot);
 						} else {
 							MessageDialog.error(this, "angal.inventoryrow.thislotcodealreadyexists.msg");
 							lotButton.doClick();
@@ -1102,14 +1113,23 @@ public class InventoryEdit extends ModalJFrame {
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
 					if (e.getValueIsAdjusting()) {
-						jTableInventoryRow.editCellAt(jTableInventoryRow.getSelectedRow(), jTableInventoryRow.getSelectedColumn());
-						int[] selectedRows = jTableInventoryRow.getSelectedRows();
-						if (selectedRows.length == 1) {
-							MedicalInventoryRow medInvRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRows[0], -1);
-							if (medInvRow.getLot() == null || medInvRow.isNewLot()) {
+						int selectedRow = jTableInventoryRow.getSelectedRow();
+						if (selectedRow != -1) {
+							MedicalInventoryRow medInvRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
+							Lot lot = medInvRow.getLot() != null ? medInvRow.getLot() : null;
+							if (lot == null || medInvRow.isNewLot()) {
 								lotButton.setEnabled(true);
 							} else {
-								lotButton.setEnabled(false);
+								BigDecimal cost = lot.getCost() != null ? lot.getCost() : new BigDecimal(0.00);
+								if (lot != null) {
+									if (cost.doubleValue() <= 0.00) {
+										lotButton.setEnabled(true);
+									} else {
+										lotButton.setEnabled(false); 
+									}
+								} else {
+									lotButton.setEnabled(false);
+								}
 							}
 						} else {
 							lotButton.setEnabled(false);
