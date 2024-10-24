@@ -1122,7 +1122,7 @@ public class InventoryEdit extends ModalJFrame {
 							} else {
 								BigDecimal cost = lot.getCost() != null ? lot.getCost() : new BigDecimal(0.00);
 								if (lot != null) {
-									if (cost.doubleValue() <= 0.00) {
+									if (cost.doubleValue() == 0.00) {
 										lotButton.setEnabled(true);
 									} else {
 										lotButton.setEnabled(false); 
