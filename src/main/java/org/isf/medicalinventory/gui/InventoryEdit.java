@@ -818,7 +818,7 @@ public class InventoryEdit extends ModalJFrame {
 				return;
 			}
 			MedicalInventoryRow selectedInventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
-			Lot lotToUpdate = selectedInventoryRow.getLot() != null ? selectedInventoryRow.getLot() : null;
+			Lot lotToUpdate = selectedInventoryRow.getLot();
 			Lot lot = new Lot();
 			try {
 				if (lotToUpdate != null && !selectedInventoryRow.isNewLot()) {
