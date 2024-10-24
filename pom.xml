@@ -19,7 +19,7 @@
 		<oh.version>1.14.2-SNAPSHOT</oh.version>
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<license.maven.plugin.version>4.5</license.maven.plugin.version>
+		<license.maven.plugin.version>4.6</license.maven.plugin.version>
 	</properties>
 
 	<build>
@@ -34,7 +34,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.0</version>
+				<version>3.5.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -336,7 +336,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.11.1</version>
+			<version>5.11.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -348,7 +348,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
-			<version>5.14.1</version>
+			<version>5.14.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
