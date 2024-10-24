@@ -1117,7 +1117,7 @@ public class InventoryEdit extends ModalJFrame {
 						if (selectedRow != -1) {
 							MedicalInventoryRow medInvRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
 							Lot lot = medInvRow.getLot();
-							if (lot == null || medInvRow.isNewLot()) {
+							if (lot == null) {
 								lotButton.setEnabled(true);
 							} else {
 								BigDecimal cost = lot.getCost() != null ? lot.getCost() : new BigDecimal(0.00);
