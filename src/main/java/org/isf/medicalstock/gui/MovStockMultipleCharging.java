@@ -448,6 +448,8 @@ public class MovStockMultipleCharging extends JDialog {
 								if (lot == null) {
 									return;
 								}
+								BigDecimal cost = askCost(qty);
+								lot.setCost(cost);
 							}
 							// Lot Cost
 							BigDecimal cost = lot.getCost();
@@ -588,15 +590,22 @@ public class MovStockMultipleCharging extends JDialog {
 
 			if (ok == JOptionPane.OK_OPTION) {
 				String lotName = lotNameTextField.getText();
-
-				if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
-					MessageDialog.error(this, "angal.medicalstock.multiplecharging.expirydatebeforepreparationdate");
-				} else if (expireDateChooser.getDate().isBefore(jDateChooser.getLocalDateTime().toLocalDate())) {
-					MessageDialog.error(this, "angal.medicalstock.multiplecharging.expiringdateinthepastnotallowed");
-				} else {
-					expiringDate = expireDateChooser.getDateEndOfDay();
-					preparationDate = preparationDateChooser.getDateStartOfDay();
-					lot = new Lot(lotName, preparationDate, expiringDate);
+				try {
+					if (movStockInsertingManager.lotExists(lotName)) {
+						MessageDialog.error(this, "angal.medicalstock.multiplecharging.theinsertedlotcodealreaedyexists.msg");
+						continue;
+					}
+					if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
+						MessageDialog.error(this, "angal.medicalstock.multiplecharging.expirydatebeforepreparationdate");
+					} else if (expireDateChooser.getDate().isBefore(jDateChooser.getLocalDateTime().toLocalDate())) {
+						MessageDialog.error(this, "angal.medicalstock.multiplecharging.expiringdateinthepastnotallowed");
+					} else {
+						expiringDate = expireDateChooser.getDateEndOfDay();
+						preparationDate = preparationDateChooser.getDateStartOfDay();
+						lot = new Lot(lotName, preparationDate, expiringDate);
+					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			} else {
 				return null;
