@@ -43,6 +43,7 @@ jobs:
       - name: Install core
         run: |
           pushd openhospital-core
+          pwd
           mvn install -DskipTests=true
           popd
 
