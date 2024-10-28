@@ -30,10 +30,9 @@ jobs:
 
       - name: Checkout core
         run: |
-          git clone --depth=50 https://github.com/${{ env.FORK_REPO }}.git openhospital-core
+          git clone --depth=1 --no-single-branch https://github.com/${{ env.FORK_REPO }}.git openhospital-core
           pushd openhospital-core
-          git fetch origin ${{ env.BRANCH_NAME }} || git fetch origin develop
-          git checkout ${{ env.BRANCH_NAME }} || git checkout develop
+          git checkout -B ${{ env.BRANCH_NAME }} origin/${{ env.BRANCH_NAME }} || git checkout develop
           popd
         
       - name: Install core
