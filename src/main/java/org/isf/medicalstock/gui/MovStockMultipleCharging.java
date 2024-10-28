@@ -640,66 +640,70 @@ public class MovStockMultipleCharging extends JDialog {
 	protected Lot chooseLot(Medical med) {
 		List<Lot> lots;
 		try {
-			lots = movStockInsertingManager.getLotByMedical(med, false);
+			lots = movStockInsertingManager.getLotByMedical(med, false); // get also empty lots
 		} catch (OHServiceException e) {
 			lots = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		Lot lot = null;
-		if (!lots.isEmpty()) {
-			StockLotModel lotModel = new StockLotModel(lots);
-			JTable lotTable = new JTable(lotModel);
-			for (int i = 0; i < lotSelectionColumnNames.length; i++) {
-				if (!lotSelectionColumnVisible[i]) {
-					lotTable.getColumnModel().getColumn(i).setMinWidth(0);
-					lotTable.getColumnModel().getColumn(i).setMaxWidth(0);
-					lotTable.getColumnModel().getColumn(i).setWidth(0);
-				}
-			}
-			lotTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-			// Checkbox to filter out empty lots
-			JCheckBox filterZeroQuantityCheckBox = new JCheckBox(MessageBundle.getMessage("angal.medicalstock.multiplecharging.hideemptylots"));
-			filterZeroQuantityCheckBox.setSelected(true);
-
-			// Update the table to filter out zero-quantity lots when checkbox is toggled
-			filterZeroQuantityCheckBox.addActionListener(e -> {
-				lotModel.setFilterZeroQuantity(filterZeroQuantityCheckBox.isSelected());
-			});
-
-			JPanel panel = new JPanel(new BorderLayout());
-			panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.useanexistinglot")), BorderLayout.NORTH); //$NON-NLS-1$
-			panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
-			panel.add(filterZeroQuantityCheckBox, BorderLayout.SOUTH);
-			Object[] options = {
-					MessageBundle.getMessage("angal.medicalstock.multiplecharging.selectedlot"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.medicalstock.multiplecharging.newlot") }; //$NON-NLS-1$
-
-			int row;
-			do {
-				int ok = JOptionPane.showOptionDialog(this,
-					panel,
-					MessageBundle.getMessage("angal.medicalstock.multiplecharging.existinglot"), //$NON-NLS-1$
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE,
-					null,
-					options,
-					options[0]);
-
-				if (ok == JOptionPane.YES_OPTION) {
-					row = lotTable.getSelectedRow();
-					if (row != -1) {
-						lot = lots.get(row);
-					} else {
-						MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
-					}
-				} else {
-					row = 0;
-				}
-
-			} while (row == -1);
+		if (lots.isEmpty()) {
+			return null;
 		}
-		return lot;
+
+		StockLotModel lotModel = new StockLotModel(lots);
+		JTable lotTable = createLotTable(lotModel);
+		JCheckBox filterZeroQuantityCheckBox = createFilterCheckbox(lotModel);
+
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.useanexistinglot")), BorderLayout.NORTH);
+		panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
+		panel.add(filterZeroQuantityCheckBox, BorderLayout.SOUTH);
+
+		Lot selectedLot = null;
+		Object[] options = {
+				MessageBundle.getMessage("angal.medicalstock.multiplecharging.selectedlot"),
+				MessageBundle.getMessage("angal.medicalstock.multiplecharging.newlot")
+		};
+
+		int row;
+		do {
+			int ok = JOptionPane.showOptionDialog(this, panel,
+				MessageBundle.getMessage("angal.medicalstock.multiplecharging.existinglot"),
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+			if (ok == JOptionPane.YES_OPTION) {
+				row = lotTable.getSelectedRow();
+				if (row != -1) {
+					selectedLot = lots.get(row);
+				} else {
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
+				}
+			} else {
+				row = 0;
+			}
+		} while (row == -1);
+
+		return selectedLot;
+	}
+
+	private JTable createLotTable(StockLotModel lotModel) {
+		JTable lotTable = new JTable(lotModel);
+		lotTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		for (int i = 0; i < lotSelectionColumnNames.length; i++) {
+			if (!lotSelectionColumnVisible[i]) {
+				TableColumn column = lotTable.getColumnModel().getColumn(i);
+				column.setMinWidth(0);
+				column.setMaxWidth(0);
+				column.setWidth(0);
+			}
+		}
+		return lotTable;
+	}
+
+	private JCheckBox createFilterCheckbox(StockLotModel lotModel) {
+		JCheckBox filterZeroQuantityCheckBox = new JCheckBox(MessageBundle.getMessage("angal.medicalstock.multiplecharging.hideemptylots"));
+		filterZeroQuantityCheckBox.setSelected(true);
+		filterZeroQuantityCheckBox.addActionListener(e -> lotModel.setFilterZeroQuantity(filterZeroQuantityCheckBox.isSelected()));
+		return filterZeroQuantityCheckBox;
 	}
 
 	protected LocalDateTime askExpiringDate() {
