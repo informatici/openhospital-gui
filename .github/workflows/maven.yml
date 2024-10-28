@@ -23,7 +23,7 @@ jobs:
             echo "FORK_REPO=${GITHUB_HEAD_REPOSITORY:-informatici/openhospital-core}" >> $GITHUB_ENV
           elif [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
             echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
-            echo "FORK_REPO=${{ github.repository }}" >> $GITHUB_ENV
+            echo "FORK_REPO=informatici/openhospital-core" >> $GITHUB_ENV
           fi
 
       - name: Set up JDK 17
@@ -43,7 +43,6 @@ jobs:
       - name: Install core
         run: |
           pushd openhospital-core
-          pwd
           mvn install -DskipTests=true
           popd
 
