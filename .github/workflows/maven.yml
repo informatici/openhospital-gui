@@ -20,7 +20,7 @@ jobs:
         run: |
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
             echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
-            echo "FORK_REPO=${{ github.event.pull_request.head.repo.full_name }}" >> $GITHUB_ENV
+            echo "FORK_REPO=${GITHUB_HEAD_REPOSITORY:-informatici/openhospital-core}" >> $GITHUB_ENV
           elif [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
             echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
             echo "FORK_REPO=${{ github.repository }}" >> $GITHUB_ENV
