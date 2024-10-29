@@ -467,7 +467,7 @@ public class MovStockMultipleCharging extends JDialog {
 		newLot.setMedical(med);
 
 		if (!setOrValidateCost(newLot, qty)) {
-			return null; // Exit if cost was invalid
+			return null;
 		}
 		return newLot;
 	}
