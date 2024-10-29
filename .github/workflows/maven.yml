@@ -17,12 +17,12 @@ jobs:
       
       - name: Debug GitHub variables
         run: |
-          echo "GITHUB_EVENT_NAME=${GITHUB_EVENT_NAME}"
-          echo "GITHUB_HEAD_REPOSITORY=${GITHUB_HEAD_REPOSITORY}"
-          echo "GITHUB_HEAD_REF=${GITHUB_HEAD_REF}"
-          echo "GITHUB_REPOSITORY=${GITHUB_REPOSITORY}"
-          echo "GITHUB_REF=${GITHUB_REF}"
-          echo "GITHUB_ACTOR=${GITHUB_ACTOR}"
+          echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+          echo "GITHUB_HEAD_REPOSITORY: ${GITHUB_HEAD_REPOSITORY}"
+          echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
 
       - name: Determine PR source branch and fork repository
         id: vars
@@ -43,6 +43,9 @@ jobs:
             else
               echo "FORK_REPO=informatici/openhospital-core" >> $GITHUB_ENV
           fi
+
+      - name: Log variables
+        run: |
           echo "FORK_REPO: ${{ env.FORK_REPO }}"
           echo "BRANCH_NAME: ${{ env.BRANCH_NAME }}"
 
