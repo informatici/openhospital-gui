@@ -418,6 +418,7 @@ public class MovStockMultipleCharging extends JDialog {
 						LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
 						LocalDateTime expiringDate = askExpiringDate();
 						lot = new Lot("", preparationDate, expiringDate); //$NON-NLS-1$
+						lot.setMedical(med);
 						// Lot Cost
 						BigDecimal cost = new BigDecimal(0);
 						if (GeneralData.LOTWITHCOST) {
