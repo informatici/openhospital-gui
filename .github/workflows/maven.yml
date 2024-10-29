@@ -42,6 +42,7 @@ jobs:
               echo "FORK_REPO=${OWNER}/openhospital-core" >> $GITHUB_ENV
             else
               echo "FORK_REPO=informatici/openhospital-core" >> $GITHUB_ENV
+            fi
           fi
 
       - name: Log variables
