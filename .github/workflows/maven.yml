@@ -14,12 +14,41 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Debug GitHub variables
+        run: |
+          echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+          echo "GITHUB_HEAD_REPOSITORY: ${GITHUB_HEAD_REPOSITORY}"
+          echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
 
       - name: Determine PR source branch and fork repository
         id: vars
         run: |
-          echo "BRANCH_NAME=${GITHUB_HEAD_REF:-develop}" >> $GITHUB_ENV
-          echo "FORK_REPO=${GITHUB_HEAD_REPOSITORY:-informatici/openhospital-core}" >> $GITHUB_ENV
+          # Get branch name from either pull_request or push context
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            # Get branch and fork repo for PR events
+            echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
+            echo "FORK_REPO=${GITHUB_HEAD_REPOSITORY:-informatici/openhospital-core}" >> $GITHUB_ENV
+          elif [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            # Get branch name for push events
+            echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+            # Default FORK_REPO to main repository, with option to fallback if the fork exists
+            OWNER=${GITHUB_ACTOR}
+            if curl -s -o /dev/null -w "%{http_code}" "https://api.github.com/repos/${OWNER}/openhospital-core/branches/${GITHUB_REF##*/}" | grep -q "200"; then
+              echo "FORK_REPO=${OWNER}/openhospital-core" >> $GITHUB_ENV
+            else
+              echo "FORK_REPO=informatici/openhospital-core" >> $GITHUB_ENV
+            fi
+          fi
+
+      - name: Log variables
+        run: |
+          echo "FORK_REPO: ${{ env.FORK_REPO }}"
+          echo "BRANCH_NAME: ${{ env.BRANCH_NAME }}"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
