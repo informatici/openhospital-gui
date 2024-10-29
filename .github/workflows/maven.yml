@@ -17,6 +17,7 @@ jobs:
       
       - name: Debug GitHub variables
         run: |
+          echo "GITHUB_EVENT_NAME=${GITHUB_EVENT_NAME}"
           echo "GITHUB_HEAD_REPOSITORY=${GITHUB_HEAD_REPOSITORY}"
           echo "GITHUB_HEAD_REF=${GITHUB_HEAD_REF}"
           echo "GITHUB_REPOSITORY=${GITHUB_REPOSITORY}"
@@ -35,15 +36,15 @@ jobs:
             # Get branch name for push events
             echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
-            # Check if the repository is a fork and if it has a matching branch
+            # Default FORK_REPO to main repository, with option to fallback if the fork exists
             OWNER=${GITHUB_ACTOR}
-            curl -s "https://api.github.com/repos/${OWNER}/openhospital-core/branches/${GITHUB_REF##*/}" | jq -e '.name' > /dev/null 2>&1
-            if [[ $? -eq 0 ]]; then
+            if curl -s -o /dev/null -w "%{http_code}" "https://api.github.com/repos/${OWNER}/openhospital-core/branches/${GITHUB_REF##*/}" | grep -q "200"; then
               echo "FORK_REPO=${OWNER}/openhospital-core" >> $GITHUB_ENV
             else
               echo "FORK_REPO=informatici/openhospital-core" >> $GITHUB_ENV
-            fi
           fi
+          echo "FORK_REPO: ${{ env.FORK_REPO }}"
+          echo "BRANCH_NAME: ${{ env.BRANCH_NAME }}"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
