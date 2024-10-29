@@ -477,7 +477,7 @@ public class MovStockMultipleCharging extends JDialog {
 		if (GeneralData.LOTWITHCOST && (cost.equals(BigDecimal.ZERO) || lot.getCost() == null)) {
 			cost = askCost(qty);
 			if (cost.compareTo(BigDecimal.ZERO) == 0) {
-				return false; // Invalid cost, exit the method
+				return false;
 			}
 			lot.setCost(cost);
 		}
