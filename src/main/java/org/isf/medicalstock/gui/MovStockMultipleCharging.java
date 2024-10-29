@@ -436,13 +436,16 @@ public class MovStockMultipleCharging extends JDialog {
 								if (lot == null) {
 									return;
 								}
+								// Lot Cost
+								BigDecimal cost = new BigDecimal(0);
 								if (GeneralData.LOTWITHCOST) {
-									BigDecimal cost = askCost(qty);
+									cost = askCost(qty);
 									if (cost.compareTo(new BigDecimal(0)) == 0) {
 										return;
 									}
-									lot.setCost(cost);
 								}
+								isNewLot = true;
+								lot.setCost(cost);
 							}
 							// Lot Cost
 							BigDecimal cost = lot.getCost();
