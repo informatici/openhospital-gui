@@ -422,45 +422,33 @@ public class MovStockMultipleCharging extends JDialog {
 						return;
 					}
 
-					// Lot (PreparationDate && ExpiringDate)
+					// Lot
 					Lot lot;
 					boolean isNewLot = false;
 					boolean updateLot = false;
 					if (isAutomaticLotIn()) {
-						LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
-						LocalDateTime expiringDate = askExpiringDate();
-						lot = new Lot("", preparationDate, expiringDate); //$NON-NLS-1$
-						// Lot Cost
-						BigDecimal cost = new BigDecimal(0);
-						if (GeneralData.LOTWITHCOST) {
-							cost = askCost(qty);
-							if (cost.compareTo(new BigDecimal(0)) == 0) {
-								return;
-							}
-						}
+						lot = createNewLot(med, qty);
 						isNewLot = true;
-						lot.setCost(cost);
 					} else {
 						do {
 							lot = chooseLot(med);
 							if (lot == null) {
-								lot = askLot();
+								lot = askLot(med);
 								if (lot == null) {
 									return;
 								}
-								BigDecimal cost = askCost(qty);
-								lot.setCost(cost);
+								if (!setOrValidateCost(lot, qty)) {
+									return;
+								}
+								isNewLot = true;
 							}
-							// Lot Cost
-							BigDecimal cost = lot.getCost();
-							if ((cost == null || cost.equals(new BigDecimal(0))) && GeneralData.LOTWITHCOST) {
+							// Lot without cost
+							if (needsCostUpdate(lot)) {
 								MessageDialog.warning(null, "angal.medicalstock.multiplecharging.selectedlotwithoutcostpleasespecify", lot.getCode());
-								cost = askCost(qty);
-								if (cost.compareTo(new BigDecimal(0)) == 0) {
+								if (!setOrValidateCost(lot, qty)) {
 									return;
 								}
 								updateLot = true;
-								lot.setCost(cost);
 							}
 						} while (lot == null);
 					}
@@ -482,6 +470,34 @@ public class MovStockMultipleCharging extends JDialog {
 			});
 		}
 		return jTextFieldSearch;
+	}
+
+	private Lot createNewLot(Medical med, int qty) {
+		LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
+		LocalDateTime expiringDate = askExpiringDate();
+		Lot newLot = new Lot("", preparationDate, expiringDate);
+		newLot.setMedical(med);
+
+		if (!setOrValidateCost(newLot, qty)) {
+			return null;
+		}
+		return newLot;
+	}
+
+	private boolean setOrValidateCost(Lot lot, int qty) {
+		BigDecimal cost = lot.getCost() != null ? lot.getCost() : BigDecimal.ZERO;
+		if (GeneralData.LOTWITHCOST && (cost.equals(BigDecimal.ZERO) || lot.getCost() == null)) {
+			cost = askCost(qty);
+			if (cost.compareTo(BigDecimal.ZERO) == 0) {
+				return false;
+			}
+			lot.setCost(cost);
+		}
+		return true;
+	}
+
+	private boolean needsCostUpdate(Lot lot) {
+		return (lot.getCost() == null || lot.getCost().equals(BigDecimal.ZERO)) && GeneralData.LOTWITHCOST;
 	}
 
 	private GoodDateTimeSpinnerChooser getJDateChooser() {
@@ -556,7 +572,7 @@ public class MovStockMultipleCharging extends JDialog {
 		return total;
 	}
 
-	protected Lot askLot() {
+	protected Lot askLot(Medical med) {
 		LocalDateTime preparationDate;
 		LocalDateTime expiringDate;
 		Lot lot = null;
@@ -603,6 +619,7 @@ public class MovStockMultipleCharging extends JDialog {
 						expiringDate = expireDateChooser.getDateEndOfDay();
 						preparationDate = preparationDateChooser.getDateStartOfDay();
 						lot = new Lot(lotName, preparationDate, expiringDate);
+						lot.setMedical(med);
 					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
