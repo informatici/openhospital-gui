@@ -432,9 +432,16 @@ public class MovStockMultipleCharging extends JDialog {
 						do {
 							lot = chooseLot(med);
 							if (lot == null) {
-								lot = askLot();
+								lot = askLot(med);
 								if (lot == null) {
 									return;
+								}
+								if (GeneralData.LOTWITHCOST) {
+									BigDecimal cost = askCost(qty);
+									if (cost.compareTo(new BigDecimal(0)) == 0) {
+										return;
+									}
+									lot.setCost(cost);
 								}
 							}
 							// Lot Cost
@@ -542,7 +549,7 @@ public class MovStockMultipleCharging extends JDialog {
 		return total;
 	}
 
-	protected Lot askLot() {
+	protected Lot askLot(Medical med) {
 		LocalDateTime preparationDate;
 		LocalDateTime expiringDate;
 		Lot lot = null;
@@ -585,6 +592,7 @@ public class MovStockMultipleCharging extends JDialog {
 					expiringDate = expireDateChooser.getDateEndOfDay();
 					preparationDate = preparationDateChooser.getDateStartOfDay();
 					lot = new Lot(lotName, preparationDate, expiringDate);
+					lot.setMedical(med);
 				}
 			} else {
 				return null;
