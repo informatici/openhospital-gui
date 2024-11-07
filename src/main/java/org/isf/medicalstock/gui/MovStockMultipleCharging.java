@@ -140,7 +140,7 @@ public class MovStockMultipleCharging extends JDialog {
 	};
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
 	private int optionSelected = UNITS;
-	private List<Lot> updateLots = new ArrayList<Lot>();
+	private List<Lot> updateLots = new ArrayList<>();
 	private final String[] lotSelectionColumnNames = {
 			MessageBundle.getMessage("angal.medicalstock.lotid").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(),
