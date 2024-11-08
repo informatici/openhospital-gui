@@ -58,9 +58,8 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                                                       final boolean isSelected,
                                                       final boolean cellHasFocus) {
             final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value instanceof Dimension) {
-                final Dimension valueAsDimension = (Dimension) value;
-                setText(String.format("%d x %d", (int) valueAsDimension.getWidth(), (int) valueAsDimension.getHeight()));
+            if (value instanceof Dimension valueAsDimension) {
+				setText(String.format("%d x %d", (int) valueAsDimension.getWidth(), (int) valueAsDimension.getHeight()));
             }
             return component;
         }
@@ -73,9 +72,8 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                                                       final boolean isSelected,
                                                       final boolean cellHasFocus) {
             final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value instanceof Webcam) {
-                final Webcam webcam = (Webcam) value;
-                setText(webcam.getName());
+            if (value instanceof Webcam webcam) {
+				setText(webcam.getName());
             }
             return component;
         }

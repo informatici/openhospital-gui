@@ -30,8 +30,7 @@ public class LoginEventListener implements LoginListener {
 
 	@Override
 	public void loginInserted(AWTEvent e) {
-		if (e.getSource() instanceof User) {
-			User myUser = (User) e.getSource();
+		if (e.getSource() instanceof User myUser) {
 			RestartUserSession.setUser(myUser);
 			RestartUserSession.getTimer().startTimer();
 		}

@@ -1142,14 +1142,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					model = list.getModel();
 					for (int i = 0; i < model.getSize(); i++) {
 						Object iteratedItem = model.getElementAt(i);
-						if (iteratedItem instanceof Therapy) {
-							Therapy aTherapy = (Therapy) iteratedItem;
+						if (iteratedItem instanceof Therapy aTherapy) {
 							if (therapyID != 0 && aTherapy.getTherapyID() == therapyID) {
 								list.setSelectedIndex(i);
 							}
 						}
-						if (iteratedItem instanceof Visit) {
-							Visit aVisit = (Visit) iteratedItem;
+						if (iteratedItem instanceof Visit aVisit) {
 							if (visitID != 0 && aVisit.getVisitID() == visitID) {
 								list.setSelectedIndex(i);
 							}

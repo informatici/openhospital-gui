@@ -63,8 +63,7 @@ public class OhTableOperationModel<T> implements TableModel {
 
 		for (T t : this.dataList) {
 			Object object = t;
-			if (object instanceof OperationRow) {
-				OperationRow price = (OperationRow) object;
+			if (object instanceof OperationRow price) {
 				String strItem = price.getOperation().getCode() + price.getOpResult();
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
@@ -126,8 +125,7 @@ public class OhTableOperationModel<T> implements TableModel {
 		String value = "";
 		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
 			T obj = this.filteredList.get(rowIndex);
-			if (obj instanceof OperationRow) {
-				OperationRow opdObj = (OperationRow) obj;
+			if (obj instanceof OperationRow opdObj) {
 				switch (columnIndex) {
 					case -1:
 						return opdObj;

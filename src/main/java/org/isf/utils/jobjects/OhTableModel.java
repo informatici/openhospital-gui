@@ -67,8 +67,7 @@ public class OhTableModel<T> implements TableModel {
 
 		for (T t : this.dataList) {
 			Object object = t;
-			if (object instanceof Price) {
-				Price price = (Price) object;
+			if (object instanceof Price price) {
 				String strItem = price.getItem() + price.getDesc();
 				if (allowSearchByCode && searchQuery.equalsIgnoreCase(price.getItem())) {
 					T resPbj = (T) object;
@@ -83,8 +82,7 @@ public class OhTableModel<T> implements TableModel {
 				}
 			}
 
-			if (object instanceof MedicalWard) {
-				MedicalWard mdw = (MedicalWard) object;
+			if (object instanceof MedicalWard mdw) {
 				String strItem = mdw.getMedical().getProdCode() + mdw.getMedical().getDescription();
 
 				if (allowSearchByCode && searchQuery.equalsIgnoreCase(mdw.getMedical().getProdCode())) {
@@ -101,8 +99,7 @@ public class OhTableModel<T> implements TableModel {
 				}
 			}
 
-			if (object instanceof PricesOthers) {
-				PricesOthers priceO = (PricesOthers) object;
+			if (object instanceof PricesOthers priceO) {
 				String strItem = priceO.getCode() + priceO.getDescription();
 
 				if (allowSearchByCode && searchQuery.equalsIgnoreCase(priceO.getCode())) {
@@ -119,8 +116,7 @@ public class OhTableModel<T> implements TableModel {
 				}
 			}
 
-			if (object instanceof BillItems) {
-				BillItems priceO = (BillItems) object;
+			if (object instanceof BillItems priceO) {
 				String strItem = priceO.getItemDisplayCode() + priceO.getItemDescription();
 
 				if (allowSearchByCode && searchQuery.equalsIgnoreCase(priceO.getItemDisplayCode())) {
@@ -188,24 +184,21 @@ public class OhTableModel<T> implements TableModel {
 		String value = "";
 		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
 			T obj = this.filteredList.get(rowIndex);
-			if (obj instanceof Price) {
-				Price priceObj = (Price) obj;
+			if (obj instanceof Price priceObj) {
 				if (columnIndex == 0) {
 					value = priceObj.getItem() != null ? priceObj.getItem() : String.valueOf(priceObj.getId());
 				} else {
 					value = priceObj.getDesc();
 				}
 			}
-			if (obj instanceof MedicalWard) {
-				MedicalWard mdwObj = (MedicalWard) obj;
+			if (obj instanceof MedicalWard mdwObj) {
 				if (columnIndex == 0) {
 					value = mdwObj.getMedical().getProdCode() != null ? mdwObj.getMedical().getProdCode() : String.valueOf(mdwObj.getMedical().getCode());
 				} else {
 					value = mdwObj.getMedical().getDescription();
 				}
 			}
-			if (obj instanceof PricesOthers) {
-				PricesOthers mdwObj = (PricesOthers) obj;
+			if (obj instanceof PricesOthers mdwObj) {
 				if (columnIndex == 0) {
 					value = mdwObj.getCode() != null ? mdwObj.getCode() : String.valueOf(mdwObj.getId());
 				} else {
@@ -213,8 +206,7 @@ public class OhTableModel<T> implements TableModel {
 				}
 			}
 
-			if (obj instanceof BillItems) {
-				BillItems mdwObj = (BillItems) obj;
+			if (obj instanceof BillItems mdwObj) {
 				if (columnIndex == 0) {
 					value = mdwObj.getItemDisplayCode() != null ? mdwObj.getItemDisplayCode() : String.valueOf(mdwObj.getId());
 				} else {

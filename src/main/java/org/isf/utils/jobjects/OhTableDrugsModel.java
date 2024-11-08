@@ -97,8 +97,7 @@ public class OhTableDrugsModel<T> implements TableModel {
 		String value = "";
 		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
 			T obj = this.filteredList.get(rowIndex);
-			if (obj instanceof MovementWard) {
-				MovementWard drugObj = (MovementWard) obj;
+			if (obj instanceof MovementWard drugObj) {
 				switch (columnIndex) {
 					case 0:
 						String dt;

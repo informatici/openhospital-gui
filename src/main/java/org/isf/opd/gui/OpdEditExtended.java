@@ -445,8 +445,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			return;
 		}
 		Object selectedObject = diseaseBox1.getSelectedItem();
-		if (selectedObject instanceof Disease) {
-			Disease disease = (Disease) selectedObject;
+		if (selectedObject instanceof Disease disease) {
 			if (lastOPDDisease1 != null && disease.getCode().equals(lastOPDDisease1.getCode())) {
 				rePatientButton.setSelected(true);
 			} else {
