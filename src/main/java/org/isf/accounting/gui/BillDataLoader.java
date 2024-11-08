@@ -47,19 +47,12 @@ public class BillDataLoader {
 	}
 
 	public List<Bill> loadBills(String status, String username) throws OHServiceException {
-		List<Bill> tableArray = new ArrayList<>();
-
-		switch (status) {
-			case "O":
-				tableArray = getPendingBills(status, username);
-				break;
-			case "ALL":
-				tableArray = getAllBills(username);
-				break;
-			case "C":
-				tableArray = getClosedBills(status, username);
-				break;
-		}
+		List<Bill> tableArray = switch (status) {
+			case "O" -> getPendingBills(status, username);
+			case "ALL" -> getAllBills(username);
+			case "C" -> getClosedBills(status, username);
+			default -> new ArrayList<>();
+		};
 
 		tableArray.sort(Collections.reverseOrder());
 		return tableArray;

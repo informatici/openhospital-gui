@@ -1206,15 +1206,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				}
 
 				// sex patient type
-				Character sex = null;
-				switch (patientSexBox.getSelectedIndex()) {
-				case 1:
-					sex = 'M';
-					break;
-				case 2:
-					sex = 'F';
-					break;
-				}
+				Character sex = switch (patientSexBox.getSelectedIndex()) {
+					case 1 -> 'M';
+					case 2 -> 'F';
+					default -> null;
+				};
 
 				if (sex != null && !sex.equals(ap.getPatient().getSex())) {
 					continue;

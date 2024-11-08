@@ -444,14 +444,11 @@ public class PatientInsertExtended extends JDialog {
 					String name = firstName + ' ' + secondName;
 					try {
 						if (patientBrowserManager.isNamePresent(name)) {
-							switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-							case JOptionPane.OK_OPTION:
-								ok = true;
-								break;
-							case JOptionPane.NO_OPTION:
-								ok = false;
-								break;
-							}
+							ok = switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
+								case JOptionPane.OK_OPTION -> true;
+								case JOptionPane.NO_OPTION -> false;
+								default -> ok;
+							};
 						}
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
