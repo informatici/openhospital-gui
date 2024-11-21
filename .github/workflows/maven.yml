@@ -29,20 +29,27 @@ jobs:
         run: |
           # Set default FORK_REPO and BRANCH_NAME values.
           BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
-          FORK_REPO="${GITHUB_HEAD_REPOSITORY:-${GITHUB_ACTOR}/openhospital-core}"
-          CHECK_BRANCH_URL="https://github.com/${GITHUB_ACTOR}/openhospital-core/tree/$BRANCH_NAME"
-          echo "Checking branch existence with: curl -s -o /dev/null -w \"%{http_code}\" $CHECK_BRANCH_URL"
           
-          # Determine FORK_REPO with fallback logic
-          if [[ -n "${GITHUB_HEAD_REPOSITORY}" ]]; then
-            echo "Using ${GITHUB_HEAD_REPOSITORY}."
-            FORK_REPO=${GITHUB_HEAD_REPOSITORY}
-          elif curl -s -o /dev/null -w "%{http_code}" $CHECK_BRANCH_URL | grep -q "200"; then
-            echo "Using ${GITHUB_ACTOR}/openhospital-core"
-            FORK_REPO=${GITHUB_ACTOR}/openhospital-core
-          else
-            echo "Using informatici/openhospital-core."
+          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REPOSITORY" == "informatici/openhospital-api" ]]; then
+            # For pushes to the main repository, default to the main core repo
             FORK_REPO="informatici/openhospital-core"
+          else
+            # For pull requests or other pushes, use the contributor fork if applicable
+            if [[ -n "$GITHUB_HEAD_REPOSITORY" ]]; then
+              FORK_REPO="$GITHUB_HEAD_REPOSITORY"
+            else
+              # Check if the actor's repo exists with the branch
+              FORK_REPO="${GITHUB_ACTOR}/openhospital-core"
+              CHECK_BRANCH_URL="https://github.com/$FORK_REPO/tree/$BRANCH_NAME"
+              echo "Checking branch existence with: curl -s -o /dev/null -w \"%{http_code}\" $CHECK_BRANCH_URL"
+
+              if curl -s -o /dev/null -w "%{http_code}" "$CHECK_BRANCH_URL" | grep -q "200"; then
+                echo "Branch $BRANCH_NAME exists in $FORK_REPO."
+              else
+                # Fallback to the main repository if the branch doesn’t exist in the fork
+                FORK_REPO="informatici/openhospital-core"
+              fi
+            fi
           fi
           
           # Export FORK_REPO and BRANCH_NAME to GITHUB_ENV for the next step
