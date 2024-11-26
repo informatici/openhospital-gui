@@ -217,6 +217,7 @@ public class TelemetryEdit extends ModalJFrame {
 					TelemetryManager telemetryManager, TelemetryUtils telemetryUtils) {
 		return new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				if (!agreementCheckbox.isSelected()) {
