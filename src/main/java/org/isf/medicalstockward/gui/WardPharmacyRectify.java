@@ -376,7 +376,7 @@ public class WardPharmacyRectify extends JDialog {
 			double movQuantity = lotQty - newQty;
 
 			if (movQuantity == 0. || newQty < 0) {
-				JOptionPane.showMessageDialog(this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseinsertavalidvalue"));
+				MessageDialog.error(this, "angal.medicalstockward.rectify.pleaseinsertavalidvalue");
 				return;
 			}
 			if (newQty == 0.) {

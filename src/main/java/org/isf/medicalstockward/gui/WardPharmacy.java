@@ -783,8 +783,7 @@ public class WardPharmacy extends ModalJFrame implements
 						weightFrom = Integer.parseInt(jWeightFromTextField.getText());
 						if (weightTo < 0 || weightTo > 200) {
 							jWeightToTextField.setText(""); //$NON-NLS-1$
-							JOptionPane
-											.showMessageDialog(WardPharmacy.this, MessageBundle.getMessage("angal.medicalstockward.insertavalidweight")); //$NON-NLS-1$
+							MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.insertavalidweight");
 						}
 					} catch (NumberFormatException ex) {
 						jWeightToTextField.setText("0"); //$NON-NLS-1$
@@ -813,7 +812,7 @@ public class WardPharmacy extends ModalJFrame implements
 						weightTo = Integer.parseInt(jWeightToTextField.getText());
 						if (weightFrom < 0) {
 							jWeightFromTextField.setText("");
-							JOptionPane.showMessageDialog(WardPharmacy.this, MessageBundle.getMessage("angal.medicalstockward.insertavalidweight"));
+							MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.insertavalidweight");
 						}
 					} catch (NumberFormatException ex) {
 						jWeightFromTextField.setText("0");

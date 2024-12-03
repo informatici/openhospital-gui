@@ -116,7 +116,7 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jButtonDelete.addActionListener(actionEvent -> {
 				if (jTablePriceLists.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.priceslist.pleaseselectalisttodelete"));
+					MessageDialog.error(null, "angal.priceslist.pleaseselectalisttodelete");
 				} else {
 					if (jTablePriceLists.getRowCount() == 1) {
 						MessageDialog.error(null, "angal.priceslist.sorryatleastonelist");
