@@ -153,19 +153,19 @@ public class PatientHistoryEdit extends JDialog {
 	private JLabel jLabelPhyDiet;
 	private JLabel jLabelPhyAlvo;
 	private JLabel jLabelPhyDiuresis;
-	private JLabel jLabelPhyAlcool;
+	private JLabel jLabelPhyAlcohol;
 	private JLabel jLabelPhySmoke;
 	private JLabel jLabelPhyDrugs;
 	private JCheckBox jCheckBoxPhyDietNormal;
 	private JCheckBox jCheckBoxPhyDietAbnormal;
 	private JCheckBox jCheckBoxPhyAlvoNormal;
 	private JCheckBox jCheckBoxPhyDiuresisNormal;
-	private JCheckBox jCheckBoxPhyAlcoolNo;
+	private JCheckBox jCheckBoxPhyAlcoholNo;
 	private JCheckBox jCheckBoxPhySmokeNo;
 	private JCheckBox jCheckBoxPhyDrugsNo;
 	private JCheckBox jCheckBoxPhyAlvoAbnormal;
 	private JCheckBox jCheckBoxPhyDiuresisAbnormal;
-	private JCheckBox jCheckBoxPhyAlcoolYes;
+	private JCheckBox jCheckBoxPhyAlcoholYes;
 	private JCheckBox jCheckBoxPhySmokeYes;
 	private JCheckBox jCheckBoxPhyDrugsYes;
 	private VoLimitedTextField jTextFieldPhyDietAbnormalText;
@@ -201,7 +201,7 @@ public class PatientHistoryEdit extends JDialog {
 	private JLabel jLabelPhyMenopauseYears;
 
 	// Buttons Groups
-	private final ButtonGroup buttonGroupAlcool = new ButtonGroup();
+	private final ButtonGroup buttonGroupAlcohol = new ButtonGroup();
 	private final ButtonGroup buttonGroupSmoke = new ButtonGroup();
 	private final ButtonGroup buttonGroupDrugs = new ButtonGroup();
 	private final ButtonGroup buttonGroupDiet = new ButtonGroup();
@@ -353,8 +353,8 @@ public class PatientHistoryEdit extends JDialog {
 		jCheckBoxPhyDiuresisNormal.setSelected(path.isPhyDiuresisNormal());
 		jCheckBoxPhyDiuresisAbnormal.setSelected(!path.isPhyDiuresisNormal());
 		jTextFieldPhyDiuresisAbnormalText.setText(path.getPhyDiuresisAbnormal());
-		jCheckBoxPhyAlcoolNo.setSelected(!path.isPhyAlcool());
-		jCheckBoxPhyAlcoolYes.setSelected(path.isPhyAlcool());
+		jCheckBoxPhyAlcoholNo.setSelected(!path.isPhyAlcohol());
+		jCheckBoxPhyAlcoholYes.setSelected(path.isPhyAlcohol());
 		jCheckBoxPhySmokeNo.setSelected(!path.isPhySmoke());
 		jCheckBoxPhySmokeYes.setSelected(path.isPhySmoke());
 		jCheckBoxPhyDrugsNo.setSelected(!path.isPhyDrug());
@@ -426,7 +426,7 @@ public class PatientHistoryEdit extends JDialog {
 		path.setPhyAlvoAbnormal(jTextFieldPhyAlvoAbnormalText.getText());
 		path.setPhyDiuresisNormal(jCheckBoxPhyDiuresisNormal.isSelected());
 		path.setPhyDiuresisAbnormal(jTextFieldPhyDiuresisAbnormalText.getText());
-		path.setPhyAlcool(jCheckBoxPhyAlcoolYes.isSelected());
+		path.setPhyAlcohol(jCheckBoxPhyAlcoholYes.isSelected());
 		path.setPhySmoke(jCheckBoxPhySmokeYes.isSelected());
 		path.setPhyDrug(jCheckBoxPhyDrugsYes.isSelected());
 		// Physiologic Female
@@ -1081,12 +1081,12 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jLabelPhyDiuresis.gridx = 0;
 			gbc_jLabelPhyDiuresis.gridy = 2;
 			jPanelPhyHistoryUnisex.add(getJLabelPhyDiuresis(), gbc_jLabelPhyDiuresis);
-			GridBagConstraints gbc_jLabelPhyAlcool = new GridBagConstraints();
-			gbc_jLabelPhyAlcool.anchor = GridBagConstraints.WEST;
-			gbc_jLabelPhyAlcool.insets = new Insets(0, 5, 0, 5);
-			gbc_jLabelPhyAlcool.gridx = 0;
-			gbc_jLabelPhyAlcool.gridy = 3;
-			jPanelPhyHistoryUnisex.add(getJLabelPhyAlcool(), gbc_jLabelPhyAlcool);
+			GridBagConstraints gbc_jLabelPhyAlcohol = new GridBagConstraints();
+			gbc_jLabelPhyAlcohol.anchor = GridBagConstraints.WEST;
+			gbc_jLabelPhyAlcohol.insets = new Insets(0, 5, 0, 5);
+			gbc_jLabelPhyAlcohol.gridx = 0;
+			gbc_jLabelPhyAlcohol.gridy = 3;
+			jPanelPhyHistoryUnisex.add(getJLabelPhyAlcohol(), gbc_jLabelPhyAlcohol);
 			GridBagConstraints gbc_jLabelPhySmoke = new GridBagConstraints();
 			gbc_jLabelPhySmoke.anchor = GridBagConstraints.WEST;
 			gbc_jLabelPhySmoke.insets = new Insets(0, 5, 0, 5);
@@ -1115,12 +1115,12 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jCheckBoxPhyDiuresisNormal.gridx = 1;
 			gbc_jCheckBoxPhyDiuresisNormal.gridy = 2;
 			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyDiuresisNormal(), gbc_jCheckBoxPhyDiuresisNormal);
-			GridBagConstraints gbc_jCheckBoxPhyAlcoolNo = new GridBagConstraints();
-			gbc_jCheckBoxPhyAlcoolNo.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPhyAlcoolNo.insets = new Insets(0, 5, 0, 5);
-			gbc_jCheckBoxPhyAlcoolNo.gridx = 1;
-			gbc_jCheckBoxPhyAlcoolNo.gridy = 3;
-			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyAlcoolNo(), gbc_jCheckBoxPhyAlcoolNo);
+			GridBagConstraints gbc_jCheckBoxPhyAlcoholNo = new GridBagConstraints();
+			gbc_jCheckBoxPhyAlcoholNo.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPhyAlcoholNo.insets = new Insets(0, 5, 0, 5);
+			gbc_jCheckBoxPhyAlcoholNo.gridx = 1;
+			gbc_jCheckBoxPhyAlcoholNo.gridy = 3;
+			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyAlcoholNo(), gbc_jCheckBoxPhyAlcoholNo);
 			GridBagConstraints gbc_jCheckBoxPhySmokeNo = new GridBagConstraints();
 			gbc_jCheckBoxPhySmokeNo.anchor = GridBagConstraints.WEST;
 			gbc_jCheckBoxPhySmokeNo.insets = new Insets(0, 5, 0, 5);
@@ -1149,12 +1149,12 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jCheckBoxPhyDiuresisAbnormal.gridx = 2;
 			gbc_jCheckBoxPhyDiuresisAbnormal.gridy = 2;
 			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyDiuresisAbnormal(), gbc_jCheckBoxPhyDiuresisAbnormal);
-			GridBagConstraints gbc_jCheckBoxPhyAlcoolYes = new GridBagConstraints();
-			gbc_jCheckBoxPhyAlcoolYes.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPhyAlcoolYes.insets = new Insets(0, 5, 0, 5);
-			gbc_jCheckBoxPhyAlcoolYes.gridx = 2;
-			gbc_jCheckBoxPhyAlcoolYes.gridy = 3;
-			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyAlcoolYes(), gbc_jCheckBoxPhyAlcoolYes);
+			GridBagConstraints gbc_jCheckBoxPhyAlcoholYes = new GridBagConstraints();
+			gbc_jCheckBoxPhyAlcoholYes.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPhyAlcoholYes.insets = new Insets(0, 5, 0, 5);
+			gbc_jCheckBoxPhyAlcoholYes.gridx = 2;
+			gbc_jCheckBoxPhyAlcoholYes.gridy = 3;
+			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyAlcoholYes(), gbc_jCheckBoxPhyAlcoholYes);
 			GridBagConstraints gbc_jCheckBoxPhySmokeYes = new GridBagConstraints();
 			gbc_jCheckBoxPhySmokeYes.anchor = GridBagConstraints.WEST;
 			gbc_jCheckBoxPhySmokeYes.insets = new Insets(0, 5, 0, 5);
@@ -1578,11 +1578,11 @@ public class PatientHistoryEdit extends JDialog {
 		return jLabelPhyDiuresis;
 	}
 
-	private JLabel getJLabelPhyAlcool() {
-		if (jLabelPhyAlcool == null) {
-			jLabelPhyAlcool = new JLabel(MessageBundle.getMessage("angal.anamnesis.alcool.txt")); //$NON-NLS-1$
+	private JLabel getJLabelPhyAlcohol() {
+		if (jLabelPhyAlcohol == null) {
+			jLabelPhyAlcohol = new JLabel(MessageBundle.getMessage("angal.anamnesis.alcohol.txt")); //$NON-NLS-1$
 		}
-		return jLabelPhyAlcool;
+		return jLabelPhyAlcohol;
 	}
 
 	private JLabel getJLabelPhySmoke() {
@@ -1663,13 +1663,13 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 
-	private JCheckBox getJCheckBoxPhyAlcoolNo() {
-		if (jCheckBoxPhyAlcoolNo == null) {
-			jCheckBoxPhyAlcoolNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.no.txt")); //$NON-NLS-1$
-			buttonGroupAlcool.add(jCheckBoxPhyAlcoolNo);
-			jCheckBoxPhyAlcoolNo.addActionListener(e -> path.setPhyAlcool(false));
+	private JCheckBox getJCheckBoxPhyAlcoholNo() {
+		if (jCheckBoxPhyAlcoholNo == null) {
+			jCheckBoxPhyAlcoholNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcohol.no.txt")); //$NON-NLS-1$
+			buttonGroupAlcohol.add(jCheckBoxPhyAlcoholNo);
+			jCheckBoxPhyAlcoholNo.addActionListener(e -> path.setPhyAlcohol(false));
 		}
-		return jCheckBoxPhyAlcoolNo;
+		return jCheckBoxPhyAlcoholNo;
 	}
 
 	private JCheckBox getJCheckBoxPhySmokeNo() {
@@ -1692,18 +1692,18 @@ public class PatientHistoryEdit extends JDialog {
 
 
 
-	private JCheckBox getJCheckBoxPhyAlcoolYes() {
-		if (jCheckBoxPhyAlcoolYes == null) {
-			jCheckBoxPhyAlcoolYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes.txt")); //$NON-NLS-1$
-			buttonGroupAlcool.add(jCheckBoxPhyAlcoolYes);
-			jCheckBoxPhyAlcoolYes.addActionListener(e -> path.setPhyAlcool(true));
+	private JCheckBox getJCheckBoxPhyAlcoholYes() {
+		if (jCheckBoxPhyAlcoholYes == null) {
+			jCheckBoxPhyAlcoholYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcohol.yes.txt")); //$NON-NLS-1$
+			buttonGroupAlcohol.add(jCheckBoxPhyAlcoholYes);
+			jCheckBoxPhyAlcoholYes.addActionListener(e -> path.setPhyAlcohol(true));
 		}
-		return jCheckBoxPhyAlcoolYes;
+		return jCheckBoxPhyAlcoholYes;
 	}
 
 	private JCheckBox getJCheckBoxPhySmokeYes() {
 		if (jCheckBoxPhySmokeYes == null) {
-			jCheckBoxPhySmokeYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes.txt")); //$NON-NLS-1$
+			jCheckBoxPhySmokeYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcohol.yes.txt")); //$NON-NLS-1$
 			buttonGroupSmoke.add(jCheckBoxPhySmokeYes);
 			jCheckBoxPhySmokeYes.addActionListener(e -> path.setPhySmoke(true));
 		}
@@ -1712,7 +1712,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyDrugsYes() {
 		if (jCheckBoxPhyDrugsYes == null) {
-			jCheckBoxPhyDrugsYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes.txt")); //$NON-NLS-1$
+			jCheckBoxPhyDrugsYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcohol.yes.txt")); //$NON-NLS-1$
 			buttonGroupDrugs.add(jCheckBoxPhyDrugsYes);
 			jCheckBoxPhyDrugsYes.addActionListener(e -> path.setPhyDrug(true));
 		}
