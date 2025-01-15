@@ -72,7 +72,6 @@ public class PatientHistoryEdit extends JDialog {
 
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 
-
 	private JPanel jPanelPatient;
 	private JPanel jPanelAnamnesis;
 	private JPanel jPanelFamily;
@@ -121,7 +120,7 @@ public class PatientHistoryEdit extends JDialog {
 	private VoLimitedTextArea jTextAreaPathClosedNote;
 	private JScrollPane jScrollPanePathClosedNote;
 
-	//	 PATHOLOGICAL OPEN
+	// PATHOLOGICAL OPEN
 	private JCheckBox jCheckBoxPathOpenNothing;
 	private JCheckBox jCheckBoxPathOpenHypertension;
 	private JCheckBox jCheckBoxPathOpenDrugsAddiction;
@@ -151,25 +150,25 @@ public class PatientHistoryEdit extends JDialog {
 
 	// PHYSIOLOGICAL UNISEX
 	private JLabel jLabelPhyDiet;
-	private JLabel jLabelPhyAlvo;
+	private JLabel jLabelPhyBowel;
 	private JLabel jLabelPhyDiuresis;
 	private JLabel jLabelPhyAlcohol;
 	private JLabel jLabelPhySmoke;
 	private JLabel jLabelPhyDrugs;
 	private JCheckBox jCheckBoxPhyDietNormal;
 	private JCheckBox jCheckBoxPhyDietAbnormal;
-	private JCheckBox jCheckBoxPhyAlvoNormal;
+	private JCheckBox jCheckBoxPhyBowelNormal;
 	private JCheckBox jCheckBoxPhyDiuresisNormal;
 	private JCheckBox jCheckBoxPhyAlcoholNo;
 	private JCheckBox jCheckBoxPhySmokeNo;
 	private JCheckBox jCheckBoxPhyDrugsNo;
-	private JCheckBox jCheckBoxPhyAlvoAbnormal;
+	private JCheckBox jCheckBoxPhyBowelAbnormal;
 	private JCheckBox jCheckBoxPhyDiuresisAbnormal;
 	private JCheckBox jCheckBoxPhyAlcoholYes;
 	private JCheckBox jCheckBoxPhySmokeYes;
 	private JCheckBox jCheckBoxPhyDrugsYes;
 	private VoLimitedTextField jTextFieldPhyDietAbnormalText;
-	private VoLimitedTextField jTextFieldPhyAlvoAbnormalText;
+	private VoLimitedTextField jTextFieldPhyBowelAbnormalText;
 	private VoLimitedTextField jTextFieldPhyDiuresisAbnormalText;
 
 	// PHYSIOLOGICAL FEMALE
@@ -205,7 +204,7 @@ public class PatientHistoryEdit extends JDialog {
 	private final ButtonGroup buttonGroupSmoke = new ButtonGroup();
 	private final ButtonGroup buttonGroupDrugs = new ButtonGroup();
 	private final ButtonGroup buttonGroupDiet = new ButtonGroup();
-	private final ButtonGroup buttonGroupAlvo = new ButtonGroup();
+	private final ButtonGroup buttonGroupBowel = new ButtonGroup();
 	private final ButtonGroup buttonGroupDiuresis = new ButtonGroup();
 	private final ButtonGroup buttonGroupPeriod = new ButtonGroup();
 	private final ButtonGroup buttonGroupMenopause = new ButtonGroup();
@@ -254,7 +253,7 @@ public class PatientHistoryEdit extends JDialog {
 		pat = path.getPatient();
 		initComponents();
 	}
-	
+
 	public PatientHistoryEdit(Frame parent, PatientPatientHistory path, boolean storeData) {
 		super(parent, true);
 		this.path = path.getPatientHistory();
@@ -262,7 +261,7 @@ public class PatientHistoryEdit extends JDialog {
 		this.storeData = storeData;
 		initComponents();
 	}
-	
+
 	public PatientHistoryEdit(Dialog parent, PatientPatientHistory path, boolean storeData) {
 		super(parent, true);
 		this.path = path.getPatientHistory();
@@ -284,11 +283,10 @@ public class PatientHistoryEdit extends JDialog {
 		getContentPane().add(getJPanelPatient(), BorderLayout.NORTH);
 		getContentPane().add(getJPanelAnamnesis(), BorderLayout.CENTER);
 		getContentPane().add(getJPanelButtons(), BorderLayout.SOUTH);
-		setSize(1063, 586); //TODO remove comment for design
+		setSize(1063, 586); // TODO remove comment for design
 		updateGUIPatient();
 		updateGUIHistory();
 	}
-
 
 	private void updateGUIPatient() {
 		jLabelPatIDText.setText(String.valueOf(path.getPatientId()));
@@ -347,9 +345,9 @@ public class PatientHistoryEdit extends JDialog {
 		jCheckBoxPhyDietNormal.setSelected(path.isPhyNutritionNormal());
 		jCheckBoxPhyDietAbnormal.setSelected(!path.isPhyNutritionNormal());
 		jTextFieldPhyDietAbnormalText.setText(path.getPhyNutritionAbnormal());
-		jCheckBoxPhyAlvoNormal.setSelected(path.isPhyAlvoNormal());
-		jCheckBoxPhyAlvoAbnormal.setSelected(!path.isPhyAlvoNormal());
-		jTextFieldPhyAlvoAbnormalText.setText(path.getPhyAlvoAbnormal());
+		jCheckBoxPhyBowelNormal.setSelected(path.isPhyBowelNormal());
+		jCheckBoxPhyBowelAbnormal.setSelected(!path.isPhyBowelNormal());
+		jTextFieldPhyBowelAbnormalText.setText(path.getPhyBowelAbnormal());
 		jCheckBoxPhyDiuresisNormal.setSelected(path.isPhyDiuresisNormal());
 		jCheckBoxPhyDiuresisAbnormal.setSelected(!path.isPhyDiuresisNormal());
 		jTextFieldPhyDiuresisAbnormalText.setText(path.getPhyDiuresisAbnormal());
@@ -377,7 +375,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private void updateModelFromGUI() {
-		//Family
+		// Family
 		path.setFamilyHypertension(jCheckBoxFamilyHypertension.isSelected());
 		path.setFamilyDrugAddiction(jCheckBoxFamilyDrugsAddiction.isSelected());
 		path.setFamilyCardiovascular(jCheckBoxFamilyCardio.isSelected());
@@ -389,7 +387,7 @@ public class PatientHistoryEdit extends JDialog {
 		path.setFamilyGyno(jCheckBoxFamilyGyno.isSelected());
 		path.setFamilyOther(jCheckBoxFamilyOther.isSelected());
 		path.setFamilyNote(jTextAreaFamilyNote.getText());
-		//Closed
+		// Closed
 		path.setPatClosedHypertension(jCheckBoxPathClosedHypertension.isSelected());
 		path.setPatClosedDrugaddiction(jCheckBoxPathClosedDrugsAddiction.isSelected());
 		path.setPatClosedCardiovascular(jCheckBoxPathClosedCardio.isSelected());
@@ -401,7 +399,7 @@ public class PatientHistoryEdit extends JDialog {
 		path.setPatClosedGyno(jCheckBoxPathClosedGyno.isSelected());
 		path.setPatClosedOther(jCheckBoxPathClosedOther.isSelected());
 		path.setPatClosedNote(jTextAreaPathClosedNote.getText());
-		//Open
+		// Open
 		path.setPatOpenHypertension(jCheckBoxPathOpenHypertension.isSelected());
 		path.setPatOpenDrugaddiction(jCheckBoxPathOpenDrugsAddiction.isSelected());
 		path.setPatOpenCardiovascular(jCheckBoxPathOpenCardio.isSelected());
@@ -422,8 +420,8 @@ public class PatientHistoryEdit extends JDialog {
 		// Physiologic Unisex
 		path.setPhyNutritionNormal(jCheckBoxPhyDietNormal.isSelected());
 		path.setPhyNutritionAbnormal(jTextFieldPhyDietAbnormalText.getText());
-		path.setPhyAlvoNormal(jCheckBoxPhyAlvoNormal.isSelected());
-		path.setPhyAlvoAbnormal(jTextFieldPhyAlvoAbnormalText.getText());
+		path.setPhyBowelNormal(jCheckBoxPhyBowelNormal.isSelected());
+		path.setPhyBowelAbnormal(jTextFieldPhyBowelAbnormalText.getText());
 		path.setPhyDiuresisNormal(jCheckBoxPhyDiuresisNormal.isSelected());
 		path.setPhyDiuresisAbnormal(jTextFieldPhyDiuresisAbnormalText.getText());
 		path.setPhyAlcohol(jCheckBoxPhyAlcoholYes.isSelected());
@@ -449,6 +447,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraNote.setLineWrap(true);
 			jTextAreaPathExtraNote.setMargin(new Insets(0, 5, 0, 0));
 			jTextAreaPathExtraNote.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					path.setPatNote(jTextAreaPathExtraNote.getText());
@@ -462,7 +461,8 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraNote == null) {
 			jScrollPanePathExtraNote = new JScrollPane();
 			jScrollPanePathExtraNote.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraNote.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.remarks.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jScrollPanePathExtraNote.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.remarks.border"), TitledBorder.LEADING, //$NON-NLS-1$
+				TitledBorder.TOP, fontBoldTitleBorder, null));
 			jScrollPanePathExtraNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraNote.setViewportView(getJTextAreaPathExtraNote());
 		}
@@ -473,7 +473,8 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraSurgery == null) {
 			jScrollPanePathExtraSurgery = new JScrollPane();
 			jScrollPanePathExtraSurgery.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraSurgery.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.surgery.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jScrollPanePathExtraSurgery.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.surgery.border"), TitledBorder.LEADING, //$NON-NLS-1$
+				TitledBorder.TOP, fontBoldTitleBorder, null));
 			jScrollPanePathExtraSurgery.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraSurgery.setViewportView(getJTextAreaPathExtraSurgery());
 		}
@@ -484,7 +485,8 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraAllergy == null) {
 			jScrollPanePathExtraAllergy = new JScrollPane();
 			jScrollPanePathExtraAllergy.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraAllergy.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.extra.allergy.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
+			jScrollPanePathExtraAllergy.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), //$NON-NLS-1$
+				MessageBundle.getMessage("angal.anamnesis.extra.allergy.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			jScrollPanePathExtraAllergy.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraAllergy.setViewportView(getJTextAreaPathExtraAllergy());
 		}
@@ -495,7 +497,8 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraTherapy == null) {
 			jScrollPanePathExtraTherapy = new JScrollPane();
 			jScrollPanePathExtraTherapy.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraTherapy.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.therapy.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jScrollPanePathExtraTherapy.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.therapy.border"), TitledBorder.LEADING, //$NON-NLS-1$
+				TitledBorder.TOP, fontBoldTitleBorder, null));
 			jScrollPanePathExtraTherapy.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraTherapy.setViewportView(getJTextAreaPathExtraTherapy());
 		}
@@ -509,6 +512,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraTherapy.setLineWrap(true);
 			jTextAreaPathExtraTherapy.setMargin(new Insets(0, 5, 0, 0));
 			jTextAreaPathExtraTherapy.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					path.setPatTherapy(jTextAreaPathExtraTherapy.getText());
@@ -522,7 +526,8 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraUsualMedicines == null) {
 			jScrollPanePathExtraUsualMedicines = new JScrollPane();
 			jScrollPanePathExtraUsualMedicines.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraUsualMedicines.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.medicine.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jScrollPanePathExtraUsualMedicines.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.medicine.border"), //$NON-NLS-1$
+				TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null));
 			jScrollPanePathExtraUsualMedicines.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraUsualMedicines.setViewportView(getJTextAreaPathExtraUsualMedicines());
 		}
@@ -536,6 +541,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraUsualMedicines.setLineWrap(true);
 			jTextAreaPathExtraUsualMedicines.setMargin(new Insets(0, 5, 0, 0));
 			jTextAreaPathExtraUsualMedicines.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					path.setPatMedicine(jTextAreaPathExtraUsualMedicines.getText());
@@ -552,6 +558,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraAllergy.setLineWrap(true);
 			jTextAreaPathExtraAllergy.setMargin(new Insets(0, 5, 0, 0));
 			jTextAreaPathExtraAllergy.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					path.setPatAllergy(jTextAreaPathExtraAllergy.getText());
@@ -568,6 +575,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraSurgery.setLineWrap(true);
 			jTextAreaPathExtraSurgery.setMargin(new Insets(0, 5, 0, 0));
 			jTextAreaPathExtraSurgery.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					path.setPatSurgery(jTextAreaPathExtraSurgery.getText());
@@ -584,6 +592,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathOpenNote.setWrapStyleWord(true);
 			jTextAreaPathOpenNote.setMargin(new Insets(0, 5, 0, 0));
 			jTextAreaPathOpenNote.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					path.setPatOpenNote(jTextAreaPathOpenNote.getText());
@@ -598,7 +607,8 @@ public class PatientHistoryEdit extends JDialog {
 			jScrollPanePathOpenNote = new JScrollPane();
 			jScrollPanePathOpenNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathOpenNote.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathOpenNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.open.remarks.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
+			jScrollPanePathOpenNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), //$NON-NLS-1$
+				MessageBundle.getMessage("angal.anamnesis.open.remarks.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			jScrollPanePathOpenNote.setViewportView(getJTextAreaPathOpenNote());
 		}
 		return jScrollPanePathOpenNote;
@@ -718,6 +728,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathClosedNote.setWrapStyleWord(true);
 			jTextAreaPathClosedNote.setLineWrap(true);
 			jTextAreaPathClosedNote.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					path.setPatClosedNote(jTextAreaPathClosedNote.getText());
@@ -731,7 +742,8 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathClosedNote == null) {
 			jScrollPanePathClosedNote = new JScrollPane();
 			jScrollPanePathClosedNote.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathClosedNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.closed.remarks.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
+			jScrollPanePathClosedNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), //$NON-NLS-1$
+				MessageBundle.getMessage("angal.anamnesis.closed.remarks.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			jScrollPanePathClosedNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathClosedNote.setViewportView(getJTextAreaPathClosedNote());
 		}
@@ -853,6 +865,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaFamilyNote.setWrapStyleWord(true);
 			jTextAreaFamilyNote.setMargin(new Insets(0, 5, 0, 0));
 			jTextAreaFamilyNote.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					path.setFamilyNote(jTextAreaFamilyNote.getText());
@@ -866,7 +879,8 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPaneFamilyNote == null) {
 			jScrollPaneFamilyNote = new JScrollPane();
 			jScrollPaneFamilyNote.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPaneFamilyNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.family.remarks.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
+			jScrollPaneFamilyNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), //$NON-NLS-1$
+				MessageBundle.getMessage("angal.anamnesis.family.remarks.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			jScrollPaneFamilyNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPaneFamilyNote.setViewportView(getJTextAreaFamilyNote());
 		}
@@ -1069,12 +1083,12 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jLabelPhyDiet.gridx = 0;
 			gbc_jLabelPhyDiet.gridy = 0;
 			jPanelPhyHistoryUnisex.add(getJLabelPhyDiet(), gbc_jLabelPhyDiet);
-			GridBagConstraints gbc_jLabelPhyAlvo = new GridBagConstraints();
-			gbc_jLabelPhyAlvo.anchor = GridBagConstraints.WEST;
-			gbc_jLabelPhyAlvo.insets = new Insets(0, 5, 0, 5);
-			gbc_jLabelPhyAlvo.gridx = 0;
-			gbc_jLabelPhyAlvo.gridy = 1;
-			jPanelPhyHistoryUnisex.add(getJLabelPhyAlvo(), gbc_jLabelPhyAlvo);
+			GridBagConstraints gbc_jLabelPhyBowel = new GridBagConstraints();
+			gbc_jLabelPhyBowel.anchor = GridBagConstraints.WEST;
+			gbc_jLabelPhyBowel.insets = new Insets(0, 5, 0, 5);
+			gbc_jLabelPhyBowel.gridx = 0;
+			gbc_jLabelPhyBowel.gridy = 1;
+			jPanelPhyHistoryUnisex.add(getJLabelPhyBowel(), gbc_jLabelPhyBowel);
 			GridBagConstraints gbc_jLabelPhyDiuresis = new GridBagConstraints();
 			gbc_jLabelPhyDiuresis.anchor = GridBagConstraints.WEST;
 			gbc_jLabelPhyDiuresis.insets = new Insets(0, 5, 0, 5);
@@ -1105,11 +1119,11 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jCheckBoxPhyDietNormal.gridx = 1;
 			gbc_jCheckBoxPhyDietNormal.gridy = 0;
 			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyDietNormal(), gbc_jCheckBoxPhyDietNormal);
-			GridBagConstraints gbc_jCheckBoxPhyAlvoNormal = new GridBagConstraints();
-			gbc_jCheckBoxPhyAlvoNormal.insets = new Insets(0, 5, 0, 5);
-			gbc_jCheckBoxPhyAlvoNormal.gridx = 1;
-			gbc_jCheckBoxPhyAlvoNormal.gridy = 1;
-			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyAlvoNormal(), gbc_jCheckBoxPhyAlvoNormal);
+			GridBagConstraints gbc_jCheckBoxPhyBowelNormal = new GridBagConstraints();
+			gbc_jCheckBoxPhyBowelNormal.insets = new Insets(0, 5, 0, 5);
+			gbc_jCheckBoxPhyBowelNormal.gridx = 1;
+			gbc_jCheckBoxPhyBowelNormal.gridy = 1;
+			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyBowelNormal(), gbc_jCheckBoxPhyBowelNormal);
 			GridBagConstraints gbc_jCheckBoxPhyDiuresisNormal = new GridBagConstraints();
 			gbc_jCheckBoxPhyDiuresisNormal.insets = new Insets(0, 5, 0, 5);
 			gbc_jCheckBoxPhyDiuresisNormal.gridx = 1;
@@ -1139,11 +1153,11 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jCheckBoxPhyDietAbnormal.gridx = 2;
 			gbc_jCheckBoxPhyDietAbnormal.gridy = 0;
 			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyDietAbnormal(), gbc_jCheckBoxPhyDietAbnormal);
-			GridBagConstraints gbc_jCheckBoxPhyAlvoAbnormal = new GridBagConstraints();
-			gbc_jCheckBoxPhyAlvoAbnormal.insets = new Insets(0, 5, 0, 5);
-			gbc_jCheckBoxPhyAlvoAbnormal.gridx = 2;
-			gbc_jCheckBoxPhyAlvoAbnormal.gridy = 1;
-			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyAlvoAbnormal(), gbc_jCheckBoxPhyAlvoAbnormal);
+			GridBagConstraints gbc_jCheckBoxPhyBowelAbnormal = new GridBagConstraints();
+			gbc_jCheckBoxPhyBowelAbnormal.insets = new Insets(0, 5, 0, 5);
+			gbc_jCheckBoxPhyBowelAbnormal.gridx = 2;
+			gbc_jCheckBoxPhyBowelAbnormal.gridy = 1;
+			jPanelPhyHistoryUnisex.add(getJCheckBoxPhyBowelAbnormal(), gbc_jCheckBoxPhyBowelAbnormal);
 			GridBagConstraints gbc_jCheckBoxPhyDiuresisAbnormal = new GridBagConstraints();
 			gbc_jCheckBoxPhyDiuresisAbnormal.insets = new Insets(0, 5, 0, 5);
 			gbc_jCheckBoxPhyDiuresisAbnormal.gridx = 2;
@@ -1174,12 +1188,12 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jTextFieldPhyDietAbnormalText.gridx = 3;
 			gbc_jTextFieldPhyDietAbnormalText.gridy = 0;
 			jPanelPhyHistoryUnisex.add(getJTextFieldPhyDietAbnormalText(), gbc_jTextFieldPhyDietAbnormalText);
-			GridBagConstraints gbc_jTextFieldPhyAlvoAbnormalText = new GridBagConstraints();
-			gbc_jTextFieldPhyAlvoAbnormalText.insets = new Insets(0, 5, 0, 5);
-			gbc_jTextFieldPhyAlvoAbnormalText.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jTextFieldPhyAlvoAbnormalText.gridx = 3;
-			gbc_jTextFieldPhyAlvoAbnormalText.gridy = 1;
-			jPanelPhyHistoryUnisex.add(getJTextFieldPhyAlvoAbnormalText(), gbc_jTextFieldPhyAlvoAbnormalText);
+			GridBagConstraints gbc_jTextFieldPhyBowelAbnormalText = new GridBagConstraints();
+			gbc_jTextFieldPhyBowelAbnormalText.insets = new Insets(0, 5, 0, 5);
+			gbc_jTextFieldPhyBowelAbnormalText.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jTextFieldPhyBowelAbnormalText.gridx = 3;
+			gbc_jTextFieldPhyBowelAbnormalText.gridy = 1;
+			jPanelPhyHistoryUnisex.add(getJTextFieldPhyBowelAbnormalText(), gbc_jTextFieldPhyBowelAbnormalText);
 			GridBagConstraints gbc_jTextFieldPhyDiuresisAbnormalText = new GridBagConstraints();
 			gbc_jTextFieldPhyDiuresisAbnormalText.insets = new Insets(0, 5, 0, 5);
 			gbc_jTextFieldPhyDiuresisAbnormalText.fill = GridBagConstraints.HORIZONTAL;
@@ -1208,11 +1222,11 @@ public class PatientHistoryEdit extends JDialog {
 		return jPanelPathologicalExtra;
 	}
 
-
 	private JPanel getJPanelPathologicalOpen() {
 		if (jPanelPathologicalOpen == null) {
 			jPanelPathologicalOpen = new JPanel();
-			jPanelPathologicalOpen.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.open.recentproblems.border"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jPanelPathologicalOpen.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.open.recentproblems.border"), TitledBorder.CENTER, //$NON-NLS-1$
+				TitledBorder.TOP, fontBoldTitleBorder, null));
 			GridBagLayout gbl_jPanelPathologicalOpen = new GridBagLayout();
 			gbl_jPanelPathologicalOpen.columnWidths = new int[] { 0 };
 			gbl_jPanelPathologicalOpen.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -1304,7 +1318,8 @@ public class PatientHistoryEdit extends JDialog {
 	private JPanel getJPanelPathologicalClosed() {
 		if (jPanelPathologicalClosed == null) {
 			jPanelPathologicalClosed = new JPanel();
-			jPanelPathologicalClosed.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.closed.pastproblems.border"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jPanelPathologicalClosed.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.closed.pastproblems.border"), //$NON-NLS-1$
+				TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null));
 			GridBagLayout gbl_jPanelPathologicalClosed = new GridBagLayout();
 			gbl_jPanelPathologicalClosed.columnWidths = new int[] { 0 };
 			gbl_jPanelPathologicalClosed.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -1395,7 +1410,8 @@ public class PatientHistoryEdit extends JDialog {
 	private JPanel getJPanelFamily() {
 		if (jPanelFamily == null) {
 			jPanelFamily = new JPanel();
-			jPanelFamily.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.family.familyhistory.border"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jPanelFamily.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.family.familyhistory.border"), TitledBorder.CENTER, //$NON-NLS-1$
+				TitledBorder.TOP, fontBoldTitleBorder, null));
 			GridBagLayout gbl_jPanelFamily = new GridBagLayout();
 			gbl_jPanelFamily.columnWidths = new int[] { 0 };
 			gbl_jPanelFamily.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -1497,7 +1513,8 @@ public class PatientHistoryEdit extends JDialog {
 		if (jPanelPatient == null) {
 			jPanelPatient = new JPanel();
 			jPanelPatient.setBackground(Color.WHITE);
-			jPanelPatient.setBorder(BorderFactory.createTitledBorder(null, MessageBundle.getMessage("angal.anamnesis.patient.txt"), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, null, null)); //$NON-NLS-1$
+			jPanelPatient.setBorder(BorderFactory.createTitledBorder(null, MessageBundle.getMessage("angal.anamnesis.patient.txt"), TitledBorder.LEADING, //$NON-NLS-1$
+				TitledBorder.DEFAULT_POSITION, null, null));
 			GridBagLayout gbl_jPanelPatient = new GridBagLayout();
 			gbl_jPanelPatient.columnWidths = new int[] { 0, 100, 0, 150, 0, 150, 0, 150 };
 			gbl_jPanelPatient.rowHeights = new int[] { 20 };
@@ -1564,11 +1581,11 @@ public class PatientHistoryEdit extends JDialog {
 		return jLabelPhyDiet;
 	}
 
-	private JLabel getJLabelPhyAlvo() {
-		if (jLabelPhyAlvo == null) {
-			jLabelPhyAlvo = new JLabel(MessageBundle.getMessage("angal.anamnesis.alvo.txt")); //$NON-NLS-1$
+	private JLabel getJLabelPhyBowel() {
+		if (jLabelPhyBowel == null) {
+			jLabelPhyBowel = new JLabel(MessageBundle.getMessage("angal.anamnesis.bowel.txt")); //$NON-NLS-1$
 		}
-		return jLabelPhyAlvo;
+		return jLabelPhyBowel;
 	}
 
 	private JLabel getJLabelPhyDiuresis() {
@@ -1620,25 +1637,25 @@ public class PatientHistoryEdit extends JDialog {
 		return jCheckBoxPhyDietAbnormal;
 	}
 
-	private JCheckBox getJCheckBoxPhyAlvoNormal() {
-		if (jCheckBoxPhyAlvoNormal == null) {
-			jCheckBoxPhyAlvoNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alvo.normal.txt")); //$NON-NLS-1$
-			buttonGroupAlvo.add(jCheckBoxPhyAlvoNormal);
-			jCheckBoxPhyAlvoNormal.addActionListener(e -> path.setPhyAlvoNormal(true));
+	private JCheckBox getJCheckBoxPhyBowelNormal() {
+		if (jCheckBoxPhyBowelNormal == null) {
+			jCheckBoxPhyBowelNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.bowel.normal.txt")); //$NON-NLS-1$
+			buttonGroupBowel.add(jCheckBoxPhyBowelNormal);
+			jCheckBoxPhyBowelNormal.addActionListener(e -> path.setPhyBowelNormal(true));
 		}
-		return jCheckBoxPhyAlvoNormal;
+		return jCheckBoxPhyBowelNormal;
 	}
 
-	private JCheckBox getJCheckBoxPhyAlvoAbnormal() {
-		if (jCheckBoxPhyAlvoAbnormal == null) {
-			jCheckBoxPhyAlvoAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alvo.other.txt")); //$NON-NLS-1$
-			buttonGroupAlvo.add(jCheckBoxPhyAlvoAbnormal);
-			jCheckBoxPhyAlvoAbnormal.addActionListener(e -> {
-				path.setPhyAlvoNormal(false);
-				jTextFieldPhyAlvoAbnormalText.requestFocus();
+	private JCheckBox getJCheckBoxPhyBowelAbnormal() {
+		if (jCheckBoxPhyBowelAbnormal == null) {
+			jCheckBoxPhyBowelAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.bowel.other.txt")); //$NON-NLS-1$
+			buttonGroupBowel.add(jCheckBoxPhyBowelAbnormal);
+			jCheckBoxPhyBowelAbnormal.addActionListener(e -> {
+				path.setPhyBowelNormal(false);
+				jTextFieldPhyBowelAbnormalText.requestFocus();
 			});
 		}
-		return jCheckBoxPhyAlvoAbnormal;
+		return jCheckBoxPhyBowelAbnormal;
 	}
 
 	private JCheckBox getJCheckBoxPhyDiuresisNormal() {
@@ -1661,7 +1678,6 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		return jCheckBoxPhyDiuresisAbnormal;
 	}
-
 
 	private JCheckBox getJCheckBoxPhyAlcoholNo() {
 		if (jCheckBoxPhyAlcoholNo == null) {
@@ -1689,8 +1705,6 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		return jCheckBoxPhyDrugsNo;
 	}
-
-
 
 	private JCheckBox getJCheckBoxPhyAlcoholYes() {
 		if (jCheckBoxPhyAlcoholYes == null) {
@@ -1723,6 +1737,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jTextFieldPhyDietAbnormalText == null) {
 			jTextFieldPhyDietAbnormalText = new VoLimitedTextField(30, 30);
 			jTextFieldPhyDietAbnormalText.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
@@ -1739,30 +1754,32 @@ public class PatientHistoryEdit extends JDialog {
 		return jTextFieldPhyDietAbnormalText;
 	}
 
-	private VoLimitedTextField getJTextFieldPhyAlvoAbnormalText() {
-		if (jTextFieldPhyAlvoAbnormalText == null) {
-			jTextFieldPhyAlvoAbnormalText = new VoLimitedTextField(30, 30);
-			jTextFieldPhyAlvoAbnormalText.addFocusListener(new FocusAdapter() {
+	private VoLimitedTextField getJTextFieldPhyBowelAbnormalText() {
+		if (jTextFieldPhyBowelAbnormalText == null) {
+			jTextFieldPhyBowelAbnormalText = new VoLimitedTextField(30, 30);
+			jTextFieldPhyBowelAbnormalText.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhyAlvoNormal(false);
+					path.setPhyBowelNormal(false);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhyAlvoAbnormal(jTextFieldPhyAlvoAbnormalText.getText());
+					path.setPhyBowelAbnormal(jTextFieldPhyBowelAbnormalText.getText());
 				}
 			});
 		}
-		return jTextFieldPhyAlvoAbnormalText;
+		return jTextFieldPhyBowelAbnormalText;
 	}
 
 	private VoLimitedTextField getJTextFieldPhyDiuresisAbnormalText() {
 		if (jTextFieldPhyDiuresisAbnormalText == null) {
 			jTextFieldPhyDiuresisAbnormalText = new VoLimitedTextField(30, 30);
 			jTextFieldPhyDiuresisAbnormalText.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
@@ -1803,7 +1820,8 @@ public class PatientHistoryEdit extends JDialog {
 	private JPanel getJPanelPhysiologicalHistory() {
 		if (jPanelPhysiologicalHistory == null) {
 			jPanelPhysiologicalHistory = new JPanel();
-			jPanelPhysiologicalHistory.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.physiologicalhistory.border"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jPanelPhysiologicalHistory.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.physiologicalhistory.border"), //$NON-NLS-1$
+				TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null));
 			jPanelPhysiologicalHistory.setLayout(new BoxLayout(jPanelPhysiologicalHistory, BoxLayout.X_AXIS));
 			jPanelPhysiologicalHistory.add(getJPanelPhyHistoryUnisex());
 			jPanelPhysiologicalHistory.add(getJPanelPhyHistoryFemale());
@@ -1949,6 +1967,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jTextFieldPhyPeriodAbnormalText == null) {
 			jTextFieldPhyPeriodAbnormalText = new VoLimitedTextField(30, 30);
 			jTextFieldPhyPeriodAbnormalText.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
@@ -1990,6 +2009,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jTextFieldPhyMenopauseYesYears == null) {
 			jTextFieldPhyMenopauseYesYears = new VoIntegerTextField(0, 5);
 			jTextFieldPhyMenopauseYesYears.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
@@ -2031,6 +2051,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jTextFieldPhyHRTYesText == null) {
 			jTextFieldPhyHRTYesText = new VoLimitedTextField(30, 30);
 			jTextFieldPhyHRTYesText.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
@@ -2094,6 +2115,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jTextFieldPhyPregnancyNumber == null) {
 			jTextFieldPhyPregnancyNumber = new VoIntegerTextField(0, 5);
 			jTextFieldPhyPregnancyNumber.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
@@ -2122,6 +2144,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jTextFieldPhyPregnancyDeliveryNumber == null) {
 			jTextFieldPhyPregnancyDeliveryNumber = new VoIntegerTextField(0, 5);
 			jTextFieldPhyPregnancyDeliveryNumber.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
@@ -2150,6 +2173,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jTextFieldPhyPregnancyAbortNumber == null) {
 			jTextFieldPhyPregnancyAbortNumber = new VoIntegerTextField(0, 5);
 			jTextFieldPhyPregnancyAbortNumber.addFocusListener(new FocusAdapter() {
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
@@ -2167,6 +2191,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private class SwingActionExcludeFamilyNothing extends AbstractAction {
+
 		/**
 		 *
 		 */
@@ -2179,10 +2204,10 @@ public class PatientHistoryEdit extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//Update model
+			// Update model
 			path.setFamilyNothing(false);
 			updateModelFromGUI();
-			//Update GUI
+			// Update GUI
 			updateGUIHistory();
 		}
 	}
@@ -2195,6 +2220,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private class SwingActionExcludePathClosedNothing extends AbstractAction {
+
 		/**
 		 *
 		 */
@@ -2207,10 +2233,10 @@ public class PatientHistoryEdit extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//Update model
+			// Update model
 			path.setPatClosedNothing(false);
 			updateModelFromGUI();
-			//Update GUI
+			// Update GUI
 			updateGUIHistory();
 		}
 	}
@@ -2223,6 +2249,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private class SwingActionExcludePathOpenNothing extends AbstractAction {
+
 		/**
 		 *
 		 */
@@ -2235,10 +2262,10 @@ public class PatientHistoryEdit extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//Update model
+			// Update model
 			path.setPatOpenNothing(false);
 			updateModelFromGUI();
-			//Update GUI
+			// Update GUI
 			updateGUIHistory();
 		}
 	}
@@ -2251,6 +2278,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private class SwingActionResetFamilyHistory extends AbstractAction {
+
 		/**
 		 *
 		 */
@@ -2288,6 +2316,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private class SwingActionResetPathClosed extends AbstractAction {
+
 		/**
 		 *
 		 */
@@ -2325,6 +2354,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private class SwingActionResetPathOpen extends AbstractAction {
+
 		/**
 		 *
 		 */
@@ -2398,6 +2428,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	class ActionSavePatientHistory extends AbstractAction {
+
 		/**
 		 *
 		 */
