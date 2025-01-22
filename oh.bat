@@ -124,7 +124,7 @@ set DATABASE_PASSWORD=isf123
 
 REM #######################  OH configuration  #########################
 REM # path and directories
-set OH_DIR="oh"
+set OH_DIR="."
 set OH_DOC_DIR="..\doc"
 set OH_SINGLE_USER="no"
 set CONF_DIR="data\conf"
