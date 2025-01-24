@@ -76,7 +76,7 @@ DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-OH_DIR=""
+OH_DIR="."
 OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
@@ -1112,7 +1112,7 @@ function start_api_server {
 	echo "Starting API server..."
 	echo "Please wait, it might take some time..."
 	echo ""
-	echo "Connect to $OH_UI_URL for dashboard"
+	echo "Connect to $OH_UI_URL for OH web interface"
 	echo ""
 
 # old jetty api server
