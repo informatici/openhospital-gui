@@ -101,7 +101,7 @@ API_LOG_FILE="api.log"
 #DB_CREATE_SQL="create_all_en.sql" # default to en
 DB_DEMO="create_all_demo.sql"
 
-######################## Other settings ########################
+######################## Advanced settings ########################
 # date format
 DATE=`date +%Y-%m-%d_%H-%M-%S`
 
@@ -111,7 +111,7 @@ EXT="tar.gz"
 # mysql configuration file
 MYSQL_CONF_FILE="my.cnf"
 
-# OH configuration files
+# OH configuration files - see also settings.properties
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
 EXAMINATION_SETTINGS="examination.properties"
@@ -223,15 +223,15 @@ TOMCAT_DIR=$TOMCAT_DISTRO
 ###################################################################
 function script_menu {
 	# show help / user options
-	echo " -----------------------------------------------------------------"
-	echo "|                                                                 |"
-	echo "|                  Open Hospital - $OH_VERSION                         |"
-	echo "|                                                                 |"
-	echo " -----------------------------------------------------------------"
-	echo "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA |"
-	echo " -----------------------------------------------------------------"
-	echo "| log level: $LOG_LEVEL | Expert mode: $EXPERT_MODE | API server: $API_SERVER |"
-	echo " -----------------------------------------------------------------"
+	echo " ------------------------------------------------------------------------"
+	echo "|                                                                        |"
+	echo "|                Open Hospital - v$OH_VERSION                                 |"
+	echo "|                                                                        |"
+	echo " ------------------------------------------------------------------------"
+	echo "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
+	echo " ------------------------------------------------------------------------"
+	echo "| Expert mode: $EXPERT_MODE | API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+	echo " ------------------------------------------------------------------------"
 	echo ""
 	echo " Usage: $SCRIPT_NAME -[OPTION] "
 	echo ""
@@ -258,8 +258,9 @@ function script_menu_advanced {
 	echo "   -e  export/save OH database		| -r  restore OH database"
 	echo "   -i  initialize/install OH database	| -t  test database connection (CLIENT mode only)"
 	echo "   -D  initialize OH with Demo data	| -X  clean/reset OH installation"
-	echo "   -G  setup GSM			| -u  create Desktop shortcut"
  	echo "   -d  toggle log level INFO/DEBUG	| -s  save OH configuration"
+	echo "   -G  setup GSM			"
+	echo "   -U  enable UI web interface		| -u  create Desktop shortcut"
 	echo "   -v  show configuration		| -V  check for latest OH version"
 	echo ""
 }
@@ -270,7 +271,6 @@ function interactive_menu {
 	do 
 		clear;
 		script_menu;
-		echo ""
 		#IFS=
 		read -n 1 -p "Please select an option or press enter to start OH: " option
 		if [[ $option != "" ]]; then 
@@ -349,6 +349,8 @@ function read_settings {
 		OH_DOC_DIR=$OH_DOC_DIR
 		DEMO_DATA=$DEMODATA
 		API_SERVER=$APISERVER
+		GUI_INTERFACE=$GUI_INTERFACE
+		UI_INTERFACE=$UI_INTERFACE
 	fi
 
 	# check for database settings file and read values
@@ -414,6 +416,13 @@ function set_defaults {
 		API_SERVER="off"
 	fi
 	
+	# GUI interface - set default to on
+	if [ -z "$GUI_INTERFACE" ]; then
+		GUI_INTERFACE="on"
+	fi
+
+	# EXPERT_MODE features - set default to off
+
 	# UI interface - set default to off
 	if [ -z "$UI_INTERFACE" ]; then
 		UI_INTERFACE="off"
@@ -1146,9 +1155,13 @@ function stop_api_server {
 }
 
 ###################################################################
+function setup_ui {
+	echo "Setup UI interface..."
+	cp -a $OH_PATH/$OH_DIR/$OH_UI_PROD $OH_PATH/$TOMCAT_DIR/webapps/
+}
+
+###################################################################
 function start_ui {
-	echo "Setup UI..."
-	cp -a $OH_PATH/$OH_DIR/$OH_UI_PROD $OH_PATH/$OH_DIR/$TOMCAT_DIR/
 	echo "Starting Open Hospital UI at $OH_UI_URL..."
 	# OH UI launch
 	if which gnome-open > /dev/null; then
@@ -1599,6 +1612,7 @@ function parse_user_input {
 			unset DB_CREATE_SQL
 			unset EXPERT_MODE
 			unset API_SERVER
+			unset GUI_INTERFACE
 			unset UI_INTERFACE
 			echo ""
 			echo "Warning: in order to reload database settings, exit script and relaunch."
@@ -1635,6 +1649,20 @@ function parse_user_input {
 	#	echo "Starting Open Hospital...";
 	#	fi
 	#	;;
+	###################################################
+	U)	# toggle UI Interface
+		case "$UI_INTERFACE" in
+			*on*)
+				UI_INTERFACE="off";
+			;;
+			*off*)
+				UI_INTERFACE="on";
+			;;
+		esac
+		#
+		if (( $2==0 )); then UI_INTERFACE="on"; interactive_menu; fi
+		option="Z";
+		;;
 	###################################################
 	"V" )	# Check for latest OH version
 		echo "";
@@ -1689,7 +1717,7 @@ cd "$OH_PATH"
 OPTIND=1 
 # list of arguments expected in user input (- option)
 # E is excluded from command line option
-OPTSTRING=":AECPSdDGhil:msrtvequQXVZ?" 
+OPTSTRING=":AECPSdDGhil:msrtvequQXUVZ?" 
 COMMAND_LINE_ARGS=$@
 
 # Parse arguments passed via command line / interactive input
@@ -1775,7 +1803,7 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	fi
 fi
 
-######## OH startup
+################### OH startup ###################
 
 # test if database connection is working
 test_database_connection;
@@ -1788,12 +1816,7 @@ if [ "$API_SERVER" = "on" ]; then
 	start_api_server;
 fi
 
-# check for UI interface
-if [ "$UI_INTERFACE" = "on" ]; then
-	start_ui;
-fi
-
-# if SERVER mode is selected, wait for CTRL-C input to exit
+# if SERVER mode is selected, start database server and wait for CTRL-C input to exit
 if [ "$OH_MODE" = "SERVER" ]; then
 	echo "Open Hospital - SERVER mode started"
 
@@ -1823,8 +1846,16 @@ else
 	# generate config files if not existent
 	write_config_files;
 
-	# start OH gui
-	start_gui;
+	# check for UI interface
+	if [ "$UI_INTERFACE" = "on" ]; then
+		setup_ui;
+		start_ui;
+	fi
+
+	# check for GUI interface
+	if [ "$GUI_INTERFACE" = "on" ]; then
+		start_gui;
+	fi
 
 	# Close and exit
 	echo "Exiting Open Hospital..."

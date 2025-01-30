@@ -160,7 +160,7 @@ $script:API_ERR_LOG_FILE="api_error.log"
 #$script:DB_CREATE_SQL="create_all_en.sql" # default to en
 $script:DB_DEMO="create_all_demo.sql"
 
-######################## Other settings ########################
+######################## Advanced settings ########################
 # date format
 $script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
@@ -170,7 +170,7 @@ $script:EXT="zip"
 # mysql configuration file
 $script:MYSQL_CONF_FILE="my.cnf"
 
-# OH configuration files
+# OH configuration files - see also settings.properties
 $script:OH_SETTINGS="settings.properties"
 $script:DATABASE_SETTINGS="database.properties"
 $script:EXAMINATION_SETTINGS="examination.properties"
@@ -291,24 +291,28 @@ $script:JAVA_DIR=$JAVA_DISTRO
 function script_menu {
 	# show menu
 	# Clear-Host # clear console
-	Write-Host " -----------------------------------------------------------------"
-	Write-Host "|                                                                 |"
-	Write-Host "|                  Open Hospital - $OH_VERSION                         |"
-	Write-Host "|                                                                 |"
-	Write-Host " -----------------------------------------------------------------"
-	Write-Host "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA |"
-	Write-Host " -----------------------------------------------------------------"
-	Write-Host "| log level: $LOG_LEVEL | Expert mode: $EXPERT_MODE | API server: $API_SERVER |"
-	Write-Host " -----------------------------------------------------------------"
+	#
+	Write-Host " ------------------------------------------------------------------------"
+	Write-Host "|                                                                        |"
+	Write-Host "|                Open Hospital - v$OH_VERSION                                 |"
+	Write-Host "|                                                                        |"
+	Write-Host " ------------------------------------------------------------------------"
+	Write-Host "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
+	Write-Host " ------------------------------------------------------------------------"
+	Write-Host "| Expert mode: $EXPERT_MODE | API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+	Write-Host " ------------------------------------------------------------------------"
 	Write-Host ""
-	Write-Host "   C    set OH in CLIENT mode"
-	Write-Host "   P    set OH in PORTABLE mode"
-	Write-Host "   S    set OH in SERVER mode (portable)"
-	Write-Host "   l    set language -> [ $OH_LANGUAGE_LIST ]"
-	Write-Host "   E    toggle EXPERT MODE - show advanced options"
-	Write-Host "   h    show help"
-	Write-Host "   q    quit"
+	Write-Host " Usage: $SCRIPT_NAME -[OPTION] "
 	Write-Host ""
+	Write-Host "   -C    set OH in CLIENT mode"
+	Write-Host "   -P    set OH in PORTABLE mode"
+	Write-Host "   -S    set OH in SERVER mode (portable)"
+	Write-Host "   -l    set language -> [ ${OH_LANGUAGE_LIST[*]} ]"
+	Write-Host "   -E    toggle EXPERT MODE - show advanced options"
+	Write-Host "   -h    show help"
+	Write-Host "   -q    quit"
+	Write-Host ""
+	#
 	if ( $EXPERT_MODE -eq "on" ) {
 		script_menu_advanced;
 	}
@@ -325,8 +329,9 @@ function script_menu_advanced {
 	Write-Host "   -e  export/save OH database		| -r  restore OH database"
 	Write-Host "   -i  initialize/install OH database	| -t  test database connection (CLIENT mode only)"
 	Write-Host "   -D  initialize OH with Demo data	| -X  clean/reset OH installation"
-	Write-Host "   -G  setup GSM			| -u  create Desktop shortcut"
  	Write-Host "   -d  toggle log level INFO/DEBUG	| -s  save OH configuration"
+	Write-Host "   -G  setup GSM			"
+	Write-Host "   -U  enable UI web interface		| -u  create Desktop shortcut"
 	Write-Host "   -v  show configuration		| -V  check for latest OH version"
 	Write-Host ""
 }
@@ -470,6 +475,13 @@ function set_defaults {
 	if ( [string]::IsNullOrEmpty($API_SERVER) ) {
 		$script:API_SERVER="off"
 	}
+	
+	# GUI interface - set default to on
+	if ( [string]::IsNullOrEmpty($GUI_INTERFACE) ) {
+		$script:GUI_INTERFACE="on"
+	}
+
+	# EXPERT_MODE features - set default to off
 
 	# UI interface - set default to off
 	if ( [string]::IsNullOrEmpty($UI_INTERFACE) ) {
@@ -1158,6 +1170,10 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set API_SERVER
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("APISERVER=off","APISERVER=$API_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		# set GUI INTERFACE
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("GUI_INTERFACE=on","GUI_INTERFACE=$GUI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		# set UI INTERFACE
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("UI_INTERFACE=on","UI_INTERFACE=$UI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 	}
 
 	######## OH - Other settings setup
@@ -1307,9 +1323,13 @@ function stop_api_server {
 }
 
 ###################################################################
+function setup_ui {
+	Write-Host "Setup UI interface..."
+	Copy-Item -Force -Recurse "$OH_PATH/$OH_DIR/$OH_UI_PROD" -Destination "$OH_PATH/$TOMCAT_DIR/webapps/"
+}
+
+###################################################################
 function start_ui {
-	echo "Setup UI..."
-	Copy-Item  -Path "$OH_PATH/$OH_DIR/$OH_UI_PROD" -Destination "$OH_PATH/$OH_DIR/$TOMCAT_DIR/" -Recurse
 	Write-Host "Starting Open Hospital UI at $OH_UI_URL..."
 	# OH UI launch
 	Start-Process $OH_UI_URL
@@ -1755,6 +1775,8 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				$script:DB_CREATE_SQL=""
 				$script:EXPERT_MODE=""
 				$script:API_SERVER=""
+				$script:GUI_INTERFACE=""
+				$script:UI_INTERFACE=""
 				Write-Host ""
 				Write-Host "Warning: in order to reload database settings, exit script and relaunch."
 				Write-Host "Select [v] option from script menu to check current settings."
@@ -1764,6 +1786,18 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			}
 			Write-Host "Done!"
 			Read-Host "Press any key to continue";
+		}
+		###################################################
+		"U"	{ # toggle UI interface
+			switch -CaseSensitive( $script:UI_INTERFACE ) {
+			"on"	{ # 
+				$script:UI_INTERFACE="off"
+				}
+			"off"	{ # 
+				$script:UI_INTERFACE="on"
+				}
+			}
+			#Read-Host "Press any key to continue";
 		}
 		###################################################
 		"V" 	{ # Check for latest OH version
@@ -1899,7 +1933,7 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 	}
 }
 
-######## OH startup
+################### OH startup ###################
 
 # test if database connection is working
 test_database_connection;
@@ -1912,12 +1946,7 @@ if ( $API_SERVER -eq "on" ) {
 	start_api_server;
 }
 
-# check for UI interface
-if ( $UI_INTERFACE -eq "on" ) {
-	start_ui;
-}
-
-# if SERVER mode is selected, wait for CTRL-C input to exit
+# if SERVER mode is selected, start database server and wait for CTRL-C input to exit
 if ( $OH_MODE -eq "SERVER" ) {
 
 	Write-Host "Open Hospital - SERVER mode started"
@@ -1964,8 +1993,16 @@ else {
 	# generate config files if not existent
 	write_config_files;
 
-	# start OH gui
-	start_gui;
+	# check for UI interface
+	if ( $UI_INTERFACE -eq "on" ) {
+		setup_ui;
+		start_ui;
+	}
+
+	# check for GUI interface
+	if ( $GUI_INTERFACE -eq "on" ) {
+		start_gui;
+	}
 
 	# Close and exit
 	Write-Host "Exiting Open Hospital..."
