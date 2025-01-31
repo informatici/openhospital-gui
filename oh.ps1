@@ -402,6 +402,8 @@ function read_settings {
 		$script:OH_DOC_DIR=$oh_settings.OH_DOC_DIR
 		$script:DEMO_DATA=$oh_settings.DEMODATA
 		$script:API_SERVER=$oh_settings.APISERVER
+		$script:UI_INTERFACE=$oh_settings.UI_INTERFACE
+		$script:GUI_INTERFACE=$oh_settings.GUI_INTERFACE
 	}
 		
 	# check for database settings file and read values
@@ -470,8 +472,13 @@ function set_defaults {
 	if ( [string]::IsNullOrEmpty($DEMO_DATA) ) {
 		$script:DEMO_DATA="off"
 	}
+	
+	# EXPERT_MODE features - set default to off
+	if ( [string]::IsNullOrEmpty($EXPERT_MODE) ) {
+		$script:EXPERT_MODE="off"
+	}
 
-	# api server - set default to off
+	# API server - set default to off
 	if ( [string]::IsNullOrEmpty($API_SERVER) ) {
 		$script:API_SERVER="off"
 	}
@@ -481,16 +488,9 @@ function set_defaults {
 		$script:GUI_INTERFACE="on"
 	}
 
-	# EXPERT_MODE features - set default to off
-
 	# UI interface - set default to off
 	if ( [string]::IsNullOrEmpty($UI_INTERFACE) ) {
 		$script:UI_INTERFACE="off"
-	}
-
-	# EXPERT_MODE features - set default to off
-	if ( [string]::IsNullOrEmpty($EXPERT_MODE) ) {
-		$script:EXPERT_MODE="off"
 	}
 
 	# set escaped path (/ in place of \)
@@ -1173,7 +1173,7 @@ function write_config_files {
 		# set GUI INTERFACE
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("GUI_INTERFACE=on","GUI_INTERFACE=$GUI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set UI INTERFACE
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("UI_INTERFACE=on","UI_INTERFACE=$UI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("UI_INTERFACE=off","UI_INTERFACE=$UI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 	}
 
 	######## OH - Other settings setup

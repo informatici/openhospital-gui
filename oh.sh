@@ -411,7 +411,12 @@ function set_defaults {
 		DEMO_DATA="off"
 	fi
 
-	# api server - set default to off
+	# EXPERT_MODE features - set default to off
+	if [ -z "$EXPERT_MODE" ]; then
+		EXPERT_MODE="off"
+	fi
+
+	# API server - set default to off
 	if [ -z "$API_SERVER" ]; then
 		API_SERVER="off"
 	fi
@@ -421,16 +426,9 @@ function set_defaults {
 		GUI_INTERFACE="on"
 	fi
 
-	# EXPERT_MODE features - set default to off
-
 	# UI interface - set default to off
 	if [ -z "$UI_INTERFACE" ]; then
 		UI_INTERFACE="off"
-	fi
-
-	# EXPERT_MODE features - set default to off
-	if [ -z "$EXPERT_MODE" ]; then
-		EXPERT_MODE="off"
 	fi
 
 	# set escaped path (/ in place of \)
@@ -1014,6 +1012,7 @@ function write_config_files {
 		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
 		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
+		-e "s/GUI_INTERFACE=on/"$GUI_INTERFACE=$GUI_INTERFACE"/g" -e "s/UI_INTERFACE=off/"UI_INTERFACE=$UI_INTERFACE"/g" \
 		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS
 	fi
 
