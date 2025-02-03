@@ -325,14 +325,14 @@ function script_menu_advanced {
 	Write-Host "   -------------------------------- "
 	Write-Host "    EXPERT MODE - advanced options"
 	Write-Host ""
-	Write-Host "   -A  toggle API server - EXPERIMENTAL	| -m  configure database connection manually"
-	Write-Host "   -e  export/save OH database		| -r  restore OH database"
-	Write-Host "   -i  initialize/install OH database	| -t  test database connection (CLIENT mode only)"
-	Write-Host "   -D  initialize OH with Demo data	| -X  clean/reset OH installation"
- 	Write-Host "   -d  toggle log level INFO/DEBUG	| -s  save OH configuration"
+	Write-Host "   -A  toggle API server - EXPERIMENTAL		| -d  toggle log level INFO/DEBUG"
+	Write-Host "   -D  initialize OH with Demo data		| -X  clean/reset OH installation"
+	Write-Host "   -e  export/save OH database			| -r  restore OH database"
+ 	Write-Host "   -m  configure database connection manually	| -i  initialize/install OH databas"
+	Write-Host "   -s  save OH configuration			| -t  test database connection (CLIENT mode only)"
 	Write-Host "   -G  setup GSM			"
-	Write-Host "   -U  enable UI web interface		| -u  create Desktop shortcut"
-	Write-Host "   -v  show configuration		| -V  check for latest OH version"
+	Write-Host "   -U  enable UI web interface			| -u  create Desktop shortcut"
+	Write-Host "   -v  show configuration			| -V  check for latest OH version"
 	Write-Host ""
 }
 
@@ -1792,9 +1792,11 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			switch -CaseSensitive( $script:UI_INTERFACE ) {
 			"on"	{ # 
 				$script:UI_INTERFACE="off"
+				$script:GUI_INTERFACE="on"
 				}
 			"off"	{ # 
 				$script:UI_INTERFACE="on"
+				$script:GUI_INTERFACE="off"
 				}
 			}
 			#Read-Host "Press any key to continue";

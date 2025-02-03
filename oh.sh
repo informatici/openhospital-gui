@@ -254,14 +254,14 @@ function script_menu_advanced {
 	echo "   -------------------------------- "
 	echo "    EXPERT MODE - advanced options"
 	echo ""
-	echo "   -A  toggle API server - EXPERIMENTAL	| -m  configure database connection manually"
-	echo "   -e  export/save OH database		| -r  restore OH database"
-	echo "   -i  initialize/install OH database	| -t  test database connection (CLIENT mode only)"
-	echo "   -D  initialize OH with Demo data	| -X  clean/reset OH installation"
- 	echo "   -d  toggle log level INFO/DEBUG	| -s  save OH configuration"
+	echo "   -A  toggle API server - EXPERIMENTAL		| -d  toggle log level INFO/DEBUG"
+	echo "   -D  initialize OH with Demo data		| -X  clean/reset OH installation"
+	echo "   -e  export/save OH database			| -r  restore OH database"
+ 	echo "   -m  configure database connection manually	| -i  initialize/install OH databas"
+	echo "   -s  save OH configuration			| -t  test database connection (CLIENT mode only)"
 	echo "   -G  setup GSM			"
-	echo "   -U  enable UI web interface		| -u  create Desktop shortcut"
-	echo "   -v  show configuration		| -V  check for latest OH version"
+	echo "   -U  enable UI web interface			| -u  create Desktop shortcut"
+	echo "   -v  show configuration			| -V  check for latest OH version"
 	echo ""
 }
 
@@ -1653,9 +1653,11 @@ function parse_user_input {
 		case "$UI_INTERFACE" in
 			*on*)
 				UI_INTERFACE="off";
+				GUI_INTERFACE="on";
 			;;
 			*off*)
 				UI_INTERFACE="on";
+				GUI_INTERFACE="off";
 			;;
 		esac
 		#
