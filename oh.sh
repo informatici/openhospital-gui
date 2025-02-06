@@ -1851,6 +1851,19 @@ else
 	if [ "$UI_INTERFACE" = "on" ]; then
 		setup_ui;
 		start_ui;
+		# wait for ctrl c to exit
+		echo "OH UI started!"
+		echo "Press Ctrl + C to exit"
+		while true; do
+		trap ctrl_c INT
+		function ctrl_c() {
+			echo "Exiting Open Hospital..."
+			stop_api_server;
+			shutdown_database;
+			cd "$CURRENT_DIR"
+			exit 0
+		}
+	done
 	fi
 
 	# check for GUI interface

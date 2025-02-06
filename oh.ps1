@@ -1973,7 +1973,7 @@ if ( $OH_MODE -eq "SERVER" ) {
 				shutdown_database;		
 				exit 0
 			}
-			default { "Invalid choice. " }
+		default { "Invalid choice. " }
 		}
 	}
 # CTRL-C version 
@@ -1999,6 +1999,21 @@ else {
 	if ( $UI_INTERFACE -eq "on" ) {
 		setup_ui;
 		start_ui;
+		Write-Host "OH UI started!"
+	
+		while ($true) {
+			$choice = Read-Host -Prompt "Press Q to exit"
+
+			switch ("$choice") {
+				"Q" {
+					Write-Host "Exiting Open Hospital..."
+					stop_api_server;
+					shutdown_database;		
+					exit 0
+				}
+			default { "Invalid choice. " }
+			}
+		}
 	}
 
 	# check for GUI interface
