@@ -133,7 +133,7 @@
 				<textElement>
 					<font size="13" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{MainStoreInventoryID}+ ":" + $P{inventoryId}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{WardInventoryID }+ ":" + $P{inventoryId}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
