@@ -305,7 +305,7 @@ public class MovStockMultipleDischarging extends JDialog {
 							return;
 						}
 					} else {
-						lot = new Lot("", null, null); //$NON-NLS-1$
+						lot = new Lot(null,"", null, null); //$NON-NLS-1$
 					}
 
 					// Date
