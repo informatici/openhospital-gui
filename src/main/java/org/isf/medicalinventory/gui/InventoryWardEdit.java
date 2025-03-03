@@ -497,7 +497,6 @@ public class InventoryWardEdit extends ModalJFrame {
 					inventory.setUser(user);
 					inventory.setInventoryType(InventoryType.ward.toString());
 					inventory.setWard(wardSelected != null ? wardSelected.getCode() : null);
-					inventory = medicalInventoryManager.newMedicalInventory(inventory);
 					for (MedicalInventoryRow medicalInventoryRow : inventoryRowSearchList) {
 						medicalInventoryRow.setInventory(inventory);
 						Lot lot = medicalInventoryRow.getLot();
@@ -521,9 +520,9 @@ public class InventoryWardEdit extends ModalJFrame {
 						} else {
 							medicalInventoryRow.setLot(null);
 						}
-						medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 						newMedicalInventoryRows.add(medicalInventoryRow);
 					}
+					inventory = medicalInventoryManager.newMedicalInventory(inventory, newMedicalInventoryRows);
 					mode = "update";
 					validateButton.setEnabled(true);
 					MessageDialog.info(this, "angal.inventory.savesuccess.msg");

@@ -614,7 +614,6 @@ public class InventoryEdit extends ModalJFrame {
 					inventory.setDischargeType(dischargeType == null ? null : dischargeType.getCode());
 					inventory.setSupplier(supplier == null ? null : supplier.getSupId());
 					inventory.setDestination(destination == null ? null : destination.getCode());
-					inventory = medicalInventoryManager.newMedicalInventory(inventory);
 					while (inventoryRowSearchListIterator.hasNext()) {
 						MedicalInventoryRow medicalInventoryRow = inventoryRowSearchListIterator.next();
 						medicalInventoryRow.setInventory(inventory);
@@ -639,9 +638,9 @@ public class InventoryEdit extends ModalJFrame {
 						} else {
 							medicalInventoryRow.setLot(null);
 						}
-						medicalInventoryRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 						newMedicalInventoryRows.add(medicalInventoryRow);
 					}
+					inventory = medicalInventoryManager.newMedicalInventory(inventory, newMedicalInventoryRows);
 					mode = "update";
 					MessageDialog.info(this, "angal.inventory.savesuccess.msg");
 					fireInventoryInserted();
