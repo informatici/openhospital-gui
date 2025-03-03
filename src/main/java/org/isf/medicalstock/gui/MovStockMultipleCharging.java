@@ -475,8 +475,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private Lot createNewLot(Medical med, int qty) {
 		LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
 		LocalDateTime expiringDate = askExpiringDate();
-		Lot newLot = new Lot("", preparationDate, expiringDate);
-		newLot.setMedical(med);
+		Lot newLot = new Lot(med,"", preparationDate, expiringDate);
 
 		if (!setOrValidateCost(newLot, qty)) {
 			return null;
@@ -618,8 +617,7 @@ public class MovStockMultipleCharging extends JDialog {
 					} else {
 						expiringDate = expireDateChooser.getDateEndOfDay();
 						preparationDate = preparationDateChooser.getDateStartOfDay();
-						lot = new Lot(lotName, preparationDate, expiringDate);
-						lot.setMedical(med);
+						lot = new Lot(med, lotName, preparationDate, expiringDate);
 					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
