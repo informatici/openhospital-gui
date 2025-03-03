@@ -578,8 +578,7 @@ public class WardPharmacyRectify extends JDialog {
 					} else {
 						expiringDate = expireDateChooser.getDateEndOfDay();
 						preparationDate = preparationDateChooser.getDateStartOfDay();
-						lot = new Lot(lotName, preparationDate, expiringDate);
-						lot.setMedical(med);
+						lot = new Lot(med, lotName, preparationDate, expiringDate);
 					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
