@@ -1581,7 +1581,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		if (isAutomaticLotIn()) {
 			LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
 			LocalDateTime expiringDate = askExpiringDate();
-			lot = new Lot("", preparationDate, expiringDate);
+			lot = new Lot(null, "", preparationDate, expiringDate);
 			// Cost
 			BigDecimal cost = new BigDecimal(0);
 			if (isLotWithCost()) {
@@ -1617,6 +1617,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		LocalDateTime preparationDate;
 		LocalDateTime expiringDate;
 		Lot lot = null;
+		Medical medical = null;
 
 		JTextField lotNameTextField = new JTextField(15);
 		lotNameTextField.addAncestorListener(new RequestFocusListener());
@@ -1630,6 +1631,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		GoodDateChooser preparationDateChooser = new GoodDateChooser(now);
 		GoodDateChooser expireDateChooser = new GoodDateChooser(now);
 		if (lotToUpdate != null) {
+			medical = lotToUpdate.getMedical();
 			lotNameTextField.setText(lotToUpdate.getCode());
 			preparationDateChooser = new GoodDateChooser(lotToUpdate.getPreparationDate().toLocalDate());
 			expireDateChooser = new GoodDateChooser(lotToUpdate.getDueDate().toLocalDate());
@@ -1651,7 +1653,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				} else {
 					expiringDate = expireDateChooser.getDateEndOfDay();
 					preparationDate = preparationDateChooser.getDateStartOfDay();
-					lot = new Lot(lotName, preparationDate, expiringDate);
+					lot = new Lot(medical, lotName, preparationDate, expiringDate);
 					BigDecimal cost = new BigDecimal(0);
 					if (isLotWithCost()) {
 						if (lotToUpdate != null) {

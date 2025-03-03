@@ -1293,21 +1293,23 @@ public class InventoryEdit extends ModalJFrame {
 		public Object getValueAt(int r, int c) {
 			if (r < inventoryRowSearchList.size()) {
 				MedicalInventoryRow medInvtRow = inventoryRowSearchList.get(r);
+				Medical medical = medInvtRow.getMedical();
+				Lot lot = medInvtRow.getLot();
 				if (c == -1) {
 					return medInvtRow;
 				} else if (c == 0) {
 					return medInvtRow.getId();
 				} else if (c == 1) {
-					return medInvtRow.getMedical() == null ? "" : medInvtRow.getMedical().getProdCode();
+					return medical == null ? "" : medical.getProdCode();
 				} else if (c == 2) {
-					return medInvtRow.getMedical() == null ? "" : medInvtRow.getMedical().getDescription();
+					return medical == null ? "" : medical.getDescription();
 				} else if (c == 3) {
-					return medInvtRow.getLot() == null || medInvtRow.isNewLot() ? "N" : "";
+					return lot == null || medInvtRow.isNewLot() ? "N" : "";
 				} else if (c == 4) {
-					return medInvtRow.getLot() == null ? "" : (medInvtRow.getLot().getCode().equals("") ? "AUTO" : medInvtRow.getLot().getCode());
+					return lot == null ? "" : (lot.getCode().equals("") ? "AUTO" : lot.getCode());
 				} else if (c == 5) {
-					if (medInvtRow.getLot() != null && medInvtRow.getLot().getDueDate() != null) {
-						return medInvtRow.getLot().getDueDate().format(DATE_FORMATTER);
+					if (lot != null && lot.getDueDate() != null) {
+						return lot.getDueDate().format(DATE_FORMATTER);
 					}
 					return "";
 				} else if (c == 6) {
@@ -1316,13 +1318,13 @@ public class InventoryEdit extends ModalJFrame {
 					double dblValue = medInvtRow.getRealQty();
 					return (int) dblValue;
 				} else if (c == 8) {
-					if (medInvtRow.getLot() != null && medInvtRow.getLot().getCost() != null) {
-						medInvtRow.setTotal(medInvtRow.getLot().getCost().multiply(BigDecimal.valueOf(medInvtRow.getRealQty())));
-						return medInvtRow.getLot().getCost();
+					if (lot != null && lot.getCost() != null) {
+						medInvtRow.setTotal(lot.getCost().multiply(BigDecimal.valueOf(medInvtRow.getRealQty())));
+						return lot.getCost();
 					}
 					return BigDecimal.ZERO;
 				} else if (c == 9) {
-					if (medInvtRow.getLot() != null && medInvtRow.getLot().getCost() != null) {
+					if (lot != null && lot.getCost() != null) {
 						return medInvtRow.getTotal();
 					}
 					return BigDecimal.ZERO;
@@ -1371,7 +1373,7 @@ public class InventoryEdit extends ModalJFrame {
 		if (isAutomaticLotIn()) {
 			LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
 			LocalDateTime expiringDate = askExpiringDate();
-			lot = new Lot("", preparationDate, expiringDate);
+			lot = new Lot(null, "", preparationDate, expiringDate);
 			// Cost
 			BigDecimal cost = BigDecimal.ZERO;
 			if (isLotWithCost()) {
@@ -1391,6 +1393,7 @@ public class InventoryEdit extends ModalJFrame {
 		LocalDateTime preparationDate;
 		LocalDateTime expiringDate;
 		Lot lot = null;
+		Medical medical = null;
 
 		JTextField lotNameTextField = new JTextField(15);
 		lotNameTextField.addAncestorListener(new RequestFocusListener());
@@ -1404,6 +1407,7 @@ public class InventoryEdit extends ModalJFrame {
 		GoodDateChooser preparationDateChooser = new GoodDateChooser(now);
 		GoodDateChooser expireDateChooser = new GoodDateChooser(now);
 		if (lotToUpdate != null) {
+			medical = lotToUpdate.getMedical();
 			lotNameTextField.setText(lotToUpdate.getCode());
 			preparationDateChooser = new GoodDateChooser(lotToUpdate.getPreparationDate().toLocalDate());
 			expireDateChooser = new GoodDateChooser(lotToUpdate.getDueDate().toLocalDate());
@@ -1429,7 +1433,7 @@ public class InventoryEdit extends ModalJFrame {
 				} else {
 					expiringDate = expireDateChooser.getDateEndOfDay();
 					preparationDate = preparationDateChooser.getDateStartOfDay();
-					lot = new Lot(lotName, preparationDate, expiringDate);
+					lot = new Lot(medical, lotName, preparationDate, expiringDate);
 					BigDecimal cost = BigDecimal.ZERO;
 					if (isLotWithCost()) {
 						if (lotToUpdate != null) {
