@@ -112,6 +112,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
+import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -946,8 +947,9 @@ public class InventoryEdit extends ModalJFrame {
 
 					if (isLotWithCost()) {
 						BigDecimal newCost = askCost(2, cost);
-						if (newCost.compareTo(BigDecimal.ZERO) == 0)
+						if (newCost.compareTo(BigDecimal.ZERO) == 0) {
 							return;
+						}
 
 						oldLot.setCost(newCost);
 						newLot = oldLot;
@@ -1338,10 +1340,14 @@ public class InventoryEdit extends ModalJFrame {
 			if (ok == JOptionPane.OK_OPTION) {
 				String lotCode = lotCodeTextField.getText();
 				try {
-					// check for lotCode in persisted lots and new lots in the inventoryRowSearchList
+					/* 
+					 * check for lotCode in persisted lots and new lots in the inventoryRowSearchList
+					 * avoiding null objects or lots without name yet (will be shown as "AUTO" and the lotCode will be generated)
+					 */
 					if (movStockInsertingManager.lotExists(lotCode) || inventoryRowSearchList.stream()
 						.map(MedicalInventoryRow::getLot)
 						.filter(Objects::nonNull)
+						.filter(l -> !l.getCode().isEmpty())
 						.anyMatch(l -> l.getCode().equals(lotCode))) {
 						MessageDialog.error(this, "angal.medicalstock.multiplecharging.theinsertedlotcodealreaedyexists.msg");
 						continue;
@@ -1536,6 +1542,7 @@ public class InventoryEdit extends ModalJFrame {
 			double actualQty = med.getInqty() - med.getOutqty();
 			if (lots.isEmpty()) {
 				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
+				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
 				}
@@ -1566,6 +1573,7 @@ public class InventoryEdit extends ModalJFrame {
 			double actualQty = med.getInqty() - med.getOutqty();
 			if (lots.isEmpty()) {
 				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
+				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
 				}
@@ -1605,6 +1613,7 @@ public class InventoryEdit extends ModalJFrame {
 			double actualQty = med.getInqty() - med.getOutqty();
 			if (lots.isEmpty()) {
 				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
+				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
 				}
@@ -1649,7 +1658,7 @@ public class InventoryEdit extends ModalJFrame {
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			if (lots.isEmpty()) {
 				inventoryRowTemp = new MedicalInventoryRow(0, 0.0, 0.0, null, med, null);
-				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor 
+				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
 				} else {
@@ -1675,7 +1684,7 @@ public class InventoryEdit extends ModalJFrame {
 			int info = MessageDialog.yesNo(null, "angal.inventory.productalreadyexist.fmt.msg", medicalWithLot.getDescription());
 			if (info == JOptionPane.YES_OPTION) {
 				inventoryRowTemp = new MedicalInventoryRow(0, 0.0, 0.0, null, medicalWithLot, null);
-				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor 
+				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				inventoryRowsList.add(inventoryRowTemp);
 			}
 		}
@@ -1726,8 +1735,7 @@ public class InventoryEdit extends ModalJFrame {
 
 	private JTextField getReferenceTextField() {
 		if (referenceTextField == null) {
-			referenceTextField = new JTextField();
-			referenceTextField.setColumns(10);
+			referenceTextField = new VoLimitedTextField(40, 10); // limit to 40 because of potential suffixes
 			if (inventory != null && !mode.equals("new")) {
 				referenceTextField.setText(inventory.getInventoryReference());
 			}
