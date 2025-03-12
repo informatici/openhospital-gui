@@ -1340,9 +1340,9 @@ public class InventoryEdit extends ModalJFrame {
 			if (ok == JOptionPane.OK_OPTION) {
 				String lotCode = lotCodeTextField.getText();
 				try {
-					/* 
-					 * check for lotCode in persisted lots and new lots in the inventoryRowSearchList
-					 * avoiding null objects or lots without name yet (will be shown as "AUTO" and the lotCode will be generated)
+					/*
+					 * check for lotCode in persisted lots and new lots in the inventoryRowSearchList avoiding null objects or lots without name yet (will be
+					 * shown as "AUTO" and the lotCode will be generated)
 					 */
 					if (movStockInsertingManager.lotExists(lotCode) || inventoryRowSearchList.stream()
 						.map(MedicalInventoryRow::getLot)
