@@ -97,6 +97,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
+import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -1391,7 +1392,8 @@ public class InventoryWardEdit extends ModalJFrame {
 
 	private JTextField getReferenceTextField() {
 		if (referenceTextField == null) {
-			referenceTextField = new JTextField();
+			// limit to 40 similarly to MainInventory so to have a common validation method
+			referenceTextField = new VoLimitedTextField(40, 10);
 			referenceTextField.setColumns(10);
 			if (inventory != null && !mode.equals("new")) {
 				referenceTextField.setText(inventory.getInventoryReference());
