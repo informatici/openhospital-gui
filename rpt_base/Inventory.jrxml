@@ -13,6 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -21,7 +22,7 @@
 	<parameter name="City" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="Email" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="Telephone" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="inventoryId" class="java.lang.String"/>
+	<parameter name="inventoryId" class="java.lang.Integer"/>
 	<parameter name="inventoryDate" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="inventoryReference" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="inventoryStatus" class="java.lang.String" isForPrompting="false"/>
@@ -29,10 +30,11 @@
 	<parameter name="PATH_LOGO" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./rsc/images/"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="ward" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT DATE_FORMAT(LT_DUE_DATE, '%d/%m/%Y') AS LT_DUE_DATE, LT_DUE_DATE,MDSR_CODE,MDSR_DESC,LT_ID_A,MINVTR_THEORETIC_QTY,MINVTR_REAL_QTY
-			 FROM ((`oh_medicaldsrinventoryrow` join `oh_medicaldsrinventory` ON MINVTR_INVT_ID=MINVT_ID)
-			join `oh_medicaldsr` on MINVTR_MDSR_ID=MDSR_ID)
+			 FROM `oh_medicaldsrinventoryrow` join `oh_medicaldsrinventory` ON MINVTR_INVT_ID=MINVT_ID
+			join `oh_medicaldsr` on MINVTR_MDSR_ID=MDSR_ID
 			left join `oh_medicaldsrlot` on MINVTR_LT_ID_A=LT_ID_A
 			where MINVTR_INVT_ID = $P{inventoryId} ORDER BY MDSR_DESC asc]]>
 	</queryString>
@@ -138,7 +140,7 @@
 				<textFieldExpression><![CDATA[$R{MainStoreInventoryID}+ ":" + $P{inventoryId}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-13" x="0" y="48" width="273" height="22" uuid="c36a0f89-2260-4f94-83f3-5ae60fe10808"/>
+				<reportElement key="textField-13" x="0" y="63" width="273" height="17" uuid="c36a0f89-2260-4f94-83f3-5ae60fe10808"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -151,7 +153,7 @@
 				<textFieldExpression><![CDATA[$R{Reference}+ ":" + $P{inventoryReference}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-6" x="0" y="26" width="273" height="22" uuid="d71f71cb-0165-4c70-8707-4a245b2a6071"/>
+				<reportElement key="textField-6" x="0" y="42" width="273" height="22" uuid="d71f71cb-0165-4c70-8707-4a245b2a6071"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -164,7 +166,7 @@
 				<textFieldExpression><![CDATA[$R{InventoryDate} + ":" + ($P{inventoryDate} != null ? $P{inventoryDate} : "")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-8" x="0" y="70" width="238" height="22" uuid="aeadc7e4-d6e3-4097-8705-74f5a99ab30d"/>
+				<reportElement key="textField-8" x="0" y="84" width="238" height="22" uuid="aeadc7e4-d6e3-4097-8705-74f5a99ab30d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -175,6 +177,19 @@
 					<font size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Status}+ ":" + $P{inventoryStatus}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-8" x="0" y="23" width="238" height="22" uuid="19c98a61-7e2f-401a-a7ec-f6ce7a58ac05"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{WardName}+ ":" + $P{ward}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
