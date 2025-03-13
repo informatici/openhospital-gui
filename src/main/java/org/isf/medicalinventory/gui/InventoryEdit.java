@@ -209,10 +209,10 @@ public class InventoryEdit extends ModalJFrame {
 	private Class< ? >[] columnsClasses = { String.class, Integer.class, String.class, String.class, String.class, LocalDate.class, Integer.class,
 			Integer.class, BigDecimal.class, BigDecimal.class };
 	private MedicalInventory inventory;
-	private JLabel specificProduct;
+	private JLabel addMedicalLabel;
 	private JButton selectButton;
 	private JLabel dateInventoryLabel;
-	private JTextField prodCodeTextField;
+	private JTextField medicalCodeTextField;
 	private String code;
 	private String mode;
 	private JLabel statusLabel;
@@ -220,7 +220,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JLabel chargeTypeLabel;
 	private JLabel dischargeTypeLabel;
 	private JLabel supplierLabel;
-	private JLabel addProductLabel;
+	private JLabel addMedicalsByLabel;
 	private JLabel destinationLabel;
 	private JTextField referenceTextField;
 	private JTextField jTextFieldEditor;
@@ -323,7 +323,7 @@ public class InventoryEdit extends ModalJFrame {
 			lotButton.setVisible(false);
 			printButton.setVisible(true);
 			selectButton.setEnabled(false);
-			prodCodeTextField.setEnabled(false);
+			medicalCodeTextField.setEnabled(false);
 
 		} else {
 			saveButton.setVisible(true);
@@ -435,24 +435,24 @@ public class InventoryEdit extends ModalJFrame {
 			gbc_destinationCombo.gridx = 3;
 			gbc_destinationCombo.gridy = 2;
 			panelHeader.add(getJComboDestination(), gbc_destinationCombo);
-			GridBagConstraints gbc_specificRadio = new GridBagConstraints();
-			gbc_specificRadio.anchor = GridBagConstraints.EAST;
-			gbc_specificRadio.insets = new Insets(0, 0, 0, 5);
-			gbc_specificRadio.gridx = 0;
-			gbc_specificRadio.gridy = 3;
-			panelHeader.add(getSpecificProductLabel(), gbc_specificRadio);
-			GridBagConstraints gbc_codeTextField = new GridBagConstraints();
-			gbc_codeTextField.insets = new Insets(0, 0, 0, 5);
-			gbc_codeTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_codeTextField.gridx = 1;
-			gbc_codeTextField.gridy = 3;
-			panelHeader.add(getProdCodeTextField(), gbc_codeTextField);
-			GridBagConstraints gbc_addProduct = new GridBagConstraints();
-			gbc_addProduct.anchor = GridBagConstraints.EAST;
-			gbc_addProduct.insets = new Insets(0, 0, 0, 5);
-			gbc_addProduct.gridx = 2;
-			gbc_addProduct.gridy = 3;
-			panelHeader.add(getAddProductLabel(), gbc_addProduct);
+			GridBagConstraints gbc_addMedicalLabel = new GridBagConstraints();
+			gbc_addMedicalLabel.anchor = GridBagConstraints.EAST;
+			gbc_addMedicalLabel.insets = new Insets(0, 0, 0, 5);
+			gbc_addMedicalLabel.gridx = 0;
+			gbc_addMedicalLabel.gridy = 3;
+			panelHeader.add(getAddMedicalLabel(), gbc_addMedicalLabel);
+			GridBagConstraints gbc_medicalCodeTextField = new GridBagConstraints();
+			gbc_medicalCodeTextField.insets = new Insets(0, 0, 0, 5);
+			gbc_medicalCodeTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbc_medicalCodeTextField.gridx = 1;
+			gbc_medicalCodeTextField.gridy = 3;
+			panelHeader.add(getMedicalCodeTextField(), gbc_medicalCodeTextField);
+			GridBagConstraints gbc_addMedicalsByLabel = new GridBagConstraints();
+			gbc_addMedicalsByLabel.anchor = GridBagConstraints.EAST;
+			gbc_addMedicalsByLabel.insets = new Insets(0, 0, 0, 5);
+			gbc_addMedicalsByLabel.gridx = 2;
+			gbc_addMedicalsByLabel.gridy = 3;
+			panelHeader.add(getAddMedicalsByLabel(), gbc_addMedicalsByLabel);
 			GridBagConstraints gbc_selectButton = new GridBagConstraints();
 			gbc_selectButton.anchor = GridBagConstraints.WEST;
 			gbc_selectButton.insets = new Insets(0, 0, 0, 5);
@@ -513,7 +513,7 @@ public class InventoryEdit extends ModalJFrame {
 
 	private JButton getSelectButton() {
 		if (selectButton == null) {
-			selectButton = new JButton(MessageBundle.getMessage("angal.inventory.allproduct.btn"));
+			selectButton = new JButton(MessageBundle.getMessage("angal.inventory.select.btn"));
 			selectButton.addActionListener(actionEvent -> {
 				mainPanel = new JPanel();
 				mainPanel.setLayout(new BorderLayout(10, 10));
@@ -1453,11 +1453,11 @@ public class InventoryEdit extends ModalJFrame {
 		this.inventory = inventory;
 	}
 
-	private JLabel getSpecificProductLabel() {
-		if (specificProduct == null) {
-			specificProduct = new JLabel(MessageBundle.getMessage("angal.inventory.specificproduct.txt"));
+	private JLabel getAddMedicalLabel() {
+		if (addMedicalLabel == null) {
+			addMedicalLabel = new JLabel(MessageBundle.getMessage("angal.inventory.addamedical.label"));
 		}
-		return specificProduct;
+		return addMedicalLabel;
 	}
 
 	private JLabel getDateInventoryLabel() {
@@ -1467,22 +1467,22 @@ public class InventoryEdit extends ModalJFrame {
 		return dateInventoryLabel;
 	}
 
-	private JTextField getProdCodeTextField() {
-		if (prodCodeTextField == null) {
-			prodCodeTextField = new JTextField();
-			prodCodeTextField.setColumns(10);
-			TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.common.code.txt"), prodCodeTextField, Show.FOCUS_LOST);
+	private JTextField getMedicalCodeTextField() {
+		if (medicalCodeTextField == null) {
+			medicalCodeTextField = new JTextField();
+			medicalCodeTextField.setColumns(10);
+			TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.common.code.txt"), medicalCodeTextField, Show.FOCUS_LOST);
 			suggestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			suggestion.setForeground(Color.GRAY);
 			suggestion.setHorizontalAlignment(SwingConstants.CENTER);
 			suggestion.changeAlpha(0.5f);
 			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
-			prodCodeTextField.addKeyListener(new KeyAdapter() {
+			medicalCodeTextField.addKeyListener(new KeyAdapter() {
 
 				@Override
 				public void keyPressed(KeyEvent e) {
 					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-						code = prodCodeTextField.getText().trim();
+						code = medicalCodeTextField.getText().trim();
 						code = code.toLowerCase();
 						try {
 							addInventoryRow(code);
@@ -1492,12 +1492,12 @@ public class InventoryEdit extends ModalJFrame {
 						if (inventory != null && !inventory.getStatus().equals(InventoryStatus.draft.toString())) {
 							inventory.setStatus(InventoryStatus.draft.toString());
 						}
-						prodCodeTextField.setText("");
+						medicalCodeTextField.setText("");
 					}
 				}
 			});
 		}
-		return prodCodeTextField;
+		return medicalCodeTextField;
 	}
 
 	private List<MedicalInventoryRow> loadNewInventoryTable(String code, MedicalInventory inventory, boolean add) throws OHServiceException {
@@ -1788,11 +1788,11 @@ public class InventoryEdit extends ModalJFrame {
 		return supplierLabel;
 	}
 
-	private JLabel getAddProductLabel() {
-		if (addProductLabel == null) {
-			addProductLabel = new JLabel(MessageBundle.getMessage("angal.inventory.addproduct.label"));
+	private JLabel getAddMedicalsByLabel() {
+		if (addMedicalsByLabel == null) {
+			addMedicalsByLabel = new JLabel(MessageBundle.getMessage("angal.inventory.addmedicalsby.label"));
 		}
-		return addProductLabel;
+		return addMedicalsByLabel;
 	}
 
 	private JLabel getDischargeLabel() {

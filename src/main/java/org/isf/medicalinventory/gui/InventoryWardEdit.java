@@ -199,10 +199,11 @@ public class InventoryWardEdit extends ModalJFrame {
 	};
 	private final Class[] lotSelectionColumnClasses = { String.class, String.class, String.class };
 	private MedicalInventory inventory;
-	private JLabel specificProduct;
+	private JLabel addMedicalsByLabel;
+	private JLabel addMedicalLabel;
 	private JButton selectButton;
 	private JLabel dateInventoryLabel;
-	private JTextField codeTextField;
+	private JTextField medicalCodeTextField;
 	private String code;
 	private String mode;
 	private JLabel statusLabel;
@@ -279,13 +280,13 @@ public class InventoryWardEdit extends ModalJFrame {
 			wardComboBox.setEnabled(false);
 			printButton.setVisible(true);
 			lotButton.setVisible(false);
-			codeTextField.setEditable(false);
+			medicalCodeTextField.setEditable(false);
 
 		} else {
 			saveButton.setVisible(true);
 			validateButton.setVisible(true);
 			deleteButton.setVisible(true);
-			codeTextField.setEditable(true);
+			medicalCodeTextField.setEditable(true);
 			resetButton.setVisible(true);
 			referenceTextField.setEditable(true);
 			jCalendarInventoryDate.setEnabled(true);
@@ -329,7 +330,6 @@ public class InventoryWardEdit extends ModalJFrame {
 			gbc_dateInventoryLabel.gridx = 0;
 			gbc_dateInventoryLabel.gridy = 1;
 			panelHeader.add(getDateInventoryLabel(), gbc_dateInventoryLabel);
-
 			GridBagConstraints gbc_jCalendarInventory = new GridBagConstraints();
 			gbc_jCalendarInventory.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jCalendarInventory.insets = new Insets(0, 0, 5, 5);
@@ -355,23 +355,28 @@ public class InventoryWardEdit extends ModalJFrame {
 			gbc_statusLabel.gridy = 1;
 			gbc_statusLabel.gridheight = 3;
 			panelHeader.add(getStatusLabel(), gbc_statusLabel);
-
-			GridBagConstraints gbc_specificRadio = new GridBagConstraints();
-			gbc_specificRadio.anchor = GridBagConstraints.EAST;
-			gbc_specificRadio.insets = new Insets(0, 0, 0, 5);
-			gbc_specificRadio.gridx = 0;
-			gbc_specificRadio.gridy = 4;
-			panelHeader.add(getSpecificProductLabel(), gbc_specificRadio);
-			GridBagConstraints gbc_codeTextField = new GridBagConstraints();
-			gbc_codeTextField.insets = new Insets(0, 0, 0, 5);
-			gbc_codeTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_codeTextField.gridx = 1;
-			gbc_codeTextField.gridy = 4;
-			panelHeader.add(getCodeTextField(), gbc_codeTextField);
+			GridBagConstraints gbc_addMedicalLabel = new GridBagConstraints();
+			gbc_addMedicalLabel.anchor = GridBagConstraints.EAST;
+			gbc_addMedicalLabel.insets = new Insets(0, 0, 0, 5);
+			gbc_addMedicalLabel.gridx = 0;
+			gbc_addMedicalLabel.gridy = 4;
+			panelHeader.add(getAddMedicalLabel(), gbc_addMedicalLabel);
+			GridBagConstraints gbc_medicalCodeTextField = new GridBagConstraints();
+			gbc_medicalCodeTextField.insets = new Insets(0, 0, 0, 5);
+			gbc_medicalCodeTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbc_medicalCodeTextField.gridx = 1;
+			gbc_medicalCodeTextField.gridy = 4;
+			panelHeader.add(getMedicalCodeTextField(), gbc_medicalCodeTextField);
+			GridBagConstraints gbc_addMedicalsByLabel = new GridBagConstraints();
+			gbc_addMedicalsByLabel.anchor = GridBagConstraints.EAST;
+			gbc_addMedicalsByLabel.insets = new Insets(0, 0, 0, 5);
+			gbc_addMedicalsByLabel.gridx = 2;
+			gbc_addMedicalsByLabel.gridy = 4;
+			panelHeader.add(getAddMedicalsByLabel(), gbc_addMedicalsByLabel);
 			GridBagConstraints gbc_selectButton = new GridBagConstraints();
-			gbc_selectButton.anchor = GridBagConstraints.EAST;
+			gbc_selectButton.anchor = GridBagConstraints.WEST;
 			gbc_selectButton.insets = new Insets(0, 0, 0, 5);
-			gbc_selectButton.gridx = 2;
+			gbc_selectButton.gridx = 3;
 			gbc_selectButton.gridy = 4;
 			panelHeader.add(getSelectButton(), gbc_selectButton);
 		}
@@ -428,7 +433,7 @@ public class InventoryWardEdit extends ModalJFrame {
 
 	private JButton getSelectButton() {
 		if (selectButton == null) {
-			selectButton = new JButton(MessageBundle.getMessage("angal.inventory.allproduct.btn"));
+			selectButton = new JButton(MessageBundle.getMessage("angal.inventory.select.btn"));
 			selectButton.setSelected(inventory != null);
 			selectButton.addActionListener(actionEvent -> {
 				if (!selectAll) {
@@ -757,7 +762,7 @@ public class InventoryWardEdit extends ModalJFrame {
 					inventoryRowsToDelete.addAll(inventoryRowSearchList);
 				}
 				selectAll = false;
-				codeTextField.setEnabled(true);
+				medicalCodeTextField.setEnabled(true);
 				inventoryRowSearchList.clear();
 				DefaultTableModel model = (DefaultTableModel) jTableInventoryRow.getModel();
 				model.setRowCount(0);
@@ -1211,11 +1216,11 @@ public class InventoryWardEdit extends ModalJFrame {
 		return found;
 	}
 
-	private JLabel getSpecificProductLabel() {
-		if (specificProduct == null) {
-			specificProduct = new JLabel(MessageBundle.getMessage("angal.inventory.specificproduct.btn"));
+	private JLabel getAddMedicalLabel() {
+		if (addMedicalLabel == null) {
+			addMedicalLabel = new JLabel(MessageBundle.getMessage("angal.inventory.addamedical.label"));
 		}
-		return specificProduct;
+		return addMedicalLabel;
 	}
 
 	private JLabel getDateInventoryLabel() {
@@ -1225,23 +1230,30 @@ public class InventoryWardEdit extends ModalJFrame {
 		return dateInventoryLabel;
 	}
 
-	private JTextField getCodeTextField() {
-		if (codeTextField == null) {
-			codeTextField = new JTextField();
-			codeTextField.setEnabled(inventory == null);
-			codeTextField.setColumns(10);
-			TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.common.code.txt"), codeTextField, Show.FOCUS_LOST);
+	private JLabel getAddMedicalsByLabel() {
+		if (addMedicalsByLabel == null) {
+			addMedicalsByLabel = new JLabel(MessageBundle.getMessage("angal.inventory.addmedicalsby.label"));
+		}
+		return addMedicalsByLabel;
+	}
+
+	private JTextField getMedicalCodeTextField() {
+		if (medicalCodeTextField == null) {
+			medicalCodeTextField = new JTextField();
+			medicalCodeTextField.setEnabled(inventory == null);
+			medicalCodeTextField.setColumns(10);
+			TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.common.code.txt"), medicalCodeTextField, Show.FOCUS_LOST);
 			suggestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			suggestion.setForeground(Color.GRAY);
 			suggestion.setHorizontalAlignment(SwingConstants.CENTER);
 			suggestion.changeAlpha(0.5f);
 			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
-			codeTextField.addKeyListener(new KeyAdapter() {
+			medicalCodeTextField.addKeyListener(new KeyAdapter() {
 
 				@Override
 				public void keyPressed(KeyEvent e) {
 					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-						code = codeTextField.getText().trim();
+						code = medicalCodeTextField.getText().trim();
 						code = code.toLowerCase();
 						try {
 							addInventoryRow(code);
@@ -1251,12 +1263,12 @@ public class InventoryWardEdit extends ModalJFrame {
 						if (inventory != null && !inventory.getStatus().equals(InventoryStatus.draft.toString())) {
 							inventory.setStatus(InventoryStatus.draft.toString());
 						}
-						codeTextField.setText("");
+						medicalCodeTextField.setText("");
 					}
 				}
 			});
 		}
-		return codeTextField;
+		return medicalCodeTextField;
 	}
 
 	private void addInventoryRow(String code) throws OHServiceException {
@@ -1498,8 +1510,8 @@ public class InventoryWardEdit extends ModalJFrame {
 
 	private void disabledSomeComponents() {
 		jCalendarInventoryDate.setEnabled(false);
-		specificProduct.setEnabled(false);
-		codeTextField.setEnabled(false);
+		addMedicalLabel.setEnabled(false);
+		medicalCodeTextField.setEnabled(false);
 		selectButton.setEnabled(false);
 		referenceTextField.setEnabled(false);
 		jTableInventoryRow.setEnabled(false);
@@ -1511,8 +1523,8 @@ public class InventoryWardEdit extends ModalJFrame {
 
 	private void activateSomeComponents() {
 		jCalendarInventoryDate.setEnabled(true);
-		specificProduct.setEnabled(true);
-		codeTextField.setEnabled(true);
+		addMedicalLabel.setEnabled(true);
+		medicalCodeTextField.setEnabled(true);
 		selectButton.setEnabled(true);
 		referenceTextField.setEnabled(true);
 		jTableInventoryRow.setEnabled(true);
