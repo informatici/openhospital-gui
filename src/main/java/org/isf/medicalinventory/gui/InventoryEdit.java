@@ -779,7 +779,7 @@ public class InventoryEdit extends ModalJFrame {
 					if (answer == JOptionPane.YES_OPTION) {
 						try {
 							inventory.setStatus(status);
-							medicalInventoryManager.actualizeMedicalInventoryRow(inventory);
+							inventory = medicalInventoryManager.actualizeMedicalInventoryRow(inventory);
 							statusLabel.setText(status.toUpperCase());
 							statusLabel.setForeground(Color.BLUE);
 							confirmButton.setEnabled(true);
