@@ -166,7 +166,7 @@ public class InventoryEdit extends ModalJFrame {
 		jTableInventoryRow.updateUI();
 	}
 
-	private GoodDateChooser jCalendarInventory;
+	private GoodDateChooser jCalendarInventoryDate;
 	private LocalDateTime dateInventory = TimeTools.getNow();
 	private JPanel panelHeader;
 	private JPanel panelFooter;
@@ -315,7 +315,7 @@ public class InventoryEdit extends ModalJFrame {
 			columnEditable = columnEditableView;
 			resetButton.setVisible(false);
 			referenceTextField.setEditable(false);
-			jCalendarInventory.setEnabled(false);
+			jCalendarInventoryDate.setEnabled(false);
 			chargeCombo.setEnabled(false);
 			dischargeCombo.setEnabled(false);
 			supplierCombo.setEnabled(false);
@@ -331,7 +331,7 @@ public class InventoryEdit extends ModalJFrame {
 			deleteButton.setVisible(true);
 			resetButton.setVisible(true);
 			referenceTextField.setEditable(true);
-			jCalendarInventory.setEnabled(true);
+			jCalendarInventoryDate.setEnabled(true);
 			chargeCombo.setEnabled(true);
 			dischargeCombo.setEnabled(true);
 			supplierCombo.setEnabled(true);
@@ -367,7 +367,7 @@ public class InventoryEdit extends ModalJFrame {
 			gbc_jCalendarInventory.insets = new Insets(0, 0, 5, 5);
 			gbc_jCalendarInventory.gridx = 1;
 			gbc_jCalendarInventory.gridy = 0;
-			panelHeader.add(getJCalendarFrom(), gbc_jCalendarInventory);
+			panelHeader.add(getJCalendarInvetoryDate(), gbc_jCalendarInventory);
 			GridBagConstraints gbc_referenceLabel = new GridBagConstraints();
 			gbc_referenceLabel.anchor = GridBagConstraints.EAST;
 			gbc_referenceLabel.insets = new Insets(0, 0, 5, 5);
@@ -496,19 +496,19 @@ public class InventoryEdit extends ModalJFrame {
 		return panelFooter;
 	}
 
-	private GoodDateChooser getJCalendarFrom() {
-		if (jCalendarInventory == null) {
+	private GoodDateChooser getJCalendarInvetoryDate() {
+		if (jCalendarInventoryDate == null) {
 
-			jCalendarInventory = new GoodDateChooser(LocalDate.now(), false, false);
+			jCalendarInventoryDate = new GoodDateChooser(LocalDate.now(), false, false);
 			if (inventory != null) {
-				jCalendarInventory.setDate(inventory.getInventoryDate().toLocalDate());
+				jCalendarInventoryDate.setDate(inventory.getInventoryDate().toLocalDate());
 				dateInventory = inventory.getInventoryDate();
 			}
-			jCalendarInventory.addDateChangeListener(event -> {
-				dateInventory = jCalendarInventory.getDate().atStartOfDay();
+			jCalendarInventoryDate.addDateChangeListener(event -> {
+				dateInventory = jCalendarInventoryDate.getDate().atStartOfDay();
 			});
 		}
-		return jCalendarInventory;
+		return jCalendarInventoryDate;
 	}
 
 	private JButton getSelectButton() {
@@ -780,6 +780,8 @@ public class InventoryEdit extends ModalJFrame {
 						try {
 							inventory.setStatus(status);
 							inventory = medicalInventoryManager.actualizeMedicalInventoryRow(inventory);
+							jCalendarInventoryDate.setDate(inventory.getInventoryDate().toLocalDate());
+							dateInventory = inventory.getInventoryDate();
 							statusLabel.setText(status.toUpperCase());
 							statusLabel.setForeground(Color.BLUE);
 							confirmButton.setEnabled(true);

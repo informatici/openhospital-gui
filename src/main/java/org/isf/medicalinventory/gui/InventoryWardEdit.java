@@ -151,7 +151,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		jTableInventoryRow.updateUI();
 	}
 
-	private GoodDateChooser jCalendarInventory;
+	private GoodDateChooser jCalendarInventoryDate;
 	private LocalDateTime dateInventory = TimeTools.getNow();
 	private JPanel panelHeader;
 	private JPanel panelFooter;
@@ -274,7 +274,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			columnEditable = columnEditableView;
 			resetButton.setVisible(false);
 			referenceTextField.setVisible(false);
-			jCalendarInventory.setEnabled(false);
+			jCalendarInventoryDate.setEnabled(false);
 			selectButton.setEnabled(false);
 			wardComboBox.setEnabled(false);
 			printButton.setVisible(true);
@@ -288,7 +288,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			codeTextField.setEditable(true);
 			resetButton.setVisible(true);
 			referenceTextField.setEditable(true);
-			jCalendarInventory.setEnabled(true);
+			jCalendarInventoryDate.setEnabled(true);
 			selectButton.setEnabled(true);
 			wardComboBox.setEnabled(true);
 			lotButton.setVisible(true);
@@ -335,7 +335,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			gbc_jCalendarInventory.insets = new Insets(0, 0, 5, 5);
 			gbc_jCalendarInventory.gridx = 1;
 			gbc_jCalendarInventory.gridy = 1;
-			panelHeader.add(getJCalendarFrom(), gbc_jCalendarInventory);
+			panelHeader.add(getJCalendarInventoryDate(), gbc_jCalendarInventory);
 			GridBagConstraints gbc_referenceLabel = new GridBagConstraints();
 			gbc_referenceLabel.anchor = GridBagConstraints.EAST;
 			gbc_referenceLabel.insets = new Insets(0, 0, 5, 5);
@@ -411,19 +411,19 @@ public class InventoryWardEdit extends ModalJFrame {
 		return panelFooter;
 	}
 
-	private GoodDateChooser getJCalendarFrom() {
-		if (jCalendarInventory == null) {
+	private GoodDateChooser getJCalendarInventoryDate() {
+		if (jCalendarInventoryDate == null) {
 
-			jCalendarInventory = new GoodDateChooser(LocalDate.now(), false, false);
+			jCalendarInventoryDate = new GoodDateChooser(LocalDate.now(), false, false);
 			if (inventory != null) {
-				jCalendarInventory.setDate(inventory.getInventoryDate().toLocalDate());
+				jCalendarInventoryDate.setDate(inventory.getInventoryDate().toLocalDate());
 				dateInventory = inventory.getInventoryDate();
 			}
-			jCalendarInventory.addDateChangeListener(event -> {
-				dateInventory = jCalendarInventory.getDate().atStartOfDay();
+			jCalendarInventoryDate.addDateChangeListener(event -> {
+				dateInventory = jCalendarInventoryDate.getDate().atStartOfDay();
 			});
 		}
-		return jCalendarInventory;
+		return jCalendarInventoryDate;
 	}
 
 	private JButton getSelectButton() {
@@ -528,7 +528,7 @@ public class InventoryWardEdit extends ModalJFrame {
 					validateButton.setEnabled(true);
 					MessageDialog.info(this, "angal.inventory.savesuccess.msg");
 					fireInventoryInserted();
-					resetVariable();
+					resetVariables();
 				} else if (mode.equals("update") && MessageDialog.yesNo(null, "angal.inventory.doyouwanttoupdatethisinventory.msg") == JOptionPane.YES_OPTION) {
 					String lastReference = inventory.getInventoryReference();
 					LocalDateTime lastDateInventory = inventory.getInventoryDate();
@@ -557,7 +557,7 @@ public class InventoryWardEdit extends ModalJFrame {
 								MessageDialog.info(null, "angal.inventory.update.success.msg");
 								statusLabel.setText(InventoryStatus.draft.toString().toUpperCase());
 								statusLabel.setForeground(Color.GRAY);
-								resetVariable();
+								resetVariables();
 								fireInventoryUpdated();
 							} else {
 								MessageDialog.error(null, "angal.inventory.update.error.msg");
@@ -568,7 +568,7 @@ public class InventoryWardEdit extends ModalJFrame {
 								MessageDialog.info(null, "angal.inventory.update.success.msg");
 								statusLabel.setText(InventoryStatus.draft.toString().toUpperCase());
 								statusLabel.setForeground(Color.GRAY);
-								resetVariable();
+								resetVariables();
 								fireInventoryUpdated();
 							} else {
 								MessageDialog.info(null, "angal.inventory.inventoryisalreadysaved.msg");
@@ -614,7 +614,7 @@ public class InventoryWardEdit extends ModalJFrame {
 					MessageDialog.info(null, "angal.inventory.update.success.msg");
 					statusLabel.setText(InventoryStatus.draft.toString().toUpperCase());
 					statusLabel.setForeground(Color.GRAY);
-					resetVariable();
+					resetVariables();
 					fireInventoryUpdated();
 				}
 				if (!newMedicalInventoryRows.isEmpty()) {
@@ -675,6 +675,8 @@ public class InventoryWardEdit extends ModalJFrame {
 						try {
 							inventory.setStatus(status);
 							inventory = medicalInventoryManager.actualizeMedicalWardInventoryRow(inventory);
+							jCalendarInventoryDate.setDate(inventory.getInventoryDate().toLocalDate());
+							dateInventory = inventory.getInventoryDate();
 							statusLabel.setText(status.toUpperCase());
 							statusLabel.setForeground(Color.BLUE);
 							confirmButton.setEnabled(true);
@@ -947,13 +949,13 @@ public class InventoryWardEdit extends ModalJFrame {
 					dispose();
 				}
 				if (reset == JOptionPane.NO_OPTION) {
-					resetVariable();
+					resetVariables();
 					dispose();
 				} else {
 					return;
 				}
 			} else {
-				resetVariable();
+				resetVariables();
 				dispose();
 			}
 		});
@@ -1495,7 +1497,7 @@ public class InventoryWardEdit extends ModalJFrame {
 	}
 
 	private void disabledSomeComponents() {
-		jCalendarInventory.setEnabled(false);
+		jCalendarInventoryDate.setEnabled(false);
 		specificProduct.setEnabled(false);
 		codeTextField.setEnabled(false);
 		selectButton.setEnabled(false);
@@ -1508,7 +1510,7 @@ public class InventoryWardEdit extends ModalJFrame {
 	}
 
 	private void activateSomeComponents() {
-		jCalendarInventory.setEnabled(true);
+		jCalendarInventoryDate.setEnabled(true);
 		specificProduct.setEnabled(true);
 		codeTextField.setEnabled(true);
 		selectButton.setEnabled(true);
@@ -1546,7 +1548,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		return position;
 	}
 
-	private void resetVariable() {
+	private void resetVariables() {
 		inventoryRowsToDelete.clear();
 		lotsDeleted.clear();
 		inventoryRowListAdded.clear();
