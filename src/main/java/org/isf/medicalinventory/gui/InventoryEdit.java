@@ -735,7 +735,7 @@ public class InventoryEdit extends ModalJFrame {
 		validateButton.setEnabled(inventory != null);
 		validateButton.addActionListener(actionEvent -> {
 			if (inventory == null) {
-				MessageDialog.error(null, "angal.inventory.inventorymustsavebeforevalidation.msg");
+				MessageDialog.error(null, "angal.inventory.inventorymustbesavebeforevalidation.msg");
 				return;
 			}
 			List<MedicalInventoryRow> invRowWithoutLot = inventoryRowSearchList.stream().filter(invRow -> invRow.getLot() == null).collect(Collectors.toList());

@@ -642,64 +642,61 @@ public class InventoryWardEdit extends ModalJFrame {
 		validateButton.setEnabled(inventory != null);
 		validateButton.addActionListener(actionEvent -> {
 			if (inventory == null) {
-				MessageDialog.error(null, "angal.inventory.inventorymustsavebeforevalidation.msg");
+				MessageDialog.error(null, "angal.inventory.inventorymustbesavebeforevalidation.msg");
 				return;
 			}
-			int reset = MessageDialog.yesNo(null, "angal.inventory.doyoureallywanttovalidatethisinventory.msg");
-			if (reset == JOptionPane.YES_OPTION) {
-				newReference = referenceTextField.getText().trim();
-				String lastReference = inventory.getInventoryReference();
-				LocalDateTime lastDate = inventory.getInventoryDate();
-				if (checkParameters(lastReference, lastDate)) {
-					MessageDialog.error(null, "angal.inventory.pleasesaveinventorybeforevalidateit.msg");
-					return;
-				}
-				if (!inventoryRowSearchList.stream().filter(i -> i.getLot() == null).toList().isEmpty()) {
-					MessageDialog.error(null, "angal.inventory.youcannotvalidatethisinventory.msg");
-					return;
-				}
-				if (!inventoryRowSearchList.stream().filter(i -> i.isNewLot() && i.getRealQty() == 0).toList().isEmpty()) {
-					MessageDialog.error(null, "angal.inventory.youcannotvalidatetheinventorylotrealqtyzero.msg");
-					return;
-				}
-				// validate inventory
-				String status = InventoryStatus.validated.toString();
-				try {
-					medicalInventoryManager.validateMedicalWardInventoryRow(inventory, inventoryRowSearchList);
-					inventory.setStatus(status);
-					inventory = medicalInventoryManager.updateMedicalInventory(inventory, true);
-					MessageDialog.info(null, "angal.inventory.validate.success.msg");
-					statusLabel.setText(status.toUpperCase());
-					statusLabel.setForeground(Color.BLUE);
-					confirmButton.setEnabled(true);
-					fireInventoryUpdated();
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-					int answer = MessageDialog.yesNo(null, "angal.inventory.doyouwanttoactualizetheinventory.msg");
-					if (answer == JOptionPane.YES_OPTION) {
-						try {
-							inventory.setStatus(status);
-							inventory = medicalInventoryManager.actualizeMedicalWardInventoryRow(inventory);
-							jCalendarInventoryDate.setDate(inventory.getInventoryDate().toLocalDate());
-							dateInventory = inventory.getInventoryDate();
-							statusLabel.setText(status.toUpperCase());
-							statusLabel.setForeground(Color.BLUE);
-							confirmButton.setEnabled(true);
-							jTableInventoryRow.setModel(new InventoryRowModel());
-							fireInventoryUpdated();
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-						}
-					} else {
-						try {
-							inventory.setStatus(InventoryStatus.draft.toString());
-							statusLabel.setText(InventoryStatus.draft.toString().toUpperCase());
-							statusLabel.setForeground(Color.GRAY);
-							inventory = medicalInventoryManager.updateMedicalInventory(inventory, true);
-							fireInventoryUpdated();
-						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
-						}
+			newReference = referenceTextField.getText().trim();
+			String lastReference = inventory.getInventoryReference();
+			LocalDateTime lastDate = inventory.getInventoryDate();
+			if (checkParameters(lastReference, lastDate)) {
+				MessageDialog.error(null, "angal.inventory.pleasesaveinventorybeforevalidateit.msg");
+				return;
+			}
+			if (!inventoryRowSearchList.stream().filter(i -> i.getLot() == null).toList().isEmpty()) {
+				MessageDialog.error(null, "angal.inventory.youcannotvalidatethisinventory.msg");
+				return;
+			}
+			if (!inventoryRowSearchList.stream().filter(i -> i.isNewLot() && i.getRealQty() == 0).toList().isEmpty()) {
+				MessageDialog.error(null, "angal.inventory.youcannotvalidatetheinventorylotrealqtyzero.msg");
+				return;
+			}
+			// validate inventory
+			String status = InventoryStatus.validated.toString();
+			try {
+				medicalInventoryManager.validateMedicalWardInventoryRow(inventory, inventoryRowSearchList);
+				inventory.setStatus(status);
+				inventory = medicalInventoryManager.updateMedicalInventory(inventory, true);
+				MessageDialog.info(null, "angal.inventory.validate.success.msg");
+				statusLabel.setText(status.toUpperCase());
+				statusLabel.setForeground(Color.BLUE);
+				confirmButton.setEnabled(true);
+				fireInventoryUpdated();
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+				int answer = MessageDialog.yesNo(null, "angal.inventory.doyouwanttoactualizetheinventory.msg");
+				if (answer == JOptionPane.YES_OPTION) {
+					try {
+						inventory.setStatus(status);
+						inventory = medicalInventoryManager.actualizeMedicalWardInventoryRow(inventory);
+						jCalendarInventoryDate.setDate(inventory.getInventoryDate().toLocalDate());
+						dateInventory = inventory.getInventoryDate();
+						statusLabel.setText(status.toUpperCase());
+						statusLabel.setForeground(Color.BLUE);
+						confirmButton.setEnabled(true);
+						jTableInventoryRow.setModel(new InventoryRowModel());
+						fireInventoryUpdated();
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1);
+					}
+				} else {
+					try {
+						inventory.setStatus(InventoryStatus.draft.toString());
+						statusLabel.setText(InventoryStatus.draft.toString().toUpperCase());
+						statusLabel.setForeground(Color.GRAY);
+						inventory = medicalInventoryManager.updateMedicalInventory(inventory, true);
+						fireInventoryUpdated();
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 					}
 				}
 			}
