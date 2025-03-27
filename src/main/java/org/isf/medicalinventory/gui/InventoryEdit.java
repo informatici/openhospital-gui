@@ -107,6 +107,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
+import org.isf.utils.jobjects.GoodDateTimeToggleChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.RequestFocusListener;
@@ -150,6 +151,7 @@ public class InventoryEdit extends ModalJFrame {
 		for (EventListener listener : listeners) {
 			((InventoryListener) listener).InventoryUpdated(event);
 		}
+		jCalendarInventoryDate.setDateTime(dateInventory);
 		jTableInventoryRow.updateUI();
 	}
 
@@ -163,10 +165,11 @@ public class InventoryEdit extends ModalJFrame {
 		for (EventListener listener : listeners) {
 			((InventoryListener) listener).InventoryInserted(event);
 		}
+		jCalendarInventoryDate.setDateTime(dateInventory);
 		jTableInventoryRow.updateUI();
 	}
 
-	private GoodDateChooser jCalendarInventoryDate;
+	private GoodDateTimeToggleChooser jCalendarInventoryDate;
 	private LocalDateTime dateInventory = TimeTools.getNow();
 	private JPanel panelHeader;
 	private JPanel panelFooter;
@@ -253,6 +256,11 @@ public class InventoryEdit extends ModalJFrame {
 	private WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private MedicalTypeBrowserManager medicalTypeManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 	private MovBrowserManager movBrowserManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
+	private boolean allMedicals;
+	private Object[] allMedicalsOrList = {
+			MessageBundle.getMessage("angal.inventory.yesallmedicals.btn"),
+			MessageBundle.getMessage("angal.inventory.noonlytheonesinthelist.btn")
+	};
 
 	public InventoryEdit() {
 		mode = "new";
@@ -367,7 +375,7 @@ public class InventoryEdit extends ModalJFrame {
 			gbc_jCalendarInventory.insets = new Insets(0, 0, 5, 5);
 			gbc_jCalendarInventory.gridx = 1;
 			gbc_jCalendarInventory.gridy = 0;
-			panelHeader.add(getJCalendarInvetoryDate(), gbc_jCalendarInventory);
+			panelHeader.add(getJCalendarInventoryDate(), gbc_jCalendarInventory);
 			GridBagConstraints gbc_referenceLabel = new GridBagConstraints();
 			gbc_referenceLabel.anchor = GridBagConstraints.EAST;
 			gbc_referenceLabel.insets = new Insets(0, 0, 5, 5);
@@ -496,16 +504,16 @@ public class InventoryEdit extends ModalJFrame {
 		return panelFooter;
 	}
 
-	private GoodDateChooser getJCalendarInvetoryDate() {
+	private GoodDateTimeToggleChooser getJCalendarInventoryDate() {
 		if (jCalendarInventoryDate == null) {
 
-			jCalendarInventoryDate = new GoodDateChooser(LocalDate.now(), false, false);
+			jCalendarInventoryDate = new GoodDateTimeToggleChooser(TimeTools.getNow());
 			if (inventory != null) {
-				jCalendarInventoryDate.setDate(inventory.getInventoryDate().toLocalDate());
+				jCalendarInventoryDate.setDateTime(inventory.getInventoryDate());
 				dateInventory = inventory.getInventoryDate();
 			}
-			jCalendarInventoryDate.addDateChangeListener(event -> {
-				dateInventory = jCalendarInventoryDate.getDate().atStartOfDay();
+			jCalendarInventoryDate.addDateTimeChangeListener(event -> {
+				dateInventory = jCalendarInventoryDate.getLocalDateTime();
 			});
 		}
 		return jCalendarInventoryDate;
@@ -735,76 +743,82 @@ public class InventoryEdit extends ModalJFrame {
 				MessageDialog.error(null, "angal.inventory.allinventoryrowshouldhavelotbeforevalidation.msg");
 				return;
 			}
-			int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttovalidatethisinventory.msg");
-			if (reset == JOptionPane.YES_OPTION) {
-				if (inventoryRowSearchList == null || inventoryRowSearchList.isEmpty()) {
-					MessageDialog.error(null, "angal.inventory.cannotvalidateinventorywithoutproducts.msg");
-					return;
-				}
-				String chargeCode = inventory.getChargeType();
-				String dischargeCode = inventory.getDischargeType();
-				Integer supplierId = inventory.getSupplier();
-				String wardCode = inventory.getDestination();
-				String lastReference = inventory.getInventoryReference();
-				LocalDateTime lastDate = inventory.getInventoryDate();
-				List<MedicalInventoryRow> invRowWithoutRealQty = inventoryRowSearchList.stream().filter(invRow -> invRow.getRealQty() == 0 && invRow.isNewLot())
-					.collect(Collectors.toList());
-				if (!invRowWithoutRealQty.isEmpty()) {
-					MessageDialog.error(null, "angal.inventory.allinventoryrowswithnewlotshouldhaverealqtygreatterthanzero.msg");
-					return;
-				}
-				String errorMessage = this.checkParamsValues(chargeCode, dischargeCode, supplierId, wardCode);
-				if (errorMessage != null) {
-					MessageDialog.error(null, errorMessage);
-					return;
-				}
-				if (checkParametersOK(wardCode, chargeCode, dischargeCode, supplierId, lastReference, lastDate)) {
-					MessageDialog.error(null, "angal.inventory.pleasesaveinventorybeforevalidateit.msg");
-					return;
-				}
-				// validate inventory
-				String status = InventoryStatus.validated.toString();
-				try {
-					medicalInventoryManager.validateMedicalInventoryRow(inventory, inventoryRowSearchList);
-					inventory.setStatus(status);
-					inventory = medicalInventoryManager.updateMedicalInventory(inventory, true);
-					MessageDialog.info(null, "angal.inventory.validate.success.msg");
-					statusLabel.setText(status.toUpperCase());
-					statusLabel.setForeground(Color.BLUE);
-					confirmButton.setEnabled(true);
-					fireInventoryUpdated();
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-					int answer = MessageDialog.yesNo(null, "angal.inventory.doyouwanttoactualizetheinventory.msg");
-					if (answer == JOptionPane.YES_OPTION) {
-						try {
-							inventory.setStatus(status);
-							inventory = medicalInventoryManager.actualizeMedicalInventoryRow(inventory);
-							jCalendarInventoryDate.setDate(inventory.getInventoryDate().toLocalDate());
-							dateInventory = inventory.getInventoryDate();
-							statusLabel.setText(status.toUpperCase());
-							statusLabel.setForeground(Color.BLUE);
-							confirmButton.setEnabled(true);
-							jTableInventoryRow.setModel(new InventoryRowModel());
-							fireInventoryUpdated();
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-						}
-					} else {
-						try {
-							inventory.setStatus(InventoryStatus.draft.toString());
-							statusLabel.setText(InventoryStatus.draft.toString().toUpperCase());
-							statusLabel.setForeground(Color.GRAY);
-							inventory = medicalInventoryManager.updateMedicalInventory(inventory, true);
-							fireInventoryUpdated();
-						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
-						}
+			if (inventoryRowSearchList == null || inventoryRowSearchList.isEmpty()) {
+				MessageDialog.error(null, "angal.inventory.cannotvalidateinventorywithoutproducts.msg");
+				return;
+			}
+			String chargeCode = inventory.getChargeType();
+			String dischargeCode = inventory.getDischargeType();
+			Integer supplierId = inventory.getSupplier();
+			String wardCode = inventory.getDestination();
+			String lastReference = inventory.getInventoryReference();
+			LocalDateTime lastInventoryDate = inventory.getInventoryDate();
+			List<MedicalInventoryRow> invRowWithoutRealQty = inventoryRowSearchList.stream().filter(invRow -> invRow.getRealQty() == 0 && invRow.isNewLot())
+				.collect(Collectors.toList());
+			if (!invRowWithoutRealQty.isEmpty()) {
+				MessageDialog.error(null, "angal.inventory.allinventoryrowswithnewlotshouldhaverealqtygreatterthanzero.msg");
+				return;
+			}
+			String errorMessage = this.checkParamsValues(chargeCode, dischargeCode, supplierId, wardCode);
+			if (errorMessage != null) {
+				MessageDialog.error(null, errorMessage);
+				return;
+			}
+			if (checkParametersChanges(wardCode, chargeCode, dischargeCode, supplierId, lastReference, lastInventoryDate)) {
+				MessageDialog.error(null, "angal.inventory.pleasesaveinventorybeforevalidateit.msg");
+				return;
+			}
+			// validate inventory
+			String status = InventoryStatus.validated.toString();
+			String option = askAllMedicalsOrList("angal.inventory.doyouwanttocheckforallmedicalsinthestockoronlytheonesinthelist.msg");
+			if (option == null) {
+				return;
+			}
+			allMedicals = option.equals(allMedicalsOrList[0]); // Yes (All medicals)
+			try {
+				medicalInventoryManager.validateMedicalInventoryRow(inventory, inventoryRowSearchList, allMedicals);
+				inventory.setStatus(status);
+				inventory = medicalInventoryManager.updateMedicalInventory(inventory, true);
+				MessageDialog.info(null, "angal.inventory.validate.success.msg");
+				statusLabel.setText(status.toUpperCase());
+				statusLabel.setForeground(Color.BLUE);
+				confirmButton.setEnabled(true);
+				fireInventoryUpdated();
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+				int answer = MessageDialog.yesNo(null, "angal.inventory.doyouwanttoactualizetheinventory.msg");
+				if (answer == JOptionPane.YES_OPTION) {
+					try {
+						inventory.setStatus(status);
+						inventory = medicalInventoryManager.actualizeMedicalInventoryRow(inventory, allMedicals);
+						dateInventory = inventory.getInventoryDate();
+						statusLabel.setText(status.toUpperCase());
+						statusLabel.setForeground(Color.BLUE);
+						confirmButton.setEnabled(true);
+						jTableInventoryRow.setModel(new InventoryRowModel());
+						fireInventoryUpdated();
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1);
+					}
+				} else {
+					try {
+						inventory.setStatus(InventoryStatus.draft.toString());
+						statusLabel.setText(InventoryStatus.draft.toString().toUpperCase());
+						statusLabel.setForeground(Color.GRAY);
+						inventory = medicalInventoryManager.updateMedicalInventory(inventory, true);
+						fireInventoryUpdated();
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 					}
 				}
 			}
 		});
 		return validateButton;
+	}
+
+	private String askAllMedicalsOrList(String question) {
+		String option = (String) MessageDialog.inputDialog(null, null, allMedicalsOrList, null, question);
+		return option;
 	}
 
 	private JButton getConfirmButton() {
@@ -846,13 +860,13 @@ public class InventoryEdit extends ModalJFrame {
 					MessageDialog.error(null, errorMessage);
 					return;
 				}
-				if (checkParametersOK(wardCode, chargeCode, dischargeCode, supplierId, lastReference, lastDate)) {
+				if (checkParametersChanges(wardCode, chargeCode, dischargeCode, supplierId, lastReference, lastDate)) {
 					MessageDialog.error(null, "angal.inventory.pleasesaveinventorybeforeconfirmation.msg");
 					return;
 				}
 				// confirm inventory
 				try {
-					medicalInventoryManager.confirmMedicalInventoryRow(inventory, inventoryRowSearchList);
+					medicalInventoryManager.confirmMedicalInventoryRow(inventory, inventoryRowSearchList, allMedicals);
 					MessageDialog.info(null, "angal.inventory.confirm.success.msg");
 					fireInventoryUpdated();
 					closeButton.doClick();
@@ -1019,7 +1033,7 @@ public class InventoryEdit extends ModalJFrame {
 				lastReference = inventory.getInventoryReference();
 				lastDate = inventory.getInventoryDate();
 			}
-			if (checkParametersOK(lastDestination, lastCharge, lastDischarge, lastSupplier, lastReference, lastDate)) {
+			if (checkParametersChanges(lastDestination, lastCharge, lastDischarge, lastSupplier, lastReference, lastDate)) {
 				int reset = MessageDialog.yesNoCancel(null, "angal.inventoryrow.doyouwanttosavethechanges.msg");
 				if (reset == JOptionPane.YES_OPTION) {
 					this.saveButton.doClick();
@@ -1976,7 +1990,7 @@ public class InventoryEdit extends ModalJFrame {
 		lotsSaved.clear();
 	}
 
-	private boolean checkParametersOK(String wardCode, String chargeCode, String dischargeCode, Integer supplierId, String reference, LocalDateTime date) {
+	private boolean checkParametersChanges(String wardCode, String chargeCode, String dischargeCode, Integer supplierId, String reference, LocalDateTime date) {
 		return !lotsSaved.isEmpty()
 			|| !inventoryRowListAdded.isEmpty()
 			|| !lotsDeleted.isEmpty()
@@ -1993,7 +2007,7 @@ public class InventoryEdit extends ModalJFrame {
 	}
 
 	private boolean isSameDate(LocalDateTime date1, LocalDateTime date2) {
-		return date1.toLocalDate().equals(date2.toLocalDate());
+		return date1.equals(date2);
 	}
 
 	private JComboBox<MedicalType> getJComboMedicalType() {
