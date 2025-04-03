@@ -325,7 +325,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private boolean checkQuantityInLot(MedicalWard medWard, double qty) {
 		double wardQty = medWard.getQty();
 		if (qty > wardQty) {
-			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.fmt.msg");
+			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.fmt.msg", qty, wardQty);
 			return false;
 		}
 		return true;
