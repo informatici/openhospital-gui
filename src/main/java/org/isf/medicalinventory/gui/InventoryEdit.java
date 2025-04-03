@@ -735,7 +735,7 @@ public class InventoryEdit extends ModalJFrame {
 		validateButton.setEnabled(inventory != null);
 		validateButton.addActionListener(actionEvent -> {
 			if (inventory == null) {
-				MessageDialog.error(null, "angal.inventory.inventorymustbesavebeforevalidation.msg");
+				MessageDialog.error(null, "angal.inventory.inventorymustbesavedbeforevalidation.msg");
 				return;
 			}
 			List<MedicalInventoryRow> invRowWithoutLot = inventoryRowSearchList.stream().filter(invRow -> invRow.getLot() == null).collect(Collectors.toList());
@@ -1221,9 +1221,9 @@ public class InventoryEdit extends ModalJFrame {
 				} else if (c == 0) {
 					return medInvtRow.getId();
 				} else if (c == 1) {
-					return medical == null ? "" : medical.getProdCode();
+					return medical.getProdCode();
 				} else if (c == 2) {
-					return medical == null ? "" : medical.getDescription();
+					return medical.getDescription();
 				} else if (c == 3) {
 					return lot == null || medInvtRow.isNewLot() ? "N" : "";
 				} else if (c == 4) {
@@ -1616,8 +1616,8 @@ public class InventoryEdit extends ModalJFrame {
 		ListIterator<Medical> medicalListIterator = medicalList.listIterator();
 		while (medicalListIterator.hasNext()) {
 			Medical med = medicalListIterator.next();
-			Integer medicalCodde = med.getCode();
-			List<Movement> movements = movBrowserManager.getMovements(medicalCodde, null, null, null, null, null, null, null, null, null);
+			Integer medicalCode = med.getCode();
+			List<Movement> movements = movBrowserManager.getMovements(medicalCode, null, null, null, null, null, null, null, null, null);
 			if (!movements.isEmpty()) {
 				medicalListWithMovement.add(med);
 			}
@@ -1999,15 +1999,15 @@ public class InventoryEdit extends ModalJFrame {
 			|| (chargeType != null && isMismatch(chargeType.getCode(), chargeCode))
 			|| (dischargeType != null && isMismatch(dischargeType.getCode(), dischargeCode))
 			|| (supplier != null && supplier.getSupId() != supplierId)
-			|| !isSameDate(date, dateInventory);
+			|| !isSameDateTime(date, dateInventory);
 	}
 
 	private boolean isMismatch(String value, String expectedValue) {
 		return !value.equals(expectedValue);
 	}
 
-	private boolean isSameDate(LocalDateTime date1, LocalDateTime date2) {
-		return date1.equals(date2);
+	private boolean isSameDateTime(LocalDateTime date1, LocalDateTime date2) {
+		return TimeTools.isSameDateTime(date1, date2);
 	}
 
 	private JComboBox<MedicalType> getJComboMedicalType() {

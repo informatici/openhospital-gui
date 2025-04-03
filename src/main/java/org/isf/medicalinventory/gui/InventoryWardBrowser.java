@@ -354,9 +354,9 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			if (draftMedicalInventories.isEmpty() && validatedMedicalInventories.isEmpty()) {
-				InventoryWardEdit inventoryWardEdit = new InventoryWardEdit();
+				InventoryWardEdit InventoryWardEdit = new InventoryWardEdit();
 				InventoryWardEdit.addInventoryListener(InventoryWardBrowser.this);
-				inventoryWardEdit.showAsModal(InventoryWardBrowser.this);
+				InventoryWardEdit.showAsModal(InventoryWardBrowser.this);
 			} else {
 				MessageDialog.error(null, "angal.inventory.cannotcreateanotherinventorywithstatusdraft.msg");
 				return;
@@ -390,9 +390,9 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 				MessageDialog.error(null, "angal.inventory.donenoteditable.msg");
 				return;
 			}
-			InventoryWardEdit inventoryWardEdit = new InventoryWardEdit(inventory, "update");
+			InventoryWardEdit InventoryWardEdit = new InventoryWardEdit(inventory, "update");
 			InventoryWardEdit.addInventoryListener(InventoryWardBrowser.this);
-			inventoryWardEdit.showAsModal(InventoryWardBrowser.this);
+			InventoryWardEdit.showAsModal(InventoryWardBrowser.this);
 		});
 		return jButtonEdit;
 	}
@@ -414,9 +414,9 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 			}
 			if (selectedRow > -1) {
 				inventory = inventoryList.get(selectedRow);
-				InventoryWardEdit inventoryWardEdit = new InventoryWardEdit(inventory, "view");
+				InventoryWardEdit InventoryWardEdit = new InventoryWardEdit(inventory, "view");
 				InventoryWardEdit.addInventoryListener(InventoryWardBrowser.this);
-				inventoryWardEdit.showAsModal(InventoryWardBrowser.this);
+				InventoryWardEdit.showAsModal(InventoryWardBrowser.this);
 			}
 		});
 		return jButtonView;

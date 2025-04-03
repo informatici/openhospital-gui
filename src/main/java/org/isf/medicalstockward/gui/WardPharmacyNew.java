@@ -30,6 +30,7 @@ import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -582,7 +583,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				boolean isPatient;
 				String description;
 				int age = 0;
-				LocalDateTime newDate = TimeTools.getNow();
+				LocalDateTime newDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES); // to make same as GoodDate* pickers
 				Ward wardTo = null; //
 				if (jRadioPatient.isSelected()) {
 					isPatient = true;
