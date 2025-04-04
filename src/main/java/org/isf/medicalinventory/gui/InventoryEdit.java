@@ -170,7 +170,7 @@ public class InventoryEdit extends ModalJFrame {
 	}
 
 	private GoodDateTimeToggleChooser jCalendarInventoryDate;
-	private LocalDateTime dateInventory = TimeTools.getNow();
+	private LocalDateTime dateInventory = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
 	private JPanel panelHeader;
 	private JPanel panelFooter;
 	private JPanel panelContent;
@@ -257,6 +257,7 @@ public class InventoryEdit extends ModalJFrame {
 	private MedicalTypeBrowserManager medicalTypeManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 	private MovBrowserManager movBrowserManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
 	private boolean allMedicals;
+	private boolean allMedicalsChosen;
 	private Object[] allMedicalsOrList = {
 			MessageBundle.getMessage("angal.inventory.yesallmedicals.btn"),
 			MessageBundle.getMessage("angal.inventory.noonlytheonesinthelist.btn")
@@ -634,6 +635,7 @@ public class InventoryEdit extends ModalJFrame {
 					}
 					inventory = medicalInventoryManager.newMedicalInventory(inventory, newMedicalInventoryRows);
 					mode = "update";
+					newReference = inventory.getInventoryReference();
 					fireInventoryInserted();
 					MessageDialog.info(this, "angal.inventory.savesuccess.msg");
 					validateButton.setEnabled(true);
@@ -775,6 +777,7 @@ public class InventoryEdit extends ModalJFrame {
 				return;
 			}
 			allMedicals = option.equals(allMedicalsOrList[0]); // Yes (All medicals)
+			allMedicalsChosen = true;
 			try {
 				medicalInventoryManager.validateMedicalInventoryRow(inventory, inventoryRowSearchList, allMedicals);
 				inventory.setStatus(status);
@@ -865,6 +868,14 @@ public class InventoryEdit extends ModalJFrame {
 					return;
 				}
 				// confirm inventory
+				String option = null;
+				if (!allMedicalsChosen) { // if not asked in the same session
+					option = askAllMedicalsOrList("angal.inventory.doyouwanttocheckforallmedicalsinthestockoronlytheonesinthelist.msg");
+					if (option == null) {
+						return;
+					}
+					allMedicals = option.equals(allMedicalsOrList[0]); // Yes (All medicals)
+				}
 				try {
 					medicalInventoryManager.confirmMedicalInventoryRow(inventory, inventoryRowSearchList, allMedicals);
 					MessageDialog.info(null, "angal.inventory.confirm.success.msg");
@@ -874,6 +885,15 @@ public class InventoryEdit extends ModalJFrame {
 					OHServiceExceptionUtil.showMessages(e);
 					MessageDialog.info(null, "angal.inventory.pleasevalidateinventoryagainsbeforeconfirmation.msg");
 					confirmButton.setEnabled(false);
+					inventory.setStatus(InventoryStatus.draft.toString());
+					statusLabel.setText(InventoryStatus.draft.toString().toUpperCase());
+					statusLabel.setForeground(Color.GRAY);
+					try {
+						inventory = medicalInventoryManager.updateMedicalInventory(inventory, true);
+						fireInventoryUpdated();
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1);
+					}
 					return;
 				}
 			}
@@ -1754,6 +1774,7 @@ public class InventoryEdit extends ModalJFrame {
 			referenceTextField = new VoLimitedTextField(40, 10); // limit to 40 because of potential suffixes
 			if (inventory != null && !mode.equals("new")) {
 				referenceTextField.setText(inventory.getInventoryReference());
+				newReference = inventory.getInventoryReference();
 			}
 		}
 		return referenceTextField;
