@@ -481,7 +481,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				JPanel leftPanel = new JPanel();
 				leftPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
 				leftPanel.setLayout(new GridLayout(3, 1));
-				leftPanel.add(new JLabel(MessageBundle.getMessage("angal.inventoryrow.medicaltype.txt")));
+				leftPanel.add(new JLabel(MessageBundle.getMessage("angal.inventory.medicaltype.txt")));
 				leftPanel.add(getJComboMedicalType());
 
 				JPanel rightPanel = new JPanel();
@@ -515,7 +515,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				frame = new JFrame();
 				frame.add(mainPanel);
 				frame.setSize(450, 200);
-				frame.setTitle(MessageBundle.getMessage("angal.inventoryrow.lotinformation.title"));
+				frame.setTitle(MessageBundle.getMessage("angal.inventory.lotinformation.title"));
 				frame.setLocationRelativeTo(null);
 				frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 				frame.addWindowListener(new WindowAdapter() {
@@ -831,7 +831,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		resetButton = new JButton(MessageBundle.getMessage("angal.inventory.clean.btn"));
 		resetButton.setMnemonic(MessageBundle.getMnemonic("angal.inventory.clean.btn.key"));
 		resetButton.addActionListener(actionEvent -> {
-			int reset = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttocleanthistable.msg");
+			int reset = MessageDialog.yesNo(null, "angal.inventory.doyoureallywanttocleanthistable.msg");
 			if (reset == JOptionPane.YES_OPTION) {
 				if (inventory != null) {
 					inventoryRowsToDelete.addAll(inventoryRowSearchList);
@@ -852,10 +852,10 @@ public class InventoryWardEdit extends ModalJFrame {
 		deleteButton.addActionListener(actionEvent -> {
 			int[] selectedRows = jTableInventoryRow.getSelectedRows();
 			if (selectedRows.length == 0) {
-				MessageDialog.error(this, "angal.inventoryrow.pleaseselectatleastoneinventoryrow.msg");
+				MessageDialog.error(this, "angal.inventory.pleaseselectatleastoneinventoryrow.msg");
 				return;
 			}
-			int delete = MessageDialog.yesNo(null, "angal.inventoryrow.doyoureallywanttodeletethisinventoryrow.msg");
+			int delete = MessageDialog.yesNo(null, "angal.inventory.doyoureallywanttodeletethisinventoryrow.msg");
 			if (delete == JOptionPane.YES_OPTION) {
 				if (selectedRows.length == inventoryRowSearchList.size()) {
 					resetButton.doClick();
@@ -893,7 +893,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		lotButton.addActionListener(actionEvent -> {
 			int selectedRow = jTableInventoryRow.getSelectedRow();
 			if (selectedRow == -1) {
-				MessageDialog.error(this, "angal.inventoryrow.pleaseselectonlyoneinventoryrow.msg");
+				MessageDialog.error(this, "angal.inventory.pleaseselectonlyoneinventoryrow.msg");
 				return;
 			}
 			MedicalInventoryRow selectedInventoryRow = (MedicalInventoryRow) jTableInventoryRow.getValueAt(selectedRow, -1);
@@ -972,7 +972,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				lastDate = inventory.getInventoryDate();
 			}
 			if (checkParametersChanges(lastReference, lastDate)) {
-				int reset = MessageDialog.yesNoCancel(null, "angal.inventoryrow.doyouwanttosavethechanges.msg");
+				int reset = MessageDialog.yesNoCancel(null, "angal.inventory.doyouwanttosavethechanges.msg");
 				if (reset == JOptionPane.YES_OPTION) {
 					this.saveButton.doClick();
 					dispose();
@@ -1206,7 +1206,7 @@ public class InventoryWardEdit extends ModalJFrame {
 						}
 					}
 					if (doubleValue < 0) {
-						MessageDialog.error(null, "angal.inventoryrow.invalidquantity.msg");
+						MessageDialog.error(null, "angal.inventory.invalidquantity.msg");
 						return;
 					}
 					invRow.setRealqty(doubleValue);
@@ -2022,7 +2022,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		try {
 			if (!areAllMedicalsInInventory()) {
 				int userChoice = (!inventoryRowSearchList.isEmpty())
-					? MessageDialog.yesNo(null, "angal.inventoryrow.doyouwanttoaddallnotyetlistedproducts.msg")
+					? MessageDialog.yesNo(null, "angal.inventory.doyouwanttoaddallnotyetlistedproducts.msg")
 					: JOptionPane.YES_OPTION;
 
 				if (userChoice == JOptionPane.YES_OPTION) {
