@@ -479,12 +479,13 @@ public class InventoryWardEdit extends ModalJFrame {
 				mainPanel.setLayout(new BorderLayout(10, 10));
 
 				JPanel leftPanel = new JPanel();
-				leftPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
+				leftPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 				leftPanel.setLayout(new GridLayout(3, 1));
 				leftPanel.add(new JLabel(MessageBundle.getMessage("angal.inventory.medicaltype.txt")));
 				leftPanel.add(getJComboMedicalType());
 
 				JPanel rightPanel = new JPanel();
+				rightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 				rightPanel.setLayout(new GridLayout(3, 1, 5, 5));
 				ButtonGroup radioGroup = new ButtonGroup();
 				radioGroup.add(getAllRadioButton());
@@ -508,7 +509,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				bottomPanel.add(getOkButton());
 				bottomPanel.add(getCancelButton());
 
-				mainPanel.add(leftPanel, BorderLayout.WEST);
+				mainPanel.add(leftPanel, BorderLayout.CENTER);
 				mainPanel.add(rightPanel, BorderLayout.EAST);
 				mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
