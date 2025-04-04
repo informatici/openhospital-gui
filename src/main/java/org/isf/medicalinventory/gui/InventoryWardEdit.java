@@ -313,7 +313,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			deleteButton.setVisible(false);
 			columnEditable = columnEditableView;
 			resetButton.setVisible(false);
-			referenceTextField.setVisible(false);
+			referenceTextField.setEditable(false);
 			jCalendarInventoryDate.setEnabled(false);
 			selectButton.setEnabled(false);
 			wardComboBox.setEnabled(false);
