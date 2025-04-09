@@ -222,7 +222,6 @@ public class InventoryWardEdit extends ModalJFrame {
 	private JLabel referenceLabel;
 	private JLabel addMedicalsByLabel;
 	private JTextField referenceTextField;
-	private JTextField jTextFieldEditor;
 	private JLabel wardLabel;
 	private JComboBox<Ward> wardComboBox;
 	private String newReference;
@@ -500,9 +499,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				sortedActionMap.putAll(actions);
 
 				// Add ActionListener to each button
-				sortedActionMap.forEach((key, value) -> {
-					rightPanel.add(key);
-				});
+				sortedActionMap.forEach((key, value) -> rightPanel.add(key));
 
 				JPanel bottomPanel = new JPanel();
 				bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -1023,7 +1020,6 @@ public class InventoryWardEdit extends ModalJFrame {
 	private JTable getJTableInventoryRow() throws OHServiceException {
 		if (jTableInventoryRow == null) {
 			jTableInventoryRow = new JTable();
-			jTextFieldEditor = new JTextField();
 			jTableInventoryRow.setFillsViewportHeight(true);
 			model = new InventoryRowModel();
 			jTableInventoryRow.setModel(model);
@@ -1060,6 +1056,7 @@ public class InventoryWardEdit extends ModalJFrame {
 					lotButton.setEnabled(medInvRow.isNewLot() || (isLotWithCost() && cost.compareTo(BigDecimal.ZERO) == 0));
 				}
 			});
+			JTextField jTextFieldEditor = new JTextField();
 			DefaultCellEditor cellEditor = new DefaultCellEditor(jTextFieldEditor);
 			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
 		}
@@ -1925,9 +1922,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			medicalTypeSelected = (MedicalType) medicalTypeComboBox.getSelectedItem();
-			medicalTypeComboBox.addActionListener(actionEvent -> {
-				medicalTypeSelected = (MedicalType) medicalTypeComboBox.getSelectedItem();
-			});
+			medicalTypeComboBox.addActionListener(actionEvent -> medicalTypeSelected = (MedicalType) medicalTypeComboBox.getSelectedItem());
 		}
 		return medicalTypeComboBox;
 	}
@@ -2007,7 +2002,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		for (MedicalInventoryRow row : inventoryRowSearchList) {
 			inventorySet.add(row.getMedical());
 		}
-		return medicals.size() == inventorySet.size() ? true : false;
+		return medicals.size() == inventorySet.size();
 	}
 
 	private void initializeActions() {

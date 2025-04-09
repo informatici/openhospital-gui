@@ -126,11 +126,11 @@ public class InventoryEdit extends ModalJFrame {
 
 	public interface InventoryListener extends EventListener {
 
-		void InventoryInserted(AWTEvent e);
+		void inventoryInserted(AWTEvent e);
 
-		void InventoryUpdated(AWTEvent e);
+		void inventoryUpdated(AWTEvent e);
 
-		void InventoryCancelled(AWTEvent e);
+		void inventoryCancelled(AWTEvent e);
 	}
 
 	public static void addInventoryListener(InventoryListener listener) {
@@ -149,7 +149,7 @@ public class InventoryEdit extends ModalJFrame {
 
 		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
 		for (EventListener listener : listeners) {
-			((InventoryListener) listener).InventoryUpdated(event);
+			((InventoryListener) listener).inventoryUpdated(event);
 		}
 		jCalendarInventoryDate.setDateTime(dateInventory);
 		jTableInventoryRow.updateUI();
@@ -163,7 +163,7 @@ public class InventoryEdit extends ModalJFrame {
 
 		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
 		for (EventListener listener : listeners) {
-			((InventoryListener) listener).InventoryInserted(event);
+			((InventoryListener) listener).inventoryInserted(event);
 		}
 		jCalendarInventoryDate.setDateTime(dateInventory);
 		jTableInventoryRow.updateUI();
@@ -226,7 +226,6 @@ public class InventoryEdit extends ModalJFrame {
 	private JLabel addMedicalsByLabel;
 	private JLabel destinationLabel;
 	private JTextField referenceTextField;
-	private JTextField jTextFieldEditor;
 	private JComboBox<MovementType> chargeCombo;
 	private JComboBox<MovementType> dischargeCombo;
 	private JComboBox<Supplier> supplierCombo;
@@ -549,9 +548,7 @@ public class InventoryEdit extends ModalJFrame {
 				sortedActionMap.putAll(actions);
 
 				// Add ActionListener to each button
-				sortedActionMap.forEach((key, value) -> {
-					rightPanel.add(key);
-				});
+				sortedActionMap.forEach((key, value) -> rightPanel.add(key));
 
 				JPanel bottomPanel = new JPanel();
 				bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -1105,7 +1102,6 @@ public class InventoryEdit extends ModalJFrame {
 	private JTable getJTableInventoryRow() throws OHServiceException {
 		if (jTableInventoryRow == null) {
 			jTableInventoryRow = new JTable();
-			jTextFieldEditor = new JTextField();
 			jTableInventoryRow.setFillsViewportHeight(true);
 			model = new InventoryRowModel();
 			jTableInventoryRow.setModel(model);
@@ -1142,6 +1138,7 @@ public class InventoryEdit extends ModalJFrame {
 					lotButton.setEnabled(medInvRow.isNewLot() || (isLotWithCost() && cost.compareTo(BigDecimal.ZERO) == 0));
 				}
 			});
+			JTextField jTextFieldEditor = new JTextField();
 			DefaultCellEditor cellEditor = new DefaultCellEditor(jTextFieldEditor);
 			jTableInventoryRow.setDefaultEditor(Integer.class, cellEditor);
 		}
@@ -1867,9 +1864,7 @@ public class InventoryEdit extends ModalJFrame {
 				chargeCombo.setSelectedItem(movementSelected);
 				chargeType = movementSelected;
 			}
-			chargeCombo.addActionListener(actionEvent -> {
-				chargeType = (MovementType) chargeCombo.getSelectedItem();
-			});
+			chargeCombo.addActionListener(actionEvent -> chargeType = (MovementType) chargeCombo.getSelectedItem());
 		}
 		return chargeCombo;
 	}
@@ -1896,9 +1891,7 @@ public class InventoryEdit extends ModalJFrame {
 				dischargeCombo.setSelectedItem(movementSelected);
 				dischargeType = movementSelected;
 			}
-			dischargeCombo.addActionListener(actionEvent -> {
-				dischargeType = (MovementType) dischargeCombo.getSelectedItem();
-			});
+			dischargeCombo.addActionListener(actionEvent -> dischargeType = (MovementType) dischargeCombo.getSelectedItem());
 		}
 		return dischargeCombo;
 	}
@@ -1912,7 +1905,7 @@ public class InventoryEdit extends ModalJFrame {
 				supplierCombo.addItem(null);
 				for (Supplier supplier : suppliers) {
 					supplierCombo.addItem(supplier);
-					if (inventory != null && supplier.getSupId() == inventory.getSupplier()) {
+					if (inventory != null && supplier.getSupId().equals(inventory.getSupplier())) {
 						supplierSelected = supplier;
 					}
 				}
@@ -1923,9 +1916,7 @@ public class InventoryEdit extends ModalJFrame {
 				supplierCombo.setSelectedItem(supplierSelected);
 				supplier = supplierSelected;
 			}
-			supplierCombo.addActionListener(actionEvent -> {
-				supplier = (Supplier) supplierCombo.getSelectedItem();
-			});
+			supplierCombo.addActionListener(actionEvent -> supplier = (Supplier) supplierCombo.getSelectedItem());
 		}
 		return supplierCombo;
 	}
@@ -1933,7 +1924,7 @@ public class InventoryEdit extends ModalJFrame {
 	private JComboBox<Ward> getJComboDestination() {
 		Ward destinationSelected = null;
 		if (destinationCombo == null) {
-			destinationCombo = new JComboBox<Ward>();
+			destinationCombo = new JComboBox<>();
 			try {
 				List<Ward> wards = wardManager.getWards();
 				destinationCombo.addItem(null);
@@ -1950,9 +1941,7 @@ public class InventoryEdit extends ModalJFrame {
 				destinationCombo.setSelectedItem(destinationSelected);
 				destination = destinationSelected;
 			}
-			destinationCombo.addActionListener(actionEvent -> {
-				destination = (Ward) destinationCombo.getSelectedItem();
-			});
+			destinationCombo.addActionListener(actionEvent -> destination = (Ward) destinationCombo.getSelectedItem());
 		}
 		return destinationCombo;
 	}
@@ -2020,7 +2009,8 @@ public class InventoryEdit extends ModalJFrame {
 			|| (destination != null && isMismatch(destination.getCode(), wardCode))
 			|| (chargeType != null && isMismatch(chargeType.getCode(), chargeCode))
 			|| (dischargeType != null && isMismatch(dischargeType.getCode(), dischargeCode))
-			|| (supplier != null && supplier.getSupId() != supplierId)
+			|| (supplier != null && !supplier.getSupId().equals(supplierId))
+			|| (reference != null && !reference.equals(newReference))
 			|| !isSameDateTime(date, dateInventory);
 	}
 
@@ -2046,9 +2036,7 @@ public class InventoryEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			medicalTypeSelected = (MedicalType) medicalTypeComboBox.getSelectedItem();
-			medicalTypeComboBox.addActionListener(actionEvent -> {
-				medicalTypeSelected = (MedicalType) medicalTypeComboBox.getSelectedItem();
-			});
+			medicalTypeComboBox.addActionListener(actionEvent -> medicalTypeSelected = (MedicalType) medicalTypeComboBox.getSelectedItem());
 		}
 		return medicalTypeComboBox;
 	}
@@ -2128,7 +2116,7 @@ public class InventoryEdit extends ModalJFrame {
 		for (MedicalInventoryRow row : inventoryRowSearchList) {
 			inventorySet.add(row.getMedical());
 		}
-		return medicals.size() == inventorySet.size() ? true : false;
+		return medicals.size() == inventorySet.size();
 	}
 
 	private void initializeActions() {

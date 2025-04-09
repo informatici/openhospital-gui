@@ -83,8 +83,6 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 	private JPanel panelHeader;
 	private JPanel panelFooter;
 	private JPanel panelContent;
-	private JButton jButtonClose;
-	private JButton jButtonNew;
 	private JButton jButtonEdit;
 	private JButton jButtonDelete;
 	private JButton jButtonView;
@@ -170,21 +168,21 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 			int eventID = itemEvent.getStateChange();
 
 			if (eventID == ItemEvent.SELECTED) {
-				int page_number = (Integer) pagesComboBox.getSelectedItem();
-				startIndex = (page_number - 1) * PAGE_SIZE;
+				int pageNumber = (Integer) pagesComboBox.getSelectedItem();
+				startIndex = (pageNumber - 1) * PAGE_SIZE;
 
 				if ((startIndex + PAGE_SIZE) > totalRows) {
 					next.setEnabled(false);
 				} else {
 					next.setEnabled(true);
 				}
-				if (page_number == 1) {
+				if (pageNumber == 1) {
 					previous.setEnabled(false);
 				} else {
 					previous.setEnabled(true);
 				}
-				pagesComboBox.setSelectedItem(page_number);
-				jTableInventory.setModel(new InventoryBrowsingModel(page_number - 1, PAGE_SIZE));
+				pagesComboBox.setSelectedItem(pageNumber);
+				jTableInventory.setModel(new InventoryBrowsingModel(pageNumber - 1, PAGE_SIZE));
 				pagesComboBox.setEnabled(true);
 			}
 		});
@@ -339,7 +337,7 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 	}
 
 	private JButton getNewButton() {
-		jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		JButton jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		jButtonNew.addActionListener(actionEvent -> {
 			String draft = InventoryStatus.draft.toString();
@@ -355,8 +353,8 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 			}
 			if (draftMedicalInventories.isEmpty() && validatedMedicalInventories.isEmpty()) {
 				InventoryWardEdit InventoryWardEdit = new InventoryWardEdit();
-				InventoryWardEdit.addInventoryListener(InventoryWardBrowser.this);
-				InventoryWardEdit.showAsModal(InventoryWardBrowser.this);
+				InventoryWardEdit.addInventoryListener(this);
+				InventoryWardEdit.showAsModal(this);
 			} else {
 				MessageDialog.error(null, "angal.inventory.cannotcreateanotherinventorywithstatusdraft.msg");
 				return;
@@ -370,7 +368,6 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 		jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		jButtonEdit.setEnabled(false);
 		jButtonEdit.addActionListener(actionEvent -> {
-			MedicalInventory inventory = new MedicalInventory();
 			if (jTableInventory.getSelectedRowCount() > 1) {
 				MessageDialog.error(this, "angal.inventory.pleaseselectonlyoneinventory.msg");
 				return;
@@ -380,7 +377,7 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 				MessageDialog.error(this, "angal.inventory.pleaseselectinventory.msg");
 				return;
 			}
-			inventory = inventoryList.get(selectedRow);
+			MedicalInventory inventory = inventoryList.get(selectedRow);
 			if (inventory.getStatus().equals(InventoryStatus.canceled.toString())) {
 				MessageDialog.error(null, "angal.inventory.cancelednoteditable.msg");
 				return;
@@ -391,8 +388,8 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 				return;
 			}
 			InventoryWardEdit InventoryWardEdit = new InventoryWardEdit(inventory, "update");
-			InventoryWardEdit.addInventoryListener(InventoryWardBrowser.this);
-			InventoryWardEdit.showAsModal(InventoryWardBrowser.this);
+			InventoryWardEdit.addInventoryListener(this);
+			InventoryWardEdit.showAsModal(this);
 		});
 		return jButtonEdit;
 	}
@@ -402,7 +399,6 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.inventory.view.btn.key"));
 		jButtonView.setEnabled(false);
 		jButtonView.addActionListener(actionEvent -> {
-			MedicalInventory inventory = new MedicalInventory();
 			if (jTableInventory.getSelectedRowCount() > 1) {
 				MessageDialog.error(this, "angal.inventory.pleaseselectonlyoneinventory.msg");
 				return;
@@ -413,10 +409,10 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 				return;
 			}
 			if (selectedRow > -1) {
-				inventory = inventoryList.get(selectedRow);
+				MedicalInventory inventory = inventoryList.get(selectedRow);
 				InventoryWardEdit InventoryWardEdit = new InventoryWardEdit(inventory, "view");
-				InventoryWardEdit.addInventoryListener(InventoryWardBrowser.this);
-				InventoryWardEdit.showAsModal(InventoryWardBrowser.this);
+				InventoryWardEdit.addInventoryListener(this);
+				InventoryWardEdit.showAsModal(this);
 			}
 		});
 		return jButtonView;
@@ -458,7 +454,7 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 	}
 
 	private JButton getCloseButton() {
-		jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		JButton jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		jButtonClose.addActionListener(actionEvent -> dispose());
 		return jButtonClose;

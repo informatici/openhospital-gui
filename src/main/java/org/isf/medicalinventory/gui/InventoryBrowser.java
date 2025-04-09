@@ -81,8 +81,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JPanel panelHeader;
 	private JPanel panelFooter;
 	private JPanel panelContent;
-	private JButton jButtonClose;
-	private JButton jButtonNew;
 	private JButton jButtonEdit;
 	private JButton jButtonDelete;
 	private JButton jButtonView;
@@ -104,7 +102,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	private JComboBox<Integer> pagesComboBox = new JComboBox<>();
 	private JLabel ofPagesLabel = new JLabel(MessageBundle.formatMessage("angal.common.pages.fmt.txt", 1));
 	private static int PAGE_SIZE = 24;
-	private int startIndex = 0;
+	private int startIndex;
 	private int totalRows;
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private List<MedicalInventory> inventoryList;
@@ -166,21 +164,21 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			int eventID = itemEvent.getStateChange();
 
 			if (eventID == ItemEvent.SELECTED) {
-				int page_number = (Integer) pagesComboBox.getSelectedItem();
-				startIndex = (page_number - 1) * PAGE_SIZE;
+				int pageNumber = (Integer) pagesComboBox.getSelectedItem();
+				startIndex = (pageNumber - 1) * PAGE_SIZE;
 
 				if ((startIndex + PAGE_SIZE) > totalRows) {
 					next.setEnabled(false);
 				} else {
 					next.setEnabled(true);
 				}
-				if (page_number == 1) {
+				if (pageNumber == 1) {
 					previous.setEnabled(false);
 				} else {
 					previous.setEnabled(true);
 				}
-				pagesComboBox.setSelectedItem(page_number);
-				jTableInventory.setModel(new InventoryBrowsingModel(page_number - 1, PAGE_SIZE));
+				pagesComboBox.setSelectedItem(pageNumber);
+				jTableInventory.setModel(new InventoryBrowsingModel(pageNumber - 1, PAGE_SIZE));
 				pagesComboBox.setEnabled(true);
 			}
 		});
@@ -335,7 +333,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	}
 
 	private JButton getNewButton() {
-		jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		JButton jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		jButtonNew.addActionListener(actionEvent -> {
 			String draft = InventoryStatus.draft.toString();
@@ -351,11 +349,10 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 			}
 			if (draftMedicalInventories.isEmpty() && validatedMedicalInventories.isEmpty()) {
 				InventoryEdit inventoryEdit = new InventoryEdit();
-				InventoryEdit.addInventoryListener(InventoryBrowser.this);
-				inventoryEdit.showAsModal(InventoryBrowser.this);
+				InventoryEdit.addInventoryListener(this);
+				inventoryEdit.showAsModal(this);
 			} else {
 				MessageDialog.error(null, "angal.inventory.cannotcreateanotherinventorywithstatusdraft.msg");
-				return;
 			}
 		});
 		return jButtonNew;
@@ -366,7 +363,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		jButtonEdit.setEnabled(false);
 		jButtonEdit.addActionListener(actionEvent -> {
-			MedicalInventory inventory = new MedicalInventory();
 			if (jTableInventory.getSelectedRowCount() > 1) {
 				MessageDialog.error(this, "angal.inventory.pleaseselectonlyoneinventory.msg");
 				return;
@@ -376,7 +372,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				MessageDialog.error(this, "angal.inventory.pleaseselectinventory.msg");
 				return;
 			}
-			inventory = inventoryList.get(selectedRow);
+			MedicalInventory inventory = inventoryList.get(selectedRow);
 			if (inventory.getStatus().equals(InventoryStatus.canceled.toString())) {
 				MessageDialog.error(null, "angal.inventory.cancelednoteditable.msg");
 				return;
@@ -387,8 +383,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				return;
 			}
 			InventoryEdit inventoryEdit = new InventoryEdit(inventory, "update");
-			InventoryEdit.addInventoryListener(InventoryBrowser.this);
-			inventoryEdit.showAsModal(InventoryBrowser.this);
+			InventoryEdit.addInventoryListener(this);
+			inventoryEdit.showAsModal(this);
 		});
 		return jButtonEdit;
 	}
@@ -398,7 +394,6 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 		jButtonView.setMnemonic(MessageBundle.getMnemonic("angal.inventory.view.btn.key"));
 		jButtonView.setEnabled(false);
 		jButtonView.addActionListener(actionEvent -> {
-			MedicalInventory inventory = new MedicalInventory();
 			if (jTableInventory.getSelectedRowCount() > 1) {
 				MessageDialog.error(this, "angal.inventory.pleaseselectonlyoneinventory.msg");
 				return;
@@ -409,10 +404,10 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				return;
 			}
 			if (selectedRow > -1) {
-				inventory = inventoryList.get(selectedRow);
+				MedicalInventory inventory = inventoryList.get(selectedRow);
 				InventoryEdit inventoryEdit = new InventoryEdit(inventory, "view");
-				InventoryEdit.addInventoryListener(InventoryBrowser.this);
-				inventoryEdit.showAsModal(InventoryBrowser.this);
+				InventoryEdit.addInventoryListener(this);
+				inventoryEdit.showAsModal(this);
 			}
 		});
 		return jButtonView;
@@ -454,7 +449,7 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	}
 
 	private JButton getCloseButton() {
-		jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		JButton jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		jButtonClose.addActionListener(actionEvent -> dispose());
 		return jButtonClose;
@@ -619,17 +614,17 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 	}
 
 	@Override
-	public void InventoryCancelled(AWTEvent e) {
+	public void inventoryCancelled(AWTEvent e) {
 		jTableInventory.setModel(new InventoryBrowsingModel(0, PAGE_SIZE));
 	}
 
 	@Override
-	public void InventoryInserted(AWTEvent e) {
+	public void inventoryInserted(AWTEvent e) {
 		jTableInventory.setModel(new InventoryBrowsingModel(0, PAGE_SIZE));
 	}
 
 	@Override
-	public void InventoryUpdated(AWTEvent e) {
+	public void inventoryUpdated(AWTEvent e) {
 		jTableInventory.setModel(new InventoryBrowsingModel(0, PAGE_SIZE));
 	}
 
