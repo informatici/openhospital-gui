@@ -121,7 +121,7 @@ public class InventoryWardEdit extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static EventListenerList InventoryListeners = new EventListenerList();
+	private static EventListenerList inventoryListeners = new EventListenerList();
 
 	public interface InventoryListener extends EventListener {
 
@@ -133,11 +133,11 @@ public class InventoryWardEdit extends ModalJFrame {
 	}
 
 	public static void addInventoryListener(InventoryListener listener) {
-		InventoryListeners.add(InventoryListener.class, listener);
+		inventoryListeners.add(InventoryListener.class, listener);
 	}
 
 	public static void removeInventoryListener(InventoryListener listener) {
-		InventoryListeners.remove(InventoryListener.class, listener);
+		inventoryListeners.remove(InventoryListener.class, listener);
 	}
 
 	private void fireInventoryUpdated() {
@@ -146,7 +146,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			private static final long serialVersionUID = 1L;
 		};
 
-		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
+		EventListener[] listeners = inventoryListeners.getListeners(InventoryListener.class);
 		for (EventListener listener : listeners) {
 			((InventoryListener) listener).inventoryUpdated(event);
 		}
@@ -160,7 +160,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			private static final long serialVersionUID = 1L;
 		};
 
-		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
+		EventListener[] listeners = inventoryListeners.getListeners(InventoryListener.class);
 		for (EventListener listener : listeners) {
 			((InventoryListener) listener).inventoryInserted(event);
 		}
