@@ -628,17 +628,17 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 	}
 
 	@Override
-	public void InventoryCancelled(AWTEvent e) {
+	public void inventoryCancelled(AWTEvent e) {
 		jTableInventory.setModel(new InventoryBrowsingModel(0, PAGE_SIZE));
 	}
 
 	@Override
-	public void InventoryInserted(AWTEvent e) {
+	public void inventoryInserted(AWTEvent e) {
 		jTableInventory.setModel(new InventoryBrowsingModel(0, PAGE_SIZE));
 	}
 
 	@Override
-	public void InventoryUpdated(AWTEvent e) {
+	public void inventoryUpdated(AWTEvent e) {
 		jTableInventory.setModel(new InventoryBrowsingModel(0, PAGE_SIZE));
 	}
 

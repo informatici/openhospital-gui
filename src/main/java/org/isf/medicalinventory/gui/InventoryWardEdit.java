@@ -125,11 +125,11 @@ public class InventoryWardEdit extends ModalJFrame {
 
 	public interface InventoryListener extends EventListener {
 
-		void InventoryInserted(AWTEvent e);
+		void inventoryInserted(AWTEvent e);
 
-		void InventoryUpdated(AWTEvent e);
+		void inventoryUpdated(AWTEvent e);
 
-		void InventoryCancelled(AWTEvent e);
+		void inventoryCancelled(AWTEvent e);
 	}
 
 	public static void addInventoryListener(InventoryListener listener) {
@@ -148,7 +148,7 @@ public class InventoryWardEdit extends ModalJFrame {
 
 		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
 		for (EventListener listener : listeners) {
-			((InventoryListener) listener).InventoryUpdated(event);
+			((InventoryListener) listener).inventoryUpdated(event);
 		}
 		jCalendarInventoryDate.setDateTime(dateInventory);
 		jTableInventoryRow.updateUI();
@@ -162,7 +162,7 @@ public class InventoryWardEdit extends ModalJFrame {
 
 		EventListener[] listeners = InventoryListeners.getListeners(InventoryListener.class);
 		for (EventListener listener : listeners) {
-			((InventoryListener) listener).InventoryInserted(event);
+			((InventoryListener) listener).inventoryInserted(event);
 		}
 		jCalendarInventoryDate.setDateTime(dateInventory);
 		jTableInventoryRow.updateUI();
