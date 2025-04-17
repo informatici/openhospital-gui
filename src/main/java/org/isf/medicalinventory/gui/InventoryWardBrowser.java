@@ -671,7 +671,8 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 
 	private void formatCellByInventoryStatus(JTable table, int row, Component cell) {
 		int statusColumn = table.getColumnModel().getColumnIndex(MessageBundle.getMessage("angal.common.status.txt").toUpperCase());
-		if ((table.getValueAt(row, statusColumn)).equals(InventoryStatus.draft.toString())) {
+		String status = (String) table.getValueAt(row, statusColumn);
+		if (status.equals(InventoryStatus.draft.toString()) || status.equals(InventoryStatus.validated.toString())) {
 			cell.setForeground(Color.BLUE);
 		} else {
 			cell.setForeground(Color.BLACK);
