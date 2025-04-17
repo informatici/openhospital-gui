@@ -198,18 +198,18 @@ public class InventoryWardEdit extends ModalJFrame {
 			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.theoreticalqty.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.realqty.col").toUpperCase(),
+			MessageBundle.getMessage("angal.inventory.difference.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.unitcost.col").toUpperCase(),
 			MessageBundle.getMessage("angal.inventory.totalcost.col").toUpperCase()
 	};
-	private int[] columwidth = { 50, 50, 200, 100, 100, 100, 100, 80, 80, 80 };
-	private boolean[] columnEditable = { false, false, false, false, false, false, false, true, false, false };
-	private boolean[] columnEditableView = { false, false, false, false, false, false, false, false, false, false };
-	private boolean[] columnVisible = { false, true, true, true, !GeneralData.AUTOMATICLOT_IN, true, true, true, GeneralData.LOTWITHCOST,
+	private int[] columwidth = { 50, 50, 200, 100, 100, 100, 100, 80, 80, 80, 80 };
+	private boolean[] columnEditable = { false, false, false, false, false, false, false, true, false, false, false };
+	private boolean[] columnVisible = { false, true, true, true, !GeneralData.AUTOMATICLOT_IN, true, true, true, true, GeneralData.LOTWITHCOST,
 			GeneralData.LOTWITHCOST };
-	private boolean[] columnCentered = { false, false, false, true, true, true, true, true, true, true };
-	private boolean[] columnDecimalNumber = { false, false, false, false, false, false, false, false, true, true };
+	private boolean[] columnCentered = { false, false, false, true, true, true, true, true, true, true, true };
+	private boolean[] columnDecimalNumber = { false, false, false, false, false, false, false, false, false, true, true };
 	private Class< ? >[] columnsClasses = { String.class, Integer.class, String.class, String.class, String.class, LocalDate.class, Integer.class,
-			Integer.class, BigDecimal.class, BigDecimal.class };
+			Integer.class, Integer.class, BigDecimal.class, BigDecimal.class };
 	private MedicalInventory inventory;
 	private JLabel addMedicalLabel;
 	private JButton selectButton;
@@ -311,7 +311,6 @@ public class InventoryWardEdit extends ModalJFrame {
 			validateButton.setVisible(false);
 			confirmButton.setVisible(false);
 			deleteButton.setVisible(false);
-			columnEditable = columnEditableView;
 			resetButton.setVisible(false);
 			referenceTextField.setEditable(false);
 			jCalendarInventoryDate.setEnabled(false);
@@ -1175,12 +1174,15 @@ public class InventoryWardEdit extends ModalJFrame {
 					double dblValue = medInvtRow.getRealQty();
 					return (int) dblValue;
 				} else if (c == 8) {
+					double difference = medInvtRow.getRealQty() - medInvtRow.getTheoreticQty();
+					return difference == 0. ? "" : (int) difference;
+				} else if (c == 9) {
 					if (lot != null && lot.getCost() != null) {
 						medInvtRow.setTotal(lot.getCost().multiply(BigDecimal.valueOf(medInvtRow.getRealQty())));
 						return lot.getCost();
 					}
 					return BigDecimal.ZERO;
-				} else if (c == 9) {
+				} else if (c == 10) {
 					if (lot != null && lot.getCost() != null) {
 						return medInvtRow.getTotal();
 					}
@@ -2049,8 +2051,14 @@ public class InventoryWardEdit extends ModalJFrame {
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
+			int differenceColumn = table.getColumnModel().getColumnIndex(MessageBundle.getMessage("angal.inventory.difference.col").toUpperCase());
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			setHorizontalAlignment(CENTER);
+			if (column == differenceColumn) {
+				setForeground(Color.RED);
+			} else {
+				setForeground(Color.BLACK);
+			}
 			return cell;
 		}
 	}
