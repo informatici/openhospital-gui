@@ -38,7 +38,10 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -110,8 +113,14 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 	private MedicalInventoryManager medicalInventoryManager = Context.getApplicationContext().getBean(MedicalInventoryManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private List<MedicalInventory> inventoryList;
+	private Map<String, Ward> wardMap;
 
 	public InventoryWardBrowser() {
+		try {
+			wardMap = wardBrowserManager.getWardMap();
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
 		initComponents();
 	}
 
@@ -351,12 +360,20 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			if (draftMedicalInventories.isEmpty() && validatedMedicalInventories.isEmpty()) {
+			Set<String> usedWardCodes = new HashSet<>();
+			for (MedicalInventory inv : draftMedicalInventories) {
+				usedWardCodes.add(inv.getWardCode());
+			}
+			for (MedicalInventory inv : validatedMedicalInventories) {
+				usedWardCodes.add(inv.getWardCode());
+			}
+			boolean hasWardWithoutOpenInventory = wardMap.values().stream().anyMatch(w -> !usedWardCodes.contains(w.getCode()));
+			if (hasWardWithoutOpenInventory) {
 				InventoryWardEdit InventoryWardEdit = new InventoryWardEdit();
 				InventoryWardEdit.addInventoryListener(this);
 				InventoryWardEdit.showAsModal(this);
 			} else {
-				MessageDialog.error(null, "angal.inventory.cannotcreateanotherinventorywithstatusdraft.msg");
+				MessageDialog.error(null, "angal.inventory.allwardshaveaongoinginventory.msg");
 				return;
 			}
 		});
@@ -555,19 +572,13 @@ public class InventoryWardBrowser extends ModalJFrame implements InventoryListen
 		@Override
 		public Object getValueAt(int r, int c) {
 			MedicalInventory medInvt = inventoryList.get(r);
-
+			Ward ward = wardMap.get(medInvt.getWardCode());
 			if (c == -1) {
 				return medInvt;
 			} else if (c == 0) {
 				return medInvt.getInventoryReference();
 			} else if (c == 1) {
-				Ward ward = new Ward();
-				try {
-					ward = wardBrowserManager.findWard(medInvt.getWard());
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				return ward == null ? "" : ward.getDescription();
+				return ward;
 			} else if (c == 2) {
 				return medInvt.getInventoryDate().format(DATE_TIME_FORMATTER);
 			} else if (c == 3) {

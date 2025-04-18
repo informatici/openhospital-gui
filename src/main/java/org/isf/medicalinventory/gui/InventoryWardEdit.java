@@ -218,7 +218,7 @@ public class InventoryWardEdit extends ModalJFrame {
 	private String code;
 	private String mode;
 	private JLabel statusLabel;
-	private String wardId = "";
+	private String wardCode = "";
 	private JLabel referenceLabel;
 	private JLabel addMedicalsByLabel;
 	private JTextField referenceTextField;
@@ -267,7 +267,7 @@ public class InventoryWardEdit extends ModalJFrame {
 
 	public InventoryWardEdit(MedicalInventory inventory, String mod) {
 		this.inventory = inventory;
-		wardId = this.inventory.getWard();
+		wardCode = this.inventory.getWardCode();
 		mode = mod;
 		initComponents();
 	}
@@ -329,7 +329,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			referenceTextField.setEditable(true);
 			jCalendarInventoryDate.setEnabled(true);
 			selectButton.setEnabled(true);
-			wardComboBox.setEnabled(true);
+			// wardComboBox.setEnabled(true); depends by "new" or !"new"
 			lotButton.setVisible(true);
 			if (inventory != null && inventory.getStatus().equals(InventoryStatus.validated.toString())) {
 				confirmButton.setEnabled(true);
@@ -545,7 +545,7 @@ public class InventoryWardEdit extends ModalJFrame {
 
 				if (mode.equals("new")) {
 					inventory = new MedicalInventory();
-					inventory.setWard(wardId);
+					inventory.setWardCode(wardCode);
 					inventory.setInventoryReference(referenceTextField.getText().trim());
 					inventory.setInventoryDate(dateInventory);
 					inventory.setStatus(status);
@@ -988,22 +988,6 @@ public class InventoryWardEdit extends ModalJFrame {
 		return closeButton;
 	}
 
-	private String checkParamsValues(String chargeCode, String dischargeCode, Integer supplierId, String wardCode) {
-		if (chargeCode == null || chargeCode.isEmpty()) {
-			return "angal.inventory.choosechargetypebeforevalidation.msg";
-		}
-		if (dischargeCode == null || dischargeCode.isEmpty()) {
-			return "angal.inventory.choosedischargetypebeforevalidation.msg";
-		}
-		if (supplierId == null || supplierId == 0) {
-			return "angal.inventory.choosesupplierbeforevalidation.msg";
-		}
-		if (wardCode == null || wardCode.isEmpty()) {
-			return "angal.inventory.choosedestinationbeforevalidation.msg";
-		}
-		return null;
-	}
-
 	private JScrollPane getScrollPaneInventory() {
 		if (scrollPaneInventory == null) {
 			scrollPaneInventory = new JScrollPane();
@@ -1416,7 +1400,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			if (!mode.equals("new")) {
-				String wardId = inventory.getWard();
+				String wardId = inventory.getWardCode();
 				for (Ward ward : wardList) {
 					if (ward.getCode().equals(wardId)) {
 						wardComboBox.addItem(ward);
@@ -1435,26 +1419,31 @@ public class InventoryWardEdit extends ModalJFrame {
 				if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
 					Object item = itemEvent.getItem();
 					if (item instanceof Ward wardSelected) {
-						wardId = wardSelected.getCode();
+						wardCode = wardSelected.getCode();
 						List<MedicalInventory> medicalWardInventoryDraft;
 						List<MedicalInventory> medicalWardInventoryValidated;
+						boolean isWardFree = false;
+
 						try {
 							medicalWardInventoryDraft = medicalInventoryManager
-								.getMedicalInventoryByStatusAndWard(InventoryStatus.draft.toString(), wardId);
+								.getMedicalInventoryByStatusAndWard(InventoryStatus.draft.toString(), wardCode);
 							medicalWardInventoryValidated = medicalInventoryManager
-								.getMedicalInventoryByStatusAndWard(InventoryStatus.validated.toString(), wardId);
+								.getMedicalInventoryByStatusAndWard(InventoryStatus.validated.toString(), wardCode);
+
+							isWardFree = medicalWardInventoryDraft.isEmpty() && medicalWardInventoryValidated.isEmpty();
 						} catch (OHServiceException e) {
-							medicalWardInventoryDraft = new ArrayList<>();
-							medicalWardInventoryValidated = new ArrayList<>();
 							OHServiceExceptionUtil.showMessages(e);
 						}
 
-						if (medicalWardInventoryDraft.isEmpty() && medicalWardInventoryValidated.isEmpty()) {
-							activateSomeComponents();
-						} else {
+						if (!isWardFree) {
 							MessageDialog.error(this,
 								"angal.inventory.cannotcreateanotherinventorywithotherinprogressinthisward.msg");
+							wardComboBox.setSelectedIndex(-1);
+							return;
 						}
+
+						wardCode = wardSelected.getCode();
+						activateSomeComponents();
 					}
 				}
 			});
@@ -1560,8 +1549,8 @@ public class InventoryWardEdit extends ModalJFrame {
 		List<Lot> lots = null;
 		Medical medical = null;
 		MedicalInventoryRow inventoryRowTemp = null;
-		wardId = ((Ward) Objects.requireNonNull(wardComboBox.getSelectedItem())).getCode();
-		Ward ward = wardManager.findWard(wardId);
+		wardCode = ((Ward) Objects.requireNonNull(wardComboBox.getSelectedItem())).getCode();
+		Ward ward = wardManager.findWard(wardCode);
 		if (code != null) {
 			medical = medicalBrowsingManager.getMedicalByMedicalCode(code);
 			if (medical != null) {
@@ -1608,8 +1597,8 @@ public class InventoryWardEdit extends ModalJFrame {
 		List<Lot> lots = null;
 		MedicalInventoryRow inventoryRowTemp = null;
 		ListIterator<Medical> medicalListIterator = medicalList.listIterator();
-		wardId = ((Ward) Objects.requireNonNull(wardComboBox.getSelectedItem())).getCode();
-		Ward ward = wardManager.findWard(wardId);
+		wardCode = ((Ward) Objects.requireNonNull(wardComboBox.getSelectedItem())).getCode();
+		Ward ward = wardManager.findWard(wardCode);
 		while (medicalListIterator.hasNext()) {
 			Medical med = medicalListIterator.next();
 			lots = movStockInsertingManager.getLotByMedical(med, false);
@@ -1642,18 +1631,18 @@ public class InventoryWardEdit extends ModalJFrame {
 		MedicalInventoryRow inventoryRowTemp = null;
 		List<Medical> medicalList = medicals;
 		ListIterator<Medical> medicalListIterator = medicalList.listIterator();
-		wardId = ((Ward) Objects.requireNonNull(wardComboBox.getSelectedItem())).getCode();
-		Ward ward = wardManager.findWard(wardId);
+		wardCode = ((Ward) Objects.requireNonNull(wardComboBox.getSelectedItem())).getCode();
+		Ward ward = wardManager.findWard(wardCode);
 		while (medicalListIterator.hasNext()) {
 			Medical med = medicalListIterator.next();
 			Integer medicalCode = med.getCode();
-			List<Movement> movementsFromMainStore = movBrowserManager.getMovements(medicalCode, null, wardId, null, null, null, null, null, null,
+			List<Movement> movementsFromMainStore = movBrowserManager.getMovements(medicalCode, null, wardCode, null, null, null, null, null, null,
 				null);
 			if (!movementsFromMainStore.isEmpty()) {
 				medicalListWithMovement.add(med);
 			}
 		}
-		List<MovementWard> movementsWard = movWardBrowserManager.getMovementWard(wardId, null, null);
+		List<MovementWard> movementsWard = movWardBrowserManager.getMovementWard(wardCode, null, null);
 		medicalListWithMovement.addAll(movementsWard.stream()
 			.filter(movement -> medicalList.contains(movement.getMedical())).map(MovementWard::getMedical)
 			.distinct()
