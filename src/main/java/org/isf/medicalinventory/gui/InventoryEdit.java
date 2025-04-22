@@ -817,8 +817,7 @@ public class InventoryEdit extends ModalJFrame {
 	}
 
 	private String askAllMedicalsOrList(String question) {
-		String option = (String) MessageDialog.inputDialog(null, null, allMedicalsOrList, null, question);
-		return option;
+		return (String) MessageDialog.inputDialog(null, null, allMedicalsOrList, null, question);
 	}
 
 	private JButton getConfirmButton() {
