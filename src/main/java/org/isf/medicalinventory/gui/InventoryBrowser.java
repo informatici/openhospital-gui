@@ -167,16 +167,8 @@ public class InventoryBrowser extends ModalJFrame implements InventoryListener {
 				int pageNumber = (Integer) pagesComboBox.getSelectedItem();
 				startIndex = (pageNumber - 1) * PAGE_SIZE;
 
-				if ((startIndex + PAGE_SIZE) > totalRows) {
-					next.setEnabled(false);
-				} else {
-					next.setEnabled(true);
-				}
-				if (pageNumber == 1) {
-					previous.setEnabled(false);
-				} else {
-					previous.setEnabled(true);
-				}
+				next.setEnabled(startIndex + PAGE_SIZE > totalRows ? false : true);
+				previous.setEnabled(pageNumber == 1);
 				pagesComboBox.setSelectedItem(pageNumber);
 				jTableInventory.setModel(new InventoryBrowsingModel(pageNumber - 1, PAGE_SIZE));
 				pagesComboBox.setEnabled(true);
