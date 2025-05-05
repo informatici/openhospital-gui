@@ -781,7 +781,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedOrto == null) {
 			jCheckBoxPathClosedOrto = new JCheckBox();
 			jCheckBoxPathClosedOrto.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedOrto.setText(MessageBundle.getMessage("angal.anamnesis.closed.orto.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedOrto.setText(MessageBundle.getMessage("angal.anamnesis.closed.ortho.txt")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedOrto;
 	}
@@ -826,7 +826,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedCardio == null) {
 			jCheckBoxPathClosedCardio = new JCheckBox();
 			jCheckBoxPathClosedCardio.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedCardio.setText(MessageBundle.getMessage("angal.anamnesis.closed.cardiovascolaris.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedCardio.setText(MessageBundle.getMessage("angal.anamnesis.closed.cardiovascular.txt")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedCardio;
 	}

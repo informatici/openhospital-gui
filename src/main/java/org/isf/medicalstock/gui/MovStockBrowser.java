@@ -696,8 +696,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JTable getMovTable() {
-		LocalDateTime now = TimeTools.getNow();
-		LocalDateTime old = now.minusWeeks(1);
+		LocalDateTime now = TimeTools.getBeginningOfNextDay(TimeTools.getNow());
+		LocalDateTime old = TimeTools.getBeginningOfDay(now.minusWeeks(1));
 
 		model = new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 		movTable = new JTable(model);
@@ -892,21 +892,21 @@ public class MovStockBrowser extends ModalJFrame {
 				if (!isAutomaticLot()) {
 					model = new MovBrowserModel(medicalSelected,
 									medicalTypeSelected, wardSelected, movementTypeSelected,
-									movDateFrom.getDateStartOfDay(),
-									movDateTo.getDateStartOfDay(),
-									lotPrepFrom.getDateStartOfDay(),
-									lotPrepTo.getDateStartOfDay(),
-									lotDueFrom.getDateStartOfDay(),
-									lotDueTo.getDateStartOfDay());
+									TimeTools.getBeginningOfDay(movDateFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(movDateTo.getDateStartOfDay()),
+									TimeTools.getBeginningOfDay(lotPrepFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(lotPrepTo.getDateStartOfDay()),
+									TimeTools.getBeginningOfDay(lotDueFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(lotDueTo.getDateStartOfDay()));
 				} else {
 					model = new MovBrowserModel(medicalSelected,
 									medicalTypeSelected, wardSelected, movementTypeSelected,
-									movDateFrom.getDateStartOfDay(),
-									movDateTo.getDateStartOfDay(),
+									TimeTools.getBeginningOfDay(movDateFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(movDateTo.getDateStartOfDay()),
 									null,
 									null,
-									lotDueFrom.getDateStartOfDay(),
-									lotDueTo.getDateStartOfDay());
+									TimeTools.getBeginningOfDay(lotDueFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(lotDueTo.getDateStartOfDay()));
 				}
 
 				if (moves != null)
@@ -1147,8 +1147,8 @@ public class MovStockBrowser extends ModalJFrame {
 		private static final long serialVersionUID = 1L;
 
 		public MovBrowserModel() {
-			LocalDateTime now = TimeTools.getNow();
-			LocalDateTime old = now.minusWeeks(1);
+			LocalDateTime now = TimeTools.getBeginningOfNextDay(TimeTools.getNow());
+			LocalDateTime old = TimeTools.getBeginningOfDay(now.minusWeeks(1));
 
 			new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 			updateTotals();

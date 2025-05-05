@@ -47,6 +47,12 @@ appender.jdbc.columnConfigs[2].name = MESSAGE
 appender.jdbc.columnConfigs[2].pattern = %mm%ex%n
 appender.jdbc.columnConfigs[2].isUnicode = false
 
+# Security settings - see log4j CVE-2021-44228
+log4j.formatMsgNoLookups=true 
+-
+# Assigning appenders to packages (application loggers)
+log4j.logger.org.isf=LOG_LEVEL,RollingFile
+log4j.additivity.org.isf = false
 
 # Assigning appenders to Hibernate packages (DB loggers)
 # - hibernate.SQL to DEBUG for SQL queries to be logged

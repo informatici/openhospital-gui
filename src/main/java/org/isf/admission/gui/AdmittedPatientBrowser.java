@@ -1040,7 +1040,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 
 			// ASK CONFIRMATION
 			int ok = MessageDialog.yesNo(this,
-							"angal.admission.withthisoperationthepatientwillbedeletedandhisherhistorytransferedtothepatient.fmt.msg", patient2.getCode(),
+							"angal.admission.withthisoperationthepatientwillbedeletedandthehistorytransferredtothepatient.fmt.msg", patient2.getCode(),
 							patient2.getName(), patient2.getAge(), patient2.getAddress(), mergedPatient.getCode(), mergedPatient.getName(),
 							mergedPatient.getAge(), mergedPatient.getAddress());
 			if (ok != JOptionPane.YES_OPTION) {

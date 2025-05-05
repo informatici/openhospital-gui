@@ -475,7 +475,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private Lot createNewLot(Medical med, int qty) {
 		LocalDateTime preparationDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES);
 		LocalDateTime expiringDate = askExpiringDate();
-		Lot newLot = new Lot(med,"", preparationDate, expiringDate);
+		Lot newLot = new Lot(med, "", preparationDate, expiringDate);
 
 		if (!setOrValidateCost(newLot, qty)) {
 			return null;
