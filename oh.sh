@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -101,7 +101,7 @@ API_LOG_FILE="api.log"
 #DB_CREATE_SQL="create_all_en.sql" # default to en
 DB_DEMO="create_all_demo.sql"
 
-######################## Other settings ########################
+######################## Advanced settings ########################
 # date format
 DATE=`date +%Y-%m-%d_%H-%M-%S`
 
@@ -111,7 +111,7 @@ EXT="tar.gz"
 # mysql configuration file
 MYSQL_CONF_FILE="my.cnf"
 
-# OH configuration files
+# OH configuration files - see also settings.properties
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
 EXAMINATION_SETTINGS="examination.properties"
@@ -125,9 +125,23 @@ API_SETTINGS="application.properties"
 CRED_SETTINGS="default_credentials.properties"
 DEMO_CRED_SETTINGS="default_demo_credentials.properties"
 
-# OH jar bin files
+# OH jar/war bin files
 OH_GUI_JAR="OH-gui.jar"
-OH_API_JAR="openhospital-api-0.1.0.jar"
+OH_API_BIN="openhospital-api"
+OH_API_VER="0.1.0"
+OH_API_JAR="$OH_API_BIN-$OH_API_VER.jar"
+OH_API_WAR="$OH_API_BIN-$OH_API_VER.war"
+OH_API_PROD="oh-api"
+
+# OH API server configuration
+OH_API_HOST="localhost"
+OH_API_PORT="8080"
+
+# OH UI configuration
+OH_UI_HOST="localhost"
+OH_UI_PORT="8080"
+OH_UI_PROD="oh-ui"
+OH_UI_URL="http://$OH_UI_HOST:$OH_UI_PORT/$OH_UI_PROD"
 
 # help file
 HELP_FILE="OH-readme.txt"
@@ -142,15 +156,16 @@ DATABASE_ROOT_USER="root"
 
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 EXPERT_MODE="off"
-OH_UI_URL="http://localhost:8080"
-OH_API_PID="../tmp/oh-api.pid"
+#OH_UI_URL="http://localhost:8080/oh"
+#OH_API_PID="../tmp/oh-api.pid"
 
 ################ Architecture and external software ################
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-MYSQL_VERSION="10.6.16"
-MYSQL32_VERSION="10.5.23"
+MYSQL_VERSION="10.6.20"
+#MYSQL_VERSION="11.6.2"
+MYSQL32_VERSION="10.5.27"
 PACKAGE_TYPE="systemd" 
 
 ######## define system and software architecture
@@ -191,9 +206,15 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ### JRE 17 - zulu distribution
 #JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-linux_$JAVA_PACKAGE_ARCH"
-JAVA_DISTRO="zulu17.48.15-ca-jre17.0.10-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu17.54.21-ca-jre17.0.13-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
+
+# Tomcat 11
+TOMCAT_VERSION="11.0.2"
+TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
+TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION"
+TOMCAT_DIR=$TOMCAT_DISTRO
 
 ######################## DO NOT EDIT BELOW THIS LINE ########################
 
@@ -202,18 +223,15 @@ JAVA_DIR=$JAVA_DISTRO
 ###################################################################
 function script_menu {
 	# show help / user options
-	echo " -----------------------------------------------------------------"
-	echo "|                                                                 |"
-	echo "|                  Open Hospital - $OH_VERSION                         |"
-	echo "|                                                                 |"
-	echo " -----------------------------------------------------------------"
-	echo " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
-	echo " -----------------------------------------------------------------"
-	if [ "$EXPERT_MODE" == "on" ]; then
-		echo " EXPERT MODE activated"
-		echo " API server set to $API_SERVER"
-		echo " -----------------------------------------------------------------"
-	fi
+	echo " ------------------------------------------------------------------------"
+	echo "|                                                                        |"
+	echo "|                Open Hospital - v$OH_VERSION                                 |"
+	echo "|                                                                        |"
+	echo " ------------------------------------------------------------------------"
+	echo "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
+	echo " ------------------------------------------------------------------------"
+	echo "| Expert mode: $EXPERT_MODE | API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+	echo " ------------------------------------------------------------------------"
 	echo ""
 	echo " Usage: $SCRIPT_NAME -[OPTION] "
 	echo ""
@@ -236,20 +254,14 @@ function script_menu_advanced {
 	echo "   -------------------------------- "
 	echo "    EXPERT MODE - advanced options"
 	echo ""
-	echo "   -A    toggle API server - EXPERIMENTAL"
-	echo "   -e    export/save OH database"
-	echo "   -r    restore OH database"
- 	echo "   -d    toggle log level INFO/DEBUG"
-	echo "   -G    setup GSM"
-	echo "   -D    initialize OH with Demo data"
-	echo "   -i    initialize/install OH database"
-	echo "   -m    configure database connection manually"
-	echo "   -s    save OH configuration"
-	echo "   -t    test database connection (CLIENT mode only)"
-	echo "   -u    create Desktop shortcut"
-	echo "   -v    show configuration"
-	echo "   -V    check for latest OH version"
-	echo "   -X    clean/reset OH installation"
+	echo "   -A  toggle API server - EXPERIMENTAL		| -d  toggle log level INFO/DEBUG"
+	echo "   -D  initialize OH with Demo data		| -X  clean/reset OH installation"
+	echo "   -e  export/save OH database			| -r  restore OH database"
+ 	echo "   -m  configure database connection manually	| -i  initialize/install OH databas"
+	echo "   -s  save OH configuration			| -t  test database connection (CLIENT mode only)"
+	echo "   -G  setup GSM			"
+	echo "   -U  enable UI web interface			| -u  create Desktop shortcut"
+	echo "   -v  show configuration			| -V  check for latest OH version"
 	echo ""
 }
 
@@ -259,7 +271,6 @@ function interactive_menu {
 	do 
 		clear;
 		script_menu;
-		echo ""
 		#IFS=
 		read -n 1 -p "Please select an option or press enter to start OH: " option
 		if [[ $option != "" ]]; then 
@@ -338,6 +349,8 @@ function read_settings {
 		OH_DOC_DIR=$OH_DOC_DIR
 		DEMO_DATA=$DEMODATA
 		API_SERVER=$APISERVER
+		GUI_INTERFACE=$GUI_INTERFACE
+		UI_INTERFACE=$UI_INTERFACE
 	fi
 
 	# check for database settings file and read values
@@ -398,19 +411,24 @@ function set_defaults {
 		DEMO_DATA="off"
 	fi
 
-	# api server - set default to off
+	# EXPERT_MODE features - set default to off
+	if [ -z "$EXPERT_MODE" ]; then
+		EXPERT_MODE="off"
+	fi
+
+	# API server - set default to off
 	if [ -z "$API_SERVER" ]; then
 		API_SERVER="off"
 	fi
 	
+	# GUI interface - set default to on
+	if [ -z "$GUI_INTERFACE" ]; then
+		GUI_INTERFACE="on"
+	fi
+
 	# UI interface - set default to off
 	if [ -z "$UI_INTERFACE" ]; then
 		UI_INTERFACE="off"
-	fi
-
-	# EXPERT_MODE features - set default to off
-	if [ -z "$EXPERT_MODE" ]; then
-		EXPERT_MODE="off"
 	fi
 
 	# set escaped path (/ in place of \)
@@ -594,14 +612,14 @@ function java_check {
 # check if JAVA_BIN is already set and it exists
 if ( [ -z ${JAVA_BIN+x} ] || [ ! -x "$JAVA_BIN" ] ); then
 	# set default
-	echo "Setting default JAVA..."
+	echo "Setting default Java..."
 	JAVA_BIN="$OH_PATH/$JAVA_DIR/bin/java"
 fi
 
 # if JAVA_BIN is not found download JRE
 if [ ! -x "$JAVA_BIN" ]; then
 	if [ ! -f "./$JAVA_DISTRO.$EXT" ]; then
-		echo "Warning - JAVA not found. Do you want to download it?"
+		echo "Warning - Java not found. Do you want to download it?"
 		get_confirmation;
 		# download java binaries
 		echo "Download $JAVA_DISTRO..."
@@ -613,13 +631,13 @@ if [ ! -x "$JAVA_BIN" ]; then
 		echo "Error unpacking Java. Exiting."
 		exit 1
 	fi
-	echo "JAVA unpacked successfully!"
+	echo "Java unpacked successfully!"
 	echo "Removing downloaded file..."
 	rm ./$JAVA_DISTRO.$EXT
 	echo "Done!"
 fi
 
-echo "JAVA found!"
+echo "Java found!"
 echo "Using $JAVA_BIN"
 }
 
@@ -659,11 +677,62 @@ if [ $? -eq 1 ]; then
 	exit 1
 fi
 # check for libncurses - version 5
-ldconfig -p | grep libncurses.so.5 > /dev/null;
-if [ $? -eq 1 ]; then
-	echo "Error: libncurses version 5 not found! Please install the library. Exiting."
-	exit 1
+#ldconfig -p | grep libncurses.so.5 > /dev/null;
+#if [ $? -eq 1 ]; then
+#	echo "Error: libncurses version 5 not found! Please install the library. Exiting."
+#	exit 1
+#fi
+}
+
+###################################################################
+function tomcat_setup {
+# check if TOMCAT_BIN is already set and it exists
+if ( [ -z ${TOMCAT_BIN+x} ] || [ ! -x "$TOMCAT_BIN" ] ); then
+	# set default
+	echo "Setting default Tomcat..."
+	TOMCAT_BIN="$OH_PATH/$TOMCAT_DIR/bin/catalina.sh"
 fi
+
+# if TOMCAT_BIN is not found download Tomcat
+if [ ! -x "$TOMCAT_BIN" ]; then
+	if [ ! -f "./$TOMCAT_DISTRO.$EXT" ]; then
+		echo "Warning - Tomcat not found. Do you want to download it?"
+		get_confirmation;
+		# download tomcat binaries
+		echo "Download $TOMCAT_DISTRO..."
+		wget -P ./ $TOMCAT_URL/$TOMCAT_DISTRO.$EXT
+	fi
+	echo "Unpacking $TOMCAT_DISTRO..."
+	tar xf ./$TOMCAT_DISTRO.$EXT -C ./
+	if [ $? -ne 0 ]; then
+		echo "Error unpacking Tomcat. Exiting."
+		exit 1
+	fi
+	echo "Tomcat unpacked successfully!"
+	echo "Removing downloaded file..."
+	rm ./$TOMCAT_DISTRO.$EXT
+	echo "Done!"
+fi
+
+echo "Tomcat found!"
+echo "Using $TOMCAT_BIN"
+
+# set up OpenHospital API war
+
+# check if OH API webapps directory already exists
+if [ ! -d "$OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD" ] ; then
+	echo "Unpacking $OH_API_PROD.war..."
+	mkdir -p $OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD/
+	unzip -qq $OH_PATH/$OH_DIR/bin/$OH_API_WAR -d $OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD 
+else
+	echo "Using $OH_API_PROD deployed application..."
+fi
+
+# copying configuration / properties files:
+echo "Copying OH API configuration files..."
+cp -f $OH_PATH/$OH_DIR/rsc/*.properties $OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD/WEB-INF/classes/
+
+echo "Tomcat | OH API server ready!"
 }
 
 ###################################################################
@@ -712,8 +781,13 @@ function initialize_database {
 function start_database {
 	echo "Checking if $MYSQL_NAME is running..."
 	if [ -f "$OH_PATH/$TMP_DIR/mysql.sock" ] || [ -f "$OH_PATH/$TMP_DIR/mysql.pid" ] ; then
-		echo "$MYSQL_NAME already running ! Exiting."
-		exit 1
+		echo "$MYSQL_NAME already running!"
+		echo "Do you want to remove pid/socket file and try to restart database?"
+		get_confirmation 1;
+		# remove socket and pid file
+		echo "Removing mariadb/mysql socket and pid file..."
+		rm -rf $OH_PATH/$TMP_DIR/mysql.sock
+		rm -rf $OH_PATH/$TMP_DIR/mysql.pid
 	fi
 
 	echo "Starting $MYSQL_NAME server... "
@@ -724,7 +798,7 @@ function start_database {
 	fi
 	# wait till the MariaDB/MySQL tcp port is open
 	until nc -z $DATABASE_SERVER $DATABASE_PORT; do sleep 1; done
-	echo "$MYSQL_NAME server started! "
+	echo "$MYSQL_NAME server started!"
 }
 
 ###################################################################
@@ -878,8 +952,17 @@ function write_api_config_file {
 		echo "Writing OH API configuration file -> $API_SETTINGS..."
 		sed -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" \
 		    -e "s&OH_API_PID&"$OH_API_PID"&g" \
-		    -e "s/API_HOST:API_PORT/localhost:8080/g" \
+		    -e "s&UI_HOST&$OH_UI_HOST&g" \
+		    -e "s&UI_PORT&$OH_UI_PORT&g" \
+		    -e "s&API_HOST&$OH_API_HOST&g" \
+		    -e "s&API_PORT&$OH_API_PORT&g" \
+		    -e "s&API_URL&$OH_API_PROD&g" \
 		    ./$OH_DIR/rsc/$API_SETTINGS.dist > ./$OH_DIR/rsc/$API_SETTINGS
+	fi
+	if [ -d "$OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD" ] ; then
+		# copying configuration / properties files to tomcat dir
+		echo "Copying OH API configuration files..."
+		cp -f $OH_PATH/$OH_DIR/rsc/*.properties $OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD/WEB-INF/classes/
 	fi
 }
 
@@ -898,12 +981,13 @@ function copy_config_file {
 function write_config_files {
 	# set up configuration files
 	echo "Checking for OH configuration files..."
-	######## IMAGING / DICOM setup
-	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ]; then
-		[ -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ] && mv -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ./$OH_DIR/rsc/$IMAGING_SETTINGS.old
-		echo "Writing OH configuration file -> $IMAGING_SETTINGS..."
-		sed -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
-		-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/$IMAGING_SETTINGS.dist > ./$OH_DIR/rsc/$IMAGING_SETTINGS
+	######## DATABASE_SETTINGS setup 
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ]; then
+		[ -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ] && mv -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ./$OH_DIR/rsc/$DATABASE_SETTINGS.old
+		echo "Writing OH database configuration file -> $DATABASE_SETTINGS..."
+		sed -e "s/DBSERVER/$DATABASE_SERVER/g" -e "s/DBPORT/$DATABASE_PORT/g" -e "s/DBNAME/$DATABASE_NAME/g" \
+		-e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
+		./$OH_DIR/rsc/$DATABASE_SETTINGS.dist > ./$OH_DIR/rsc/$DATABASE_SETTINGS
 	fi
 	######## LOG4J_SETTINGS setup
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$LOG4J_SETTINGS ]; then
@@ -914,13 +998,12 @@ function write_config_files {
 		-e "s/DBNAME/$DATABASE_NAME/g" -e "s/LOG_LEVEL/$LOG_LEVEL/g" -e "s+LOG_DEST+$OH_LOG_DEST+g" \
 		./$OH_DIR/rsc/$LOG4J_SETTINGS.dist > ./$OH_DIR/rsc/$LOG4J_SETTINGS
 	fi
-	######## DATABASE_SETTINGS setup 
-	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ]; then
-		[ -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ] && mv -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ./$OH_DIR/rsc/$DATABASE_SETTINGS.old
-		echo "Writing OH database configuration file -> $DATABASE_SETTINGS..."
-		sed -e "s/DBSERVER/$DATABASE_SERVER/g" -e "s/DBPORT/$DATABASE_PORT/g" -e "s/DBNAME/$DATABASE_NAME/g" \
-		-e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
-		./$OH_DIR/rsc/$DATABASE_SETTINGS.dist > ./$OH_DIR/rsc/$DATABASE_SETTINGS
+	######## IMAGING / DICOM setup
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ]; then
+		[ -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ] && mv -f ./$OH_DIR/rsc/$IMAGING_SETTINGS ./$OH_DIR/rsc/$IMAGING_SETTINGS.old
+		echo "Writing OH configuration file -> $IMAGING_SETTINGS..."
+		sed -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
+		-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/$IMAGING_SETTINGS.dist > ./$OH_DIR/rsc/$IMAGING_SETTINGS
 	fi
 	######## OH_SETTINGS setup
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
@@ -929,6 +1012,7 @@ function write_config_files {
 		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
 		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
+		-e "s/GUI_INTERFACE=on/"$GUI_INTERFACE=$GUI_INTERFACE"/g" -e "s/UI_INTERFACE=off/"UI_INTERFACE=$UI_INTERFACE"/g" \
 		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS
 	fi
 
@@ -951,8 +1035,8 @@ function write_config_files {
 ###################################################################
 function clean_database {
 	# remove socket and pid file
-	echo "Removing socket and pid file..."
-	rm -rf ./$TMP_DIR/*
+	echo "Cleaning tmp directory..."
+	rm -rf ./$TMP_DIR/mysql*
 	# remove database files
 	echo "Removing databases..."
 	# removing all databases under default data dir (prod / demo)
@@ -1019,15 +1103,15 @@ function start_api_server {
 		exit 1;
 	fi
 	
-	########## WORKAROUND to kill existing API server process ##################
-	########## TO BE REMOVED IN NEXT RELEASES
-	##########
-	# check for stale PID files
-	if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
-		API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
-		echo "Killing API server - process $API_PID_NUMBER..."
-		kill $API_PID_NUMBER
-	fi
+#	########## WORKAROUND to kill existing API server process ##################
+#	########## TO BE REMOVED IN NEXT RELEASES
+#	##########
+#	# check for stale PID files
+#	if [ -f $OH_PATH/$TMP_DIR/$OH_API_PID ]; then
+#		API_PID_NUMBER=$(cat $OH_PATH/$TMP_DIR/$OH_API_PID)
+#		echo "Killing API server - process $API_PID_NUMBER..."
+#		kill $API_PID_NUMBER
+#	fi
 	##########
 
 	echo "------------------------"
@@ -1036,19 +1120,43 @@ function start_api_server {
 	echo "Starting API server..."
 	echo "Please wait, it might take some time..."
 	echo ""
-	echo "Connect to http://$OH_UI_URL for dashboard"
+	echo "Connect to $OH_UI_URL for OH web interface"
 	echo ""
-	
-	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
-	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &
-	
+
+# old jetty api server
+#	
+#	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+#	$JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher >> ../$LOG_DIR/$API_LOG_FILE 2>&1 &
+#
+
+	# tomcat startup
+	$OH_PATH/$TOMCAT_DIR/bin/catalina.sh run >> $OH_PATH/$LOG_DIR/$API_LOG_FILE 2>&1 &
+
 	if [ $? -ne 0 ]; then
-		echo "An error occurred while starting Open Hospital API. Exiting."
+		echo "An error occurred while starting Tomcat - Open Hospital API server. Exiting."
 		shutdown_database;
 		cd "$CURRENT_DIR"
 		exit 4
 	fi
 	cd "$OH_PATH"
+}
+
+###################################################################
+function stop_api_server {
+	if [ "$OH_MODE" != "CLIENT" ] && [ "$API_SERVER" = "on" ]; then
+		echo "Shutting down Tomcat - Open Hospital API server..."
+		# shutdown tomcat
+		$OH_PATH/$TOMCAT_DIR/bin/catalina.sh stop $OH_PATH/$LOG_DIR/$API_LOG_FILE 2>&1
+		echo "Tomcat stopped!"
+#	else
+#		exit 1
+	fi
+}
+
+###################################################################
+function setup_ui {
+	echo "Setup UI interface..."
+	cp -a $OH_PATH/$OH_DIR/$OH_UI_PROD $OH_PATH/$TOMCAT_DIR/webapps/
 }
 
 ###################################################################
@@ -1358,6 +1466,9 @@ function parse_user_input {
 		get_confirmation 1;
 		# overwrite configuration files if existing
 		WRITE_CONFIG_FILES=on; write_config_files;
+		if [ "$API_SERVER" = "on" ]; then
+			write_api_config_file;
+		fi
 		set_oh_mode;
 		check_language;
 		set_language;
@@ -1440,11 +1551,15 @@ function parse_user_input {
 		echo "Warning: do you want to kill all java and mysql/mariadb processes?"
 		read -p "Press [y] to confirm: " choice
 		if [ "$choice" = "y" ]; then
+			echo "Killing java..."
+			killall java
 			# kill mariadb/mysqld processes
 			echo "Killing mariadb/mysql..."
 			killall mariadbd
-			echo "Killing java..."
-			killall java
+			# remove socket and pid file
+			echo "Removing mariadb/mysql socket and pid file..."
+			rm -rf $OH_PATH/$TMP_DIR/mysql.sock
+			rm -rf $OH_PATH/$TMP_DIR/mysql.pid
 		fi
 		########## WORKAROUND to kill existing API server process ##################
 		########## TO BE REMOVED IN NEXT RELEASES
@@ -1496,6 +1611,7 @@ function parse_user_input {
 			unset DB_CREATE_SQL
 			unset EXPERT_MODE
 			unset API_SERVER
+			unset GUI_INTERFACE
 			unset UI_INTERFACE
 			echo ""
 			echo "Warning: in order to reload database settings, exit script and relaunch."
@@ -1532,6 +1648,22 @@ function parse_user_input {
 	#	echo "Starting Open Hospital...";
 	#	fi
 	#	;;
+	###################################################
+	U)	# toggle UI Interface
+		case "$UI_INTERFACE" in
+			*on*)
+				UI_INTERFACE="off";
+				GUI_INTERFACE="on";
+			;;
+			*off*)
+				UI_INTERFACE="on";
+				GUI_INTERFACE="off";
+			;;
+		esac
+		#
+		if (( $2==0 )); then UI_INTERFACE="on"; interactive_menu; fi
+		option="Z";
+		;;
 	###################################################
 	"V" )	# Check for latest OH version
 		echo "";
@@ -1586,7 +1718,7 @@ cd "$OH_PATH"
 OPTIND=1 
 # list of arguments expected in user input (- option)
 # E is excluded from command line option
-OPTSTRING=":AECPSdDGhil:msrtvequQXVZ?" 
+OPTSTRING=":AECPSdDGhil:msrtvequQXUVZ?" 
 COMMAND_LINE_ARGS=$@
 
 # Parse arguments passed via command line / interactive input
@@ -1672,22 +1804,20 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	fi
 fi
 
-######## OH startup
+################### OH startup ###################
 
 # test if database connection is working
 test_database_connection;
 
 # check for API server
 if [ "$API_SERVER" = "on" ]; then
+	tomcat_setup;
+	# generate config files if not existent
+	write_config_files;
 	start_api_server;
 fi
 
-# check for UI interface
-if [ "$UI_INTERFACE" = "on" ]; then
-	start_ui;
-fi
-
-# if SERVER mode is selected, wait for CTRL-C input to exit
+# if SERVER mode is selected, start database server and wait for CTRL-C input to exit
 if [ "$OH_MODE" = "SERVER" ]; then
 	echo "Open Hospital - SERVER mode started"
 
@@ -1705,7 +1835,8 @@ if [ "$OH_MODE" = "SERVER" ]; then
 		trap ctrl_c INT
 		function ctrl_c() {
 			echo "Exiting Open Hospital..."
-			shutdown_database;		
+			stop_api_server;
+			shutdown_database;
 			cd "$CURRENT_DIR"
 			exit 0
 		}
@@ -1716,11 +1847,37 @@ else
 	# generate config files if not existent
 	write_config_files;
 
-	# start OH gui
-	start_gui;
+	# check for UI interface
+	if [ "$UI_INTERFACE" = "on" ]; then
+		setup_ui;
+		start_ui;
+		# wait for ctrl c to exit
+		echo "OH UI started!"
+		echo "Press Ctrl + C to exit"
+		while true; do
+		trap ctrl_c INT
+		function ctrl_c() {
+			echo "Exiting Open Hospital..."
+			stop_api_server;
+			shutdown_database;
+			cd "$CURRENT_DIR"
+			exit 0
+		}
+	done
+	fi
+
+	# check for GUI interface
+	if [ "$GUI_INTERFACE" = "on" ]; then
+		start_gui;
+	fi
 
 	# Close and exit
 	echo "Exiting Open Hospital..."
+	
+	# shutdown Tomcat
+	stop_api_server;
+
+	# shutdown MySQL/MariaDB
 	shutdown_database;
 
 	# go back to starting directory
