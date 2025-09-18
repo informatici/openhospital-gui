@@ -27,9 +27,9 @@ appender.rolling.policies.time.modulate = true
 # DB Appender (table columns)
 appender.jdbc.type = JDBC
 appender.jdbc.name = jdbc
-appender.jdbc.connectionSource.driverClassName = com.mysql.cj.jdbc.Driver
+appender.jdbc.connectionSource.driverClassName = org.mariadb.jdbc.Driver
 appender.jdbc.connectionSource.type = DriverManager
-appender.jdbc.connectionSource.connectionString = dbc:mysql://DBSERVER:DBPORT/DBNAME?autoReconnect=true
+appender.jdbc.connectionSource.connectionString = dbc:mariadb://DBSERVER:DBPORT/DBNAME?autoReconnect=true
 appender.jdbc.connectionSource.userName = DBUSER
 appender.jdbc.connectionSource.password = DBPASS
 appender.jdbc.tableName = logs
@@ -47,12 +47,13 @@ appender.jdbc.columnConfigs[2].name = MESSAGE
 appender.jdbc.columnConfigs[2].pattern = %mm%ex%n
 appender.jdbc.columnConfigs[2].isUnicode = false
 
-# Security settings - see log4j CVE-2021-44228
-log4j.formatMsgNoLookups=true 
--
 # Assigning appenders to packages (application loggers)
-log4j.logger.org.isf=LOG_LEVEL,RollingFile
-log4j.additivity.org.isf = false
+logger.isf.name = org.isf
+logger.isf.level = debug
+logger.isf.appenderRefs = stdout, rolling
+logger.isf.appenderRef.stdout.ref = STDOUT
+logger.isf.appenderRef.rolling.ref = RollingFile
+logger.isf.additivity = false
 
 # Assigning appenders to Hibernate packages (DB loggers)
 # - hibernate.SQL to DEBUG for SQL queries to be logged
