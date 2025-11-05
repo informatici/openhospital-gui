@@ -16,7 +16,7 @@
 	<version>1.14.2-SNAPSHOT</version>
 
 	<properties>
-		<oh.version>1.14.2-SNAPSHOT</oh.version>
+		<oh.version>1.15.0</oh.version>
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<license.maven.plugin.version>5.0.0</license.maven.plugin.version>
