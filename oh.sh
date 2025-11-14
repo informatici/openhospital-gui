@@ -98,7 +98,7 @@ OH_LOG_FILE="openhospital.log"
 API_LOG_FILE="api.log"
 
 # SQL creation files
-#DB_CREATE_SQL="create_all_en.sql" # default to en
+#DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
 DB_DEMO="create_all_demo.sql"
 
 ######################## Advanced settings ########################
@@ -163,7 +163,7 @@ EXPERT_MODE="off"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-MYSQL_VERSION="10.6.20"
+MYSQL_VERSION="10.6.23"
 #MYSQL_VERSION="11.6.2"
 MYSQL32_VERSION="10.5.27"
 PACKAGE_TYPE="systemd" 
@@ -206,12 +206,12 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ### JRE 17 - zulu distribution
 #JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-linux_$JAVA_PACKAGE_ARCH"
-JAVA_DISTRO="zulu17.54.21-ca-jre17.0.13-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
 
 # Tomcat 11
-TOMCAT_VERSION="11.0.2"
+TOMCAT_VERSION="11.0.13"
 TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION"
 TOMCAT_DIR=$TOMCAT_DISTRO
@@ -261,7 +261,7 @@ function script_menu_advanced {
 	echo "   -s  save OH configuration			| -t  test database connection (CLIENT mode only)"
 	echo "   -G  setup GSM			"
 	echo "   -U  enable UI web interface			| -u  create Desktop shortcut"
-	echo "   -v  show configuration			| -V  check for latest OH version"
+	echo "   -v  show configuration			| -V  check for latest available OH version"
 	echo ""
 }
 
@@ -469,9 +469,11 @@ function set_demo_data {
 	# set database name for demo data
 	case "$DEMO_DATA" in
 			*on*)
+				echo "Enabling DEMO data..."
 				DATABASE_NAME=$DEMO_DATABASE
 			;;
 			*off*)
+				echo "Disabling DEMO data..."
 				DATABASE_NAME="$DEFAULT_DATABASE_NAME"
 			;;
 	esac
