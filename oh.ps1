@@ -157,7 +157,7 @@ $script:API_LOG_FILE="api.log"
 $script:API_ERR_LOG_FILE="api_error.log"
 
 # SQL creation files
-#$script:DB_CREATE_SQL="create_all_en.sql" # default to en
+#$script:DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
 $script:DB_DEMO="create_all_demo.sql"
 
 ######################## Advanced settings ########################
@@ -226,7 +226,7 @@ $script:EXPERT_MODE="off"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-$script:MYSQL_VERSION="10.6.20"
+$script:MYSQL_VERSION="10.6.23"
 $script:MYSQL32_VERSION="10.6.5"
 
 ######## define system and software architecture
@@ -266,11 +266,11 @@ $script:MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ### JRE 17 - zulu distribution
 #$script:JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-win_$JAVA_PACKAGE_ARCH"
-$script:JAVA_DISTRO="zulu17.54.21-ca-jre17.0.13-win_$JAVA_PACKAGE_ARCH"
+$script:JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
 
 # Tomcat 11
-$script:TOMCAT_VERSION="11.0.2"
+$script:TOMCAT_VERSION="11.0.13"
 $script:TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 $script:TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION-windows-x64"
 $script:TOMCAT_DIR="apache-tomcat-$TOMCAT_VERSION"
@@ -332,7 +332,7 @@ function script_menu_advanced {
 	Write-Host "   -s  save OH configuration			| -t  test database connection (CLIENT mode only)"
 	Write-Host "   -G  setup GSM			"
 	Write-Host "   -U  enable UI web interface			| -u  create Desktop shortcut"
-	Write-Host "   -v  show configuration			| -V  check for latest OH version"
+	Write-Host "   -v  show configuration			| -V  check for latest available OH version"
 	Write-Host ""
 }
 
@@ -526,9 +526,11 @@ function set_demo_data {
 	# set database name for demo data
 	switch -CaseSensitive( $script:DEMO_DATA ) {
 	"on"	{ # 
+		Write-Host "Enabling DEMO data..."
 		$script:DATABASE_NAME=$DEMO_DATABASE
 		}
 	"off"	{ # 
+		Write-Host "Disabling DEMO data..."
 		$script:DATABASE_NAME="$script:DEFAULT_DATABASE_NAME"
 		}
 	}
