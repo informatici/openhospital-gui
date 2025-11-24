@@ -270,7 +270,7 @@ $script:JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
 
 # Tomcat 11
-$script:TOMCAT_VERSION="11.0.13"
+$script:TOMCAT_VERSION="11.0.14"
 $script:TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 $script:TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION-windows-x64"
 $script:TOMCAT_DIR="apache-tomcat-$TOMCAT_VERSION"
