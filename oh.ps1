@@ -1947,6 +1947,9 @@ if ( $API_SERVER -eq "on" ) {
 	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# workaround to have UI files in correct place
+	setup_ui;
+	# start API server
 	start_api_server;
 }
 
