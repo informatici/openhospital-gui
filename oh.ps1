@@ -270,8 +270,8 @@ $script:JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
 
 # Tomcat 11
-$script:TOMCAT_VERSION="11.0.13"
-$script:TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
+$script:TOMCAT_VERSION="11.0.15"
+$script:TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 $script:TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION-windows-x64"
 $script:TOMCAT_DIR="apache-tomcat-$TOMCAT_VERSION"
 # windows -> https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.1/bin/apache-tomcat-11.0.1-windows-x64.zip
@@ -1947,6 +1947,9 @@ if ( $API_SERVER -eq "on" ) {
 	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# workaround to have UI files in correct place
+	setup_ui;
+	# start API server
 	start_api_server;
 }
 
