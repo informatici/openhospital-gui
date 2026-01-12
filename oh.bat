@@ -171,7 +171,7 @@ REM # JRE 8 32bit - i686 - zulu
 REM set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
 REM set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
-REM # JRE 11 32bit - i686 - zulu - default
+REM # JRE 17 32bit - i686 - zulu - default
 set JAVA_DIR=zulu17.60.17-ca-jre17.0.16-win_%ARCH%
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
