@@ -211,8 +211,8 @@ JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
 
 # Tomcat 11
-TOMCAT_VERSION="11.0.13"
-TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
+TOMCAT_VERSION="11.0.15"
+TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION"
 TOMCAT_DIR=$TOMCAT_DISTRO
 
