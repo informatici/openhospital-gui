@@ -133,7 +133,7 @@ $script:DATABASE_PASSWORD="isf123"
 
 #######################  OH configuration  #########################
 # path and directories
-$script:OH_DIR="."
+$script:OH_DIR="oh"
 $script:OH_DOC_DIR="doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
@@ -270,8 +270,8 @@ $script:JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
 
 # Tomcat 11
-$script:TOMCAT_VERSION="11.0.13"
-$script:TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
+$script:TOMCAT_VERSION="11.0.15"
+$script:TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 $script:TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION-windows-x64"
 $script:TOMCAT_DIR="apache-tomcat-$TOMCAT_VERSION"
 # windows -> https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.1/bin/apache-tomcat-11.0.1-windows-x64.zip
@@ -299,8 +299,10 @@ function script_menu {
 	Write-Host " ------------------------------------------------------------------------"
 	Write-Host "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
 	Write-Host " ------------------------------------------------------------------------"
-	Write-Host "| Expert mode: $EXPERT_MODE | API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
-	Write-Host " ------------------------------------------------------------------------"
+	if ( $EXPERT_MODE -eq "on" ) {
+		Write-Host "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		Write-Host " ------------------------------------------------------------------------"
+	}
 	Write-Host ""
 	Write-Host " Usage: $SCRIPT_NAME -[OPTION] "
 	Write-Host ""
@@ -991,29 +993,6 @@ function import_database {
 		Read-Host; exit 2
 	}
 
-	# EXPERIMENTAL ONLY
-	# workaround for hard coded password limit - execute extra sql script 
-	# not needed anymore - see OP-1078
-
-#	if ( ($API_SERVER -eq "On") ){
-#		Write-Host "Setting admin password..."
-#	cd "$OH_PATH/$SQL_EXTRA_DIR/"
-#
-#   $SQLCOMMAND=@"
-#   --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
-#"@
-#		try {
-#			Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-#	 	}
-#		catch {
-#			Write-Host "Error! Exiting." -ForeGroundColor Red
-#			shutdown_database;
-#			cd "$CURRENT_DIR"
-#			Read-Host; exit 2
-#		}
-#	}
-
-	# end
 	cd "$OH_PATH"
 }
 
@@ -1298,10 +1277,7 @@ function start_api_server {
 	$env:JRE_HOME="$OH_PATH/$JAVA_DIR"
 	$env:CATALINA_HOME="$OH_PATH/$TOMCAT_DIR"
 
-	# tomcat startup
-	# -ArgumentList ("-D
-	# Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat run" -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
-	Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("run") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+	Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("run") -WorkingDirectory "$OH_PATH/$OH_DIR" -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
 
 #        if [ $? -ne 0 ]; then
 #                echo "An error occurred while starting Tomcat - Open Hospital API server. Exiting.
@@ -1309,6 +1285,7 @@ function start_api_server {
 #                cd "$CURRENT_DIR"
 #                exit 4
 #        fi
+
         cd "$OH_PATH"
 }
 
@@ -1947,6 +1924,9 @@ if ( $API_SERVER -eq "on" ) {
 	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# workaround to have UI files in correct place
+	setup_ui;
+	# start API server
 	start_api_server;
 }
 
