@@ -230,8 +230,10 @@ function script_menu {
 	echo " ------------------------------------------------------------------------"
 	echo "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
 	echo " ------------------------------------------------------------------------"
-	echo "| Expert mode: $EXPERT_MODE | API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
-	echo " ------------------------------------------------------------------------"
+	if [ "$EXPERT_MODE" == "on" ]; then
+		echo "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		echo " ------------------------------------------------------------------------"
+	fi
 	echo ""
 	echo " Usage: $SCRIPT_NAME -[OPTION] "
 	echo ""

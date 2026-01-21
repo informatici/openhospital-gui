@@ -299,8 +299,10 @@ function script_menu {
 	Write-Host " ------------------------------------------------------------------------"
 	Write-Host "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
 	Write-Host " ------------------------------------------------------------------------"
-	Write-Host "| Expert mode: $EXPERT_MODE | API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
-	Write-Host " ------------------------------------------------------------------------"
+	if ( $EXPERT_MODE -eq "on" ) {
+		Write-Host "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		Write-Host " ------------------------------------------------------------------------"
+	}
 	Write-Host ""
 	Write-Host " Usage: $SCRIPT_NAME -[OPTION] "
 	Write-Host ""
@@ -991,29 +993,6 @@ function import_database {
 		Read-Host; exit 2
 	}
 
-	# EXPERIMENTAL ONLY
-	# workaround for hard coded password limit - execute extra sql script 
-	# not needed anymore - see OP-1078
-
-#	if ( ($API_SERVER -eq "On") ){
-#		Write-Host "Setting admin password..."
-#	cd "$OH_PATH/$SQL_EXTRA_DIR/"
-#
-#   $SQLCOMMAND=@"
-#   --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
-#"@
-#		try {
-#			Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-#	 	}
-#		catch {
-#			Write-Host "Error! Exiting." -ForeGroundColor Red
-#			shutdown_database;
-#			cd "$CURRENT_DIR"
-#			Read-Host; exit 2
-#		}
-#	}
-
-	# end
 	cd "$OH_PATH"
 }
 
@@ -1298,10 +1277,7 @@ function start_api_server {
 	$env:JRE_HOME="$OH_PATH/$JAVA_DIR"
 	$env:CATALINA_HOME="$OH_PATH/$TOMCAT_DIR"
 
-	# tomcat startup
-	# -ArgumentList ("-D
-	# Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat run" -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
-	Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("run") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+	Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("run") -WorkingDirectory "$OH_PATH/$OH_DIR" -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
 
 #        if [ $? -ne 0 ]; then
 #                echo "An error occurred while starting Tomcat - Open Hospital API server. Exiting.
@@ -1309,6 +1285,7 @@ function start_api_server {
 #                cd "$CURRENT_DIR"
 #                exit 4
 #        fi
+
         cd "$OH_PATH"
 }
 
