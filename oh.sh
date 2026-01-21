@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -1150,7 +1150,7 @@ function stop_api_server {
 	if [ "$OH_MODE" != "CLIENT" ] && [ "$API_SERVER" = "on" ]; then
 		echo "Shutting down Tomcat - Open Hospital API server..."
 		# shutdown tomcat
-		$OH_PATH/$TOMCAT_DIR/bin/catalina.sh stop $OH_PATH/$LOG_DIR/$API_LOG_FILE 2>&1
+		$OH_PATH/$TOMCAT_DIR/bin/catalina.sh stop >> $OH_PATH/$LOG_DIR/$API_LOG_FILE 2>&1
 		echo "Tomcat stopped!"
 #	else
 #		exit 1

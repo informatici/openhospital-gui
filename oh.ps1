@@ -2,7 +2,7 @@
 #!/usr/bin/pwsh
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -155,6 +155,9 @@ $script:LOG_FILE_ERR="startup_error.log"
 $script:OH_LOG_FILE="openhospital.log"
 $script:API_LOG_FILE="api.log"
 $script:API_ERR_LOG_FILE="api_error.log"
+$script:API_STOP_LOG_FILE="api_stop.log"
+$script:API_STOP_ERR_LOG_FILE="api_stop_error.log"
+$script:TMP_LOG_FILE="tmp.log"
 
 # SQL creation files
 #$script:DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
@@ -856,7 +859,7 @@ function initialize_database {
 	switch -Regex ( $MYSQL_DIR ) {
 		"mariadb" {
 			try {
-				Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql_install_db.exe" -ArgumentList ("--datadir=`"$OH_PATH\$DATA_DIR`" --password=$DATABASE_ROOT_PW") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+				Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql_install_db.exe" -ArgumentList ("--datadir=`"$OH_PATH\$DATA_DIR`" --password=$DATABASE_ROOT_PW") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 	        	}
 			catch {
 				Write-Host "Error: $MYSQL_NAME initialization failed! Exiting." -ForegroundColor Red
@@ -1295,9 +1298,8 @@ function stop_api_server {
 	if ( !($OH_MODE -eq "CLIENT") -And ( $API_SERVER -eq "on" ) ) {
 		# shutdown tomcat
                 Write-Host "Shutting down Tomcat - Open Hospital API server..."
-		Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("stop") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+		Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("stop") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_STOP_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_STOP_ERR_LOG_FILE" -Wait
                 Write-Host "Tomcat stopped!"
-
 	}
 }
 
