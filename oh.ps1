@@ -859,7 +859,7 @@ function initialize_database {
 	switch -Regex ( $MYSQL_DIR ) {
 		"mariadb" {
 			try {
-				Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql_install_db.exe" -ArgumentList ("--datadir=`"$OH_PATH\$DATA_DIR`" --password=$DATABASE_ROOT_PW") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+				Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql_install_db.exe" -ArgumentList ("--datadir=`"$OH_PATH\$DATA_DIR`" --password=$DATABASE_ROOT_PW") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 	        	}
 			catch {
 				Write-Host "Error: $MYSQL_NAME initialization failed! Exiting." -ForegroundColor Red
