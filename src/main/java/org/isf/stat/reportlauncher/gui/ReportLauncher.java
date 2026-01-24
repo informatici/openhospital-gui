@@ -1,23 +1,24 @@
 /*
- * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Open Hospital (www.open-hospital.org) Copyright © 2006-2023 Informatici Senza
+ * Frontiere (info@informaticisenzafrontiere.org)
  *
- * Open Hospital is a free and open source software for healthcare data management.
+ * Open Hospital is a free and open source software for healthcare data
+ * management.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
  * https://www.gnu.org/licenses/gpl-3.0-standalone.html
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.stat.reportlauncher.gui;
 
@@ -53,7 +54,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import org.isf.generaldata.ConfigurationProperties;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.stat.gui.report.GenericReportFromDateToDate;
@@ -72,8 +72,9 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
- * ReportLauncher - launch all the reports that have as parameters year and month the class expects the initialization through year, month, name of the report
- * (without .jasper)
+ * ReportLauncher - launch all the reports that have as parameters year and
+ * month the class expects the initialization through year, month, name of the
+ * report (without .jasper)
  */
 public class ReportLauncher extends ModalJFrame {
 
@@ -218,43 +219,45 @@ public class ReportLauncher extends ModalJFrame {
 			folderNameFileNameMap = new HashMap<>();
 			try {
 				List<File> loadedFiles = Files.walk(Paths.get("./rpt_stat"))
-					.filter(Files::isRegularFile)
-					.map(Path::toFile)
-					.filter(t -> t.getName().endsWith(".jasper"))
-					.collect(Collectors.toList());
+								.filter(Files::isRegularFile)
+								.map(Path::toFile)
+								.filter(t -> t.getName().endsWith(".jasper"))
+								.collect(Collectors.toList());
 				jasperFilesInFolder.addAll(loadedFiles);
 				folderNameFileNameMap.put("rpt_stat", loadedFiles.stream().map(t -> t.getName().replace(".jasper", "")).collect(Collectors.toList()));
 
 				loadedFiles = Files.walk(Paths.get("./rpt_extra"))
-					.filter(Files::isRegularFile)
-					.map(Path::toFile)
-					.filter(t -> t.getName().endsWith(".jasper"))
-					.collect(Collectors.toList());
+								.filter(Files::isRegularFile)
+								.map(Path::toFile)
+								.filter(t -> t.getName().endsWith(".jasper"))
+								.collect(Collectors.toList());
 				jasperFilesInFolder.addAll(loadedFiles);
 				folderNameFileNameMap.put("rpt_extra", loadedFiles.stream().map(t -> t.getName().replace(".jasper", "")).collect(Collectors.toList()));
 
 				reportNameFileMap = new HashMap<>();
 				List<String> jRptComboBoxList = new LinkedList<>();
+				String language = new Locale(GeneralData.LANGUAGE).getLanguage();
+
 				for (File f : jasperFilesInFolder) {
 					try {
-						Properties props = ConfigurationProperties.loadPropertiesFile(
-							f.getName().replace(".jasper", '_' + new Locale(GeneralData.LANGUAGE).getLanguage() + ".properties"), LOGGER);
+						Path localizedPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", "_" + language + ".properties"));
 
-						if (props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
-							reportNameFileMap.put(props.getProperty("jTitle"), f);
-							jRptComboBoxList.add(props.getProperty("jTitle"));
-						} else {
-							props = ConfigurationProperties.loadPropertiesFile(
-								f.getName().replace(".jasper", ".properties"), LOGGER);
+						Properties props = MessageBundle.loadPropertiesFileUtf8(localizedPropsPath, LOGGER);
 
-							if (props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
-								reportNameFileMap.put(props.getProperty("jTitle"), f);
-								jRptComboBoxList.add(props.getProperty("jTitle"));
-							}
+						String title = props.getProperty("jTitle");
+						if (title == null || title.isBlank()) {
+							Path fallbackPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", ".properties"));
+							props = MessageBundle.loadPropertiesFileUtf8(fallbackPropsPath, LOGGER);
+							title = props.getProperty("jTitle");
 						}
+
+						if (title != null && !title.isBlank()) {
+							reportNameFileMap.put(title, f);
+							jRptComboBoxList.add(title);
+						}
+
 					} catch (Exception e) {
-						e.getStackTrace();
-						LOGGER.error("", e);
+						LOGGER.error("Error loading report properties for {}", f.getName(), e);
 					}
 				}
 
@@ -271,7 +274,8 @@ public class ReportLauncher extends ModalJFrame {
 				}
 			});
 
-			// TODO: fix how the layout of the last two fields are done; adding spaces is a hack
+			// TODO: fix how the layout of the last two fields are done; adding
+			// spaces is a hack
 			jMonthLabel = new JLabel("               " + MessageBundle.getMessage("angal.stat.month"));
 
 			jMonthComboBox = new JComboBox<>();
@@ -290,7 +294,8 @@ public class ReportLauncher extends ModalJFrame {
 
 			jMonthComboBox.setSelectedIndex(month - 1);
 
-			// TODO: fix how the layout of the last two fields are done; adding spaces is a hack
+			// TODO: fix how the layout of the last two fields are done; adding
+			// spaces is a hack
 			jYearLabel = new JLabel("                    " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox<>();
 
@@ -332,7 +337,7 @@ public class ReportLauncher extends ModalJFrame {
 				JRParameter[] params = jasperReport.getParameters();
 
 				List<JRParameter> userInputParams = Arrays.asList(params).stream().filter(t -> !t.isSystemDefined() && t.isForPrompting())
-					.collect(Collectors.toList());
+								.collect(Collectors.toList());
 				userInputParamNames = userInputParams.stream().map(t -> t.getName()).collect(Collectors.toList());
 				if (userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
 					jMonthComboBox.setVisible(false);
@@ -381,42 +386,42 @@ public class ReportLauncher extends ModalJFrame {
 
 	public static Date convertToDateUsingInstant(LocalDate date) {
 		return Date.from(date.atStartOfDay()
-			.atZone(ZoneId.systemDefault())
-			.toInstant());
+						.atZone(ZoneId.systemDefault())
+						.toInstant());
 	}
 
 	protected void generateReport(boolean toExcel) {
 		if (jRptComboBox.getSelectedItem() != null) {
 			if (userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
 				new GenericReportFromDateToDate(jFromDateField.getDate(), jToDateField.getDate(),
-					folderNameFileNameMap.get("rpt_stat").contains(
-						reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", "")) ? "rpt_stat"
-							: "rpt_extra",
-					reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", ""),
-					jRptComboBox.getSelectedItem().toString(), toExcel);
+								folderNameFileNameMap.get("rpt_stat").contains(
+												reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", "")) ? "rpt_stat"
+																: "rpt_extra",
+								reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", ""),
+								jRptComboBox.getSelectedItem().toString(), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 					frame.sendMessage("011100100110010101110000011011110111001001110100 " +
-						TimeTools.formatDateTime(jFromDateField.getDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY) + ' ' +
-						TimeTools.formatDateTime(jToDateField.getDate().atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY) + ' ' +
-						jRptComboBox.getSelectedItem().toString(), user, false);
+									TimeTools.formatDateTime(jFromDateField.getDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY) + ' ' +
+									TimeTools.formatDateTime(jToDateField.getDate().atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY) + ' ' +
+									jRptComboBox.getSelectedItem().toString(), user, false);
 				}
 			} else {
 				int month = jMonthComboBox.getSelectedIndex() + 1;
 				int year = Integer.parseInt((String) jYearComboBox.getSelectedItem());
 
 				new GenericReportMY(month, year,
-					folderNameFileNameMap.get("rpt_stat").contains(
-						reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", "")) ? "rpt_stat"
-							: "rpt_extra",
-					reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", ""),
-					jRptComboBox.getSelectedItem().toString(), toExcel);
+								folderNameFileNameMap.get("rpt_stat").contains(
+												reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", "")) ? "rpt_stat"
+																: "rpt_extra",
+								reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", ""),
+								jRptComboBox.getSelectedItem().toString(), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + ' ' + year + ' ' +
-						jRptComboBox.getSelectedItem().toString(), user, false);
+									jRptComboBox.getSelectedItem().toString(), user, false);
 				}
 			}
 		}
@@ -427,7 +432,7 @@ public class ReportLauncher extends ModalJFrame {
 	 */
 	private JPanel setMyBorder(JPanel panel, String title) {
 		Border border = BorderFactory.createCompoundBorder(
-			BorderFactory.createTitledBorder(title), BorderFactory.createEmptyBorder(0, 0, 0, 0));
+						BorderFactory.createTitledBorder(title), BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		panel.setBorder(border);
 		return panel;
 	}
