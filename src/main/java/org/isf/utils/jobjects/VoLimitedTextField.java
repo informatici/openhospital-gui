@@ -24,18 +24,16 @@ package org.isf.utils.jobjects;
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.PlainDocument;
 
 /**
  * Returns a JTextField of the wanted length
- *
- * @author studente
  */
 public class VoLimitedTextField extends JTextField {
 
 	private static final long serialVersionUID = 1L;
 
-	public class LimitedDimension extends DefaultStyledDocument {
+	public static class LimitedDimension extends PlainDocument {
 
 		private static final long serialVersionUID = 1L;
 		private final int maxChars;
@@ -45,15 +43,18 @@ public class VoLimitedTextField extends JTextField {
 		}
 
 		@Override
-		public void insertString(int off, String text, AttributeSet att)
-				throws BadLocationException {
+		public void insertString(int off, String text, AttributeSet att) throws BadLocationException {
+			if (text == null || text.isEmpty()) {
+				return;
+			}
+
 			int charsInDocument = getLength();
 			int newLength = text.length();
+
 			if (charsInDocument + newLength > maxChars) {
 				int availableChars = maxChars - charsInDocument;
 				if (availableChars > 0) {
-					String newTextPart = text.substring(0, availableChars);
-					super.insertString(off, newTextPart, att);
+					super.insertString(off, text.substring(0, availableChars), att);
 				}
 			} else {
 				super.insertString(off, text, att);
@@ -80,5 +81,4 @@ public class VoLimitedTextField extends JTextField {
 		super(columns);
 		this.setDocument(new LimitedDimension(maxChars));
 	}
-
 }
