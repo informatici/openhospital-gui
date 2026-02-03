@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -97,8 +97,7 @@ public class OhTableDrugsModel<T> implements TableModel {
 		String value = "";
 		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
 			T obj = this.filteredList.get(rowIndex);
-			if (obj instanceof MovementWard) {
-				MovementWard drugObj = (MovementWard) obj;
+			if (obj instanceof MovementWard drugObj) {
 				switch (columnIndex) {
 					case 0:
 						String dt;

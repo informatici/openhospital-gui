@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
+<!-- Created with Jaspersoft Studio version 6.21.2.final using JasperReports Library version 6.21.2-8434a0bd7c3bbc37cbf916f2968d35e4b165821a  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH010_OutPatientReport" pageWidth="1133" pageHeight="793" orientation="Landscape" columnWidth="1073" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="OH010_OutPatientReport" whenResourceMissingType="Key" uuid="1ae95539-9794-4bfc-954e-7879664f4181">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="344"/>
@@ -230,7 +230,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
-				<reportElement key="textField-8" x="50" y="122" width="64" height="17" uuid="83adc030-5739-4a9e-83a9-1a3017e5bfa6">
+				<reportElement key="textField-8" x="50" y="122" width="85" height="17" uuid="83adc030-5739-4a9e-83a9-1a3017e5bfa6">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -261,7 +261,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{From}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-2" x="114" y="122" width="30" height="17" uuid="774511e3-5965-4822-8546-cfd8199a2189">
+				<reportElement key="staticText-2" x="135" y="122" width="30" height="17" uuid="774511e3-5965-4822-8546-cfd8199a2189">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -277,7 +277,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
-				<reportElement key="textField-9" x="144" y="122" width="64" height="17" uuid="1985a4d2-3de0-4911-8639-a40e4614dbe4">
+				<reportElement key="textField-9" x="165" y="122" width="95" height="17" uuid="1985a4d2-3de0-4911-8639-a40e4614dbe4">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>

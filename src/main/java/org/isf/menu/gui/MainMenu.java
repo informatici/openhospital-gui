@@ -153,6 +153,7 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 		GeneralData.initialize();
 		this.activableModules = retrieveActivatedModulesMap();
 		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); // for all fixed options YES_NO_CANCEL in dialogs
+		Locale.setDefault(Locale.Category.FORMAT, Locale.ROOT); // fix technical formats after SpringBoot 3.4.5
 		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
 		// internalPharmacies=false : no internalPharmacies
@@ -180,6 +181,15 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 		if (singleUser) {
 			LOGGER.info("Logging: Single User mode.");
 			myUser = new User(ADMIN_STR, new UserGroup(ADMIN_STR, ""), ADMIN_STR, "");
+			try {
+				userBrowsingManager.setLastLogin(myUser);
+			} catch (OHServiceException e) {
+				LOGGER.error("Unable to update last login time for {}.", myUser.getUserName());
+			}
+			if (myUser.getFailedAttempts() > 0) {
+				userBrowsingManager.resetFailedAttempts(myUser);
+			}
+			RestartUserSession.setUser(myUser);
 		} else {
 			// get an user
 			LOGGER.info("Logging: Multi User mode.");
@@ -211,7 +221,7 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 		try {
 			this.sessionAuditId = sessionAuditManager.newSessionAudit(new SessionAudit(myUser.getUserName(), LocalDateTime.now(), null));
 		} catch (OHServiceException e1) {
-			LOGGER.error("Unable to log user login in the session_audit table");
+			LOGGER.error("Unable to log user login in the session_audit table.");
 		}
 		// get menu items
 		try {
@@ -525,7 +535,7 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 
 		private JPanel getLogoPanel() {
 			JLabel logo_appl = new JLabel(new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("logo_menu_vert.png"))
-							.getImage().getScaledInstance(28, 180, Image.SCALE_SMOOTH)));
+				.getImage().getScaledInstance(28, 180, Image.SCALE_SMOOTH)));
 			Object checkLogoHospital = getClass().getClassLoader().getResource("logo_hospital.png");
 
 			JPanel logoPanel = new JPanel();
@@ -535,11 +545,11 @@ public class MainMenu extends JFrame implements ActionListener, LoginListener, C
 			logoPanel.setBackground(Color.decode(BACKGROUND_COLOR_HEX));
 			if (checkLogoHospital != null) {
 				JLabel logo_hosp = new JLabel(new ImageIcon(new ImageIcon(getClass().getClassLoader().getResource("logo_hospital.png"))
-								.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+					.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 				logoPanel.add(logo_hosp);
 				logo_appl.setIcon(new ImageIcon(
-								new ImageIcon(getClass().getClassLoader().getResource("logo_menu.png"))
-												.getImage().getScaledInstance(90, 57, Image.SCALE_SMOOTH)));
+					new ImageIcon(getClass().getClassLoader().getResource("logo_menu.png"))
+						.getImage().getScaledInstance(90, 57, Image.SCALE_SMOOTH)));
 			} else {
 				logoPanel.add(Box.createVerticalStrut(100)); // for short menu
 			}

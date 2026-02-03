@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -39,6 +39,7 @@ import org.isf.menu.gui.GroupEdit.GroupListener;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.UserGroup;
+import org.isf.utils.exception.OHDataIntegrityViolationException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
@@ -47,60 +48,39 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class UserGroupBrowsing extends ModalJFrame implements GroupListener {
 
 	private static final long serialVersionUID = 1L;
-
-	@Override
-	public void groupInserted(AWTEvent e) {
-		pGroup.add(0, group);
-		((UserGroupBrowserModel) table.getModel()).fireTableDataChanged();
-		table.updateUI();
-		if (table.getRowCount() > 0) {
-			table.setRowSelectionInterval(0, 0);
-		}
-	}
-
-	@Override
-	public void groupUpdated(AWTEvent e) {
-		pGroup.set(selectedrow, group);
-		((UserGroupBrowserModel) table.getModel()).fireTableDataChanged();
-		table.updateUI();
-		if (table.getRowCount() > 0 && selectedrow > -1) {
-			table.setRowSelectionInterval(selectedrow, selectedrow);
-		}
-	}
-	
 	private static final int DEFAULT_WIDTH = 200;
 	private static final int DEFAULT_HEIGHT = 150;
+	private final String[] pColumns = {
+		MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.common.deleted.col").toUpperCase()
+	};
+	private final int[] pColumnWidth = { 70, 100, 20 };
+	private final DefaultTableModel model;
+	private final JTable table;
+	private final UserGroupBrowsing myFrame;
+	private final UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 	private int selectedrow;
 	private List<UserGroup> pGroup;
-	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
-	};
-	private int[] pColumnWidth = {70,  100};
 	private UserGroup group;
-	private DefaultTableModel model;
-	private JTable table;
-	
-	private UserGroupBrowsing myFrame;
-
-	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public UserGroupBrowsing() {
 		myFrame = this;
 		setTitle(MessageBundle.getMessage("angal.groupsbrowser.title"));
-		
+
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		int pfrmWidth = screensize.width / 2;
 		int pfrmHeight = screensize.height / 4;
 		setBounds(screensize.width / 4, screensize.height / 4, pfrmWidth, pfrmHeight);
-		
+
 		model = new UserGroupBrowserModel();
 		table = new JTable(model);
 		table.getColumnModel().getColumn(0).setPreferredWidth(pColumnWidth[0]);
 		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
-				
+		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
+
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel();
@@ -153,6 +133,24 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupListener {
 						model.fireTableDataChanged();
 						table.updateUI();
 					}
+				} catch (OHDataIntegrityViolationException ex) {
+					UserGroup oldUserGroup = userBrowsingManager.findUserGroupByCode(userGroup.getCode(), true);
+					if (oldUserGroup.isDeleted()) {
+						MessageDialog.error(null, "angal.groupsbrowser.alreadysoftdeleted.msg");
+					} else {
+						answer = MessageDialog.yesNo(null, "angal.groupsbrowser.softdeletegroup.fmt.msg", userGroup.getCode());
+						if (answer == JOptionPane.YES_OPTION) {
+							try {
+								userGroup.setDeleted(true);
+								userBrowsingManager.updateUserGroup(userGroup);
+								model.fireTableDataChanged();
+								table.updateUI();
+							} catch (OHServiceException e) {
+								userGroup.setDeleted(false);
+								OHServiceExceptionUtil.showMessages(e);
+							}
+						}
+					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
@@ -170,17 +168,37 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupListener {
 		setVisible(true);
 	}
 
+	@Override
+	public void groupInserted(AWTEvent e) {
+		pGroup.add(0, group);
+		((UserGroupBrowserModel) table.getModel()).fireTableDataChanged();
+		table.updateUI();
+		if (table.getRowCount() > 0) {
+			table.setRowSelectionInterval(0, 0);
+		}
+	}
+
+	@Override
+	public void groupUpdated(AWTEvent e) {
+		pGroup.set(selectedrow, group);
+		((UserGroupBrowserModel) table.getModel()).fireTableDataChanged();
+		table.updateUI();
+		if (table.getRowCount() > 0 && selectedrow > -1) {
+			table.setRowSelectionInterval(selectedrow, selectedrow);
+		}
+	}
+
 	class UserGroupBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
 
 		public UserGroupBrowserModel() {
-            try {
-                pGroup = userBrowsingManager.getUserGroup();
-            } catch (OHServiceException e) {
-                OHServiceExceptionUtil.showMessages(e);
-            }
-        }
+			try {
+				pGroup = userBrowsingManager.getUserGroup();
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
+		}
 
 		@Override
 		public int getRowCount() {
@@ -189,7 +207,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupListener {
 			}
 			return pGroup.size();
 		}
-		
+
 		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
@@ -208,10 +226,17 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupListener {
 				return pGroup.get(r);
 			} else if (c == 1) {
 				return pGroup.get(r).getDesc();
-			} 
+			} else if (c == 2) {
+				return pGroup.get(r).isDeleted();
+			}
 			return null;
 		}
-		
+
+		@Override
+		public Class getColumnClass(int column) {
+			return (column == 2) ? Boolean.class : String.class;
+		}
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;

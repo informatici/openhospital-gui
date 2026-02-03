@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -55,45 +55,10 @@ import org.isf.utils.layout.SpringUtilities;
 public class UserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private EventListenerList userListeners = new EventListenerList();
-
-    public interface UserListener extends EventListener {
-        void userUpdated(AWTEvent e);
-        void userInserted(AWTEvent e);
-    }
-
-    public void addUserListener(UserListener l) {
-        userListeners.add(UserListener.class, l);
-    }
-
-    public void removeUserListener(UserListener listener) {
-        userListeners.remove(UserListener.class, listener);
-    }
-
-	private void fireUserInserted(User aUser) {
-		AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
-
-			private static final long serialVersionUID = 1L;
-		};
-
-		EventListener[] listeners = userListeners.getListeners(UserListener.class);
-		for (EventListener listener : listeners) {
-			((UserListener) listener).userInserted(event);
-		}
-	}
-
-	private void fireUserUpdated() {
-		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-
-			private static final long serialVersionUID = 1L;
-		};
-
-		EventListener[] listeners = userListeners.getListeners(UserListener.class);
-		for (EventListener listener : listeners) {
-			((UserListener) listener).userUpdated(event);
-		}
-	}
-
+	private final EventListenerList userListeners = new EventListenerList();
+	private final User user;
+	private final boolean insert;
+	private final UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 	private JPanel jContentPane;
 	private JPanel dataPanel;
 	private JPanel buttonPanel;
@@ -105,25 +70,46 @@ public class UserEdit extends JDialog {
 	private JPasswordField pwd2TextField;
 	private JComboBox<UserGroup> userGroupComboBox;
 	private JCheckBox accountLocked;
-
-	private User user;
-	private boolean insert;
-
-	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
-
+	private JCheckBox isDeletedCheck;
 	/**
-	 * This is the default constructor; we pass the arraylist and the selectedrow
-     * because we need to update them
+	 * This is the default constructor; we pass the arraylist and the selectedrow because we need to update them
 	 */
 	public UserEdit(UserBrowsing parent, User old, boolean inserting) {
 		super(parent, (inserting ? MessageBundle.getMessage("angal.userbrowser.addnewuser.title")
-				: MessageBundle.getMessage("angal.userbrowser.edituser.title")), true);
+			: MessageBundle.getMessage("angal.userbrowser.edituser.title")), true);
 		addUserListener(parent);
 		insert = inserting;
 		user = old;
 		initialize();
 	}
+	public void addUserListener(UserListener l) {
+		userListeners.add(UserListener.class, l);
+	}
+	public void removeUserListener(UserListener listener) {
+		userListeners.remove(UserListener.class, listener);
+	}
+	private void fireUserInserted(User aUser) {
+		AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
 
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = userListeners.getListeners(UserListener.class);
+		for (EventListener listener : listeners) {
+			((UserListener) listener).userInserted(event);
+		}
+	}
+	private void fireUserUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = userListeners.getListeners(UserListener.class);
+		for (EventListener listener : listeners) {
+			((UserListener) listener).userUpdated(event);
+		}
+	}
 	/**
 	 * This method initializes this
 	 */
@@ -134,10 +120,8 @@ public class UserEdit extends JDialog {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-
 	/**
 	 * This method initializes jContentPane
-	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -149,16 +133,9 @@ public class UserEdit extends JDialog {
 		}
 		return jContentPane;
 	}
-
 	/**
 	 * This method initializes dataPanel
-	 *
-	 * @return javax.swing.JPanel
-	 * tipo combo
-	 * nome text
-	 * desc text
-	 * pwd  text
-	 * pwd2	text
+	 * @return javax.swing.JPanel tipo combo nome text desc text pwd  text pwd2	text
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
@@ -181,17 +158,21 @@ public class UserEdit extends JDialog {
 				accountLocked.setSelected(user.isAccountLocked());
 				dataPanel.add(accountLocked);
 			}
+
+			dataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.deleted.label")));
+			isDeletedCheck = new JCheckBox();
+			isDeletedCheck.setSelected(user.isDeleted());
+			dataPanel.add(isDeletedCheck);
+
 			SpringUtilities.makeCompactGrid(dataPanel,
-					insert ? 5 : 4, 2,
-					5, 5,
-					5, 5);
+				insert ? 6 : 5, 2,
+				5, 5,
+				5, 5);
 		}
 		return dataPanel;
 	}
-
 	/**
 	 * This method initializes buttonPanel
-	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getButtonPanel() {
@@ -202,10 +183,8 @@ public class UserEdit extends JDialog {
 		}
 		return buttonPanel;
 	}
-
 	/**
 	 * This method initializes cancelButton
-	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getCancelButton() {
@@ -216,10 +195,8 @@ public class UserEdit extends JDialog {
 		}
 		return cancelButton;
 	}
-
 	/**
 	 * This method initializes okButton
-	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
@@ -232,8 +209,11 @@ public class UserEdit extends JDialog {
 					MessageDialog.error(null, "angal.userbrowser.pleaseprovideavalidusername.msg");
 					return;
 				}
+
 				user.setUserName(userName);
 				user.setDesc(descriptionTextField.getText());
+				user.setDeleted(isDeletedCheck.isSelected());
+
 				if (insert) {
 					char[] password = pwdTextField.getPassword();
 					char[] repeatPassword = pwd2TextField.getPassword();
@@ -278,9 +258,11 @@ public class UserEdit extends JDialog {
 						Arrays.fill(repeatPassword, '0');
 						return;
 					}
+
 					String hashed = BCrypt.hashpw(new String(password), BCrypt.gensalt());
 					user.setPasswd(hashed);
 					user.setUserGroupName((UserGroup) userGroupComboBox.getSelectedItem());
+
 					try {
 						userBrowsingManager.newUser(user);
 						fireUserInserted(user);
@@ -311,10 +293,8 @@ public class UserEdit extends JDialog {
 		}
 		return okButton;
 	}
-
 	/**
 	 * This method initializes descriptionTextField
-	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getDescriptionTextField() {
@@ -328,8 +308,6 @@ public class UserEdit extends JDialog {
 		}
 		return descriptionTextField;
 	}
-
-
 	private JTextField getNameTextField() {
 		if (nameTextField == null) {
 			if (insert) {
@@ -342,44 +320,44 @@ public class UserEdit extends JDialog {
 		}
 		return nameTextField;
 	}
-
 	private JPasswordField getPwdTextField() {
 		if (pwdTextField == null) {
 			pwdTextField = new JPasswordField(15);
 		}
 		return pwdTextField;
 	}
-
 	private JTextField getPwd2TextField() {
 		if (pwd2TextField == null) {
 			pwd2TextField = new JPasswordField(15);
 		}
 		return pwd2TextField;
 	}
-
 	/**
 	 * This method initializes userGroupComboBox
-	 *
 	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox<UserGroup> getUserGroupComboBox() {
 		if (userGroupComboBox == null) {
 			userGroupComboBox = new JComboBox<>();
 			try {
-				List<UserGroup> group = userBrowsingManager.getUserGroup();
+				List<UserGroup> groups = userBrowsingManager.getUserGroup();
 				if (insert) {
-					if (group != null) {
-						for (UserGroup elem : group) {
-							userGroupComboBox.addItem(elem);
+					if (groups != null) {
+						for (UserGroup group : groups) {
+							if (!group.isDeleted()) {
+								userGroupComboBox.addItem(group);
+							}
 						}
 					}
 				} else {
 					UserGroup selectedUserGroup = null;
-					if (group != null) {
-						for (UserGroup elem : group) {
-							userGroupComboBox.addItem(elem);
-							if (user.getUserGroupName().equals(elem)) {
-								selectedUserGroup = elem;
+					if (groups != null) {
+						for (UserGroup group : groups) {
+							if (!group.isDeleted()) {
+								userGroupComboBox.addItem(group);
+								if (user.getUserGroupName().equals(group)) {
+									selectedUserGroup = group;
+								}
 							}
 						}
 					}
@@ -398,6 +376,12 @@ public class UserEdit extends JDialog {
 			}
 		}
 		return userGroupComboBox;
+	}
+
+	public interface UserListener extends EventListener {
+
+		void userUpdated(AWTEvent e);
+		void userInserted(AWTEvent e);
 	}
 
 }

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import java.util.EventListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -95,8 +96,10 @@ public class MedicalTypeBrowserEdit extends JDialog {
 	private JButton cancelButton;
 	private JButton okButton;
 	private JTextField descriptionTextField;
+	private JCheckBox deletedCheckbox;
 	private VoLimitedTextField codeTextField;
 	private String lastdescription;
+	private char isLastDeleted;
 	private MedicalType medicalType;
 	private boolean insert;
 	private JPanel jDataPanel;
@@ -110,6 +113,7 @@ public class MedicalTypeBrowserEdit extends JDialog {
 		insert = inserting;
 		medicalType = old; //medical type will be used for every operation
 		lastdescription = medicalType.getDescription();
+		isLastDeleted = medicalType.getDeleted();
 		initialize();
 	}
 
@@ -124,6 +128,7 @@ public class MedicalTypeBrowserEdit extends JDialog {
 			this.setTitle(MessageBundle.getMessage("angal.medtype.editmedicaltype.title"));
 		}
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.getDeletedField();
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
@@ -197,7 +202,8 @@ public class MedicalTypeBrowserEdit extends JDialog {
 
 				medicalType.setDescription(descriptionTextField.getText());
 				medicalType.setCode(codeTextField.getText());
-
+				medicalType.setDeleted(deletedCheckbox.isSelected() ? 'Y' : 'N');
+				
 				if (insert) { // inserting
 					try {
 						MedicalType insertedMedicalType = medicalTypeBrowserManager.newMedicalType(medicalType);
@@ -211,7 +217,7 @@ public class MedicalTypeBrowserEdit extends JDialog {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
 				} else { // updating
-					if (descriptionTextField.getText().equals(lastdescription)) {
+					if (descriptionTextField.getText().equals(lastdescription) && medicalType.getDeleted() == isLastDeleted) {
 						dispose();
 					} else {
 						try {
@@ -263,6 +269,14 @@ public class MedicalTypeBrowserEdit extends JDialog {
 		}
 		return codeTextField;
 	}
+	
+	private JCheckBox getDeletedField() {
+		if (deletedCheckbox == null) {
+			deletedCheckbox = new JCheckBox(MessageBundle.getMessage("angal.common.deleted.label"));
+			deletedCheckbox.setSelected(medicalType.getDeleted() == 'Y');
+		}
+		return deletedCheckbox;
+	}
 
 	/**
 	 * This method initializes jDataPanel	
@@ -276,7 +290,9 @@ public class MedicalTypeBrowserEdit extends JDialog {
 			jDataPanel.add(getCodeTextField());
 			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':'));
 			jDataPanel.add(getDescriptionTextField());
-			SpringUtilities.makeCompactGrid(jDataPanel, 2, 2, 5, 5, 5, 5);
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.deleted.label") + ':'));
+			jDataPanel.add(getDeletedField());
+			SpringUtilities.makeCompactGrid(jDataPanel, 3, 2, 5, 5, 5, 5);
 		}
 		return jDataPanel;
 	}

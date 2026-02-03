@@ -174,8 +174,7 @@ public class TelemetryEdit extends ModalJFrame {
 	}
 
 	/**
-	 * We could load checkboxes information from somewhere (properties file or from
-	 * other strange places)
+	 * We could load checkboxes information from somewhere (properties file or from other strange places)
 	 * 
 	 * @return
 	 */
@@ -208,8 +207,7 @@ public class TelemetryEdit extends ModalJFrame {
 	}
 
 	/**
-	 * Action for confirmation button: inserts for the first time in the telemetry
-	 * table or updates the existing row
+	 * Action for confirmation button: inserts for the first time in the telemetry table or updates the existing row
 	 * 
 	 * @param checkboxes
 	 * @param telemetryManager
@@ -219,12 +217,13 @@ public class TelemetryEdit extends ModalJFrame {
 					TelemetryManager telemetryManager, TelemetryUtils telemetryUtils) {
 		return new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				if (!agreementCheckbox.isSelected()) {
 					MessageDialog.info(TelemetryEdit.this,
-									MessageBundle.formatMessage("angal.telemetry.fmt.confirm.pleaseselecttoproceed",
-													MessageBundle.getMessage(KEY_TELEMETRY_CHECKBOX)));
+									"angal.telemetry.fmt.confirm.pleaseselecttoproceed",
+									MessageBundle.getMessage(KEY_TELEMETRY_CHECKBOX));
 					return;
 				}
 				Map<String, Boolean> consentMap = buildConsentData(checkboxes);
@@ -244,7 +243,7 @@ public class TelemetryEdit extends ModalJFrame {
 							return;
 						}
 					} catch (RuntimeException | OHException f) {
-                                                LOGGER.error("Something strange happened: {}", f.getMessage());
+						LOGGER.error("Something strange happened: {}", f.getMessage());
 						LOGGER.debug(f.getMessage(), f);
 					}
 				} else {

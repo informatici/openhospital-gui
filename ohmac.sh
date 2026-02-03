@@ -46,7 +46,7 @@ OH_API_JAR="openhospital-api-0.1.0.jar"
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
 IMAGING_SETTINGS="dicom.properties"
-LOG4J_SETTINGS="log4j.properties"
+LOG4J_SETTINGS="log4j2-spring.properties"
 API_SETTINGS="application.properties"
 HELP_FILE="OH-readme.txt"
 
@@ -268,7 +268,11 @@ function write_api_config_file {
 		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
 
 		echo "Writing OH API configuration file -> $API_SETTINGS..."
-		sed -i '' -e "s/JWT_TOKEN_SECRET/"$JWT_TOKEN_SECRET"/g" -e "s&OH_API_PID&"$OH_API_PID"&g" $SET_FILE.dist
+		sed -i '' \
+			-e "s/JWT_TOKEN_SECRET/$JWT_TOKEN_SECRET/g" \
+			-e "s/API_HOST:API_PORT/localhost:8080/g" \
+			-e "s&OH_API_PID&$OH_API_PID&g" \
+			$SET_FILE.dist
 		cp -f $SET_FILE.dist $SET_FILE	
 	fi
 }
@@ -547,7 +551,7 @@ function start_gui {
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch	
 	
-	$JAVA_BIN -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.menu.gui.Menu >> $OH_DIR/$LOG_DIR/$LOG_FILE 2>&1
+	$JAVA_BIN -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> $OH_DIR/$LOG_DIR/$LOG_FILE 2>&1
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."

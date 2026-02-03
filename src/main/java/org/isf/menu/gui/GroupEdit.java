@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -25,6 +25,7 @@ import java.awt.AWTEvent;
 import java.util.EventListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,23 +46,38 @@ import org.isf.utils.layout.SpringUtilities;
 public class GroupEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private EventListenerList groupListeners = new EventListenerList();
+	private final EventListenerList groupListeners = new EventListenerList();
 
-	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private final UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private final UserGroup group;
+	private final boolean insert;
+	private JPanel jContentPane;
+	private JPanel dataPanel;
+	private JPanel buttonPanel;
+	private JButton cancelButton;
+	private JButton okButton;
+	private JTextField descriptionTextField;
+	private JTextField nameTextField;
+	private JCheckBox isDeletedCheck;
 
-    public interface GroupListener extends EventListener {
-        void groupUpdated(AWTEvent e);
-        void groupInserted(AWTEvent e);
-    }
-
-    public void addGroupListener(GroupListener l) {
-    	groupListeners.add(GroupListener.class, l);
-    }
-
-    public void removeGroupListener(GroupListener listener) {
-    	groupListeners.remove(GroupListener.class, listener);
-    }
-
+	/**
+	 * This is the default constructor; we pass the arraylist and the selectedrow because we need to update them
+	 */
+	public GroupEdit(UserGroupBrowsing parent, UserGroup old, boolean inserting) {
+		super(parent, inserting
+			? MessageBundle.getMessage("angal.groupsbrowser.newgroup.title")
+			: MessageBundle.getMessage("angal.groupsbrowser.editgroup.title"), true);
+		addGroupListener(parent);
+		insert = inserting;
+		group = old;
+		initialize();
+	}
+	public void addGroupListener(GroupListener l) {
+		groupListeners.add(GroupListener.class, l);
+	}
+	public void removeGroupListener(GroupListener listener) {
+		groupListeners.remove(GroupListener.class, listener);
+	}
 	private void fireGroupInserted(UserGroup aGroup) {
 		AWTEvent event = new AWTEvent(aGroup, AWTEvent.RESERVED_ID_MAX + 1) {
 
@@ -73,7 +89,6 @@ public class GroupEdit extends JDialog {
 			((GroupListener) listener).groupInserted(event);
 		}
 	}
-
 	private void fireGroupUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
@@ -85,46 +100,17 @@ public class GroupEdit extends JDialog {
 			((GroupListener) listener).groupUpdated(event);
 		}
 	}
-    
-	private JPanel jContentPane;
-	private JPanel dataPanel;
-	private JPanel buttonPanel;
-	private JButton cancelButton;
-	private JButton okButton;
-	private JTextField descriptionTextField;
-	private JTextField nameTextField;
-    
-	private UserGroup group;
-	private boolean insert;
-    
-	/**
-	 * This is the default constructor; we pass the arraylist and the selectedrow
-     * because we need to update them
-	 */
-	public GroupEdit(UserGroupBrowsing parent, UserGroup old, boolean inserting) {
-		super(parent, inserting
-				? MessageBundle.getMessage("angal.groupsbrowser.newgroup.title")
-				: MessageBundle.getMessage("angal.groupsbrowser.editgroup.title"), true);
-		addGroupListener(parent);
-		insert = inserting;
-		group = old;
-		initialize();
-	}
-
 	/**
 	 * This method initializes this
 	 */
 	private void initialize() {
-
-		this.setBounds(300, 300, 450, 150);
 		this.setContentPane(getJContentPane());
-
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(false);
+		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-
 	/**
 	 * This method initializes jContentPane
 	 * 
@@ -139,10 +125,9 @@ public class GroupEdit extends JDialog {
 		}
 		return jContentPane;
 	}
-
 	/**
 	 * This method initializes dataPanel
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getDataPanel() {
@@ -152,32 +137,36 @@ public class GroupEdit extends JDialog {
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(nameLabel);
 			dataPanel.add(getNameTextField());
-			  
+
 			dataPanel.add(descLabel);
 			dataPanel.add(getDescriptionTextField());
-			SpringUtilities.makeCompactGrid(dataPanel, 2, 2, 5, 5, 5, 5);
+
+			dataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.deleted.label")));
+			isDeletedCheck = new JCheckBox();
+			isDeletedCheck.setSelected(group.isDeleted());
+			dataPanel.add(isDeletedCheck);
+
+			SpringUtilities.makeCompactGrid(dataPanel, 3, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
 	}
-
 	/**
-	 * This method initializes buttonPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes buttonPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  
-			buttonPanel.add(getCancelButton(), null); 
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
-
 	/**
-	 * This method initializes cancelButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes cancelButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
@@ -187,11 +176,10 @@ public class GroupEdit extends JDialog {
 		}
 		return cancelButton;
 	}
-
 	/**
-	 * This method initializes okButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes okButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
@@ -199,14 +187,15 @@ public class GroupEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 				if (nameTextField.getText().isEmpty()) {
-					MessageDialog.error(null, MessageBundle.getMessage("angal.groupsbrowser.pleaseinsertavalidusergroupname.msg"));
+					MessageDialog.error(null, "angal.groupsbrowser.pleaseinsertavalidusergroupname.msg");
 					return;
 				}
 
 				group.setCode(nameTextField.getText());
-
 				group.setDesc(descriptionTextField.getText());
-				if (insert) {      // inserting
+				group.setDeleted(isDeletedCheck.isSelected());
+
+				if (insert) { // inserting
 					try {
 						userBrowsingManager.newUserGroup(group);
 						fireGroupInserted(group);
@@ -215,7 +204,7 @@ public class GroupEdit extends JDialog {
 						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-				} else {         // updating
+				} else { // updating
 					try {
 						userBrowsingManager.updateUserGroup(group);
 						fireGroupUpdated();
@@ -229,33 +218,37 @@ public class GroupEdit extends JDialog {
 		}
 		return okButton;
 	}
-
 	/**
-	 * This method initializes descriptionTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes descriptionTextField
+	 * 
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getDescriptionTextField() {
 		if (descriptionTextField == null) {
 			if (insert) {
-				descriptionTextField = new JTextField();
+				descriptionTextField = new JTextField(15);
 			} else {
 				descriptionTextField = new JTextField(group.getDesc());
 			}
 		}
 		return descriptionTextField;
 	}
-
 	private JTextField getNameTextField() {
 		if (nameTextField == null) {
 			if (insert) {
-				nameTextField = new JTextField();
+				nameTextField = new JTextField(15);
 			} else {
 				nameTextField = new JTextField(group.getCode());
 				nameTextField.setEditable(false);
 			}
 		}
 		return nameTextField;
+	}
+
+	public interface GroupListener extends EventListener {
+
+		void groupUpdated(AWTEvent e);
+		void groupInserted(AWTEvent e);
 	}
 
 }

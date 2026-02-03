@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -34,6 +34,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -162,7 +163,7 @@ public class WardPharmacyRectify extends JDialog {
 		super(owner, true);
 		selectedWard = ward;
 		try {
-			wardDrugs = movWardBrowserManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
+			wardDrugs = movWardBrowserManager.getMedicalsWard(selectedWard.getCode(), false);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -184,7 +185,7 @@ public class WardPharmacyRectify extends JDialog {
 		super(owner, true);
 		selectedWard = ward;
 		try {
-			wardDrugs = movWardBrowserManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
+			wardDrugs = movWardBrowserManager.getMedicalsWard(selectedWard.getCode(), false);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -376,7 +377,7 @@ public class WardPharmacyRectify extends JDialog {
 			double movQuantity = lotQty - newQty;
 
 			if (movQuantity == 0. || newQty < 0) {
-				JOptionPane.showMessageDialog(this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseinsertavalidvalue"));
+				MessageDialog.error(this, "angal.medicalstockward.rectify.pleaseinsertavalidvalue");
 				return;
 			}
 			if (newQty == 0.) {
@@ -389,7 +390,7 @@ public class WardPharmacyRectify extends JDialog {
 			try {
 				movStockInsertingManager.storeLot(selectedLot.getCode(), selectedLot, med);
 				movWardBrowserManager.newMovementWard(new MovementWard(selectedWard, TimeTools.getNow(), false, null, 0, 0, reason, med, movQuantity,
-								MessageBundle.getMessage("angal.medicalstockward.rectify.pieces"), selectedLot));
+					MessageBundle.getMessage("angal.medicalstockward.rectify.pieces"), selectedLot));
 				fireMovementWardInserted();
 				dispose();
 			} catch (OHServiceException e1) {
@@ -484,7 +485,7 @@ public class WardPharmacyRectify extends JDialog {
 			}
 		}
 		if (newLot) {
-			Lot addLot = askLot();
+			Lot addLot = askLot(medical);
 			if (addLot == null) {
 				return null;
 			}
@@ -508,9 +509,9 @@ public class WardPharmacyRectify extends JDialog {
 			panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
 
 			int ok = JOptionPane.showConfirmDialog(this,
-							panel,
-							MessageBundle.getMessage("angal.medicalstockward.rectify.lotinformations"), //$NON-NLS-1$
-							JOptionPane.OK_CANCEL_OPTION);
+				panel,
+				MessageBundle.getMessage("angal.medicalstockward.rectify.lotinformations"), //$NON-NLS-1$
+				JOptionPane.OK_CANCEL_OPTION);
 
 			if (ok == JOptionPane.OK_OPTION) {
 				int row = lotTable.getSelectedRow();
@@ -528,14 +529,14 @@ public class WardPharmacyRectify extends JDialog {
 		}
 		return medWard;
 	}
-	private boolean isAutomaticLot() {
-		return GeneralData.AUTOMATICLOT_IN;
-	}
 
-	protected Lot askLot() {
+	protected Lot askLot(Medical med) {
+		LocalDateTime preparationDate;
+		LocalDateTime expiringDate;
 		Lot lot = null;
-		JTextField lotNameTextField = new JTextField(15);
 
+		JTextField lotNameTextField = new JTextField(15);
+		lotNameTextField.addAncestorListener(new RequestFocusListener());
 		TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotid"), lotNameTextField);
 		suggestion.setFont(FONT_PLAIN_14);
 		suggestion.setForeground(Color.GRAY);
@@ -543,13 +544,9 @@ public class WardPharmacyRectify extends JDialog {
 		suggestion.changeAlpha(0.5f);
 		suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 
-		lotNameTextField.addAncestorListener(new RequestFocusListener());
-		if (isAutomaticLot()) {
-			lotNameTextField.setEnabled(false);
-		}
-		GoodDateChooser preparationDateChooser = new GoodDateChooser(null, true, false);
-		GoodDateChooser expireDateChooser = new GoodDateChooser(null, true, false);
-
+		LocalDate now = LocalDate.now();
+		GoodDateChooser preparationDateChooser = new GoodDateChooser(now);
+		GoodDateChooser expireDateChooser = new GoodDateChooser(now);
 		JPanel panel = new JPanel(new GridLayout(3, 2));
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstockward.rectify.lotnumberabb"))); //$NON-NLS-1$
 		panel.add(lotNameTextField);
@@ -560,20 +557,31 @@ public class WardPharmacyRectify extends JDialog {
 
 		do {
 			int ok = JOptionPane.showConfirmDialog(this, panel,
-							MessageBundle.getMessage("angal.medicalstockward.rectify.lotinformations"), //$NON-NLS-1$
-							JOptionPane.OK_CANCEL_OPTION);
+				MessageBundle.getMessage("angal.medicalstockward.rectify.lotinformations"), //$NON-NLS-1$
+				JOptionPane.OK_CANCEL_OPTION);
+
 			if (ok == JOptionPane.OK_OPTION) {
 				String lotName = lotNameTextField.getText();
-				if (lotName.isEmpty()) {
-					MessageDialog.error(this, "angal.medicalstockward.rectify.lotnumberSelect");
-					return null;
-				}
-				if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
-					MessageDialog.error(this, "angal.medicalstockward.rectify.expirydatebeforepreparationdate");
-				} else {
-					LocalDateTime expiringDate = expireDateChooser.getDateEndOfDay();
-					LocalDateTime preparationDate = preparationDateChooser.getDateStartOfDay();
-					lot = new Lot(lotName, preparationDate, expiringDate);
+				try {
+					if (lotName.isEmpty()) {
+						MessageDialog.error(this, "angal.medicalstockward.rectify.lotnumberSelect");
+						continue;
+					}
+					if (movStockInsertingManager.lotExists(lotName)) {
+						MessageDialog.error(this, "angal.medicalstock.multiplecharging.theinsertedlotcodealreaedyexists.msg");
+						continue;
+					}
+					if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
+						MessageDialog.error(this, "angal.medicalstockward.rectify.expirydatebeforepreparationdate");
+					} else if (expireDateChooser.getDate().isBefore(TimeTools.getDateToday0().toLocalDate())) {
+						MessageDialog.error(this, "angal.medicalstockward.rectify.expiringdateinthepastnotallowed");
+					} else {
+						expiringDate = expireDateChooser.getDateEndOfDay();
+						preparationDate = preparationDateChooser.getDateStartOfDay();
+						lot = new Lot(med, lotName, preparationDate, expiringDate);
+					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			} else {
 				return null;
@@ -586,8 +594,8 @@ public class WardPharmacyRectify extends JDialog {
 		double cost = 0.;
 		do {
 			String input = JOptionPane.showInputDialog(this,
-							MessageBundle.getMessage("angal.medicalstockward.rectify.unitcost"), //$NON-NLS-1$
-							0.);
+				MessageBundle.getMessage("angal.medicalstockward.rectify.unitcost"), //$NON-NLS-1$
+				0.);
 			if (input != null) {
 				try {
 					cost = Double.parseDouble(input);
@@ -606,7 +614,6 @@ public class WardPharmacyRectify extends JDialog {
 
 	protected int askQuantity(Medical med) {
 		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
-		StringBuilder message = new StringBuilder(med.toString());
 		String prodCode = med.getProdCode();
 		if (prodCode != null && !prodCode.equals("")) {
 			title.append(' ').append(MessageBundle.getMessage("angal.common.code.txt")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -617,9 +624,9 @@ public class WardPharmacyRectify extends JDialog {
 		int qty = 0;
 		do {
 			String quantity = JOptionPane.showInputDialog(this,
-							message.toString(),
-							title.toString(),
-							JOptionPane.QUESTION_MESSAGE);
+				med.toString(),
+				title.toString(),
+				JOptionPane.QUESTION_MESSAGE);
 			if (quantity != null) {
 				try {
 					qty = Integer.parseInt(quantity);

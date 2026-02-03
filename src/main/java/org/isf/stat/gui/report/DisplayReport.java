@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import org.isf.generaldata.GeneralData;
-import org.isf.generaldata.MessageBundle;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.utils.jobjects.MessageDialog;
 
@@ -35,7 +34,7 @@ public class DisplayReport {
 
 	protected void showReport(JasperReportResultDto jasperReportResultDto) throws IOException {
 		if (jasperReportResultDto.getJasperPrint().getPages().isEmpty()) {
-			MessageDialog.info(null, MessageBundle.getMessage("angal.common.documenthasnopages.msg"));
+			MessageDialog.info(null, "angal.common.documenthasnopages.msg");
 			return;
 		}
 		if (GeneralData.INTERNALVIEWER) {

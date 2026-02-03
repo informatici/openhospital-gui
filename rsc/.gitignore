@@ -1,1 +1,10 @@
-/generalData.properties
+database.properties
+dicom.properties
+examination.properties
+log4j2-spring.properties
+settings.properties
+sms.properties
+telemetry.properties
+txtPrinter.properties
+xmpp.properties
+

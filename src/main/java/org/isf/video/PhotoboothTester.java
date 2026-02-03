@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -46,16 +46,14 @@ public class PhotoboothTester {
         final PhotoboothPanelPresentationModel presentationModel = new PhotoboothPanelPresentationModel();
         presentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
             final Object newValue = propertyChangeEvent.getNewValue();
-            if (newValue instanceof BufferedImage) {
-                final BufferedImage bufferedImage = (BufferedImage) newValue;
-                LOGGER.info("New image is being set {}x{}", bufferedImage.getWidth(), bufferedImage.getHeight());
+            if (newValue instanceof BufferedImage bufferedImage) {
+				LOGGER.info("New image is being set {}x{}", bufferedImage.getWidth(), bufferedImage.getHeight());
             }
         });
         presentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_RESOLUTION, propertyChangeEvent -> {
             Object newValue = propertyChangeEvent.getNewValue();
-            if (newValue instanceof Dimension) {
-                final Dimension newDimension = (Dimension) newValue;
-                LOGGER.info("New dimension is {}x{}", newDimension.getWidth(), newDimension.getHeight());
+            if (newValue instanceof Dimension newDimension) {
+				LOGGER.info("New dimension is {}x{}", newDimension.getWidth(), newDimension.getHeight());
             }
         });
 

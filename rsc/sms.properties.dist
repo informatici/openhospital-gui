@@ -28,6 +28,8 @@ skebby-gateway-service.ribbon.base-url=https://api.skebby.it:443
 # USER_KEY and ACCESS_TOKEN avoids the login call every time we need to send sms
 skebby-gateway-service.accessToken=
 skebby-gateway-service.userKey=
+# message_type: GP for Classic+, TI for Classic, SI for Basic (default)
+#skebby-gateway-service.messageType=
 
 
 ##################################################################

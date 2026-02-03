@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -1142,7 +1142,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				try {
 					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
-					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
+					MessageDialog.error(OpdBrowser.this, "angal.common.pleaseinsertavalidnumber.msg");
 					return;
 				}
 				progYearFilter.setText("");
@@ -1155,7 +1155,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					((AbstractTableModel) jTable.getModel()).fireTableDataChanged();
 					rowCounter.setText(rowCounterText + pSur.size());
 				} else {
-					MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("angal.common.nodatatoshow.msg"));
+					MessageDialog.info(OpdBrowser.this, "angal.common.nodatatoshow.msg");
 				}
 			}
 		}
@@ -1176,7 +1176,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				try {
 					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
-					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
+					MessageDialog.error(OpdBrowser.this, "angal.common.pleaseinsertavalidnumber.msg");
 					return;
 				}
 				opdCodeFilter.setText("");
@@ -1185,7 +1185,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				((AbstractTableModel) jTable.getModel()).fireTableDataChanged();
 				rowCounter.setText(rowCounterText + pSur.size());
 				if (pSur.isEmpty()) {
-					MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("angal.common.nodatatoshow.msg"));
+					MessageDialog.info(OpdBrowser.this, "angal.common.nodatatoshow.msg");
 				}
 			}
 		}
@@ -1206,7 +1206,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				try {
 					code = Integer.parseInt(codeHint);
 				} catch (NumberFormatException e1) {
-					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
+					MessageDialog.error(OpdBrowser.this, "angal.common.pleaseinsertavalidnumber.msg");
 					return;
 				}
 				opdCodeFilter.setText("");
@@ -1216,7 +1216,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					((AbstractTableModel) jTable.getModel()).fireTableDataChanged();
 					rowCounter.setText(rowCounterText + pSur.size());
 					if (pSur.isEmpty()) {
-						MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("angal.common.nodatatoshow.msg"));
+						MessageDialog.info(OpdBrowser.this, "angal.common.nodatatoshow.msg");
 					}
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);

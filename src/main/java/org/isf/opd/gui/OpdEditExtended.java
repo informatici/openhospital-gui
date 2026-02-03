@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -445,8 +445,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			return;
 		}
 		Object selectedObject = diseaseBox1.getSelectedItem();
-		if (selectedObject instanceof Disease) {
-			Disease disease = (Disease) selectedObject;
+		if (selectedObject instanceof Disease disease) {
 			if (lastOPDDisease1 != null && disease.getCode().equals(lastOPDDisease1.getCode())) {
 				rePatientButton.setSelected(true);
 			} else {
@@ -1681,6 +1680,10 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
 			jAnamnesisButton.addActionListener(actionEvent -> {
 				try {
+					if (opdPatient == null) {
+						MessageDialog.error(this,"angal.common.pleaseselectapatient.msg");
+						return;
+					}
 					PatientHistory ph = new PatientHistory();
 					ph.setPatientId(opdPatient.getCode());
 					Patient patient = this.patientBrowserManager.getPatientById(opdPatient.getCode());

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -106,8 +106,7 @@ import org.slf4j.LoggerFactory;
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
- * MovStockBrowser - list medicals movement. let the user search for movements
- * 					  and insert a new movements
+ * MovStockBrowser - list medicals movement. Let the user search for movements and insert a new movement.
  */
 public class MovStockBrowser extends ModalJFrame {
 
@@ -148,6 +147,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.medicalstock.refno.col").toUpperCase(), // 1
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(), // 2
+			MessageBundle.getMessage("angal.medicalstock.category.col").toUpperCase(), // 3
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(), // 3
 			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(), // 4
 			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(), // 5
@@ -162,15 +162,16 @@ public class MovStockBrowser extends ModalJFrame {
 			MessageBundle.getMessage("angal.common.total.txt").toUpperCase(), // 14
 			MessageBundle.getMessage("angal.common.userid").toUpperCase() // 15
 	};
-	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
-			SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
+			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.CENTER };
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
-	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
+	private boolean[] pColumnVisible = { true, true, false, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN,
+			true, true,
 			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, !isSingleUser };
 
-	private int[] pColumnWidth = { 50, 90, 45, 130, 50, 30, 150, 70, 70, 80, 80, 50, 50, 70, 70 };
+	private int[] pColumnWidth = { 50, 90, 45, 45, 130, 50, 30, 150, 70, 70, 80, 80, 50, 50, 70, 70 };
 
 	/*
 	 * Adds to facilitate the selection of products
@@ -617,7 +618,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalTypeBox.addItem(TEXT_ALL);
 
 		try {
-			medical = medicalTypeBrowserManager.getMedicalType();
+			medical = medicalTypeBrowserManager.getAllActiveMedicalType();
 
 			for (MedicalType aMedicalType : medical) {
 				medicalTypeBox.addItem(aMedicalType);
@@ -695,8 +696,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JTable getMovTable() {
-		LocalDateTime now = TimeTools.getNow();
-		LocalDateTime old = now.minusWeeks(1);
+		LocalDateTime now = TimeTools.getBeginningOfNextDay(TimeTools.getNow());
+		LocalDateTime old = TimeTools.getBeginningOfDay(now.minusWeeks(1));
 
 		model = new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 		movTable = new JTable(model);
@@ -891,21 +892,21 @@ public class MovStockBrowser extends ModalJFrame {
 				if (!isAutomaticLot()) {
 					model = new MovBrowserModel(medicalSelected,
 									medicalTypeSelected, wardSelected, movementTypeSelected,
-									movDateFrom.getDateStartOfDay(),
-									movDateTo.getDateStartOfDay(),
-									lotPrepFrom.getDateStartOfDay(),
-									lotPrepTo.getDateStartOfDay(),
-									lotDueFrom.getDateStartOfDay(),
-									lotDueTo.getDateStartOfDay());
+									TimeTools.getBeginningOfDay(movDateFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(movDateTo.getDateStartOfDay()),
+									TimeTools.getBeginningOfDay(lotPrepFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(lotPrepTo.getDateStartOfDay()),
+									TimeTools.getBeginningOfDay(lotDueFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(lotDueTo.getDateStartOfDay()));
 				} else {
 					model = new MovBrowserModel(medicalSelected,
 									medicalTypeSelected, wardSelected, movementTypeSelected,
-									movDateFrom.getDateStartOfDay(),
-									movDateTo.getDateStartOfDay(),
+									TimeTools.getBeginningOfDay(movDateFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(movDateTo.getDateStartOfDay()),
 									null,
 									null,
-									lotDueFrom.getDateStartOfDay(),
-									lotDueTo.getDateStartOfDay());
+									TimeTools.getBeginningOfDay(lotDueFrom.getDateStartOfDay()),
+									TimeTools.getBeginningOfNextDay(lotDueTo.getDateStartOfDay()));
 				}
 
 				if (moves != null)
@@ -1146,8 +1147,8 @@ public class MovStockBrowser extends ModalJFrame {
 		private static final long serialVersionUID = 1L;
 
 		public MovBrowserModel() {
-			LocalDateTime now = TimeTools.getNow();
-			LocalDateTime old = now.minusWeeks(1);
+			LocalDateTime now = TimeTools.getBeginningOfNextDay(TimeTools.getNow());
+			LocalDateTime old = TimeTools.getBeginningOfDay(now.minusWeeks(1));
 
 			new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 			updateTotals();
@@ -1203,6 +1204,8 @@ public class MovStockBrowser extends ModalJFrame {
 				return movement.getRefNo();
 			} else if (c == ++col) {
 				return formatDateTime(movement.getDate());
+			} else if (c == ++col) {
+				return movement.getType().getCategory();
 			} else if (c == ++col) {
 				return movement.getType().toString();
 			} else if (c == ++col) {

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -30,6 +30,7 @@ import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -81,17 +82,18 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WardPharmacyNew.class);
 
 //LISTENER INTERFACE --------------------------------------------------------
-    private EventListenerList movementWardListeners = new EventListenerList();
-	
+	private EventListenerList movementWardListeners = new EventListenerList();
+
 	public interface MovementWardListeners extends EventListener {
+
 		void movementUpdated(AWTEvent e);
 		void movementInserted(AWTEvent e);
 	}
-	
+
 	public void addMovementWardListener(MovementWardListeners l) {
 		movementWardListeners.add(MovementWardListeners.class, l);
 	}
-	
+
 	public void removeMovementWardListener(MovementWardListeners listener) {
 		movementWardListeners.remove(MovementWardListeners.class, listener);
 	}
@@ -108,8 +110,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 	}
 
-	//---------------------------------------------------------------------------
-	
+	// ---------------------------------------------------------------------------
+
 	@Override
 	public void patientSelected(Patient patient) {
 		patientSelected = patient;
@@ -118,25 +120,25 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.changepatient")); //$NON-NLS-1$
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.changethepatientassociatedwiththismovement")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
-		
+
 		try {
 			Optional.ofNullable(examinationBrowserManager.getLastByPatID(patientSelected.getCode()))
-			.map(lastExam -> lastExam.getPex_weight())
-			.map(weight -> weight.floatValue())
-			.ifPresent(w -> patientWeight = w);
-			
+				.map(lastExam -> lastExam.getPex_weight())
+				.map(weight -> weight.floatValue())
+				.ifPresent(w -> patientWeight = w);
+
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, this);
 			MessageDialog.error(this, "angal.medicalstockwardedit.problemoccurredwhileretrievingweight");
 		}
 	}
-	
+
 	private static final long serialVersionUID = 1L;
 
-	private	ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
-	
+
 	private JLabel jLabelPatient;
 	private JTextField jTextFieldPatient;
 	private JButton jButtonPickPatient;
@@ -201,7 +203,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		pack();
 		setLocationRelativeTo(null);
 	}
-	
+
 	private boolean isAutomaticLot() {
 		return GeneralData.AUTOMATICLOTWARD_TOWARD;
 	}
@@ -216,7 +218,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			ButtonGroup group = new ButtonGroup();
 			group.add(jRadioPatient);
 			group.add(jRadioUse);
-                        group.add(jRadioWard);
+			group.add(jRadioWard);
 		}
 		return jPanelNorth;
 	}
@@ -283,7 +285,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			if (c == 0) {
 				return MessageBundle.getMessage("angal.medicalstock.lotid").toUpperCase();
 			}
-			
+
 			if (c == 1) {
 				return MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase();
 			}
@@ -302,13 +304,13 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		public Object getValueAt(int r, int c) {
 			MedicalWard medicalWard = druglist.get(r);
 			if (c == -1) {
-				
+
 				return medicalWard;
 			} else if (c == 0) {
 				return medicalWard.getId().getLot();
-			} else if (c == 1) {	
+			} else if (c == 1) {
 				return medicalWard.getQty();
-			}  else if (c == 2) {
+			} else if (c == 2) {
 				return TimeTools.formatDateTime(medicalWard.getLot().getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}
 			return null;
@@ -319,16 +321,16 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			return false;
 		}
 	}
-	
+
 	private boolean checkQuantityInLot(MedicalWard medWard, double qty) {
 		double wardQty = medWard.getQty();
 		if (qty > wardQty) {
-			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.msg");
+			MessageDialog.error(this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.fmt.msg", qty, wardQty);
 			return false;
-		} 
+		}
 		return true;
 	}
-	
+
 	private MedicalWard automaticChoose(List<MedicalWard> drug, String me, int quantity) {
 		drug.sort((o1, o2) -> {
 			if (o1.getLot().getDueDate() == null || o2.getLot().getDueDate() == null) {
@@ -386,9 +388,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 		do {
 			int ok = JOptionPane.showConfirmDialog(this,
-					panel,
-					MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$
-					JOptionPane.OK_CANCEL_OPTION);
+				panel,
+				MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$
+				JOptionPane.OK_CANCEL_OPTION);
 
 			if (ok == JOptionPane.OK_OPTION) {
 				int row = lotTable.getSelectedRow();
@@ -423,23 +425,23 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 		}
 		StringBuilder message = new StringBuilder();
-		message.append(med).append('\n') //$NON-NLS-1$
-				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
-				.append(totalQty); // $NON-NLS-1$
+		message.append(med).append('\n') // $NON-NLS-1$
+			.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
+			.append(totalQty); // $NON-NLS-1$
 		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
 
 		if (prodCode != null && !prodCode.equals("")) { //$NON-NLS-1$
-			title.append(' ') //$NON-NLS-1$
-					.append(MessageBundle.getMessage("angal.common.code.txt"))
-					.append(": ") //$NON-NLS-1$
-					.append(prodCode);
+			title.append(' ') // $NON-NLS-1$
+				.append(MessageBundle.getMessage("angal.common.code.txt"))
+				.append(": ") //$NON-NLS-1$
+				.append(prodCode);
 		} else {
 			title.append(": "); //$NON-NLS-1$
 		}
 
 		do {
 			String quantity = JOptionPane.showInputDialog(this, message.toString(), title.toString(),
-					JOptionPane.QUESTION_MESSAGE);
+				JOptionPane.QUESTION_MESSAGE);
 
 			if (quantity != null) {
 				try {
@@ -473,13 +475,13 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return qty;
 
 	}
-	
-	private boolean checkQuantity( double totalQty, double qty) {
-	
+
+	private boolean checkQuantity(double totalQty, double qty) {
+
 		if (qty > totalQty) {
 			StringBuilder message = new StringBuilder();
 			message.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.thequantityisnotavailable")) //$NON-NLS-1$
-				.append('\n') //$NON-NLS-1$
+				.append('\n') // $NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty);
 			JOptionPane.showMessageDialog(this, message.toString());
@@ -500,11 +502,11 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 		return jButtonAddMedical;
 	}
-	
+
 	public double round(double input, double step) {
 		return Math.round(input / step) * step;
 	}
-	
+
 	private JButton getJButtonRemoveMedical() {
 		if (jButtonRemoveMedical == null) {
 			jButtonRemoveMedical = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.removeitem.btn"));
@@ -523,22 +525,22 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	private void addItem(MedicalWard ward, int quantity) {
 		if (ward != null) {
-		
+
 			MedicalWard item = new MedicalWard(ward.getMedical(), quantity, ward.getId().getLot());
 			medItems.add(item);
-			
+
 //			medArray.add(med);
 			jTableMedicals.updateUI();
 		}
 	}
-	
+
 	private void removeItem(int row) {
 		if (row != -1) {
 			medItems.remove(row);
 			medArray.remove(row);
 			jTableMedicals.updateUI();
 		}
-		
+
 	}
 
 	private JPanel getJPanelMedicalsButtons() {
@@ -581,7 +583,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				boolean isPatient;
 				String description;
 				int age = 0;
-				LocalDateTime newDate = TimeTools.getNow();
+				LocalDateTime newDate = TimeTools.getNow().truncatedTo(ChronoUnit.MINUTES); // to make same as GoodDate* pickers
 				Ward wardTo = null; //
 				if (jRadioPatient.isSelected()) {
 					isPatient = true;
@@ -611,8 +613,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				try {
 					for (MedicalWard medItem : medItems) {
 						manyMovementWard.add(new MovementWard(wardSelected, newDate, isPatient, patientSelected,
-								age, patientWeight, description, medItem.getMedical(), medItem.getQty(),
-								MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null, medItem.getLot()));
+							age, patientWeight, description, medItem.getMedical(), medItem.getQty(),
+							MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null, medItem.getLot()));
 					}
 
 					movWardBrowserManager.newMovementWard(manyMovementWard);
@@ -625,7 +627,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 		return jButtonOK;
 	}
-	
+
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
@@ -648,7 +650,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (jPanelMedicals == null) {
 			jPanelMedicals = new JPanel();
 			jPanelMedicals.setLayout(new BoxLayout(jPanelMedicals, BoxLayout.Y_AXIS));
-                        jPanelMedicals.add(getJPanelMedicalsSearch());
+			jPanelMedicals.add(getJPanelMedicalsSearch());
 			jPanelMedicals.add(getJScrollPaneMedicals());
 			jPanelMedicals.add(getJPanelMedicalsButtons());
 		}
@@ -735,15 +737,15 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 		return jLabelPatient;
 	}
-	
+
 	public class MedicalTableModel implements TableModel {
-		
+
 		public MedicalTableModel() {
-			
+
 		}
-		
+
 		@Override
-		public Class<?> getColumnClass(int i) {
+		public Class< ? > getColumnClass(int i) {
 			return medClasses[i].getClass();
 		}
 
@@ -751,7 +753,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		public int getColumnCount() {
 			return medClasses.length;
 		}
-		
+
 		@Override
 		public int getRowCount() {
 			if (medItems == null) {
@@ -759,7 +761,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			}
 			return medItems.size();
 		}
-		
+
 		@Override
 		public Object getValueAt(int r, int c) {
 			MedicalWard medWard = medItems.get(r);
@@ -770,19 +772,19 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				return medWard.getMedical().getDescription();
 			}
 			if (c == 1) {
-				return medWard.getQty(); 
+				return medWard.getQty();
 			}
 			if (c == 2) {
-				return medWard.getLot(); 
+				return medWard.getLot();
 			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int r, int c) {
 			return c == 1;
 		}
-		
+
 		@Override
 		public void setValueAt(Object item, int r, int c) {
 		}
@@ -806,7 +808,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			panelWard = new JPanel();
 			panelWard.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			panelWard.add(getJRadioWard());
-			//panelWard.add(getJLabelSelectWard());
+			// panelWard.add(getJLabelSelectWard());
 			panelWard.add(getWardBox());
 		}
 		return panelWard;
@@ -922,7 +924,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				for (String pattern : patterns) {
 					if (code.contains(pattern.toLowerCase()) || description.contains(pattern.toLowerCase())) {
 						patternFound = true;
-						//It is sufficient that only one pattern matches the query
+						// It is sufficient that only one pattern matches the query
 						break;
 					}
 				}

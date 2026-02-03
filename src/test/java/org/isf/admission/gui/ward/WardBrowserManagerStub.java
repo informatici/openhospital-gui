@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -24,10 +24,20 @@ package org.isf.admission.gui.ward;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.isf.ward.service.WardIoOperations;
+import org.mockito.Mock;
 
 public class WardBrowserManagerStub extends WardBrowserManager {
+
+	@Mock
+	private WardIoOperations wardIoOperations;
+
+	public WardBrowserManagerStub(AdmissionBrowserManager admissionBrowserManager, WardIoOperations wardIoOperations) {
+		super(admissionBrowserManager, wardIoOperations);
+	}
 
 	private final List<Ward> wards = new ArrayList<>();
 

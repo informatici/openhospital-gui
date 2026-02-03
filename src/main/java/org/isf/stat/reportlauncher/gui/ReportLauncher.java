@@ -1,23 +1,24 @@
 /*
- * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Open Hospital (www.open-hospital.org) Copyright © 2006-2023 Informatici Senza
+ * Frontiere (info@informaticisenzafrontiere.org)
  *
- * Open Hospital is a free and open source software for healthcare data management.
+ * Open Hospital is a free and open source software for healthcare data
+ * management.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
  * https://www.gnu.org/licenses/gpl-3.0-standalone.html
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.stat.reportlauncher.gui;
 
@@ -53,7 +54,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import org.isf.generaldata.ConfigurationProperties;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.stat.gui.report.GenericReportFromDateToDate;
@@ -72,8 +72,9 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
- * ReportLauncher - launch all the reports that have as parameters year and month
- * 					the class expects the initialization through year, month, name of the report (without .jasper)
+ * ReportLauncher - launch all the reports that have as parameters year and
+ * month the class expects the initialization through year, month, name of the
+ * report (without .jasper)
  */
 public class ReportLauncher extends ModalJFrame {
 
@@ -127,9 +128,9 @@ public class ReportLauncher extends ModalJFrame {
 	}
 
 	/**
-	 * This method initializes jPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
 		if (jPanel == null) {
@@ -141,9 +142,9 @@ public class ReportLauncher extends ModalJFrame {
 	}
 
 	/**
-	 * This method initializes jButtonPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jButtonPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJButtonPanel() {
 		if (jButtonPanel == null) {
@@ -169,9 +170,9 @@ public class ReportLauncher extends ModalJFrame {
 	}
 
 	/**
-	 * This method initializes jCloseButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes jCloseButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
@@ -183,9 +184,9 @@ public class ReportLauncher extends ModalJFrame {
 	}
 
 	/**
-	 * This method initializes jContentPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jContentPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPanel() {
 		if (jContentPanel == null) {
@@ -235,26 +236,28 @@ public class ReportLauncher extends ModalJFrame {
 
 				reportNameFileMap = new HashMap<>();
 				List<String> jRptComboBoxList = new LinkedList<>();
+				String language = new Locale(GeneralData.LANGUAGE).getLanguage();
+
 				for (File f : jasperFilesInFolder) {
 					try {
-						Properties props = ConfigurationProperties.loadPropertiesFile(
-										f.getName().replace(".jasper", '_' + new Locale(GeneralData.LANGUAGE).getLanguage() + ".properties"), LOGGER);
+						Path localizedPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", "_" + language + ".properties"));
 
-						if (props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
-							reportNameFileMap.put(props.getProperty("jTitle"), f);
-							jRptComboBoxList.add(props.getProperty("jTitle"));
-						} else {
-							props = ConfigurationProperties.loadPropertiesFile(
-											f.getName().replace(".jasper", ".properties"), LOGGER);
+						Properties props = MessageBundle.loadPropertiesFileUtf8(localizedPropsPath, LOGGER);
 
-							if (props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
-								reportNameFileMap.put(props.getProperty("jTitle"), f);
-								jRptComboBoxList.add(props.getProperty("jTitle"));
-							}
+						String title = props.getProperty("jTitle");
+						if (title == null || title.isBlank()) {
+							Path fallbackPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", ".properties"));
+							props = MessageBundle.loadPropertiesFileUtf8(fallbackPropsPath, LOGGER);
+							title = props.getProperty("jTitle");
 						}
+
+						if (title != null && !title.isBlank()) {
+							reportNameFileMap.put(title, f);
+							jRptComboBoxList.add(title);
+						}
+
 					} catch (Exception e) {
-						e.getStackTrace();
-						LOGGER.error("", e);
+						LOGGER.error("Error loading report properties for {}", f.getName(), e);
 					}
 				}
 
@@ -271,7 +274,8 @@ public class ReportLauncher extends ModalJFrame {
 				}
 			});
 
-			// TODO: fix how the layout of the last two fields are done; adding spaces is a hack
+			// TODO: fix how the layout of the last two fields are done; adding
+			// spaces is a hack
 			jMonthLabel = new JLabel("               " + MessageBundle.getMessage("angal.stat.month"));
 
 			jMonthComboBox = new JComboBox<>();
@@ -290,7 +294,8 @@ public class ReportLauncher extends ModalJFrame {
 
 			jMonthComboBox.setSelectedIndex(month - 1);
 
-			// TODO: fix how the layout of the last two fields are done; adding spaces is a hack
+			// TODO: fix how the layout of the last two fields are done; adding
+			// spaces is a hack
 			jYearLabel = new JLabel("                    " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox<>();
 
@@ -299,10 +304,10 @@ public class ReportLauncher extends ModalJFrame {
 			}
 
 			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.common.datefrom.label"));
-			LocalDate defaultDate = LocalDate.now().minusMonths(8L);
+			LocalDate defaultDate = LocalDate.now().minusDays(8);
 			jFromDateField = new GoodDateChooser(defaultDate);
 			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.common.dateto.label"));
-			defaultDate = defaultDate.plusMonths(7L);
+			defaultDate = defaultDate.plusDays(7);
 			jToDateField = new GoodDateChooser(defaultDate);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);

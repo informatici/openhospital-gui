@@ -5,8 +5,10 @@
 MODE=OH_MODE
 DEMODATA=off
 
-# experimental settings
+# experimental/advanced settings
 APISERVER=off
+GUI_INTERFACE=on
+UI_INTERFACE=off
 
 # internal settings, modules, directories
 LANGUAGE=OH_LANGUAGE
@@ -53,7 +55,7 @@ LOTWITHCOST=yes
 PHARMACEUTICALORDER=PharmaceuticalOrder
 PHARMACEUTICALSTOCK=PharmaceuticalStock_ver4
 PHARMACEUTICALSTOCKLOT=PharmaceuticalStock_ver5
-PHARMACEUTICALAMC=PharmaceuticalAMC
+PHARMACEUTICALAMC=PharmaceuticalAMC_ver2
 
 # dicom / imaging settings
 DICOMMODULEENABLED=yes

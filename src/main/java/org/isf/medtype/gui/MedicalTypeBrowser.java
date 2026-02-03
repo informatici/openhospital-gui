@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -54,9 +54,10 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 	private List<MedicalType> pMedicalType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.deleted.label").toUpperCase()
 	};
-	private int[] pColumnWidth = {80, 200};
+	private final int[] pColumnWidth = { 20, 200, 20 };
 	private JPanel jContainPanel;
 	private JPanel jButtonPanel;
 	private JButton jNewButton;
@@ -198,6 +199,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
+			jTable.getColumnModel().getColumn(2).setMinWidth(pColumnWidth[2]);
 		}
 		return jTable;
 	}
@@ -243,6 +245,8 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 				return medType.getCode();
 			} else if (c == 1) {
 				return medType.getDescription();
+			} else if (c == 2) {
+				return medType.getDeleted() == 'Y';
 			}
 			return null;
 		}
@@ -250,6 +254,11 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
+		}
+		
+		@Override
+		public Class getColumnClass(int column) {
+			return (column == 2) ? Boolean.class : String.class;
 		}
 	}
 

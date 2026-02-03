@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -107,8 +107,7 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 import com.github.lgooddatepicker.zinternaltools.TimeChangeEvent;
 
 /**
- * Create a single Patient Bill
- * it affects tables BILLS, BILLITEMS and BILLPAYMENTS
+ * Create a single Patient Bill which affects tables BILLS, BILLITEMS and BILLPAYMENTS
  *
  * @author Mwithi
  */
@@ -558,8 +557,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			MessageDialog.warning(this,
 							MessageBundle.formatMessage("angal.newbill.somepricesnotfound.fmt.msg", String.join(", ", notFoundPriceList)));
 		} else if (!changedPriceList.isEmpty()) {
-			int ok = MessageDialog.yesNo(this, MessageBundle.formatMessage(
-							"angal.newbill.somepriceshavebeenchangeddoyouwanttoupdatetheitemsprices.fmg.msg", String.join(", ", changedPriceList)));
+			int ok = MessageDialog.yesNo(this, "angal.newbill.somepriceshavebeenchangeddoyouwanttoupdatetheitemsprices.fmt.msg", String.join(", ", changedPriceList));
 			if (ok == JOptionPane.OK_OPTION) {
 				updatePrices();
 			}
@@ -721,6 +719,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				thisBill.setPriceList(selectedPricelist);
 				thisBill.setIsList(true);
 				setCurrencyCodeFromList(selectedPricelist);
+				setPriceListArray();
+				checkBill();
 				updateGUI();
 			});
 		}
@@ -845,11 +845,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonTrashPatient.setPreferredSize(new Dimension(25, 25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.removethepatientassociatedwiththisbill.tooltip"));
+			if (thisBill.getBillPatient() == null) {
+				jButtonTrashPatient.setEnabled(false);
+			}
 			jButtonTrashPatient.addActionListener(actionEvent -> {
 				// BILL
 				thisBill.setBillPatient(null);
 				thisBill.setIsPatient(false);
-				thisBill.getBillPatient().setCode(0);
 				thisBill.setPatName(""); //$NON-NLS-1$
 				thisBill.setAdmission(null);
 				// INTERFACE
@@ -895,6 +897,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.changepatient.btn"));
 			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.newbill.changepatient.btn.key"));
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.changethepatientassociatedwiththisbill.tooltip"));
+			if (jButtonTrashPatient != null) {
+				jButtonTrashPatient.setEnabled(true);	
+			}
 		}
 	}
 

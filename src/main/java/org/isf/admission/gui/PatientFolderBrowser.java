@@ -452,19 +452,16 @@ public class PatientFolderBrowser extends ModalJFrame
 					}
 				}
 
-				if (selectedObject instanceof Admission) {
+				if (selectedObject instanceof Admission ad) {
 
-					Admission ad = (Admission) selectedObject;
 					startDate = ad.getAdmDate();
 					endDate = ad.getDisDate();
 
-				} else if (selectedObject instanceof Opd) {
+				} else if (selectedObject instanceof Opd opd) {
 
-					Opd opd = (Opd) selectedObject;
 					startDate = opd.getDate();
 
-				} else if (selectedObject instanceof PatientExamination) {
-					PatientExamination exam = (PatientExamination) selectedObject;
+				} else if (selectedObject instanceof PatientExamination exam) {
 					startDate = exam.getPex_date();
 				}
 

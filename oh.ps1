@@ -2,7 +2,7 @@
 #!/usr/bin/pwsh
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -155,12 +155,15 @@ $script:LOG_FILE_ERR="startup_error.log"
 $script:OH_LOG_FILE="openhospital.log"
 $script:API_LOG_FILE="api.log"
 $script:API_ERR_LOG_FILE="api_error.log"
+$script:API_STOP_LOG_FILE="api_stop.log"
+$script:API_STOP_ERR_LOG_FILE="api_stop_error.log"
+$script:TMP_LOG_FILE="tmp.log"
 
 # SQL creation files
-#$script:DB_CREATE_SQL="create_all_en.sql" # default to en
+#$script:DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
 $script:DB_DEMO="create_all_demo.sql"
 
-######################## Other settings ########################
+######################## Advanced settings ########################
 # date format
 $script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
@@ -170,12 +173,12 @@ $script:EXT="zip"
 # mysql configuration file
 $script:MYSQL_CONF_FILE="my.cnf"
 
-# OH configuration files
+# OH configuration files - see also settings.properties
 $script:OH_SETTINGS="settings.properties"
 $script:DATABASE_SETTINGS="database.properties"
 $script:EXAMINATION_SETTINGS="examination.properties"
 $script:IMAGING_SETTINGS="dicom.properties"
-$script:LOG4J_SETTINGS="log4j.properties"
+$script:LOG4J_SETTINGS="log4j2-spring.properties"
 $script:PRINTER_SETTINGS="txtPrinter.properties"
 $script:SMS_SETTINGS="sms.properties"
 $script:TELEMETRY_SETTINGS="telemetry.properties"
@@ -184,9 +187,27 @@ $script:API_SETTINGS="application.properties"
 $script:CRED_SETTINGS="default_credentials.properties"
 $script:DEMO_CRED_SETTINGS="default_demo_credentials.properties"
 
-# OH jar bin files
+# OH API server configuration
+$script:OH_API_HOST="localhost"
+$script:OH_API_PORT="8080"
+
+# OH jar/war bin files
 $script:OH_GUI_JAR="OH-gui.jar"
-$script:OH_API_JAR="openhospital-api-0.1.0.jar"
+$script:OH_API_BIN="openhospital-api"
+$script:OH_API_VER="0.1.0"
+$script:OH_API_JAR="$OH_API_BIN-$OH_API_VER.jar"
+$script:OH_API_WAR="$OH_API_BIN-$OH_API_VER.war"
+$script:OH_API_PROD="oh-api"
+
+# OH API server configuration
+$script:OH_API_HOST="localhost"
+$script:OH_API_PORT="8080"
+
+# OH UI configuration
+$script:OH_UI_HOST="localhost"
+$script:OH_UI_PORT="8080"
+$script:OH_UI_PROD="oh-ui"
+$script:OH_UI_URL="http://${OH_UI_HOST}:$OH_UI_PORT/$OH_UI_PROD"
 
 # help file
 $script:HELP_FILE="OH-readme.txt"
@@ -201,14 +222,14 @@ $script:DATABASE_ROOT_USER="root"
 
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 $script:EXPERT_MODE="off"
-$script:OH_UI_URL="http://localhost:8080"
-$script:OH_API_PID="../tmp/oh-api.pid"
+#$script:OH_UI_URL="http://localhost:8080/oh"
+#$script:OH_API_PID="../tmp/oh-api.pid"
 
 ############## Architecture and external software ##############
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-$script:MYSQL_VERSION="10.6.16"
+$script:MYSQL_VERSION="10.6.23"
 $script:MYSQL32_VERSION="10.6.5"
 
 ######## define system and software architecture
@@ -248,8 +269,15 @@ $script:MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ### JRE 17 - zulu distribution
 #$script:JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-win_$JAVA_PACKAGE_ARCH"
-$script:JAVA_DISTRO="zulu17.48.15-ca-jre17.0.10-win_$JAVA_PACKAGE_ARCH"
+$script:JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
+
+# Tomcat 11
+$script:TOMCAT_VERSION="11.0.15"
+$script:TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
+$script:TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION-windows-x64"
+$script:TOMCAT_DIR="apache-tomcat-$TOMCAT_VERSION"
+# windows -> https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.1/bin/apache-tomcat-11.0.1-windows-x64.zip
 
 # workaround for JRE 11 - 32bit
 #	if ( $JAVA_ARCH -eq "32" ) {
@@ -266,27 +294,30 @@ $script:JAVA_DIR=$JAVA_DISTRO
 function script_menu {
 	# show menu
 	# Clear-Host # clear console
-	Write-Host " -----------------------------------------------------------------"
-	Write-Host "|                                                                 |"
-	Write-Host "|                  Open Hospital - $OH_VERSION                         |"
-	Write-Host "|                                                                 |"
-	Write-Host " -----------------------------------------------------------------"
-	Write-Host " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
-	Write-Host " -----------------------------------------------------------------"
+	#
+	Write-Host " ------------------------------------------------------------------------"
+	Write-Host "|                                                                        |"
+	Write-Host "|                Open Hospital - v$OH_VERSION                                 |"
+	Write-Host "|                                                                        |"
+	Write-Host " ------------------------------------------------------------------------"
+	Write-Host "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
+	Write-Host " ------------------------------------------------------------------------"
 	if ( $EXPERT_MODE -eq "on" ) {
-		Write-Host " EXPERT MODE activated"
-		Write-Host " API server set to $API_SERVER"
-	Write-Host " -----------------------------------------------------------------"
+		Write-Host "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		Write-Host " ------------------------------------------------------------------------"
 	}
 	Write-Host ""
-	Write-Host "   C    set OH in CLIENT mode"
-	Write-Host "   P    set OH in PORTABLE mode"
-	Write-Host "   S    set OH in SERVER mode (portable)"
-	Write-Host "   l    set language -> [ $OH_LANGUAGE_LIST ]"
-	Write-Host "   E    toggle EXPERT MODE - show advanced options"
-	Write-Host "   h    show help"
-	Write-Host "   q    quit"
+	Write-Host " Usage: $SCRIPT_NAME -[OPTION] "
 	Write-Host ""
+	Write-Host "   -C    set OH in CLIENT mode"
+	Write-Host "   -P    set OH in PORTABLE mode"
+	Write-Host "   -S    set OH in SERVER mode (portable)"
+	Write-Host "   -l    set language -> [ ${OH_LANGUAGE_LIST[*]} ]"
+	Write-Host "   -E    toggle EXPERT MODE - show advanced options"
+	Write-Host "   -h    show help"
+	Write-Host "   -q    quit"
+	Write-Host ""
+	#
 	if ( $EXPERT_MODE -eq "on" ) {
 		script_menu_advanced;
 	}
@@ -299,20 +330,14 @@ function script_menu_advanced {
 	Write-Host "   -------------------------------- "
 	Write-Host "    EXPERT MODE - advanced options"
 	Write-Host ""
-	Write-Host "   A    toggle API server - EXPERT_MODE"
-	Write-Host "   e    export/save OH database"
-	Write-Host "   r    restore OH database"
-	Write-Host "   d    toggle log level INFO/DEBUG"
-	Write-Host "   D    initialize OH with Demo data"
-	Write-Host "   G    setup GSM"
-	Write-Host "   i    initialize/install OH database"
-	Write-Host "   m    configure database connection manually"
-	Write-Host "   s    save OH configuration"
-	Write-Host "   t    test database connection (CLIENT mode only)"
-	Write-Host "   u    create Desktop shortcut with current params"
-	Write-Host "   v    show configuration"
-	Write-Host "   V    check for latest OH version"
-	Write-Host "   X    clean/reset OH installation"
+	Write-Host "   -A  toggle API server - EXPERIMENTAL		| -d  toggle log level INFO/DEBUG"
+	Write-Host "   -D  initialize OH with Demo data		| -X  clean/reset OH installation"
+	Write-Host "   -e  export/save OH database			| -r  restore OH database"
+ 	Write-Host "   -m  configure database connection manually	| -i  initialize/install OH databas"
+	Write-Host "   -s  save OH configuration			| -t  test database connection (CLIENT mode only)"
+	Write-Host "   -G  setup GSM			"
+	Write-Host "   -U  enable UI web interface			| -u  create Desktop shortcut"
+	Write-Host "   -v  show configuration			| -V  check for latest available OH version"
 	Write-Host ""
 }
 
@@ -382,6 +407,8 @@ function read_settings {
 		$script:OH_DOC_DIR=$oh_settings.OH_DOC_DIR
 		$script:DEMO_DATA=$oh_settings.DEMODATA
 		$script:API_SERVER=$oh_settings.APISERVER
+		$script:UI_INTERFACE=$oh_settings.UI_INTERFACE
+		$script:GUI_INTERFACE=$oh_settings.GUI_INTERFACE
 	}
 		
 	# check for database settings file and read values
@@ -391,6 +418,7 @@ function read_settings {
 
 		$DATABASE_URL=$db_settings."jdbc.url"
 		$DATABASE_URL=$DATABASE_URL.TrimStart("jdbc:mysql")
+		$DATABASE_URL=$DATABASE_URL.TrimStart("jdbc:mariadb")
 		$script:DATABASE_SERVER=$DATABASE_URL.Split('/')[2].Split(':')[0]
 		$script:DATABASE_PORT=$DATABASE_URL.Split(":",2)[1].Split("/",2)[0]
 		$script:DATABASE_NAME=$DATABASE_URL.Split(":",2)[1].Split("/",2)[1]
@@ -449,20 +477,25 @@ function set_defaults {
 	if ( [string]::IsNullOrEmpty($DEMO_DATA) ) {
 		$script:DEMO_DATA="off"
 	}
+	
+	# EXPERT_MODE features - set default to off
+	if ( [string]::IsNullOrEmpty($EXPERT_MODE) ) {
+		$script:EXPERT_MODE="off"
+	}
 
-	# api server - set default to off
+	# API server - set default to off
 	if ( [string]::IsNullOrEmpty($API_SERVER) ) {
 		$script:API_SERVER="off"
+	}
+	
+	# GUI interface - set default to on
+	if ( [string]::IsNullOrEmpty($GUI_INTERFACE) ) {
+		$script:GUI_INTERFACE="on"
 	}
 
 	# UI interface - set default to off
 	if ( [string]::IsNullOrEmpty($UI_INTERFACE) ) {
 		$script:UI_INTERFACE="off"
-	}
-
-	# EXPERT_MODE features - set default to off
-	if ( [string]::IsNullOrEmpty($EXPERT_MODE) ) {
-		$script:EXPERT_MODE="off"
 	}
 
 	# set escaped path (/ in place of \)
@@ -498,9 +531,11 @@ function set_demo_data {
 	# set database name for demo data
 	switch -CaseSensitive( $script:DEMO_DATA ) {
 	"on"	{ # 
+		Write-Host "Enabling DEMO data..."
 		$script:DATABASE_NAME=$DEMO_DATABASE
 		}
 	"off"	{ # 
+		Write-Host "Disabling DEMO data..."
 		$script:DATABASE_NAME="$script:DEFAULT_DATABASE_NAME"
 		}
 	}
@@ -654,7 +689,7 @@ function java_check {
 	# if JAVA_BIN is not found download JRE
 	if ( !(Test-Path $JAVA_BIN  -PathType leaf ) ) {
         	if ( !(Test-Path "$OH_PATH/$JAVA_DISTRO.$EXT" -PathType leaf ) ) {
-			Write-Host "Warning - JAVA not found. Do you want to download it?" -ForegroundColor Yellow
+			Write-Host "Warning - Java not found. Do you want to download it?" -ForegroundColor Yellow
 			get_confirmation;
 			# Download java binaries
 			download_file "$JAVA_URL" "$JAVA_DISTRO.$EXT"
@@ -672,7 +707,7 @@ function java_check {
 		Remove-Item "$OH_PATH\$JAVA_DISTRO.$EXT"
         	Write-Host "Done!"
 	}
-	Write-Host "JAVA found!"
+	Write-Host "Java found!"
 	Write-Host "Using $JAVA_BIN"
 }
 
@@ -708,6 +743,68 @@ function mysql_check {
 		Read-Host; exit 1
 	}
 }
+
+###################################################################
+function tomcat_setup {
+	# check if TOMCAT_BIN is already set and it exists
+	if ( !( $TOMCAT_BIN ) -or !(Test-Path $TOMCAT_BIN -PathType leaf ) ) {
+        	# set default
+        	Write-Host "Setting default Tomcat..."
+		$script:TOMCAT_BIN="$OH_PATH\$TOMCAT_DIR\bin\catalina.bat"
+	}
+
+	# if TOMCAT_BIN is not found download Tomcat
+	if ( !(Test-Path $TOMCAT_BIN  -PathType leaf ) ) {
+        	if ( !(Test-Path "$OH_PATH/$TOMCAT_DISTRO.$EXT" -PathType leaf ) ) {
+			Write-Host "Warning - Tomcat not found. Do you want to download it?" -ForegroundColor Yellow
+			get_confirmation;
+			# Download tomcat binaries
+			download_file "$TOMCAT_URL" "$TOMCAT_DISTRO.$EXT"
+		}
+		Write-Host "Unpacking $TOMCAT_DISTRO..."
+		try {
+			Expand-Archive "$OH_PATH\$TOMCAT_DISTRO.$EXT" -DestinationPath "$OH_PATH\" -Force
+		}
+		catch {
+			Write-Host "Error unpacking Tomcat. Exiting." -ForegroundColor Red
+			Read-Host; exit 1
+		}
+		Write-Host "Tomcat unpacked successfully!"
+		Write-Host "Removing downloaded file..."
+		Remove-Item "$OH_PATH\$TOMCAT_DISTRO.$EXT"
+        	Write-Host "Done!"
+	}
+	Write-Host "Tomcat found!"
+	Write-Host "Using $TOMCAT_BIN"
+
+	# set up OpenHospital API war
+	
+	# check if OH API webapps directory already exists
+	if ( !(Test-Path "$OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD") ) {
+
+		Write-Host "Unpacking $OH_API_PROD.war..."
+		try {
+			# workaround to extract war file
+			Rename-Item -Path "$OH_PATH/$OH_DIR/bin/$OH_API_WAR" -NewName "$OH_PATH/$OH_DIR/bin/$OH_API_PROD.zip"
+			Expand-Archive "$OH_PATH/$OH_DIR/bin/$OH_API_PROD.zip" -DestinationPath $OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD/ -Force
+			Rename-Item -Path "$OH_PATH/$OH_DIR/bin/$OH_API_PROD.zip" -NewName "$OH_PATH/$OH_DIR/bin/$OH_API_WAR"
+		}
+		catch {
+			Write-Host "Error unpacking $OH_API_PROD. Exiting." -ForegroundColor Red
+			Read-Host; exit 1
+			}
+	}
+	else {
+		Write-Host "Using $OH_API_PROD deployed application..."
+	}
+
+	# copying configuration / properties files:
+	Write-Host "Copying OH API configuration files..."
+	Copy-Item "$OH_PATH/$OH_DIR/rsc/*.properties" "$OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD/WEB-INF/classes/"
+	
+	Write-Host "Tomcat | OH API server ready!"
+}
+
 
 ###################################################################
 function config_database {
@@ -785,8 +882,13 @@ function initialize_database {
 function start_database {
 	Write-Host "Checking if $MYSQL_NAME is running..."
 	if ( ( Test-Path "$OH_PATH/$TMP_DIR/mysql.sock" ) -or ( Test-Path "$OH_PATH/$TMP_DIR/mysql.pid" ) ) {
-		Write-Host "$MYSQL_NAME already running ! Exiting."
-		exit 1
+		Write-Host "$MYSQL_NAME already running!"
+		Write-Host "Do you want to remove pid/socket file and try to restart database?"
+		get_confirmation 1;
+		# remove socket and pid file
+		Write-Host "Removing mariadb/mysql socket and pid file..."
+		$filetodel="$OH_PATH/$TMP_DIR/mysql.sock"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+		$filetodel="$OH_PATH/$TMP_DIR/mysql.pid"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	}
 
 	Write-Host "Starting $MYSQL_NAME server... "
@@ -804,7 +906,7 @@ function start_database {
 	# # Wait till the MariaDB/MySQL tcp port is open
 	# until nc -z $DATABASE_SERVER $DATABASE_PORT; do sleep 1; done
 
-	Write-Host "$MYSQL_NAME server started! "
+	Write-Host "$MYSQL_NAME server started!"
 }
 
 ###################################################################
@@ -894,29 +996,6 @@ function import_database {
 		Read-Host; exit 2
 	}
 
-	# EXPERIMENTAL ONLY
-	# workaround for hard coded password limit - execute extra sql script 
-	# not needed anymore - see OP-1078
-
-#	if ( ($API_SERVER -eq "On") ){
-#		Write-Host "Setting admin password..."
-#	cd "$OH_PATH/$SQL_EXTRA_DIR/"
-#
-#   $SQLCOMMAND=@"
-#   --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
-#"@
-#		try {
-#			Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-#	 	}
-#		catch {
-#			Write-Host "Error! Exiting." -ForeGroundColor Red
-#			shutdown_database;
-#			cd "$CURRENT_DIR"
-#			Read-Host; exit 2
-#		}
-#	}
-
-	# end
 	cd "$OH_PATH"
 }
 
@@ -963,6 +1042,7 @@ function test_database_connection {
 		Write-Host "Testing database connection..."
 		try {
 		Start-Process -FilePath ("$OH_PATH\$MYSQL_DIR\bin\mysql.exe") -ArgumentList ("--user=$DATABASE_USER --password=$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e $([char]34)USE $DATABASE_NAME$([char]34) " ) -Wait -NoNewWindow
+#		#		Start-Process -FilePath ("$OH_PATH\$MYSQL_DIR\bin\mysql.exe") -ArgumentList ("--user=$DATABASE_USER --password=$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME" ) -Wait -NoNewWindow
 		}
 		catch {
 			Write-Host "Error: can't connect to database! Exiting." -ForegroundColor Red
@@ -984,8 +1064,20 @@ function write_api_config_file {
 		# generate OH API token and save to settings file
 		$JWT_TOKEN_SECRET=( -join ($(for($i=0; $i -lt 64; $i++) { ((65..90)+(97..122)+(".")+("!")+("?")+("&") | Get-Random | % {[char]$_}) })) )
 		Write-Host "Writing OH API configuration file -> $API_SETTINGS..."
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS.dist").replace("JWT_TOKEN_SECRET","$JWT_TOKEN_SECRET") | Set-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS").replace("OH_API_PID","$OH_API_PID") | Set-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS.dist") `
+		-replace "JWT_TOKEN_SECRET", "$JWT_TOKEN_SECRET" `
+		-replace "OH_API_PID", "$OH_API_PID" `
+		-replace "UI_HOST", "$OH_UI_HOST" `
+		-replace "UI_PORT", "$OH_UI_PORT" `
+		-replace "API_HOST", "$OH_API_HOST" `
+		-replace "API_PORT", "$OH_API_PORT" `
+		-replace "API_URL", "$OH_API_PROD" `
+		| Set-Content "$OH_PATH/$OH_DIR/rsc/$API_SETTINGS"
+	}
+	if ( (Test-Path "$OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD" -PathType container ) ) {
+		# copying configuration / properties files to tomcat dir
+		Write-Host "Copying OH API configuration files..."
+		copy "$OH_PATH/$OH_DIR/rsc/*.properties" "$OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD/WEB-INF/classes/"
 	}
 }
 
@@ -1004,17 +1096,23 @@ function copy_config_file ($arg) {
 function write_config_files {
 	# set up configuration files
 	Write-Host "Checking for OH configuration files..."
+	
+	######## DATABASE_SETTINGS setup 
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS" -PathType leaf) ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS.old }
+		Write-Host "Writing OH database configuration file -> $DATABASE_SETTINGS..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS.dist").replace("DBSERVER","$DATABASE_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS").replace("DBPORT","$DATABASE_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS").replace("DBPASS","$DATABASE_PASSWORD") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS").replace("DBNAME","$DATABASE_NAME") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
 
-	######## IMAGING / DICOM setup
-	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS" -PathType leaf) ) {
-		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS $OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.old }
-		Write-Host "Writing OH configuration file -> $IMAGING_SETTINGS..."
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
+		# direct creation of $DATABASE_SETTINGS - deprecated
+		#Set-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.url=jdbc:mariadb://"$DATABASE_SERVER":$DATABASE_PORT/$DATABASE_NAME"
+		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.username=$DATABASE_USER"
+		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.password=$DATABASE_PASSWORD"
 	}
-
+	
 	######## LOG4J_SETTINGS setup
 	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS" -PathType leaf) ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS $OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS.old }
@@ -1028,20 +1126,14 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS").replace("LOG_DEST","../$LOG_DIR/$OH_LOG_FILE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$LOG4J_SETTINGS"
 	}
 
-	######## DATABASE_SETTINGS setup 
-	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS" -PathType leaf) ) {
-		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS.old }
-		Write-Host "Writing OH database configuration file -> $DATABASE_SETTINGS..."
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS.dist").replace("DBSERVER","$DATABASE_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS").replace("DBPORT","$DATABASE_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS").replace("DBPASS","$DATABASE_PASSWORD") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS").replace("DBNAME","$DATABASE_NAME") | Set-Content "$OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS"
-
-		# direct creation of $DATABASE_SETTINGS - deprecated
-		#Set-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.url=jdbc:mysql://"$DATABASE_SERVER":$DATABASE_PORT/$DATABASE_NAME"
-		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.username=$DATABASE_USER"
-		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/$DATABASE_SETTINGS -Value "jdbc.password=$DATABASE_PASSWORD"
+	######## IMAGING / DICOM setup
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS" -PathType leaf) ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS $OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.old }
+		Write-Host "Writing OH configuration file -> $IMAGING_SETTINGS..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$IMAGING_SETTINGS"
 	}
 
 	######## OH_SETTINGS setup
@@ -1062,6 +1154,10 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set API_SERVER
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("APISERVER=off","APISERVER=$API_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		# set GUI INTERFACE
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("GUI_INTERFACE=on","GUI_INTERFACE=$GUI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		# set UI INTERFACE
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("UI_INTERFACE=off","UI_INTERFACE=$UI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 	}
 
 	######## OH - Other settings setup
@@ -1083,8 +1179,8 @@ function write_config_files {
 ###################################################################
 function clean_database {
 	# remove socket and pid file
-	Write-Host "Removing socket and pid file..."
-	$filetodel="$OH_PATH/$TMP_DIR/*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	Write-Host "Cleaning tmp directory..."
+	$filetodel="$OH_PATH/$TMP_DIR/mysql*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	# remove database files
 	Write-Host "Removing databases..."
 	# removing all databases under default data dir (prod / demo)
@@ -1133,10 +1229,10 @@ function start_gui {
 	# OH GUI launch
 	cd "$OH_PATH\$OH_DIR" # workaround for hard coded paths
 
-	#$JAVA_ARGS="-client -Dlog4j.configuration=`"`'$OH_PATH\$OH_DIR\rsc\$LOG4J_SETTINGS`'`" -Dsun.java2d.dpiaware=false -Djava.library.path=`"`'$NATIVE_LIB_PATH`'`" -cp `"`'$OH_CLASSPATH`'`" org.isf.menu.gui.Menu"
+	#$JAVA_ARGS="-client -Dlog4j.configuration=`"`'$OH_PATH\$OH_DIR\rsc\$LOG4J_SETTINGS`'`" -Dsun.java2d.dpiaware=false -Djava.library.path=`"`'$NATIVE_LIB_PATH`'`" -cp `"`'$OH_CLASSPATH`'`" org.isf.Application"
 
 	# log4j configuration is now read directly
-$JAVA_ARGS="-client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=`"$NATIVE_LIB_PATH`" -cp `"`'$OH_CLASSPATH`'`" org.isf.menu.gui.Menu"
+$JAVA_ARGS="-client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=`"$NATIVE_LIB_PATH`" -cp `"`'$OH_CLASSPATH`'`" org.isf.Application"
 
 	Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_ARGS -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 	
@@ -1170,24 +1266,47 @@ function start_api_server {
 	Write-Host "Starting API server..."
 	Write-Host "Please wait, it might take some time..."
 	Write-Host ""
-	Write-Host "Connect to http://localhost:8080 for dashboard"
+	Write-Host "Connect to $OH_UI_URL for OH web interface"
 	Write-Host ""
 
-        cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+# old jetty api server
+#
+#        cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+#	$JAVA_API_ARGS="-server -Xms64m -Xmx1024m -cp ./bin/$OH_API_JAR;./rsc;./static org.springframework.boot.loader.JarLauncher"
 
-	$JAVA_API_ARGS="-server -Xms64m -Xmx1024m -cp ./bin/$OH_API_JAR;./rsc;./static org.springframework.boot.loader.JarLauncher"
+#	Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_API_ARGS -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
 
-	Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_API_ARGS -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+	# set tomcat environment variable
+	$env:JRE_HOME="$OH_PATH/$JAVA_DIR"
+	$env:CATALINA_HOME="$OH_PATH/$TOMCAT_DIR"
 
-        # $JAVA_BIN -client -Xms64m -Xmx1024m -cp "./bin/$OH_API_JAR:./rsc::./static" org.springframework.boot.loader.JarLauncher
+	Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("run") -WorkingDirectory "$OH_PATH/$OH_DIR" -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
 
 #        if [ $? -ne 0 ]; then
-#                echo "An error occurred while starting Open Hospital API. Exiting."
+#                echo "An error occurred while starting Tomcat - Open Hospital API server. Exiting.
 #                shutdown_database;
 #                cd "$CURRENT_DIR"
 #                exit 4
 #        fi
+
         cd "$OH_PATH"
+}
+
+###################################################################
+function stop_api_server {
+	# check for API server
+	if ( !($OH_MODE -eq "CLIENT") -And ( $API_SERVER -eq "on" ) ) {
+		# shutdown tomcat
+                Write-Host "Shutting down Tomcat - Open Hospital API server..."
+		Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("stop") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_STOP_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_STOP_ERR_LOG_FILE" -Wait
+                Write-Host "Tomcat stopped!"
+	}
+}
+
+###################################################################
+function setup_ui {
+	Write-Host "Setup UI interface..."
+	Copy-Item -Force -Recurse "$OH_PATH/$OH_DIR/$OH_UI_PROD" -Destination "$OH_PATH/$TOMCAT_DIR/webapps/"
 }
 
 ###################################################################
@@ -1492,6 +1611,9 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			get_confirmation 1;
 			# overwrite configuration files if existing
 			$script:WRITE_CONFIG_FILES="on"; write_config_files;
+			if ( $API_SERVER -eq "on" ) {
+				write_api_config_file;
+			}
 			set_oh_mode;
 			check_language;
 			set_language;
@@ -1576,10 +1698,13 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host "Warning: do you want to kill all java and mysql/mariadb processes?"
 			$choice = Read-Host -Prompt "Press [y] to confirm: "
 			if (( "$choice" -eq "y" )) {
-				Write-Host "Killing mariadb/mysql..."	
-				Get-Process mysqld -ErrorAction SilentlyContinue | Stop-Process -PassThru
 				Write-Host "Killing java..."	
 				Get-Process java -ErrorAction SilentlyContinue | Stop-Process -PassThru
+				Write-Host "Killing mariadb/mysql..."	
+				Get-Process mysqld -ErrorAction SilentlyContinue | Stop-Process -PassThru
+				Write-Host "Removing mariadb/mysql socket and pid file..."
+				$filetodel="$OH_PATH/$TMP_DIR/mysql.sock"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+				$filetodel="$OH_PATH/$TMP_DIR/mysql.pid"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 			}
 			########## WORKAROUND to kill existing API server process ##################
 			########## TO BE REMOVED IN NEXT RELEASES
@@ -1631,6 +1756,8 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				$script:DB_CREATE_SQL=""
 				$script:EXPERT_MODE=""
 				$script:API_SERVER=""
+				$script:GUI_INTERFACE=""
+				$script:UI_INTERFACE=""
 				Write-Host ""
 				Write-Host "Warning: in order to reload database settings, exit script and relaunch."
 				Write-Host "Select [v] option from script menu to check current settings."
@@ -1640,6 +1767,20 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			}
 			Write-Host "Done!"
 			Read-Host "Press any key to continue";
+		}
+		###################################################
+		"U"	{ # toggle UI interface
+			switch -CaseSensitive( $script:UI_INTERFACE ) {
+			"on"	{ # 
+				$script:UI_INTERFACE="off"
+				$script:GUI_INTERFACE="on"
+				}
+			"off"	{ # 
+				$script:UI_INTERFACE="on"
+				$script:GUI_INTERFACE="off"
+				}
+			}
+			#Read-Host "Press any key to continue";
 		}
 		###################################################
 		"V" 	{ # Check for latest OH version
@@ -1775,22 +1916,23 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 	}
 }
 
-######## OH startup
+################### OH startup ###################
 
 # test if database connection is working
 test_database_connection;
 
 # check for API server
 if ( $API_SERVER -eq "on" ) {
+	tomcat_setup;
+	# generate config files if not existent
+	write_config_files;
+	# workaround to have UI files in correct place
+	setup_ui;
+	# start API server
 	start_api_server;
 }
 
-# check for UI interface
-if ( $UI_INTERFACE -eq "on" ) {
-	start_ui;
-}
-
-# if SERVER mode is selected, wait for CTRL-C input to exit
+# if SERVER mode is selected, start database server and wait for CTRL-C input to exit
 if ( $OH_MODE -eq "SERVER" ) {
 
 	Write-Host "Open Hospital - SERVER mode started"
@@ -1811,10 +1953,11 @@ if ( $OH_MODE -eq "SERVER" ) {
 		switch ("$choice") {
 			"Q" {
 				Write-Host "Exiting Open Hospital..."
+				stop_api_server;
 				shutdown_database;		
 				exit 0
 			}
-			default { "Invalid choice. " }
+		default { "Invalid choice. " }
 		}
 	}
 # CTRL-C version 
@@ -1836,11 +1979,39 @@ else {
 	# generate config files if not existent
 	write_config_files;
 
-	# start OH gui
-	start_gui;
+	# check for UI interface
+	if ( $UI_INTERFACE -eq "on" ) {
+		setup_ui;
+		start_ui;
+		Write-Host "OH UI started!"
+	
+		while ($true) {
+			$choice = Read-Host -Prompt "Press Q to exit"
+
+			switch ("$choice") {
+				"Q" {
+					Write-Host "Exiting Open Hospital..."
+					stop_api_server;
+					shutdown_database;		
+					exit 0
+				}
+			default { "Invalid choice. " }
+			}
+		}
+	}
+
+	# check for GUI interface
+	if ( $GUI_INTERFACE -eq "on" ) {
+		start_gui;
+	}
 
 	# Close and exit
 	Write-Host "Exiting Open Hospital..."
+
+	# shutdown Tomcat
+	stop_api_server;
+
+	# shutdown MySQL/MariaDB
 	shutdown_database;
 
 	# go back to starting directory

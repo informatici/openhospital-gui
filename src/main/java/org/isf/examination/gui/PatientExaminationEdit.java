@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -1468,7 +1468,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 			if (weight != 0 && height != 0) {
 				if (weight == ExaminationParameters.WEIGHT_MIN || weight == ExaminationParameters.WEIGHT_MAX || height == ExaminationParameters.HEIGHT_MIN || height == ExaminationParameters.HEIGHT_MAX) {
-					int response = MessageDialog.yesNo(null, MessageBundle.getMessage("angal.patient.examination.minmaxvalues.msg"));
+					int response = MessageDialog.yesNo(null, "angal.patient.examination.minmaxvalues.msg");
 					if (response == JOptionPane.YES_OPTION) {
 						savePatientExamaination();
 					}
@@ -1476,7 +1476,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					savePatientExamaination();
 				}
 			} else {
-				MessageDialog.error(null, MessageBundle.getMessage("angal.patient.examination.nonzero.msg"));
+				MessageDialog.error(null, "angal.patient.examination.nonzero.msg");
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -263,14 +263,11 @@ public class PatientInsert extends JDialog implements ActionListener {
 								String name = jFirstNameTextField.getText() + ' ' + jSecondNameTextField.getText();
 								try {
 									if (patientBrowserManager.isNamePresent(name)) {
-										switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-											case JOptionPane.OK_OPTION:
-												ok = true;
-												break;
-											case JOptionPane.NO_OPTION:
-												ok = false;
-												break;
-										}
+										ok = switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
+											case JOptionPane.OK_OPTION -> true;
+											case JOptionPane.NO_OPTION -> false;
+											default -> ok;
+										};
 									}
 								} catch (OHServiceException ex) {
 									OHServiceExceptionUtil.showMessages(ex);
@@ -320,14 +317,11 @@ public class PatientInsert extends JDialog implements ActionListener {
 					if (!patient.getName().equals(name)) {
 						try {
 							if (patientBrowserManager.isNamePresent(name)) {
-								switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-									case JOptionPane.OK_OPTION:
-										ok = true;
-										break;
-									case JOptionPane.NO_OPTION:
-										ok = false;
-										break;
-								}
+								ok = switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
+									case JOptionPane.OK_OPTION -> true;
+									case JOptionPane.NO_OPTION -> false;
+									default -> ok;
+								};
 							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);

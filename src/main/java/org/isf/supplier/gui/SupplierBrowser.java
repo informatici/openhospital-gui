@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -95,7 +95,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierListener {
 			MessageBundle.getMessage("angal.common.fax.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.email.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.note.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.supplier.deleted.col").toUpperCase()
+			MessageBundle.getMessage("angal.common.deleted.col").toUpperCase()
 	};
 	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30};
 	private int selectedrow;

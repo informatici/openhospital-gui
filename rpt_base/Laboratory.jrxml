@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<!-- Created with Jaspersoft Studio version 6.21.2.final using JasperReports Library version 6.21.2-8434a0bd7c3bbc37cbf916f2968d35e4b165821a  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Laboratory" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="Laboratory" whenResourceMissingType="Key" uuid="455b698a-3a6c-447d-9570-be963546da05">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -13,7 +13,7 @@
 	<parameter name="ospedaleIndirizzo" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="ospedaleCitta" class="java.lang.String" isForPrompting="false"/>
 	<field name="exam" class="java.lang.String"/>
-	<field name="date" class="java.lang.String"/>
+	<field name="date" class="java.time.LocalDateTime"/>
 	<field name="result" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -172,7 +172,7 @@
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{date}.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField" x="258" y="0" width="277" height="13" uuid="09da5319-3f04-42d5-8027-d1de436685a2"/>
