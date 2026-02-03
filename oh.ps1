@@ -2,7 +2,7 @@
 #!/usr/bin/pwsh
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -155,6 +155,9 @@ $script:LOG_FILE_ERR="startup_error.log"
 $script:OH_LOG_FILE="openhospital.log"
 $script:API_LOG_FILE="api.log"
 $script:API_ERR_LOG_FILE="api_error.log"
+$script:API_STOP_LOG_FILE="api_stop.log"
+$script:API_STOP_ERR_LOG_FILE="api_stop_error.log"
+$script:TMP_LOG_FILE="tmp.log"
 
 # SQL creation files
 #$script:DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
@@ -270,8 +273,8 @@ $script:JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
 
 # Tomcat 11
-$script:TOMCAT_VERSION="11.0.13"
-$script:TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
+$script:TOMCAT_VERSION="11.0.15"
+$script:TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 $script:TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION-windows-x64"
 $script:TOMCAT_DIR="apache-tomcat-$TOMCAT_VERSION"
 # windows -> https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.1/bin/apache-tomcat-11.0.1-windows-x64.zip
@@ -299,8 +302,10 @@ function script_menu {
 	Write-Host " ------------------------------------------------------------------------"
 	Write-Host "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
 	Write-Host " ------------------------------------------------------------------------"
-	Write-Host "| Expert mode: $EXPERT_MODE | API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
-	Write-Host " ------------------------------------------------------------------------"
+	if ( $EXPERT_MODE -eq "on" ) {
+		Write-Host "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		Write-Host " ------------------------------------------------------------------------"
+	}
 	Write-Host ""
 	Write-Host " Usage: $SCRIPT_NAME -[OPTION] "
 	Write-Host ""
@@ -991,29 +996,6 @@ function import_database {
 		Read-Host; exit 2
 	}
 
-	# EXPERIMENTAL ONLY
-	# workaround for hard coded password limit - execute extra sql script 
-	# not needed anymore - see OP-1078
-
-#	if ( ($API_SERVER -eq "On") ){
-#		Write-Host "Setting admin password..."
-#	cd "$OH_PATH/$SQL_EXTRA_DIR/"
-#
-#   $SQLCOMMAND=@"
-#   --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./reset_admin_password_strong.sql"
-#"@
-#		try {
-#			Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-#	 	}
-#		catch {
-#			Write-Host "Error! Exiting." -ForeGroundColor Red
-#			shutdown_database;
-#			cd "$CURRENT_DIR"
-#			Read-Host; exit 2
-#		}
-#	}
-
-	# end
 	cd "$OH_PATH"
 }
 
@@ -1298,10 +1280,7 @@ function start_api_server {
 	$env:JRE_HOME="$OH_PATH/$JAVA_DIR"
 	$env:CATALINA_HOME="$OH_PATH/$TOMCAT_DIR"
 
-	# tomcat startup
-	# -ArgumentList ("-D
-	# Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat run" -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
-	Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("run") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+	Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("run") -WorkingDirectory "$OH_PATH/$OH_DIR" -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
 
 #        if [ $? -ne 0 ]; then
 #                echo "An error occurred while starting Tomcat - Open Hospital API server. Exiting.
@@ -1309,6 +1288,7 @@ function start_api_server {
 #                cd "$CURRENT_DIR"
 #                exit 4
 #        fi
+
         cd "$OH_PATH"
 }
 
@@ -1318,9 +1298,8 @@ function stop_api_server {
 	if ( !($OH_MODE -eq "CLIENT") -And ( $API_SERVER -eq "on" ) ) {
 		# shutdown tomcat
                 Write-Host "Shutting down Tomcat - Open Hospital API server..."
-		Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("stop") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+		Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("stop") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_STOP_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_STOP_ERR_LOG_FILE" -Wait
                 Write-Host "Tomcat stopped!"
-
 	}
 }
 
@@ -1947,6 +1926,9 @@ if ( $API_SERVER -eq "on" ) {
 	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# workaround to have UI files in correct place
+	setup_ui;
+	# start API server
 	start_api_server;
 }
 

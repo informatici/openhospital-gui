@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -211,8 +211,8 @@ JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
 
 # Tomcat 11
-TOMCAT_VERSION="11.0.13"
-TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
+TOMCAT_VERSION="11.0.15"
+TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION"
 TOMCAT_DIR=$TOMCAT_DISTRO
 
@@ -230,8 +230,10 @@ function script_menu {
 	echo " ------------------------------------------------------------------------"
 	echo "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
 	echo " ------------------------------------------------------------------------"
-	echo "| Expert mode: $EXPERT_MODE | API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
-	echo " ------------------------------------------------------------------------"
+	if [ "$EXPERT_MODE" == "on" ]; then
+		echo "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		echo " ------------------------------------------------------------------------"
+	fi
 	echo ""
 	echo " Usage: $SCRIPT_NAME -[OPTION] "
 	echo ""
@@ -1148,7 +1150,7 @@ function stop_api_server {
 	if [ "$OH_MODE" != "CLIENT" ] && [ "$API_SERVER" = "on" ]; then
 		echo "Shutting down Tomcat - Open Hospital API server..."
 		# shutdown tomcat
-		$OH_PATH/$TOMCAT_DIR/bin/catalina.sh stop $OH_PATH/$LOG_DIR/$API_LOG_FILE 2>&1
+		$OH_PATH/$TOMCAT_DIR/bin/catalina.sh stop >> $OH_PATH/$LOG_DIR/$API_LOG_FILE 2>&1
 		echo "Tomcat stopped!"
 #	else
 #		exit 1
@@ -1816,6 +1818,9 @@ if [ "$API_SERVER" = "on" ]; then
 	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# workaround to have UI files in correct place
+	setup_ui;
+	# start API server
 	start_api_server;
 fi
 
