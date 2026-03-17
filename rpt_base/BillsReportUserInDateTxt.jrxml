@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BillsReportUserInDateTxt" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="BillsReportUserInDateTxt" whenResourceMissingType="Key" uuid="12083df1-eddc-4182-be8c-fda1fc1d5c6b">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -31,7 +30,7 @@ AND BLP_USR_ID_A like $P{user}]]>
 	</background>
 	<title>
 		<band height="159" splitType="Stretch">
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-18" x="0" y="0" width="535" height="22" uuid="cfed68d4-bdeb-4b6f-bad0-8bce859c59e9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -44,7 +43,7 @@ AND BLP_USR_ID_A like $P{user}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-19" x="0" y="22" width="535" height="17" uuid="c0c11bb2-6837-4c59-b77b-6cbb671c4822"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -57,7 +56,7 @@ AND BLP_USR_ID_A like $P{user}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-20" x="0" y="39" width="535" height="17" uuid="1bf54d3f-9870-42fd-bef8-451280896b20"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -70,7 +69,7 @@ AND BLP_USR_ID_A like $P{user}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-21" x="0" y="56" width="535" height="17" uuid="156f0324-76be-47bc-b28d-db08065f592e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -83,7 +82,7 @@ AND BLP_USR_ID_A like $P{user}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-23" x="84" y="96" width="252" height="21" uuid="071f503b-1b96-4047-9dd4-61ec2981816d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -135,7 +134,7 @@ AND BLP_USR_ID_A like $P{user}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{User}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="HH:mm:ss" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="HH:mm:ss" isBlankWhenNull="false">
 				<reportElement key="textField-30" x="84" y="117" width="252" height="21" uuid="c90e05ce-07ca-4e25-9cfd-97a49af645ac"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

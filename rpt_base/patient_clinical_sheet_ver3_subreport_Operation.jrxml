@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_clinical_sheet_ver3_subreport_Operation" pageWidth="455" pageHeight="102" orientation="Landscape" whenNoDataType="NoPages" columnWidth="455" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="patient_clinical_sheet_ver3_subreport_Operation" whenResourceMissingType="Key" uuid="d6f1bf8b-21af-4912-a4bc-00fb5778aa83">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -107,7 +106,7 @@ WHERE ($P{type} like 'Opd%' AND OPER_OPD_ID = $P{id})
 				</textElement>
 				<textFieldExpression><![CDATA[$R{OperationDate}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField" x="127" y="64" width="328" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="e5fd1021-d934-4a8a-a73e-9e18b2150568"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WardPharmacyOutcomes" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="WardPharmacyOutcomes" whenResourceMissingType="Key" uuid="ce0e3de5-8e25-4ad5-bb74-0019a2ccae19">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -34,7 +33,7 @@
 		<groupExpression><![CDATA[$F{date}]]></groupExpression>
 		<groupHeader>
 			<band height="13" splitType="Stretch">
-				<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 					<reportElement key="textField-12" x="3" y="0" width="70" height="13" uuid="a431dbea-5790-4715-bc96-4fad80ed269b"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -60,7 +59,7 @@
 		</groupHeader>
 		<groupFooter>
 			<band height="13" splitType="Stretch">
-				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 					<reportElement key="textField" x="149" y="0" width="132" height="13" uuid="ea6bedda-b145-410a-b7f0-9fe94b86c7da"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -73,7 +72,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$F{medical}.toString()]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 					<reportElement key="textField-10" x="483" y="0" width="52" height="13" uuid="fd8ab686-0434-4465-9ae3-c6bc510fb9d9">
 						<printWhenExpression><![CDATA[new Boolean($V{MEDICAL_TOTAL}.compareTo( new Double(0) ) != 0)]]></printWhenExpression>
 					</reportElement>
@@ -88,7 +87,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$V{MEDICAL_TOTAL}]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 					<reportElement key="textField-24" x="97" y="0" width="52" height="13" uuid="cf1a7210-c684-4d32-bd2c-146300e7275c"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -116,7 +115,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$V{MEDICAL_RECTIFY}]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 					<reportElement key="textField-26" x="276" y="0" width="132" height="13" uuid="4e760c6a-a525-4ffc-a7f6-6e6f0a7cb813"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

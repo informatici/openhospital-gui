@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillPaymentsPDF" pageWidth="158" pageHeight="288" whenNoDataType="NoPages" columnWidth="148" leftMargin="5" rightMargin="5" topMargin="0" bottomMargin="0" resourceBundle="PatientBillPaymentsPDF" whenResourceMissingType="Key" isIgnorePagination="true" uuid="666b73d4-0375-4b8d-9d33-1e7aefdd6812">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -50,7 +49,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["BILL N. " + $P{billID}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-16" x="31" y="65" width="117" height="9" uuid="af326dc0-b47d-43cf-aaf3-1beab64b7005"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -115,7 +114,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Date}+":"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-23" x="31" y="73" width="117" height="9" uuid="4c9f1c02-7507-4840-9398-347e8d3c9e99"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LabelForSamples" pageWidth="141" pageHeight="56" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="141" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="LabelForSamples" whenResourceMissingType="Key" uuid="7e294126-6fb6-411a-b50d-08ace3197902">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -74,7 +73,7 @@ WHERE PAT_ID Like $P{patientID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{PatientId}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement key="textField-3" x="24" y="17" width="23" height="9" uuid="2b0abb40-99ae-4ea3-8b50-6c8f8eef923f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -161,7 +160,7 @@ WHERE PAT_ID Like $P{patientID}]]>
 			<line>
 				<reportElement key="line-5" x="104" y="48" width="26" height="1" uuid="9786d52d-8613-4a34-a712-4bfe6c2d3b44"/>
 			</line>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement key="textField-4" x="66" y="17" width="23" height="9" uuid="a0269c1e-cb94-44d6-a3c0-b83d8863c444"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
