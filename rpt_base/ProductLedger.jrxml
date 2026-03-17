@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProductLedger" pageWidth="842" pageHeight="595" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="ProductLedger" whenResourceMissingType="Key" uuid="de31a0bf-4eb3-43f4-8b32-8ee425584a64">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -289,7 +288,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{DateFrom}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-5" x="528" y="105" width="76" height="20" uuid="b0be9e0f-f855-45f1-8800-8bc882dab16a"/>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -317,7 +316,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{DateTo}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-6" x="604" y="105" width="76" height="20" uuid="01c0d1eb-604a-4d6a-b3a2-aecac6a1065f"/>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -345,7 +344,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Medical}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-7" x="176" y="105" width="176" height="20" uuid="1125acd9-358a-469b-b096-4fc04c34f90c"/>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -373,7 +372,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{MedicalType}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-8" x="352" y="105" width="176" height="20" uuid="655e7737-9b09-4f8d-8069-7ab5f7a14103"/>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -401,7 +400,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Store}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-9" x="0" y="105" width="104" height="20" uuid="4cf79068-f850-4a77-9705-75b6e7b02c6e"/>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -429,7 +428,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{UoM}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-11" x="680" y="105" width="52" height="20" uuid="6175f4ee-b890-4d43-b3c9-21531cd128f5"/>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -457,7 +456,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Prod.Code}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-12" x="104" y="105" width="72" height="20" uuid="a8a2537e-b98b-4b86-ab68-e5bd6b59cef0"/>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -485,7 +484,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Curr.}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-17" x="732" y="105" width="50" height="20" uuid="e1d10fb3-0b1c-4f72-a887-c575baef8967"/>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -758,7 +757,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 	$F{ORDERING_FIELD}.equals("2") ? $V{OUT_QTY}.doubleValue() == 0 ? null : $V{OUT_QTY} :
 	$V{TOT_OUT}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,###.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,###.00" isBlankWhenNull="true">
 				<reportElement key="textField" style="Opening" x="711" y="0" width="71" height="16" forecolor="#000000" uuid="29e3fe21-71c8-4086-831d-374bf7033a43"/>
 				<box leftPadding="5" rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -786,7 +785,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 	$F{ORDERING_FIELD}.equals("2") ? $V{IN_QTY}.doubleValue() == 0 ? null : $V{IN_QTY} :
 	$V{TOT_IN}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,###" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,###" isBlankWhenNull="true">
 				<reportElement key="textField-13" style="Opening" x="644" y="0" width="67" height="16" forecolor="#000000" uuid="1cf63e54-d7f0-422e-b5bd-f4a81fb27837"/>
 				<box leftPadding="5" rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -799,7 +798,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ORDERING_FIELD}.equals( "3" ) ? $V{IN_QTY} : $V{BALANCE}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-14" style="Opening" x="339" y="0" width="51" height="16" forecolor="#000000" uuid="8b8af85c-32e2-433a-b1dc-7b32573f598d"/>
 				<box leftPadding="5" rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

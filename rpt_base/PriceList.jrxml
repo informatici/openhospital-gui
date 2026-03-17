@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PriceList" columnCount="2" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="260" columnSpacing="14" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PriceList" whenResourceMissingType="Key" uuid="6b1310c2-54b7-454e-90a6-65726cadd27e">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -68,7 +67,7 @@
 				</box>
 				<imageExpression><![CDATA[$P{PATH_LOGO} + "logo_report.png"]]></imageExpression>
 			</image>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-4" x="0" y="49" width="535" height="22" uuid="7b49f1fa-6ea9-4403-bc27-6d8fe8bb8621"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -81,7 +80,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleNome}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-5" x="0" y="71" width="535" height="17" uuid="530e5c8b-7fb7-4349-be8d-0c5a89067ef4"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -94,7 +93,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleIndirizzo} + " - " + $P{ospedaleCitta}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-6" x="0" y="88" width="535" height="17" uuid="51cf5a07-e70f-41cd-bc53-63a3b44480c1"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -107,7 +106,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleMail}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-7" x="0" y="105" width="535" height="17" uuid="1005a0e2-f795-4838-853f-541e27cb0b6d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -124,7 +123,7 @@
 	</title>
 	<pageHeader>
 		<band height="50" splitType="Stretch">
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-15" x="0" y="0" width="535" height="21" uuid="0d617fd3-f095-4f6b-9d1d-83807ad8fbe0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="16"/>

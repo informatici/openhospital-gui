@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillGroupedTxt" pageWidth="595" pageHeight="400" orientation="Landscape" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="PatientBillGroupedTxt" whenResourceMissingType="Key" isIgnorePagination="true" uuid="701efe07-67d6-4c1c-9f43-5d16399c353e">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -68,7 +67,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-19" x="0" y="18" width="555" height="18" uuid="7a3d626a-7973-4f48-8357-24a10cc88e28"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -81,7 +80,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-20" x="0" y="36" width="555" height="18" uuid="70f3c78d-5b24-4480-97ad-b71e3f178b64"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -94,7 +93,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-21" x="0" y="54" width="555" height="18" uuid="3890f455-9d0c-4c08-86c1-06496ca9c084"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -120,7 +119,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 				</textElement>
 				<textFieldExpression><![CDATA[$R{BillN) + ": " + $P{billID}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-26" x="-1" y="131" width="555" height="18" uuid="ca1a1318-409b-4cc5-bd3e-5baec8be9f39"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -133,7 +132,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Date} + ": " + $F{BLL_UPDATE}.toLocaleString()]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-27" x="-1" y="95" width="555" height="18" uuid="953d0f73-9060-4869-a63a-3adc03188023"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -146,7 +145,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Pat.N} +": " + $F{BLL_ID_PAT} + " - " + $F{BLL_PAT_NAME}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-28" x="-1" y="113" width="555" height="18" uuid="9ce237c5-905c-4a22-a8c9-fe9ade6cd432"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -177,7 +176,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 	</columnHeader>
 	<detail>
 		<band height="19" splitType="Stretch">
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-8" isPrintRepeatedValues="false" x="0" y="0" width="207" height="18" uuid="c96d62f3-f038-46e2-88cd-f4953b803a7d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -190,7 +189,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLI_ITEM_DESC}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="###0" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="false">
 				<reportElement key="textField-9" x="337" y="0" width="52" height="18" isRemoveLineWhenBlank="true" uuid="7aa82d75-8521-4a18-a47a-d112c286fb78"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -216,7 +215,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_ITEM}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="###0" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="false">
 				<reportElement key="textField-23" x="207" y="0" width="88" height="18" isRemoveLineWhenBlank="true" uuid="7d198514-1acb-457c-a72b-bf265e097efb"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -229,7 +228,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM OH_BILLPAYMENTS WHERE BLP_ID_BI
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLI_ITEM_AMOUNT}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="###0" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="false">
 				<reportElement key="textField-31" x="295" y="0" width="42" height="18" isRemoveLineWhenBlank="true" uuid="fa3b4996-a7b6-48cd-a230-f4c707727205"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

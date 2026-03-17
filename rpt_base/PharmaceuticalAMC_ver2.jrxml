@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalAMC_ver2" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoPages" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="a8347532-25fa-47d3-9f7f-5e58aa404d36">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -174,7 +173,7 @@ GROUP BY MDSR_CODE]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{SOHatDate}+":"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-39" x="170" y="40" width="80" height="20" uuid="3a4ccfcf-f3ad-4ed8-aeb7-1fcd5d89ee80"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -200,7 +199,7 @@ GROUP BY MDSR_CODE]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{ReferencePeriod}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-40" x="170" y="60" width="80" height="20" uuid="c744b3c3-db6a-413e-a7a0-2eb2271aad17"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -213,7 +212,7 @@ GROUP BY MDSR_CODE]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{START_DATE}.toLocalDate()]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-41" x="250" y="60" width="80" height="20" uuid="035d3411-1236-41cc-a8a1-19525171582f"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -324,7 +323,7 @@ GROUP BY MDSR_CODE]]>
 				</textElement>
 				<text><![CDATA[AVG 6]]></text>
 			</staticText>
-			<textField textAdjust="ScaleFont" pattern="MMM-yy" isBlankWhenNull="false">
+			<textField pattern="MMM-yy" isBlankWhenNull="false">
 				<reportElement key="textField-42" x="349" y="0" width="63" height="17" forecolor="#030303" uuid="6d24b72f-2506-48b9-a959-49f098181132"/>
 				<box rightPadding="10">
 					<pen lineWidth="0.0" lineStyle="Solid"/>
