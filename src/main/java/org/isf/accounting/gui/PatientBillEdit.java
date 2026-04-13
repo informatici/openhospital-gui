@@ -29,6 +29,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
@@ -713,15 +715,51 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				jComboBoxPriceList.setSelectedItem(list);
 				setCurrencyCodeFromList(list);
 			}
-			jComboBoxPriceList.addActionListener(actionEvent -> {
+			// anonymous class instead of lambda needed to toggle the listener and avoid auto-triggering
+			jComboBoxPriceList.addActionListener(new ActionListener() {
 
-				PriceList selectedPricelist = (PriceList) jComboBoxPriceList.getSelectedItem();
-				thisBill.setPriceList(selectedPricelist);
-				thisBill.setIsList(true);
-				setCurrencyCodeFromList(selectedPricelist);
-				setPriceListArray();
-				checkBill();
-				updateGUI();
+				private PriceList previousList = (PriceList) jComboBoxPriceList.getSelectedItem();
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					PriceList selectedPricelist = (PriceList) jComboBoxPriceList.getSelectedItem();
+					if (selectedPricelist == null || selectedPricelist.equals(previousList)) {
+						return;
+					}
+
+					// Temporarily adopt the new list to detect missing items.
+					thisBill.setPriceList(selectedPricelist);
+					setPriceListArray();
+					List<String> missingItems = new ArrayList<>();
+					for (BillItems item : billItems) {
+						if (item.isPrice() && getPrice(item.getPriceID()) == null) {
+							missingItems.add(item.getItemDescription());
+						}
+					}
+
+					if (!missingItems.isEmpty()) {
+						// Switching price list is blocked when one or more bill items
+						// are absent from the target list.  Revert the combo first,
+						// then show a blocking error so the administrator knows which
+						// items must be added to the target price list before switching.
+						PriceList revert = previousList;
+						jComboBoxPriceList.removeActionListener(this);
+						jComboBoxPriceList.setSelectedItem(revert);
+						jComboBoxPriceList.addActionListener(this);
+						thisBill.setPriceList(revert);
+						setPriceListArray();
+						MessageDialog.error(PatientBillEdit.this,
+								"angal.newbill.someitemsnotavailableintheselectedpricelist.fmt.msg",
+								String.join(", ", missingItems));
+						return;
+					}
+
+					previousList = selectedPricelist;
+					thisBill.setIsList(true);
+					setCurrencyCodeFromList(selectedPricelist);
+					checkBill();
+					updateGUI();
+				}
 			});
 		}
 		return jComboBoxPriceList;
@@ -898,7 +936,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.newbill.changepatient.btn.key"));
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.changethepatientassociatedwiththisbill.tooltip"));
 			if (jButtonTrashPatient != null) {
-				jButtonTrashPatient.setEnabled(true);	
+				jButtonTrashPatient.setEnabled(true);
 			}
 		}
 	}
@@ -1193,6 +1231,14 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				 */
 				loadDataset();
 				checkBill();
+
+				if (billItems.isEmpty()) {
+					JOptionPane.showMessageDialog(PatientBillEdit.this,
+									MessageBundle.getMessage("angal.newbill.abillmustcontainatleastoneitem.msg"),
+									MessageBundle.getMessage("angal.newbill.title"),
+									JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 
 				if (thisBill.getPriceList() == null) { // FIXME: workaround ? to be removed ?
 					thisBill.setPriceList(lstArray.get(0));
@@ -1940,14 +1986,15 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 		@Override
 		public Object getValueAt(int r, int c) {
+			BillPayments p = payItems.get(r);
 			if (c == -1) {
-				return payItems.get(r);
+				return p;
 			}
 			if (c == 0) {
-				return formatDateTime(payItems.get(r).getDate());
+				return formatDateTime(p.getDate());
 			}
 			if (c == 1) {
-				return payItems.get(r).getAmount();
+				return p.getAmount();
 			}
 			return null;
 		}
