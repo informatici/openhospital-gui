@@ -44,41 +44,43 @@ import org.isf.utils.layout.SpringUtilities;
 public class InsertMalnutrition extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private EventListenerList malnutritionListeners = new EventListenerList();
 
-    public interface MalnutritionListener extends EventListener {
-        void malnutritionUpdated(Malnutrition maln);
-        void malnutritionInserted();
-    }
+	public interface MalnutritionListener extends EventListener {
+		void malnutritionUpdated(Malnutrition maln);
 
-    public void addMalnutritionListener(MalnutritionListener l) {
-    	malnutritionListeners.add(MalnutritionListener.class, l);
-    }
+		void malnutritionInserted();
+	}
 
-    public void removeMalnutritionListener(MalnutritionListener listener) {
-    	malnutritionListeners.remove(MalnutritionListener.class, listener);
-    }
+	public void addMalnutritionListener(MalnutritionListener l) {
+		malnutritionListeners.add(MalnutritionListener.class, l);
+	}
 
-    private void fireMalnutritionInserted() {
+	public void removeMalnutritionListener(MalnutritionListener listener) {
+		malnutritionListeners.remove(MalnutritionListener.class, listener);
+	}
 
-        EventListener[] listeners = malnutritionListeners.getListeners(MalnutritionListener.class);
-	    for (EventListener listener : listeners) {
-		    ((MalnutritionListener) listener).malnutritionInserted();
-	    }
-    }
-    private void fireMalnutritionUpdated(Malnutrition maln) {
+	private void fireMalnutritionInserted() {
 
-        EventListener[] listeners = malnutritionListeners.getListeners(MalnutritionListener.class);
-	    for (EventListener listener : listeners) {
-		    ((MalnutritionListener) listener).malnutritionUpdated(maln);
-	    }
-    }
+		EventListener[] listeners = malnutritionListeners.getListeners(MalnutritionListener.class);
+		for (EventListener listener : listeners) {
+			((MalnutritionListener) listener).malnutritionInserted();
+		}
+	}
+
+	private void fireMalnutritionUpdated(Malnutrition maln) {
+
+		EventListener[] listeners = malnutritionListeners.getListeners(MalnutritionListener.class);
+		for (EventListener listener : listeners) {
+			((MalnutritionListener) listener).malnutritionUpdated(maln);
+		}
+	}
 
 	private GoodDateChooser confDate;
 
 	private GoodDateChooser suppDate;
-	
+
 	private JTextField weightField;
 
 	private JTextField heightField;
@@ -86,8 +88,9 @@ public class InsertMalnutrition extends JDialog {
 	private Malnutrition maln;
 
 	private boolean inserting;
-	
-	private MalnutritionManager malnutritionManager = Context.getApplicationContext().getBean(MalnutritionManager.class);
+
+	private MalnutritionManager malnutritionManager = Context.getApplicationContext()
+			.getBean(MalnutritionManager.class);
 
 	InsertMalnutrition(JDialog owner, Malnutrition malnutrition, boolean insert) {
 		super(owner, true);
@@ -102,7 +105,7 @@ public class InsertMalnutrition extends JDialog {
 		pack();
 		setLocationRelativeTo(null);
 	}
-	
+
 	private JPanel getJContentPane() {
 		JPanel jContentPane = new JPanel();
 		jContentPane.setLayout(new BoxLayout(jContentPane, BoxLayout.Y_AXIS));
@@ -173,29 +176,32 @@ public class InsertMalnutrition extends JDialog {
 			maln.setDateSupp(suppDate.getDateStartOfDay());
 			maln.setDateConf(confDate.getDateStartOfDay());
 
-			if (inserting) {	//inserting
-				Malnutrition insertedMalnutrition = null;
-				try {
-					insertedMalnutrition = malnutritionManager.newMalnutrition(maln);
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				if (insertedMalnutrition != null) {
-					fireMalnutritionInserted();
-					dispose();
+			boolean result = false;
+			Malnutrition savedMalnutrition = null;
+
+			try {
+				if (inserting) {
+					savedMalnutrition = malnutritionManager.newMalnutrition(maln);
+				} else {
+					savedMalnutrition = malnutritionManager.updateMalnutrition(maln);
 				}
 
-			} else {	//updating
-				Malnutrition updatedMaln = null;
-				try {
-					updatedMaln = malnutritionManager.updateMalnutrition(maln);
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
+				if (savedMalnutrition != null) {
+					result = true;
+					if (inserting) {
+						fireMalnutritionInserted();
+					} else {
+						fireMalnutritionUpdated(savedMalnutrition);
+					}
 				}
-				if (updatedMaln != null) {
-					fireMalnutritionUpdated(updatedMaln);
-					dispose();
-				}
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
+
+			if (result) {
+				dispose();
+			} else {
+				org.isf.utils.jobjects.MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 			}
 		});
 		return okButton;

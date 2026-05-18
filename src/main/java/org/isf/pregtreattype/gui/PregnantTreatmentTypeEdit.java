@@ -198,38 +198,29 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 
+				pregnantTreatmentType.setDescription(descriptionTextField.getText());
+				pregnantTreatmentType.setCode(codeTextField.getText());
+
 				try {
-					if (descriptionTextField.getText().equals(lastdescription)) {
-						dispose();
-					}
-					pregnantTreatmentType.setDescription(descriptionTextField.getText());
-					pregnantTreatmentType.setCode(codeTextField.getText());
-					boolean result = false;
-					if (insert) {	// inserting
-						
-						PregnantTreatmentType insertedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
-						if (insertedPregnantTreatmentType != null) {
-							firePregnantTreatmentInserted();
-							result = true;
-						}
-					} else {	// updating
-						if (descriptionTextField.getText().equals(lastdescription)) {
-							dispose();
-						} else {
-							PregnantTreatmentType updatedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.updatePregnantTreatmentType(pregnantTreatmentType);
-							if (updatedPregnantTreatmentType != null) {
-								firePregnantTreatmentUpdated();
-								result = true;
-							}
-						}
-					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					PregnantTreatmentType savedPregnantTreatmentType;
+					if (insert) {
+						savedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
 					} else {
-						dispose();
+						savedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.updatePregnantTreatmentType(pregnantTreatmentType);
 					}
-				} catch (OHServiceException ex) {
-					OHServiceExceptionUtil.showMessages(ex);
+
+					if (savedPregnantTreatmentType != null) {
+						if (insert) {
+							firePregnantTreatmentInserted();
+						} else {
+							firePregnantTreatmentUpdated();
+						}
+						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			});
 		}

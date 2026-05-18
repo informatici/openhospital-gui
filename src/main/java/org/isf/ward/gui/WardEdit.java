@@ -440,40 +440,27 @@ public class WardEdit extends JDialog {
 				ward.setFemale(isFemaleCheck.isSelected());
 				ward.setVisitDuration(duration);
 
-				boolean result = false;
-				Ward savedWard;
-				if (insert) { // inserting
-					try {
+				try {
+					Ward savedWard;
+					if (insert) {
 						savedWard = wardBrowserManager.newWard(ward);
-						if (savedWard != null) {
-							ward.setLock(savedWard.getLock());
-							result = true;
-						}
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
-					}
-					if (result) {
-						fireWardInserted();
-					}
-				} else {
-					try { // updating
+					} else {
 						savedWard = wardBrowserManager.updateWard(ward);
-						if (savedWard != null) {
-							ward.setLock(savedWard.getLock());
-							result = true;
+					}
+
+					if (savedWard != null) {
+						ward.setLock(savedWard.getLock());
+						if (insert) {
+							fireWardInserted();
+						} else {
+							fireWardUpdated();
 						}
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
+						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
-					if (result) {
-						fireWardUpdated();
-					}
-				}
-				if (!result) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-				}
-				else {
-					dispose();
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			});
 		}

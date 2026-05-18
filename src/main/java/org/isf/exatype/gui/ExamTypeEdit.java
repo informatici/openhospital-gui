@@ -51,20 +51,21 @@ public class ExamTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-    private EventListenerList examTypeListeners = new EventListenerList();
+	private EventListenerList examTypeListeners = new EventListenerList();
 
-    public interface ExamTypeListener extends EventListener {
-        void examTypeUpdated(AWTEvent e);
-        void examTypeInserted(AWTEvent e);
-    }
+	public interface ExamTypeListener extends EventListener {
+		void examTypeUpdated(AWTEvent e);
 
-    public void addExamTypeListener(ExamTypeListener l) {
-        examTypeListeners.add(ExamTypeListener.class, l);
-    }
+		void examTypeInserted(AWTEvent e);
+	}
 
-    public void removeExamTypeListener(ExamTypeListener listener) {
-        examTypeListeners.remove(ExamTypeListener.class, listener);
-    }
+	public void addExamTypeListener(ExamTypeListener l) {
+		examTypeListeners.add(ExamTypeListener.class, l);
+	}
+
+	public void removeExamTypeListener(ExamTypeListener listener) {
+		examTypeListeners.remove(ExamTypeListener.class, listener);
+	}
 
 	private void fireExamTypeInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -90,7 +91,8 @@ public class ExamTypeEdit extends JDialog {
 		}
 	}
 
-	private ExamTypeBrowserManager examTypeBrowserManager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
+	private ExamTypeBrowserManager examTypeBrowserManager = Context.getApplicationContext()
+			.getBean(ExamTypeBrowserManager.class);
 
 	private JPanel jContentPane;
 	private JPanel dataPanel;
@@ -106,12 +108,12 @@ public class ExamTypeEdit extends JDialog {
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
-     * because we need to update them
+	 * because we need to update them
 	 */
 	public ExamTypeEdit(JFrame owner, ExamType old, boolean inserting) {
 		super(owner, true);
 		insert = inserting;
-		examType = old;   //examType will be used for every operation
+		examType = old; // examType will be used for every operation
 		lastdescription = examType.getDescription();
 		initialize();
 	}
@@ -127,7 +129,7 @@ public class ExamTypeEdit extends JDialog {
 			this.setTitle(MessageBundle.getMessage("angal.exatype.editexamtype.title"));
 		}
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		
+
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
@@ -148,9 +150,9 @@ public class ExamTypeEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes dataPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes dataPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
@@ -161,9 +163,9 @@ public class ExamTypeEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes buttonPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes buttonPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
@@ -175,9 +177,9 @@ public class ExamTypeEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes cancelButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes cancelButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
@@ -189,9 +191,9 @@ public class ExamTypeEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes okButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes okButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
@@ -202,21 +204,28 @@ public class ExamTypeEdit extends JDialog {
 					examType.setDescription(descriptionTextField.getText());
 					examType.setCode(codeTextField.getText());
 
-					if (insert) {     // inserting
-						examTypeBrowserManager.newExamType(examType);
-						fireExamTypeInserted();
-						dispose();
-					} else {            // updating
-						if (descriptionTextField.getText().equals(lastdescription)) {
-							dispose();
+					boolean result = false;
+					// Standardized pattern: use a single service call or unified logic
+					// Both insert and update use newExamType in this old code, but we structure it
+					// cleanly
+					ExamType savedExamType = examTypeBrowserManager.newExamType(examType);
+
+					if (savedExamType != null) {
+						result = true;
+						if (insert) {
+							fireExamTypeInserted();
 						} else {
-							examTypeBrowserManager.newExamType(examType);
 							fireExamTypeUpdated();
-							dispose();
 						}
 					}
+
+					if (result) {
+						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
 				} catch (OHServiceException ohServiceException) {
-					MessageDialog.showExceptions(ohServiceException);
+					org.isf.utils.exception.gui.OHServiceExceptionUtil.showMessages(ohServiceException);
 				}
 			});
 		}
@@ -224,25 +233,25 @@ public class ExamTypeEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes descriptionTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes descriptionTextField
+	 * 
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getDescriptionTextField() {
 		if (descriptionTextField == null) {
 			descriptionTextField = new JTextField(20);
 			if (!insert) {
 				descriptionTextField.setText(examType.getDescription());
-				lastdescription=examType.getDescription();
-			} 
+				lastdescription = examType.getDescription();
+			}
 		}
 		return descriptionTextField;
 	}
-	
+
 	/**
-	 * This method initializes codeTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes codeTextField
+	 * 
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
@@ -256,9 +265,9 @@ public class ExamTypeEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes jDataPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jDataPanel
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
