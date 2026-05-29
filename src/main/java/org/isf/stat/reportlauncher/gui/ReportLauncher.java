@@ -239,7 +239,11 @@ public class ReportLauncher extends ModalJFrame {
 
 				for (File f : jasperFilesInFolder) {
 					try {
-						Path localizedPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", "_" + language + ".properties"));
+						Path parent = f.toPath().getParent();
+						if (parent == null) {
+							continue;
+						}
+						Path localizedPropsPath = parent.resolve(language).resolve(f.getName().replace(".jasper", ".properties"));
 
 						Properties props = MessageBundle.loadPropertiesFileUtf8(localizedPropsPath, LOGGER);
 
