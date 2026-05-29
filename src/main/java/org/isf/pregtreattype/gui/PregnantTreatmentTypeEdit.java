@@ -206,9 +206,10 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 					if (insert) {
 						savedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
 					} else {
-						savedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.updatePregnantTreatmentType(pregnantTreatmentType);
-					}
-
+							if (descriptionTextField.getText().equals(lastdescription)) {
+								dispose();
+								return;
+							}
 					if (savedPregnantTreatmentType != null) {
 						if (insert) {
 							firePregnantTreatmentInserted();

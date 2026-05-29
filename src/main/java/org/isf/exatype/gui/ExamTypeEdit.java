@@ -205,16 +205,22 @@ public class ExamTypeEdit extends JDialog {
 					examType.setCode(codeTextField.getText());
 
 					boolean result = false;
-					// Standardized pattern: use a single service call or unified logic
-					// Both insert and update use newExamType in this old code, but we structure it
-					// cleanly
-					ExamType savedExamType = examTypeBrowserManager.newExamType(examType);
+					ExamType savedExamType = null;
 
-					if (savedExamType != null) {
-						result = true;
-						if (insert) {
+					if (insert) {
+						savedExamType = examTypeBrowserManager.newExamType(examType);
+						if (savedExamType != null) {
+							result = true;
 							fireExamTypeInserted();
-						} else {
+						}
+					} else {
+						if (descriptionTextField.getText().equals(lastdescription)) {
+							dispose();
+							return;
+						}
+						savedExamType = examTypeBrowserManager.newExamType(examType);
+						if (savedExamType != null) {
+							result = true;
 							fireExamTypeUpdated();
 						}
 					}
