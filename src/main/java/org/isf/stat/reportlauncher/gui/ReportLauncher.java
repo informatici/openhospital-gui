@@ -236,7 +236,7 @@ public class ReportLauncher extends ModalJFrame {
 
 				reportNameFileMap = new HashMap<>();
 				List<String> jRptComboBoxList = new LinkedList<>();
-				String language = new Locale(GeneralData.LANGUAGE).getLanguage(); // will be deprecated in Java 19+, replace with Locale.forLanguageTag()
+				String language = GeneralData.LANGUAGE;
 
 				for (File f : jasperFilesInFolder) {
 					try {
