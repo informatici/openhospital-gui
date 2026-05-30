@@ -202,20 +202,30 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 				pregnantTreatmentType.setCode(codeTextField.getText());
 
 				try {
-					PregnantTreatmentType savedPregnantTreatmentType;
+					boolean result = false;
+					PregnantTreatmentType savedPregnantTreatmentType = null;
+
 					if (insert) {
 						savedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
-					} else {
-							if (descriptionTextField.getText().equals(lastdescription)) {
-								dispose();
-								return;
-							}
-					if (savedPregnantTreatmentType != null) {
-						if (insert) {
+						if (savedPregnantTreatmentType != null) {
+							result = true;
 							firePregnantTreatmentInserted();
-						} else {
+						}
+					} else {
+						// If nothing changed, skip update and close dialog
+						if (descriptionTextField.getText().equals(lastdescription)) {
+							dispose();
+							return;
+						}
+
+						savedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
+						if (savedPregnantTreatmentType != null) {
+							result = true;
 							firePregnantTreatmentUpdated();
 						}
+					}
+
+					if (result) {
 						dispose();
 					} else {
 						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");

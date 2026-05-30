@@ -200,6 +200,7 @@ public class MedicalTypeBrowserEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 
+				// Update model with values from UI fields
 				medicalType.setDescription(descriptionTextField.getText());
 				medicalType.setCode(codeTextField.getText());
 				medicalType.setDeleted(deletedCheckbox.isSelected() ? 'Y' : 'N');
@@ -207,8 +208,10 @@ public class MedicalTypeBrowserEdit extends JDialog {
 				try {
 					MedicalType savedMedicalType;
 					if (insert) {
+						// Insert new MedicalType record
 						savedMedicalType = medicalTypeBrowserManager.newMedicalType(medicalType);
 					} else {
+						// Update existing MedicalType record
 						savedMedicalType = medicalTypeBrowserManager.updateMedicalType(medicalType);
 					}
 

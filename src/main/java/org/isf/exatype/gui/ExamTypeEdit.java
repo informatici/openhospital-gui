@@ -214,10 +214,13 @@ public class ExamTypeEdit extends JDialog {
 							fireExamTypeInserted();
 						}
 					} else {
+						// If nothing changed, close without saving
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 							return;
 						}
+
+						// Update existing ExamType (uses same method here)
 						savedExamType = examTypeBrowserManager.newExamType(examType);
 						if (savedExamType != null) {
 							result = true;
@@ -225,6 +228,7 @@ public class ExamTypeEdit extends JDialog {
 						}
 					}
 
+					// Close dialog if save succeeded, otherwise show error
 					if (result) {
 						dispose();
 					} else {

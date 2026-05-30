@@ -181,8 +181,10 @@ public class InsertMalnutrition extends JDialog {
 
 			try {
 				if (inserting) {
+					// Insert new Malnutrition record
 					savedMalnutrition = malnutritionManager.newMalnutrition(maln);
 				} else {
+					// Update existing Malnutrition record
 					savedMalnutrition = malnutritionManager.updateMalnutrition(maln);
 				}
 
@@ -198,6 +200,7 @@ public class InsertMalnutrition extends JDialog {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 
+			// Close dialog if save succeeded; otherwise show error message
 			if (result) {
 				dispose();
 			} else {
