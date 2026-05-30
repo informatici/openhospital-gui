@@ -115,7 +115,21 @@ public class WardBrowser extends ModalJFrame implements WardListener {
 			MessageBundle.getMessage("angal.ward.duration.col").toUpperCase()
 	};
 	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30, 30, 30};
-	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, int.class};
+	private Class[] pColumnClass = {
+		String.class,
+		String.class,
+		String.class,
+		String.class,
+		String.class,
+		Integer.class,
+		Integer.class,
+		Integer.class,
+		Boolean.class,
+		Boolean.class,
+		Boolean.class,
+		Boolean.class,
+		Integer.class
+	};
 	private int selectedrow;
 	private List<Ward> pWard;
 	private Ward ward;
