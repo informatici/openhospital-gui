@@ -75,6 +75,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			MessageBundle.getMessage("angal.exa.default.col").toUpperCase()
 	};
 	private int[] pColumnWidth = { 60, 330, 160, 60, 200 };
+	private Class[] pColumnClass = { String.class, String.class, String.class, Integer.class, String.class };
 	private Exam exam;
 
 	private DefaultTableModel model ;
@@ -379,6 +380,11 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 				return exam.getDefaultResult();
 			}
 			return null;
+		}
+
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
+			return pColumnClass[columnIndex];
 		}
 		
 		@Override
