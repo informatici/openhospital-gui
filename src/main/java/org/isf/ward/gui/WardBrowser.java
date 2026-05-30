@@ -33,8 +33,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
@@ -42,6 +46,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.table.OHTableSortFilter;
 import org.isf.ward.gui.WardEdit.WardListener;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -73,7 +78,10 @@ public class WardBrowser extends ModalJFrame implements WardListener {
 		((WardBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
 		if (table.getRowCount() > 0 && selectedrow > -1) {
-			table.setRowSelectionInterval(selectedrow, selectedrow);
+			int selectedViewRow = table.convertRowIndexToView(selectedrow);
+			if (selectedViewRow > -1) {
+				table.setRowSelectionInterval(selectedViewRow, selectedViewRow);
+			}
 		}
 	}
 
@@ -87,7 +95,9 @@ public class WardBrowser extends ModalJFrame implements WardListener {
 	private JButton jCloseButton;
 	private JScrollPane jScrollPane;
 	private JTable table;
+	private JTextField searchField;
 	private DefaultTableModel model;
+	private TableRowSorter<DefaultTableModel> sorter;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
@@ -155,6 +165,8 @@ public class WardBrowser extends ModalJFrame implements WardListener {
 	private JPanel getJButtonPanel() {
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel(new WrapLayout());
+			jButtonPanel.add(new JLabel(MessageBundle.getMessage("angal.common.search.txt")));
+			jButtonPanel.add(getSearchField());
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
 			jButtonPanel.add(getJDeleteButton(), null);
@@ -176,8 +188,8 @@ public class WardBrowser extends ModalJFrame implements WardListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					selectedrow = table.getSelectedRow();
-					ward = (Ward) model.getValueAt(table.getSelectedRow(), -1);
+					selectedrow = OHTableSortFilter.getSelectedModelRow(table);
+					ward = (Ward) model.getValueAt(selectedrow, -1);
 					WardEdit editrecord = new WardEdit(myFrame, ward, false);
 					editrecord.addWardListener(this);
 					editrecord.setVisible(true);
@@ -219,12 +231,13 @@ public class WardBrowser extends ModalJFrame implements WardListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
 				} else {
-					Ward ward = (Ward) model.getValueAt(table.getSelectedRow(), -1);
+					int selectedModelRow = OHTableSortFilter.getSelectedModelRow(table);
+					Ward ward = (Ward) model.getValueAt(selectedModelRow, -1);
 					int answer = MessageDialog.yesNo(this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
 					try {
 						if (answer == JOptionPane.YES_OPTION) {
 							wardBrowserManager.deleteWard(ward);
-							pWard.remove(table.getSelectedRow());
+							pWard.remove(selectedModelRow);
 							model.fireTableDataChanged();
 							table.updateUI();
 						}
@@ -250,6 +263,34 @@ public class WardBrowser extends ModalJFrame implements WardListener {
 		}
 		return jCloseButton;
 	}
+
+	private JTextField getSearchField() {
+		if (searchField == null) {
+			searchField = new JTextField(15);
+			searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					applySearchFilter();
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					applySearchFilter();
+				}
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					applySearchFilter();
+				}
+			});
+		}
+		return searchField;
+	}
+
+	private void applySearchFilter() {
+		OHTableSortFilter.applyNaturalTextFilter(table, sorter, searchField.getText());
+	}
 	
 	/**
 	 * This method initializes jScrollPane	
@@ -273,6 +314,7 @@ public class WardBrowser extends ModalJFrame implements WardListener {
 		if (table == null) {
 			model = new WardBrowserModel();
 			table = new JTable(model);
+			sorter = OHTableSortFilter.installSorter(table, model);
 			TableColumnModel columnModel = table.getColumnModel();
 			columnModel.getColumn(0).setMaxWidth(pColumnWidth[0]);
 			columnModel.getColumn(1).setPreferredWidth(pColumnWidth[1]);
