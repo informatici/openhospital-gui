@@ -121,12 +121,19 @@ public final class ChangePasswordDialog {
 		// 3. Check
 		if (!newPassword.equals(newPassword2)) {
 			MessageDialog.error(parent, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
+			newPassword = null;
+			newPassword2 = null;
 			return null;
 		}
 		if (newPassword.length() > BCRYPT_MAX_LENGTH) {
 			MessageDialog.error(parent, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+			newPassword = null;
+			newPassword2 = null;
 			return null;
 		}
-		return BCrypt.hashpw(newPassword, BCrypt.gensalt());
+		String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+		newPassword = null;
+		newPassword2 = null;
+		return hashed;
 	}
 }
