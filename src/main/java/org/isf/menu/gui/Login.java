@@ -204,6 +204,20 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				}
 			}
 			if (found) {
+				// OP-896: force a password change before granting access when required (admin reset or expired lease)
+				if (user.isPasswdMustChange() || userBrowsingManager.isPasswordExpired(user)) {
+					String hashed = ChangePasswordDialog.promptForNewPassword(this, userBrowsingManager,
+						MessageBundle.getMessage("angal.login.changepassword.title"));
+					if (hashed == null) {
+						MessageDialog.error(this, "angal.login.youmustchangethepasswordbeforeloggingin.msg");
+						pwd.setText("");
+						pwd.grabFocus();
+						return;
+					}
+					user.setPasswd(hashed);
+					user.setPasswdMustChange(false);
+					userBrowsingManager.updatePassword(user);
+				}
 				userBrowsingManager.setLastLogin(user);
 				// good PW, so reset failed attempts if there are any
 				if (user.getFailedAttempts() > 0) {
