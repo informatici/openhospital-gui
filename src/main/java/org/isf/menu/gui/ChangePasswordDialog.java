@@ -77,63 +77,61 @@ public final class ChangePasswordDialog {
 			}
 		});
 
-		// 1. Insert new password
-		String newPassword = "";
-		JPanel stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-		if (GeneralData.STRONGLENGTH != 0) {
-			stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.fmt.msg", GeneralData.STRONGLENGTH)));
-		} else {
-			stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.msg")));
-		}
-		stepPanel.add(pwd);
+		// Loop so that a wrong repeat (or a too-long password) re-prompts instead of aborting the whole change
+		while (true) {
+			// 1. Insert new password
+			pwd.setText("");
+			String newPassword = "";
+			JPanel insertPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+			if (GeneralData.STRONGLENGTH != 0) {
+				insertPanel
+					.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.fmt.msg", GeneralData.STRONGLENGTH)));
+			} else {
+				insertPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.msg")));
+			}
+			insertPanel.add(pwd);
 
-		while (newPassword.isEmpty()) {
-			int action = JOptionPane.showConfirmDialog(parent, stepPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+			while (newPassword.isEmpty()) {
+				int action = JOptionPane.showConfirmDialog(parent, insertPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+				if (JOptionPane.CANCEL_OPTION == action) {
+					return null;
+				}
+				newPassword = new String(pwd.getPassword());
+				if (newPassword.isEmpty()) {
+					MessageDialog.error(parent, "angal.userbrowser.passwordmustnotbeblank.msg");
+					pwd.setText("");
+				} else if (GeneralData.STRONGLENGTH != 0 && newPassword.length() < GeneralData.STRONGLENGTH) {
+					MessageDialog.error(parent, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
+					newPassword = "";
+					pwd.setText("");
+				} else if (!userBrowsingManager.isPasswordStrong(newPassword)) {
+					MessageDialog.error(parent, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+					newPassword = "";
+					pwd.setText("");
+				}
+			}
+
+			// 2. Retype new password
+			pwd.setText("");
+			JPanel repeatPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+			repeatPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step2.pleaserepeatthenewpassword.label")));
+			repeatPanel.add(pwd);
+			int action = JOptionPane.showConfirmDialog(parent, repeatPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 			if (JOptionPane.CANCEL_OPTION == action) {
 				return null;
 			}
-			newPassword = new String(pwd.getPassword());
-			if (newPassword.isEmpty()) {
-				MessageDialog.error(parent, "angal.userbrowser.passwordmustnotbeblank.msg");
-				pwd.setText("");
-			} else if (GeneralData.STRONGLENGTH != 0 && newPassword.length() < GeneralData.STRONGLENGTH) {
-				MessageDialog.error(parent, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
-				newPassword = "";
-				pwd.setText("");
-			} else if (!userBrowsingManager.isPasswordStrong(newPassword)) {
-				MessageDialog.error(parent, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
-				newPassword = "";
-				pwd.setText("");
+			String newPassword2 = new String(pwd.getPassword());
+
+			// 3. Check: on mismatch or too-long, show the error and re-prompt
+			if (!newPassword.equals(newPassword2)) {
+				MessageDialog.error(parent, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
+				continue;
 			}
+			if (newPassword.length() > BCRYPT_MAX_LENGTH) {
+				MessageDialog.error(parent, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+				continue;
+			}
+			return BCrypt.hashpw(newPassword, BCrypt.gensalt());
 		}
-
-		// 2. Retype new password
-		pwd.setText("");
-		stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-		stepPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step2.pleaserepeatthenewpassword.label")));
-		stepPanel.add(pwd);
-		int action = JOptionPane.showConfirmDialog(parent, stepPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-		if (JOptionPane.CANCEL_OPTION == action) {
-			return null;
-		}
-		String newPassword2 = new String(pwd.getPassword());
-
-		// 3. Check
-		if (!newPassword.equals(newPassword2)) {
-			MessageDialog.error(parent, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
-			newPassword = null;
-			newPassword2 = null;
-			return null;
-		}
-		if (newPassword.length() > BCRYPT_MAX_LENGTH) {
-			MessageDialog.error(parent, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
-			newPassword = null;
-			newPassword2 = null;
-			return null;
-		}
-		String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-		newPassword = null;
-		newPassword2 = null;
-		return hashed;
 	}
 }
