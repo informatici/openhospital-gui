@@ -892,21 +892,21 @@ public class MovStockBrowser extends ModalJFrame {
 				if (!isAutomaticLot()) {
 					model = new MovBrowserModel(medicalSelected,
 									medicalTypeSelected, wardSelected, movementTypeSelected,
-									TimeTools.getBeginningOfDay(movDateFrom.getDateStartOfDay()),
-									TimeTools.getBeginningOfNextDay(movDateTo.getDateStartOfDay()),
-									TimeTools.getBeginningOfDay(lotPrepFrom.getDateStartOfDay()),
-									TimeTools.getBeginningOfNextDay(lotPrepTo.getDateStartOfDay()),
-									TimeTools.getBeginningOfDay(lotDueFrom.getDateStartOfDay()),
-									TimeTools.getBeginningOfNextDay(lotDueTo.getDateStartOfDay()));
+									beginningOfDayOrNull(movDateFrom.getDateStartOfDay()),
+									beginningOfNextDayOrNull(movDateTo.getDateStartOfDay()),
+									beginningOfDayOrNull(lotPrepFrom.getDateStartOfDay()),
+									beginningOfNextDayOrNull(lotPrepTo.getDateStartOfDay()),
+									beginningOfDayOrNull(lotDueFrom.getDateStartOfDay()),
+									beginningOfNextDayOrNull(lotDueTo.getDateStartOfDay()));
 				} else {
 					model = new MovBrowserModel(medicalSelected,
 									medicalTypeSelected, wardSelected, movementTypeSelected,
-									TimeTools.getBeginningOfDay(movDateFrom.getDateStartOfDay()),
-									TimeTools.getBeginningOfNextDay(movDateTo.getDateStartOfDay()),
+									beginningOfDayOrNull(movDateFrom.getDateStartOfDay()),
+									beginningOfNextDayOrNull(movDateTo.getDateStartOfDay()),
 									null,
 									null,
-									TimeTools.getBeginningOfDay(lotDueFrom.getDateStartOfDay()),
-									TimeTools.getBeginningOfNextDay(lotDueTo.getDateStartOfDay()));
+									beginningOfDayOrNull(lotDueFrom.getDateStartOfDay()),
+									beginningOfNextDayOrNull(lotDueTo.getDateStartOfDay()));
 				}
 
 				if (moves != null)
@@ -920,6 +920,14 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 		});
 		return filterButton;
+	}
+
+	private LocalDateTime beginningOfDayOrNull(LocalDateTime date) {
+		return date == null ? null : TimeTools.getBeginningOfDay(date);
+	}
+
+	private LocalDateTime beginningOfNextDayOrNull(LocalDateTime date) {
+		return date == null ? null : TimeTools.getBeginningOfNextDay(date);
 	}
 
 	private JButton getResetButton() {
@@ -1026,12 +1034,13 @@ public class MovStockBrowser extends ModalJFrame {
 			try {
 				Movement lastMovement = movBrowserManager.getLastMovement();
 				if (lastMovement.getCode() == selectedMovement.getCode()) {
-					int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
-					if (delete == JOptionPane.YES_OPTION) {
-						movBrowserManager.deleteLastMovement(lastMovement);
-					} else {
+					String reason = (String) JOptionPane.showInputDialog(this,
+						MessageBundle.getMessage("angal.medicalstock.deletemovementreason.msg"),
+						MessageBundle.getMessage("angal.common.delete.btn"), JOptionPane.QUESTION_MESSAGE);
+					if (reason == null) {
 						return;
 					}
+					movBrowserManager.deleteLastMovement(lastMovement, reason);
 				} else {
 					MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
 					return;
