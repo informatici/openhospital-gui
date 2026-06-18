@@ -1034,13 +1034,14 @@ public class MovStockBrowser extends ModalJFrame {
 			try {
 				Movement lastMovement = movBrowserManager.getLastMovement();
 				if (lastMovement.getCode() == selectedMovement.getCode()) {
-					String reason = (String) JOptionPane.showInputDialog(this,
-						MessageBundle.getMessage("angal.medicalstock.deletemovementreason.msg"),
-						MessageBundle.getMessage("angal.common.delete.btn"), JOptionPane.QUESTION_MESSAGE);
-					if (reason == null) {
+					JTextField reasonField = new JTextField(20);
+					Object[] message = { MessageBundle.getMessage("angal.medicalstock.deletemovementreason.msg"), reasonField };
+					int answer = JOptionPane.showConfirmDialog(this, message,
+						MessageBundle.getMessage("angal.common.delete.btn"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if (answer != JOptionPane.YES_OPTION) {
 						return;
 					}
-					movBrowserManager.deleteLastMovement(lastMovement, reason);
+					movBrowserManager.deleteLastMovement(lastMovement, reasonField.getText());
 				} else {
 					MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
 					return;

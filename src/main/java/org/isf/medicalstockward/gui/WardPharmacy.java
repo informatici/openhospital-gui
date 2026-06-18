@@ -404,13 +404,14 @@ public class WardPharmacy extends ModalJFrame implements
 				try {
 					MovementWard movWard = movWardBrowserManager.getLastMovementWard(wardSelected);
 					if (movWard.getCode() == selectedMovement.getCode()) {
-						String reason = (String) JOptionPane.showInputDialog(this,
-							MessageBundle.getMessage("angal.medicalstock.deletemovementreason.msg"),
-							MessageBundle.getMessage("angal.common.delete.btn"), JOptionPane.QUESTION_MESSAGE);
-						if (reason == null) {
+						JTextField reasonField = new JTextField(20);
+						Object[] message = { MessageBundle.getMessage("angal.medicalstock.deletemovementreason.msg"), reasonField };
+						int answer = JOptionPane.showConfirmDialog(this, message,
+							MessageBundle.getMessage("angal.common.delete.btn"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+						if (answer != JOptionPane.YES_OPTION) {
 							return;
 						}
-						movWardBrowserManager.deleteLastMovementWard(movWard, reason);
+						movWardBrowserManager.deleteLastMovementWard(movWard, reasonField.getText());
 					} else {
 						MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
 						return;
