@@ -21,6 +21,8 @@
  */
 package org.isf.accounting.gui;
 
+import java.math.BigDecimal;
+
 import org.isf.accounting.model.Bill;
 
 public class TestBill {
@@ -28,7 +30,7 @@ public class TestBill {
 	public static Bill notDeletedBillWithBalance(int id, double amount) {
 		Bill bill = new Bill();
 		bill.setId(id);
-		bill.setBalance(java.math.BigDecimal.valueOf(amount));
+		bill.setBalance(BigDecimal.valueOf(amount));
 		return bill;
 	}
 
@@ -36,14 +38,14 @@ public class TestBill {
 		Bill bill = new Bill();
 		bill.setId(id);
 		bill.setStatus(status);
-		bill.setBalance(java.math.BigDecimal.valueOf(100));
+		bill.setBalance(BigDecimal.valueOf(100));
 		return bill;
 	}
 
 	public static Bill deletedBillWithBalance(int id, double amount) {
 		Bill bill = new Bill();
 		bill.setId(id);
-		bill.setBalance(java.math.BigDecimal.valueOf(amount));
+		bill.setBalance(BigDecimal.valueOf(amount));
 		bill.setStatus("D");
 		return bill;
 	}
