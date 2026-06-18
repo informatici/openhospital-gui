@@ -127,7 +127,7 @@ public class PriceModel extends AbstractTreeTableModel {
 				displayValue = price.getDesc();
 				break;
 			case 1:
-				displayValue = price.getPrice().doubleValue();
+				displayValue = price.getPrice() != null ? price.getPrice().doubleValue() : null;
 				break;
 			default:
 				break;
