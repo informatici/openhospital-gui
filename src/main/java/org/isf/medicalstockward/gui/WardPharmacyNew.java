@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -613,7 +614,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				try {
 					for (MedicalWard medItem : medItems) {
 						manyMovementWard.add(new MovementWard(wardSelected, newDate, isPatient, patientSelected,
-							age, patientWeight, description, medItem.getMedical(), medItem.getQty(),
+							age, patientWeight, description, medItem.getMedical(), new BigDecimal(Double.toString(medItem.getQty())),
 							MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null, medItem.getLot()));
 					}
 

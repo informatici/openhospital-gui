@@ -28,7 +28,7 @@ public class TestPayment {
 
 	public static BillPayments withAmountAndBill(double amount, Bill bill) {
 		BillPayments billPayments = new BillPayments();
-		billPayments.setAmount(amount);
+		billPayments.setAmount(java.math.BigDecimal.valueOf(amount));
 		billPayments.setBill(bill);
 		return billPayments;
 	}

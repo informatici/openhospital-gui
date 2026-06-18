@@ -389,7 +389,8 @@ public class WardPharmacyRectify extends JDialog {
 
 			try {
 				movStockInsertingManager.storeLot(selectedLot.getCode(), selectedLot, med);
-				movWardBrowserManager.newMovementWard(new MovementWard(selectedWard, TimeTools.getNow(), false, null, 0, 0, reason, med, movQuantity,
+				movWardBrowserManager.newMovementWard(new MovementWard(selectedWard, TimeTools.getNow(), false, null, 0, 0, reason, med,
+					new BigDecimal(Double.toString(movQuantity)),
 					MessageBundle.getMessage("angal.medicalstockward.rectify.pieces"), selectedLot));
 				fireMovementWardInserted();
 				dispose();
