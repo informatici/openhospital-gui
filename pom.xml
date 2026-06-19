@@ -20,7 +20,22 @@
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<license.maven.plugin.version>5.0.0</license.maven.plugin.version>
+		<commons-collections4.version>4.5.0</commons-collections4.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!--
+				Force commons-collections4 4.5.0: jasperreports (via commons-beanutils2) needs 4.5.0, but poi-ooxml pulls 4.4 and wins version
+				mediation. With 4.4 any JRBeanCollectionDataSource print fails at runtime (missing ConcurrentReferenceHashMap). See OP-1413.
+			-->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-collections4</artifactId>
+				<version>${commons-collections4.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
