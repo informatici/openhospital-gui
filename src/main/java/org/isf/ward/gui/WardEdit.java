@@ -114,6 +114,7 @@ public class WardEdit extends JDialog {
 	private JTextField durationTextField;
 	private JCheckBox isOpdCheck;
 	private JCheckBox isPharmacyCheck;
+	private JCheckBox isVirtualCheck;
 	private JCheckBox isMaleCheck;
 	private JCheckBox isFemaleCheck;
 	private Ward ward;
@@ -319,12 +320,20 @@ public class WardEdit extends JDialog {
 			gbcIsPharmacyCheck.gridy = 10;
 			dataPanel.add(getIsPharmacyCheck(), gbcIsPharmacyCheck);
 
+			GridBagConstraints gbcIsVirtualCheck = new GridBagConstraints();
+			gbcIsVirtualCheck.anchor = GridBagConstraints.WEST;
+			gbcIsVirtualCheck.insets = new Insets(0, 0, 5, 0);
+			gbcIsVirtualCheck.gridwidth = 2;
+			gbcIsVirtualCheck.gridx = 0;
+			gbcIsVirtualCheck.gridy = 11;
+			dataPanel.add(getIsVirtualCheck(), gbcIsVirtualCheck);
+
 			GridBagConstraints gbcIsMaleCheck = new GridBagConstraints();
 			gbcIsMaleCheck.anchor = GridBagConstraints.WEST;
 			gbcIsMaleCheck.insets = new Insets(0, 0, 5, 0);
 			gbcIsMaleCheck.gridwidth = 2;
 			gbcIsMaleCheck.gridx = 0;
-			gbcIsMaleCheck.gridy = 11;
+			gbcIsMaleCheck.gridy = 12;
 			dataPanel.add(getIsMaleCheck(), gbcIsMaleCheck);
 
 			GridBagConstraints gbcIsFemaleCheck = new GridBagConstraints();
@@ -332,7 +341,7 @@ public class WardEdit extends JDialog {
 			gbcIsFemaleCheck.insets = new Insets(0, 0, 5, 0);
 			gbcIsFemaleCheck.gridwidth = 2;
 			gbcIsFemaleCheck.gridx = 0;
-			gbcIsFemaleCheck.gridy = 12;
+			gbcIsFemaleCheck.gridy = 13;
 			dataPanel.add(getIsFemaleCheck(), gbcIsFemaleCheck);
 
 			JLabel requiredLabel = new JLabel(MessageBundle.getMessage("angal.ward.requiredfields"));
@@ -340,7 +349,7 @@ public class WardEdit extends JDialog {
 			gbcRequiredLabel.gridwidth = 2;
 			gbcRequiredLabel.anchor = GridBagConstraints.EAST;
 			gbcRequiredLabel.gridx = 0;
-			gbcRequiredLabel.gridy = 13;
+			gbcRequiredLabel.gridy = 14;
 			dataPanel.add(requiredLabel, gbcRequiredLabel);
 		}
 		return dataPanel;
@@ -436,6 +445,7 @@ public class WardEdit extends JDialog {
 				ward.setDocs(docs);
 				ward.setOpd(isOpdCheck.isSelected());
 				ward.setPharmacy(isPharmacyCheck.isSelected());
+				ward.setVirtual(isVirtualCheck.isSelected());
 				ward.setMale(isMaleCheck.isSelected());
 				ward.setFemale(isFemaleCheck.isSelected());
 				ward.setVisitDuration(duration);
@@ -639,6 +649,21 @@ public class WardEdit extends JDialog {
 			}
 		}
 		return isPharmacyCheck;
+	}
+
+	/**
+	 * This method initializes isVirtualCheck
+	 *
+	 * @return javax.swing.JCheckBox
+	 */
+	private JCheckBox getIsVirtualCheck() {
+		if (isVirtualCheck == null) {
+			isVirtualCheck = new JCheckBox(MessageBundle.getMessage("angal.ward.isvirtual.txt"));
+			if (!insert) {
+				isVirtualCheck.setSelected(ward.isVirtual());
+			}
+		}
+		return isVirtualCheck;
 	}
 
 	/**

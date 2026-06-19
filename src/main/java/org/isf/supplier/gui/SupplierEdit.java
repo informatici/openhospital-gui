@@ -112,6 +112,7 @@ public class SupplierEdit extends JDialog {
 	private JTextField emailTextField;
 	private JTextField noteTextField;
 	private JCheckBox isDeletedCheck;
+	private JCheckBox isVirtualCheck;
 	private Supplier supplier;
 	private boolean insert;
 
@@ -177,6 +178,7 @@ public class SupplierEdit extends JDialog {
 			JLabel emailLabel = new JLabel(MessageBundle.getMessage("angal.supplier.email") + ':');
 			JLabel noteLabel = new JLabel(MessageBundle.getMessage("angal.supplier.note") + ':');
 			JLabel isDeletedLabel = new JLabel(MessageBundle.getMessage("angal.supplier.deleted") + ':');
+			JLabel isVirtualLabel = new JLabel(MessageBundle.getMessage("angal.supplier.isvirtual.txt") + ':');
 			JLabel requiredLabel = new JLabel(MessageBundle.getMessage("angal.supplier.requiredfields"));
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(idLabel);
@@ -199,9 +201,11 @@ public class SupplierEdit extends JDialog {
 				dataPanel.add(isDeletedLabel);
 				dataPanel.add(getIsDeleted());
 			}
+			dataPanel.add(isVirtualLabel);
+			dataPanel.add(getIsVirtual());
 			dataPanel.add(requiredLabel);
 			dataPanel.add(new JLabel(""));
-			SpringUtilities.makeCompactGrid(dataPanel, insert ? 9 : 10, 2, 5, 5, 5, 5);
+			SpringUtilities.makeCompactGrid(dataPanel, insert ? 10 : 11, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
 	}
@@ -262,6 +266,7 @@ public class SupplierEdit extends JDialog {
 				} else {
 					supplier.setSupDeleted('N');
 				}
+				supplier.setVirtual(isVirtualCheck.isSelected());
 				if (insert) {	// inserting
 					try {
 						Supplier insertedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
@@ -420,6 +425,21 @@ public class SupplierEdit extends JDialog {
 			}
 		}
 		return isDeletedCheck;
+	}
+
+	/**
+	 * This method initializes isVirtualCheck
+	 *
+	 * @return javax.swing.JCheckBox
+	 */
+	private JCheckBox getIsVirtual() {
+		if (isVirtualCheck == null) {
+			isVirtualCheck = new JCheckBox();
+			if (!insert) {
+				isVirtualCheck.setSelected(supplier.isVirtual());
+			}
+		}
+		return isVirtualCheck;
 	}
 
 }
