@@ -27,25 +27,14 @@ import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -56,30 +45,24 @@ import javax.swing.border.Border;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
+import org.isf.stat.dto.ReportLauncherDto;
 import org.isf.stat.gui.report.GenericReportFromDateToDate;
 import org.isf.stat.gui.report.GenericReportMY;
+import org.isf.stat.manager.JasperReportsManager;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
- * ReportLauncher - launch all the reports that have as parameters year and
- * month the class expects the initialization through year, month, name of the
- * report (without .jasper)
+ * ReportLauncher - lets the user pick and launch a stat report. The list of available reports (and the parameters each one prompts for, e.g. year/month or
+ * from-date/to-date) is provided by the CORE {@link JasperReportsManager#getReportsList()}; this class only builds the Swing selection panel around it.
  */
 public class ReportLauncher extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReportLauncher.class);
 
 	private JPanel jPanel;
 	private JPanel jButtonPanel;
@@ -99,12 +82,12 @@ public class ReportLauncher extends ModalJFrame {
 
 	private JComboBox<String> jRptComboBox;
 
-	private Map<String, File> reportNameFileMap;
-	private Map<String, List<String>> folderNameFileNameMap;
-	private List<String> userInputParamNames;
+	private Map<String, ReportLauncherDto> reportMap;
 
 	private JComboBox<String> shareWith;
 	Interaction userOh;
+
+	private final JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	/**
 	 * This is the default constructor
@@ -215,61 +198,11 @@ public class ReportLauncher extends ModalJFrame {
 			JLabel jRptLabel = new JLabel(MessageBundle.getMessage("angal.stat.report"));
 
 			jRptComboBox = new JComboBox<>();
-			List<File> jasperFilesInFolder = new LinkedList<>();
-			folderNameFileNameMap = new HashMap<>();
-			try {
-				List<File> loadedFiles = Files.walk(Paths.get("./rpt_stat"))
-								.filter(Files::isRegularFile)
-								.map(Path::toFile)
-								.filter(t -> t.getName().endsWith(".jasper"))
-								.collect(Collectors.toList());
-				jasperFilesInFolder.addAll(loadedFiles);
-				folderNameFileNameMap.put("rpt_stat", loadedFiles.stream().map(t -> t.getName().replace(".jasper", "")).collect(Collectors.toList()));
-
-				loadedFiles = Files.walk(Paths.get("./rpt_extra"))
-								.filter(Files::isRegularFile)
-								.map(Path::toFile)
-								.filter(t -> t.getName().endsWith(".jasper"))
-								.collect(Collectors.toList());
-				jasperFilesInFolder.addAll(loadedFiles);
-				folderNameFileNameMap.put("rpt_extra", loadedFiles.stream().map(t -> t.getName().replace(".jasper", "")).collect(Collectors.toList()));
-
-				reportNameFileMap = new HashMap<>();
-				List<String> jRptComboBoxList = new LinkedList<>();
-				String language = new Locale(GeneralData.LANGUAGE).getLanguage();
-
-				for (File f : jasperFilesInFolder) {
-					try {
-						Path parent = f.toPath().getParent();
-						if (parent == null) {
-							continue;
-						}
-						Path localizedPropsPath = parent.resolve(language).resolve(f.getName().replace(".jasper", ".properties"));
-
-						Properties props = MessageBundle.loadPropertiesFileUtf8(localizedPropsPath, LOGGER);
-
-						String title = props.getProperty("jTitle");
-						if (title == null || title.isBlank()) {
-							Path fallbackPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", ".properties"));
-							props = MessageBundle.loadPropertiesFileUtf8(fallbackPropsPath, LOGGER);
-							title = props.getProperty("jTitle");
-						}
-
-						if (title != null && !title.isBlank()) {
-							reportNameFileMap.put(title, f);
-							jRptComboBoxList.add(title);
-						}
-
-					} catch (Exception e) {
-						LOGGER.error("Error loading report properties for {}", f.getName(), e);
-					}
-				}
-
-				Collections.sort(jRptComboBoxList);
-				jRptComboBoxList.forEach(t -> jRptComboBox.addItem(t));
-
-			} catch (IOException e) {
-				LOGGER.error("Exception in getJParameterSelectionPanel method.", e);
+			reportMap = new HashMap<>();
+			// the discovery of the available reports (folder scan, localized titles, prompt parameters) now lives in the CORE manager
+			for (ReportLauncherDto report : jasperReportsManager.getReportsList()) {
+				reportMap.put(report.getTitle(), report);
+				jRptComboBox.addItem(report.getTitle());
 			}
 
 			jRptComboBox.addActionListener(actionEvent -> {
@@ -334,37 +267,33 @@ public class ReportLauncher extends ModalJFrame {
 	}
 
 	protected void selectAction() {
-		File jasperFile = reportNameFileMap.get(jRptComboBox.getSelectedItem().toString());
-		if (jasperFile != null) {
-			try {
-				JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperFile);
-				JRParameter[] params = jasperReport.getParameters();
-
-				List<JRParameter> userInputParams = Arrays.asList(params).stream().filter(t -> !t.isSystemDefined() && t.isForPrompting())
-								.collect(Collectors.toList());
-				userInputParamNames = userInputParams.stream().map(t -> t.getName()).collect(Collectors.toList());
-				if (userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
-					jMonthComboBox.setVisible(false);
-					jMonthLabel.setVisible(false);
-					jYearComboBox.setVisible(false);
-					jYearLabel.setVisible(false);
-					jFromDateLabel.setVisible(true);
-					jFromDateField.setVisible(true);
-					jToDateLabel.setVisible(true);
-					jToDateField.setVisible(true);
-				} else if (userInputParamNames.contains("month") || userInputParamNames.contains("year")) {
-					jMonthComboBox.setVisible(true);
-					jMonthLabel.setVisible(true);
-					jYearComboBox.setVisible(true);
-					jYearLabel.setVisible(true);
-					jFromDateLabel.setVisible(false);
-					jFromDateField.setVisible(false);
-					jToDateLabel.setVisible(false);
-					jToDateField.setVisible(false);
-				}
-			} catch (JRException e) {
-				LOGGER.error("Exception in selectAction method.", e);
-			}
+		Object selectedReport = jRptComboBox.getSelectedItem();
+		if (selectedReport == null) {
+			return;
+		}
+		ReportLauncherDto report = reportMap.get(selectedReport.toString());
+		if (report == null) {
+			return;
+		}
+		List<String> userInputParamNames = report.getUserInputParameters();
+		if (userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
+			jMonthComboBox.setVisible(false);
+			jMonthLabel.setVisible(false);
+			jYearComboBox.setVisible(false);
+			jYearLabel.setVisible(false);
+			jFromDateLabel.setVisible(true);
+			jFromDateField.setVisible(true);
+			jToDateLabel.setVisible(true);
+			jToDateField.setVisible(true);
+		} else if (userInputParamNames.contains("month") || userInputParamNames.contains("year")) {
+			jMonthComboBox.setVisible(true);
+			jMonthLabel.setVisible(true);
+			jYearComboBox.setVisible(true);
+			jYearLabel.setVisible(true);
+			jFromDateLabel.setVisible(false);
+			jFromDateField.setVisible(false);
+			jToDateLabel.setVisible(false);
+			jToDateField.setVisible(false);
 		}
 	}
 
@@ -395,38 +324,37 @@ public class ReportLauncher extends ModalJFrame {
 	}
 
 	protected void generateReport(boolean toExcel) {
-		if (jRptComboBox.getSelectedItem() != null) {
-			if (userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
-				new GenericReportFromDateToDate(jFromDateField.getDate(), jToDateField.getDate(),
-								folderNameFileNameMap.get("rpt_stat").contains(
-												reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", "")) ? "rpt_stat"
-																: "rpt_extra",
-								reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", ""),
-								jRptComboBox.getSelectedItem().toString(), toExcel);
-				if (GeneralData.XMPPMODULEENABLED) {
-					String user = (String) shareWith.getSelectedItem();
-					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 " +
-									TimeTools.formatDateTime(jFromDateField.getDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY) + ' ' +
-									TimeTools.formatDateTime(jToDateField.getDate().atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY) + ' ' +
-									jRptComboBox.getSelectedItem().toString(), user, false);
-				}
-			} else {
-				int month = jMonthComboBox.getSelectedIndex() + 1;
-				int year = Integer.parseInt((String) jYearComboBox.getSelectedItem());
+		Object selectedReport = jRptComboBox.getSelectedItem();
+		if (selectedReport == null) {
+			return;
+		}
+		ReportLauncherDto report = reportMap.get(selectedReport.toString());
+		if (report == null) {
+			return;
+		}
+		String reportTitle = selectedReport.toString();
+		List<String> userInputParamNames = report.getUserInputParameters();
+		if (userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
+			new GenericReportFromDateToDate(jFromDateField.getDate(), jToDateField.getDate(),
+							report.getFolder(), report.getFileName(), reportTitle, toExcel);
+			if (GeneralData.XMPPMODULEENABLED) {
+				String user = (String) shareWith.getSelectedItem();
+				CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
+				frame.sendMessage("011100100110010101110000011011110111001001110100 " +
+								TimeTools.formatDateTime(jFromDateField.getDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY) + ' ' +
+								TimeTools.formatDateTime(jToDateField.getDate().atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY) + ' ' +
+								reportTitle, user, false);
+			}
+		} else {
+			int month = jMonthComboBox.getSelectedIndex() + 1;
+			int year = Integer.parseInt((String) jYearComboBox.getSelectedItem());
 
-				new GenericReportMY(month, year,
-								folderNameFileNameMap.get("rpt_stat").contains(
-												reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", "")) ? "rpt_stat"
-																: "rpt_extra",
-								reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", ""),
-								jRptComboBox.getSelectedItem().toString(), toExcel);
-				if (GeneralData.XMPPMODULEENABLED) {
-					String user = (String) shareWith.getSelectedItem();
-					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + ' ' + year + ' ' +
-									jRptComboBox.getSelectedItem().toString(), user, false);
-				}
+			new GenericReportMY(month, year, report.getFolder(), report.getFileName(), reportTitle, toExcel);
+			if (GeneralData.XMPPMODULEENABLED) {
+				String user = (String) shareWith.getSelectedItem();
+				CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
+				frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + ' ' + year + ' ' +
+								reportTitle, user, false);
 			}
 		}
 	}
