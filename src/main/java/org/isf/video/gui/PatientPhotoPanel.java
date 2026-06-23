@@ -153,9 +153,12 @@ public class PatientPhotoPanel extends JPanel {
 				}
 			});
 
-			final Webcam webcam = Webcam.getDefault();
+			// only touch the webcam stack when the video module is enabled; Webcam.getDefault() loads a native library
+			// (BridJ) that is not available on every platform (e.g. Apple Silicon), and calling it unconditionally
+			// would throw an UnsatisfiedLinkError and break the whole patient form even with the video module off
+			final Webcam webcam = GeneralData.VIDEOMODULEENABLED ? Webcam.getDefault() : null;
 
-			if (GeneralData.VIDEOMODULEENABLED && webcam != null) {
+			if (webcam != null) {
 				JButton jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.newphoto.btn"));
 				jGetPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.newphoto.btn.key"));
 				jGetPhotoButton.setMinimumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
