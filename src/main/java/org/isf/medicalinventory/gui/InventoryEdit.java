@@ -78,6 +78,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.EventListenerList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -187,6 +188,9 @@ public class InventoryEdit extends ModalJFrame {
 	private DefaultTableModel model;
 	private List<MedicalInventoryRow> inventoryRowList = new ArrayList<>();
 	private List<MedicalInventoryRow> inventoryRowSearchList = new ArrayList<>();
+	private final Set<String> changedRowKeys = new HashSet<>();
+	private static final Color CHANGED_ROW_COLOR = new Color(255, 247, 188);
+	private final InventoryRowChangeTracker changeTracker = new InventoryRowChangeTracker();
 	private List<MedicalInventoryRow> inventoryRowsToDelete = new ArrayList<>();
 	private List<MedicalInventoryRow> inventoryRowListAdded = new ArrayList<>();
 	private List<Lot> lotsSaved = new ArrayList<>();
@@ -789,6 +793,7 @@ public class InventoryEdit extends ModalJFrame {
 				int answer = MessageDialog.yesNo(null, "angal.inventory.doyouwanttoactualizetheinventory.msg");
 				if (answer == JOptionPane.YES_OPTION) {
 					try {
+						Map<String, Double> theoreticQtyBeforeActualize = changeTracker.snapshotTheoreticQty(inventoryRowSearchList);
 						inventory.setStatus(status);
 						inventory = medicalInventoryManager.actualizeMedicalInventoryRow(inventory, allMedicals);
 						dateInventory = inventory.getInventoryDate();
@@ -796,6 +801,7 @@ public class InventoryEdit extends ModalJFrame {
 						statusLabel.setForeground(Color.BLUE);
 						confirmButton.setEnabled(true);
 						jTableInventoryRow.setModel(new InventoryRowModel());
+						markChangedRows(theoreticQtyBeforeActualize);
 						fireInventoryUpdated();
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
@@ -1099,7 +1105,26 @@ public class InventoryEdit extends ModalJFrame {
 
 	private JTable getJTableInventoryRow() throws OHServiceException {
 		if (jTableInventoryRow == null) {
-			jTableInventoryRow = new JTable();
+			jTableInventoryRow = new JTable() {
+
+				private static final long serialVersionUID = 1L;
+
+				// done via prepareRenderer rather than a per-column cell renderer so the highlight also covers the
+				// default-rendered code/medical columns and overrides the decimal renderer's white background
+				@Override
+				public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+					Component component = super.prepareRenderer(renderer, row, column);
+					if (!isRowSelected(row)) {
+						Object rowObject = getValueAt(row, -1);
+						if (rowObject instanceof MedicalInventoryRow invRow && changedRowKeys.contains(changeTracker.rowKey(invRow))) {
+							component.setBackground(CHANGED_ROW_COLOR);
+						} else {
+							component.setBackground(getBackground());
+						}
+					}
+					return component;
+				}
+			};
 			jTableInventoryRow.setFillsViewportHeight(true);
 			model = new InventoryRowModel();
 			jTableInventoryRow.setModel(model);
@@ -2000,6 +2025,10 @@ public class InventoryEdit extends ModalJFrame {
 		lotsDeleted.clear();
 		inventoryRowListAdded.clear();
 		lotsSaved.clear();
+		changedRowKeys.clear();
+		if (jTableInventoryRow != null) {
+			jTableInventoryRow.repaint();
+		}
 	}
 
 	private boolean checkParametersChanges(String wardCode, String chargeCode, String dischargeCode, Integer supplierId, String reference, LocalDateTime date) {
@@ -2155,6 +2184,16 @@ public class InventoryEdit extends ModalJFrame {
 		} else {
 			MessageDialog.info(null, "angal.inventory.notdataforthatfilter.msg");
 		}
+	}
+
+	/**
+	 * Flags the inventory rows that the validation/actualize step added or whose theoretical quantity it changed, so the
+	 * table highlights them; the flag is cleared on save (see {@link #resetVariables()}).
+	 */
+	private void markChangedRows(Map<String, Double> theoreticQtyBeforeActualize) {
+		changedRowKeys.clear();
+		changedRowKeys.addAll(changeTracker.findChangedRowKeys(theoreticQtyBeforeActualize, inventoryRowSearchList));
+		jTableInventoryRow.repaint();
 	}
 
 	class CenterTableCellRenderer extends DefaultTableCellRenderer {
