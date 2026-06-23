@@ -2194,6 +2194,13 @@ public class PatientInsertExtended extends JDialog {
 		checkboxService.setSelected(consensus.isServiceFlag());
 		panel.add(checkboxService);
 
+		JCheckBox checkboxAdministrative = new JCheckBox("<html><body style='width: 150px; padding-left: 10px;'>" +
+						MessageBundle.getMessage("angal.patient.consensus.administrative.txt") +
+						"</body></html>");
+		checkboxAdministrative.addActionListener(e -> consensus.setAdministrativeFlag(!consensus.isAdministrativeFlag()));
+		checkboxAdministrative.setSelected(consensus.isAdministrativeFlag());
+		panel.add(checkboxAdministrative);
+
 		panel.setBorder(
 						BorderFactory.createCompoundBorder(
 										BorderFactory.createTitledBorder(
