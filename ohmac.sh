@@ -230,9 +230,6 @@ function java_lib_setup {
         arm64)
         NATIVE_LIB_PATH="./$OH_DIR/lib/native/macOS/arm64"
         ;;
-		64)
-		NATIVE_LIB_PATH="./$OH_DIR/lib/native/macOS/x86_64"
-		;;
 	esac
 
 	# CLASSPATH setup
