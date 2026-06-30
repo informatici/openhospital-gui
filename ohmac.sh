@@ -228,13 +228,10 @@ function java_lib_setup {
 	# NATIVE LIB setup
 	case $JAVA_ARCH in
         arm64)
-        NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/arm64"
+        NATIVE_LIB_PATH="./$OH_DIR/lib/native/macOS/arm64"
         ;;
 		64)
-		NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/amd64"
-		;;
-		32)
-		NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/i386"
+		NATIVE_LIB_PATH="./$OH_DIR/lib/native/macOS/x86_64"
 		;;
 	esac
 
