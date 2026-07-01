@@ -35,6 +35,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +53,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -89,13 +94,18 @@ import org.isf.lab.gui.LabNew;
 import org.isf.lab.model.Laboratory;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
+import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.opd.gui.OpdEditExtended;
 import org.isf.opd.model.Opd;
+import org.isf.patient.dto.PatientExport;
+import org.isf.patient.gui.PatientExportJson;
 import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.gui.PatientInsertExtended.PatientListener;
 import org.isf.patient.manager.PatientBrowserManager;
+import org.isf.patient.manager.PatientExportManager;
 import org.isf.patient.model.Patient;
+import org.isf.permissions.manager.PermissionManager;
 import org.isf.therapy.gui.TherapyEdit;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
@@ -161,6 +171,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+	private PatientExportManager patientExportManager = Context.getApplicationContext().getBean(PatientExportManager.class);
+	private PermissionManager permissionManager = Context.getApplicationContext().getBean(PermissionManager.class);
 
 	protected boolean altKeyReleased = true;
 	protected Timer ageTimer = new Timer(1000, e -> filterPatient(null));
@@ -707,6 +719,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		if (MainMenu.checkUserGrants("btnadmpatientfolder")) {
 			buttonPanel.add(getButtonPatientFolderBrowser());
 		}
+		if (canExportPatientData()) {
+			buttonPanel.add(getButtonExportData());
+		}
 		if (MainMenu.checkUserGrants("btnadmtherapy")) {
 			buttonPanel.add(getButtonTherapy());
 		}
@@ -995,6 +1010,58 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			new PatientFolderBrowser(myFrame, patient.getPatient()).showAsModal(this);
 		});
 		return buttonPatientFolderBrowser;
+	}
+
+	private boolean canExportPatientData() {
+		String currentUser = UserBrowsingManager.getCurrentUser();
+		if (currentUser == null) {
+			return false;
+		}
+		try {
+			return permissionManager.retrievePermissionsByUsername(currentUser).stream()
+							.anyMatch(permission -> "patient.export".equals(permission.getName()));
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			return false;
+		}
+	}
+
+	private JButton getButtonExportData() {
+		JButton buttonExportData = new JButton(MessageBundle.getMessage("angal.admission.exportpatientdata.btn"));
+		buttonExportData.setMnemonic(MessageBundle.getMnemonic("angal.admission.exportpatientdata.btn.key"));
+		buttonExportData.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
+				return;
+			}
+			patient = reloadSelectedPatient(table.getSelectedRow());
+
+			if (patient != null) {
+				int code = patient.getPatient().getCode();
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setSelectedFile(new File("patient_" + code + "_export.json"));
+				if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+					return;
+				}
+				File exportFile = fileChooser.getSelectedFile();
+				if (!exportFile.getName().endsWith(".json")) {
+					exportFile = new File(exportFile.getAbsolutePath() + ".json");
+				}
+				try {
+					PatientExport export = patientExportManager.exportPatientData(code);
+					if (export == null) {
+						MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
+						return;
+					}
+					Files.write(exportFile.toPath(), PatientExportJson.toJson(export).getBytes(StandardCharsets.UTF_8));
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+				} catch (IOException e) {
+					MessageDialog.error(this, "angal.common.datacouldnotbesaved.msg");
+				}
+			}
+		});
+		return buttonExportData;
 	}
 
 	private JButton getButtonTherapy() {
