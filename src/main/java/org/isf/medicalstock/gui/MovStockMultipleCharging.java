@@ -35,6 +35,7 @@ import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -486,13 +487,38 @@ public class MovStockMultipleCharging extends JDialog {
 	private boolean setOrValidateCost(Lot lot, int qty) {
 		BigDecimal cost = lot.getCost() != null ? lot.getCost() : BigDecimal.ZERO;
 		if (GeneralData.LOTWITHCOST && (cost.equals(BigDecimal.ZERO) || lot.getCost() == null)) {
-			cost = askCost(qty);
-			if (cost.compareTo(BigDecimal.ZERO) == 0) {
-				return false;
-			}
+			do {
+				cost = askCost(qty);
+				if (cost.compareTo(BigDecimal.ZERO) == 0) {
+					return false;
+				}
+			} while (!confirmLotCost(lot.getMedical(), cost));
 			lot.setCost(cost);
 		}
 		return true;
+	}
+
+	/**
+	 * When the entered {@code cost} deviates from the average cost of the previous lots of {@code medical} by more than the configured
+	 * {@link GeneralData#LOTCOSTVARIANCEPERCENT}, asks the user to confirm. Returns {@code true} to proceed with the entered cost, {@code false} to
+	 * re-enter it.
+	 */
+	private boolean confirmLotCost(Medical medical, BigDecimal cost) {
+		try {
+			BigDecimal averageCost = movStockInsertingManager.getAverageLotCost(medical);
+			if (movStockInsertingManager.isLotCostWithinVariance(cost, averageCost)) {
+				return true;
+			}
+			int answer = JOptionPane.showConfirmDialog(this,
+				MessageBundle.formatMessage("angal.medicalstock.multiplecharging.lotcostvariance.fmt",
+					cost.setScale(2, RoundingMode.HALF_UP).toPlainString(), averageCost.toPlainString(), GeneralData.LOTCOSTVARIANCEPERCENT),
+				MessageBundle.getMessage("angal.messagedialog.question.title"),
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			return answer == JOptionPane.YES_OPTION;
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			return true; // do not block the user if the average cannot be computed
+		}
 	}
 
 	private boolean needsCostUpdate(Lot lot) {
