@@ -406,12 +406,19 @@ public class WardPharmacy extends ModalJFrame implements
 					if (movWard.getCode() == selectedMovement.getCode()) {
 						JTextField reasonField = new JTextField(20);
 						Object[] message = { MessageBundle.getMessage("angal.medicalstock.deletemovementreason.msg"), reasonField };
-						int answer = JOptionPane.showConfirmDialog(this, message,
-							MessageBundle.getMessage("angal.common.delete.btn"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-						if (answer != JOptionPane.YES_OPTION) {
-							return;
-						}
-						movWardBrowserManager.deleteLastMovementWard(movWard, reasonField.getText());
+						String reason;
+						do {
+							int answer = JOptionPane.showConfirmDialog(this, message,
+								MessageBundle.getMessage("angal.common.delete.btn"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+							if (answer != JOptionPane.YES_OPTION) {
+								return;
+							}
+							reason = reasonField.getText().trim();
+							if (reason.isEmpty()) {
+								MessageDialog.error(this, "angal.medicalstock.deletemovementreasonrequired.msg");
+							}
+						} while (reason.isEmpty());
+						movWardBrowserManager.deleteLastMovementWard(movWard, reason);
 					} else {
 						MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
 						return;
