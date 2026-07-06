@@ -80,6 +80,7 @@ abstract class OperationRowBase extends JPanel {
 	protected JButton searchOperationButton;
 	protected JComboBox<String> comboResult;
 	protected JTextArea textAreaRemark;
+	protected JButton btnAdd;
 
 	protected OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	protected OperationRowBrowserManager operationRowBrowserManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
@@ -260,7 +261,7 @@ abstract class OperationRowBase extends JPanel {
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		panelListData.add(panelActions, BorderLayout.NORTH);
 
-		JButton btnAdd = new JButton(MessageBundle.getMessage("angal.operationrowlist.add.btn"));
+		btnAdd = new JButton(MessageBundle.getMessage("angal.operationrowlist.add.btn"));
 		btnAdd.setMnemonic(MessageBundle.getMnemonic("angal.operationrowlist.add.btn.key"));
 		btnAdd.addActionListener(actionEvent -> addToGrid());
 		panelActions.add(btnAdd);
@@ -433,6 +434,9 @@ abstract class OperationRowBase extends JPanel {
 		}
 		comboResult.setSelectedIndex(index);
 		/* *********** */
+		// OP-1404: a row was loaded for editing — turn the Add button into Update
+		btnAdd.setText(MessageBundle.getMessage("angal.common.update.btn"));
+		btnAdd.setMnemonic(MessageBundle.getMnemonic("angal.common.update.btn.key"));
 	}
 
 	public void deleteOpeRow(Component parentComponent, int idRow) {
@@ -477,6 +481,9 @@ abstract class OperationRowBase extends JPanel {
 		textFieldUnit.setText(""); //$NON-NLS-1$
 		tableData.clearSelection();
 		comboOperation.setEnabled(true);
+		// OP-1404: back to new-row mode — restore the Add label
+		btnAdd.setText(MessageBundle.getMessage("angal.operationrowlist.add.btn"));
+		btnAdd.setMnemonic(MessageBundle.getMnemonic("angal.operationrowlist.add.btn.key"));
 	}
 
 	public List<OperationRow> getOprowData() {
