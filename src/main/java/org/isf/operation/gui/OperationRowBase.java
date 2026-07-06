@@ -383,6 +383,8 @@ abstract class OperationRowBase extends JPanel {
 		for (String description : operationResults) {
 			comboResult.addItem(description);
 		}
+		// OP-1404: start with no result pre-selected, so the user must choose one explicitly instead of silently saving the first value.
+		comboResult.setSelectedIndex(-1);
 		return comboResult;
 	}
 
@@ -421,7 +423,9 @@ abstract class OperationRowBase extends JPanel {
 		}
 
 		/* ***** resultat **** */
-		int index = 0;
+		// OP-1404: leave the result unselected when the row has no (or an unknown) stored result,
+		// so editing an old row can't silently re-save the first value; the user must pick one.
+		int index = -1;
 		for (int i = 0; i < operationResults.size(); i++) {
 			if (opeRow.getOpResult() != null && operationBrowserManager.getResultDescriptionKey(operationResults.get(i)).equals(opeRow.getOpResult())) {
 				index = i;
