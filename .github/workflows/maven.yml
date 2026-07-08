@@ -27,8 +27,14 @@ jobs:
       - name: Determine PR source branch and fork repository
         id: vars
         run: |
+          # Skip tag pushes entirely
+          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" != refs/heads/* ]]; then
+            echo "Not a branch push ($GITHUB_REF). Exiting."
+            exit 0
+          fi
+
           # Set default FORK_REPO and BRANCH_NAME values.
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
+          BRANCH_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
           
           if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REPOSITORY" == "informatici/openhospital-gui" ]]; then
             # For pushes to the main repository, default to the main core repo
