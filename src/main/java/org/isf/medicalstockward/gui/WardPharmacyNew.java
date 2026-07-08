@@ -622,7 +622,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					fireMovementWardInserted();
 					dispose();
 				} catch (OHServiceException ex) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					OHServiceExceptionUtil.showMessages(ex, this);
 				}
 			});
 		}
