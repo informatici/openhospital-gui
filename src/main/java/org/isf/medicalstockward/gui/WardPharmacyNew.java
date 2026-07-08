@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -161,7 +162,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private Patient patientSelected;
 	private float patientWeight;
 	private Ward wardSelected;
-	private Object[] medClasses = { Medical.class, Integer.class, String.class };
+	private Object[] medClasses = { Medical.class, Double.class, String.class };
 	private String[] medColumnNames = {
 			MessageBundle.getMessage("angal.wardpharmacy.medical.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase(),
@@ -331,7 +332,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return true;
 	}
 
-	private MedicalWard automaticChoose(List<MedicalWard> drug, String me, int quantity) {
+	private MedicalWard automaticChoose(List<MedicalWard> drug, String me, double quantity) {
 		drug.sort((o1, o2) -> {
 			if (o1.getLot().getDueDate() == null || o2.getLot().getDueDate() == null) {
 				return 0;
@@ -340,15 +341,15 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		});
 
 		MedicalWard medWard = null;
-		int q = quantity;
+		double q = quantity;
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
 
 				if (elem.getQty() != 0.0) {
-					if (q != 0) {
+					if (q > 0) {
 						if (elem.getQty() <= q) {
-							q = (int) (q - elem.getQty());
-							int maxquantity = (int) (elem.getQty() - 0);
+							double maxquantity = elem.getQty();
+							q = q - maxquantity;
 							medWard = elem;
 							addItem(medWard, maxquantity);
 
@@ -367,7 +368,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return medWard;
 	}
 
-	private MedicalWard chooseLot(List<MedicalWard> drug, String me, int quantity) {
+	private MedicalWard chooseLot(List<MedicalWard> drug, String me, double quantity) {
 		List<MedicalWard> dr = new ArrayList<>();
 		MedicalWard medWard = null;
 		for (MedicalWard elem : drug) {
@@ -412,8 +413,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return medWard;
 	}
 
-	protected int askQuantity(String med, List<MedicalWard> drug) {
-		int qty = 0;
+	protected double askQuantity(String med, List<MedicalWard> drug) {
+		double qty = 0;
 		double totalQty = 0;
 		String prodCode = null;
 		for (MedicalWard elem : drug) {
@@ -445,7 +446,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 			if (quantity != null) {
 				try {
-					qty = Integer.parseInt(quantity);
+					qty = Double.parseDouble(quantity);
 					if (qty == 0) {
 						return 0;
 					}
@@ -497,7 +498,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
 			jButtonAddMedical.addActionListener(actionEvent -> {
 				String medical = (String) jComboBoxMedicals.getSelectedItem();
-				int quantity = askQuantity(medical, wardDrugs);
+				double quantity = askQuantity(medical, wardDrugs);
 			});
 		}
 		return jButtonAddMedical;
@@ -523,7 +524,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return jButtonRemoveMedical;
 	}
 
-	private void addItem(MedicalWard ward, int quantity) {
+	private void addItem(MedicalWard ward, double quantity) {
 		if (ward != null) {
 
 			MedicalWard item = new MedicalWard(ward.getMedical(), quantity, ward.getId().getLot());
@@ -613,7 +614,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				try {
 					for (MedicalWard medItem : medItems) {
 						manyMovementWard.add(new MovementWard(wardSelected, newDate, isPatient, patientSelected,
-							age, patientWeight, description, medItem.getMedical(), medItem.getQty(),
+							age, patientWeight, description, medItem.getMedical(), new BigDecimal(Double.toString(medItem.getQty())),
 							MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null, medItem.getLot()));
 					}
 
