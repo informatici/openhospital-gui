@@ -134,7 +134,7 @@ public class WardPharmacyRectify extends JDialog {
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 
 	private List<Medical> medicals; // list of all medicals available in the application
-	private Map<Integer, Double> wardMap; // map quantities by their medical_id
+	private Map<Integer, BigDecimal> wardMap; // map quantities by their medical_id
 	private JTextField jTextFieldLotNumber;
 	private JButton jButtonChooseLot;
 	private List<MedicalWard> wardDrugs; // list of drugs available in the selected ward
@@ -171,8 +171,8 @@ public class WardPharmacyRectify extends JDialog {
 		for (MedicalWard medWard : wardDrugs) {
 
 			if (wardMap.containsKey(medWard.getMedical().getCode())) {
-				Double quantity = wardMap.get(medWard.getMedical().getCode());
-				wardMap.put(medWard.getMedical().getCode(), quantity + medWard.getQty());
+				BigDecimal quantity = wardMap.get(medWard.getMedical().getCode());
+				wardMap.put(medWard.getMedical().getCode(), quantity.add(medWard.getQty()));
 			} else {
 				wardMap.put(medWard.getMedical().getCode(), medWard.getQty());
 			}
@@ -193,8 +193,8 @@ public class WardPharmacyRectify extends JDialog {
 		for (MedicalWard medWard : wardDrugs) {
 
 			if (wardMap.containsKey(medWard.getMedical().getCode())) {
-				Double qu = wardMap.get(medWard.getMedical().getCode());
-				wardMap.put(medWard.getMedical().getCode(), qu + medWard.getQty());
+				BigDecimal qu = wardMap.get(medWard.getMedical().getCode());
+				wardMap.put(medWard.getMedical().getCode(), qu.add(medWard.getQty()));
 			} else {
 				wardMap.put(medWard.getMedical().getCode(), medWard.getQty());
 			}
@@ -724,9 +724,9 @@ public class WardPharmacyRectify extends JDialog {
 						}
 					}
 					Integer code = med.getCode();
-					Double qty = wardMap.get(code);
+					BigDecimal qty = wardMap.get(code);
 					if (qty == null) {
-						qty = 0.0D;
+						qty = BigDecimal.ZERO;
 					}
 					jTextFieldStockQty.setText(qty.toString());
 					jSpinnerNewQty.setValue(qty);
