@@ -18,15 +18,11 @@
 	<parameter name="LOGO_PATH" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./rsc/images/"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="EXCLUDE_ANONYMIZED" class="java.lang.Boolean" isForPrompting="false">
-		<defaultValueExpression><![CDATA[Boolean.TRUE]]></defaultValueExpression>
-	</parameter>
 	<queryString>
 		<![CDATA[SELECT PAT_CITY, PAT_ADDR, COUNT(PAT_ID) AS NUMBER
 FROM OH_PATIENT
 WHERE DATE(PAT_TIMESTAMP) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 AND PAT_DELETED = 'N'
-AND (PAT_ANONYMIZED = 0 OR $P{EXCLUDE_ANONYMIZED} = FALSE)
 GROUP BY PAT_CITY, PAT_ADDR
 ORDER BY NUMBER DESC]]>
 	</queryString>

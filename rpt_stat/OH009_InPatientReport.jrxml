@@ -22,9 +22,6 @@
 	<parameter name="LOGO_PATH" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./rsc/images/"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="EXCLUDE_ANONYMIZED" class="java.lang.Boolean" isForPrompting="false">
-		<defaultValueExpression><![CDATA[Boolean.TRUE]]></defaultValueExpression>
-	</parameter>
 	<queryString>
 		<![CDATA[SELECT ADM_ID, ADM_YPROG, PAT_ID, PAT_NAME, PAT_CITY, PAT_ADDR, PAT_SEX, PAT_AGE, 
 			DATEDIFF(ADM_DATE_ADM, PAT_BDATE) AS DAYS,
@@ -40,7 +37,6 @@
 	        IF(DATEDIFF(ADM_DATE_DIS, ADM_DATE_ADM) = 0, 1, DATEDIFF(ADM_DATE_DIS, ADM_DATE_ADM)) AS LOS
 		FROM OH_ADMISSION JOIN OH_PATIENT ON PAT_ID = ADM_PAT_ID
 		WHERE ADM_DELETED = 'N'
-			AND (PAT_ANONYMIZED = 0 OR $P{EXCLUDE_ANONYMIZED} = FALSE)
 			AND ADM_DATE_DIS IS NOT NULL
 			AND DATE(ADM_DATE_DIS) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 		ORDER BY ADM_DATE_DIS]]>
