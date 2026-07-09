@@ -26,6 +26,9 @@
 	<parameter name="LOGO_PATH" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./rsc/images/"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="EXCLUDE_ANONYMIZED" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[Boolean.TRUE]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT OPD_PROG_YEAR, PAT_ID, OPD_DATE, PAT_CITY, PAT_ADDR, COALESCE(PAT_SEX, OPD_SEX) AS PAT_SEX, 
 		COALESCE(PAT_AGE, OPD_AGE) AS PAT_AGE, DATEDIFF(OPD_DATE,PAT_BDATE) AS DAYS,
@@ -36,7 +39,8 @@
        	IF(OPD_NEW_PAT='N','New','Re') AS ATTENDANCE
 FROM OH_OPD LEFT JOIN OH_PATIENT ON PAT_ID = OPD_PAT_ID
 LEFT JOIN OH_WARD ON OPD_WRD_ID_A = WRD_ID_A
-WHERE DATE(OPD_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
+WHERE (COALESCE(PAT_ANONYMIZED, 0) = 0 OR $P{EXCLUDE_ANONYMIZED} = FALSE)
+	AND DATE(OPD_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 ORDER BY OPD_DATE ASC]]>
 	</queryString>
 	<field name="OPD_PROG_YEAR" class="java.lang.Integer">
