@@ -367,20 +367,20 @@ public class WardPharmacyRectify extends JDialog {
 				return;
 			}
 
-			double lotQty = 0;
+			BigDecimal lotQty = BigDecimal.ZERO;
 			try {
-				lotQty = movWardBrowserManager.getCurrentQuantityInWard(selectedWard, selectedLot);
+				lotQty = BigDecimal.valueOf(movWardBrowserManager.getCurrentQuantityInWard(selectedWard, selectedLot));
 			} catch (OHServiceException e2) {
 				OHServiceExceptionUtil.showMessages(e2);
 			}
-			double newQty = spinnerNewQtyModel.getNumber().doubleValue();
-			double movQuantity = lotQty - newQty;
+			BigDecimal newQty = new BigDecimal(spinnerNewQtyModel.getNumber().toString());
+			BigDecimal movQuantity = lotQty.subtract(newQty);
 
-			if (movQuantity == 0. || newQty < 0) {
+			if (movQuantity.signum() == 0 || newQty.signum() < 0) {
 				MessageDialog.error(this, "angal.medicalstockward.rectify.pleaseinsertavalidvalue");
 				return;
 			}
-			if (newQty == 0.) {
+			if (newQty.signum() == 0) {
 				int ok = JOptionPane.showConfirmDialog(this, MessageBundle.getMessage("angal.medicalstockward.rectify.thiswillemptythelotproceed"));
 				if (ok != JOptionPane.OK_OPTION) {
 					return;
@@ -390,7 +390,7 @@ public class WardPharmacyRectify extends JDialog {
 			try {
 				movStockInsertingManager.storeLot(selectedLot.getCode(), selectedLot, med);
 				movWardBrowserManager.newMovementWard(new MovementWard(selectedWard, TimeTools.getNow(), false, null, 0, 0, reason, med,
-					new BigDecimal(Double.toString(movQuantity)),
+					movQuantity,
 					MessageBundle.getMessage("angal.medicalstockward.rectify.pieces"), selectedLot));
 				fireMovementWardInserted();
 				dispose();
@@ -492,7 +492,7 @@ public class WardPharmacyRectify extends JDialog {
 			}
 
 			jTextFieldLotNumber.setText(addLot.getCode());
-			jSpinnerNewQty.setValue(0);
+			jSpinnerNewQty.setValue(0.0d);
 			jLabelLotQty.setText("0");
 			jLabelInLot.setVisible(true);
 			if (GeneralData.LOTWITHCOST) {
@@ -522,7 +522,7 @@ public class WardPharmacyRectify extends JDialog {
 					return null;
 				}
 				jTextFieldLotNumber.setText(medWard.getLot().getCode());
-				jSpinnerNewQty.setValue(medWard.getQty());
+				jSpinnerNewQty.setValue(medWard.getQty().doubleValue());
 				jLabelLotQty.setText(medWard.getQty().toString());
 				jLabelInLot.setVisible(true);
 				selectedLot = medWard.getLot();
@@ -592,25 +592,25 @@ public class WardPharmacyRectify extends JDialog {
 	}
 
 	protected BigDecimal askCost() {
-		double cost = 0.;
+		BigDecimal cost = BigDecimal.ZERO;
 		do {
 			String input = JOptionPane.showInputDialog(this,
 				MessageBundle.getMessage("angal.medicalstockward.rectify.unitcost"), //$NON-NLS-1$
 				0.);
 			if (input != null) {
 				try {
-					cost = Double.parseDouble(input);
-					if (cost < 0) {
+					cost = new BigDecimal(input);
+					if (cost.signum() < 0) {
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException nfe) {
 					MessageDialog.error(this, "angal.medicalstockward.rectify.pleaseinsertavalidvalue");
 				}
 			} else {
-				return BigDecimal.valueOf(cost);
+				return cost;
 			}
-		} while (cost == 0.);
-		return BigDecimal.valueOf(cost);
+		} while (cost.signum() == 0);
+		return cost;
 	}
 
 	protected int askQuantity(Medical med) {
@@ -657,14 +657,14 @@ public class WardPharmacyRectify extends JDialog {
 			jSpinnerNewQty = new JSpinner(spinnerNewQtyModel);
 			jSpinnerNewQty.setFont(FONT_BOLD);
 			jSpinnerNewQty.addChangeListener(changeEvent -> {
-				double stock = Double.parseDouble(jTextFieldStockQty.getText());
-				double newQty = spinnerNewQtyModel.getNumber().doubleValue();
-				if (stock > 0) {
+				BigDecimal stock = new BigDecimal(jTextFieldStockQty.getText());
+				BigDecimal newQty = new BigDecimal(spinnerNewQtyModel.getNumber().toString());
+				if (stock.signum() > 0) {
 					jButtonChooseLot.setEnabled(true);
 				}
-				if (newQty > stock) {
+				if (newQty.compareTo(stock) > 0) {
 					jButtonNewLot.setEnabled(true);
-				} else if (newQty < stock) {
+				} else if (newQty.compareTo(stock) < 0) {
 					jButtonNewLot.setEnabled(false);
 				}
 			});
@@ -729,7 +729,7 @@ public class WardPharmacyRectify extends JDialog {
 						qty = BigDecimal.ZERO;
 					}
 					jTextFieldStockQty.setText(qty.toString());
-					jSpinnerNewQty.setValue(qty);
+					jSpinnerNewQty.setValue(qty.doubleValue());
 				} catch (ClassCastException ex) {
 					jTextFieldStockQty.setText(""); //$NON-NLS-1$
 					jSpinnerNewQty.setValue(0.0D);
