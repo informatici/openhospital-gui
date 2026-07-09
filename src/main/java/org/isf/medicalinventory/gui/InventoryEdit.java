@@ -1287,7 +1287,8 @@ public class InventoryEdit extends ModalJFrame {
 							return;
 						}
 					}
-					if (newQty.signum() < 0) {
+					// main-store stock is integer: reject negative and fractional quantities
+					if (newQty.signum() < 0 || newQty.stripTrailingZeros().scale() > 0) {
 						MessageDialog.error(null, "angal.inventory.invalidquantity.msg");
 						return;
 					}
