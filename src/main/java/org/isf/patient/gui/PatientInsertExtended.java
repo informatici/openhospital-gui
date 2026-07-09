@@ -774,6 +774,7 @@ public class PatientInsertExtended extends JDialog {
 			}
 
 			GoodDateChooser jBirthDateChooser = new GoodDateChooser(birthDate, false);
+			jBirthDateChooser.setEnabled(!patient.isAnonymized());
 			jBirthDateChooser.addDateChangeListener(event -> {
 				LocalDate newDate = event.getNewDate();
 				if (newDate != null) {
