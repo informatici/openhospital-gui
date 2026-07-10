@@ -64,7 +64,6 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -225,7 +224,7 @@ public class InventoryWardEdit extends ModalJFrame {
 	private JLabel wardLabel;
 	private JComboBox<Ward> wardComboBox;
 	private String newReference;
-	private JFrame frame;
+	private JDialog lotInformationDialog;
 	private JPanel mainPanel;
 	private JRadioButton radioButtonAll;
 	private JRadioButton radioOnlyNonZero;
@@ -509,23 +508,22 @@ public class InventoryWardEdit extends ModalJFrame {
 				mainPanel.add(rightPanel, BorderLayout.EAST);
 				mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-				frame = new JFrame();
-				frame.add(mainPanel);
-				frame.setSize(450, 200);
-				frame.setTitle(MessageBundle.getMessage("angal.inventory.lotinformation.title"));
-				frame.setLocationRelativeTo(null);
-				frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-				frame.addWindowListener(new WindowAdapter() {
+				lotInformationDialog = new JDialog(this, MessageBundle.getMessage("angal.inventory.lotinformation.title"), true);
+				lotInformationDialog.add(mainPanel);
+				lotInformationDialog.setSize(450, 200);
+				lotInformationDialog.setLocationRelativeTo(null);
+				lotInformationDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+				lotInformationDialog.addWindowListener(new WindowAdapter() {
 
 					@Override
 					public void windowClosing(WindowEvent e) {
-						int choice = MessageDialog.yesNo(frame, "angal.inventory.areyousureyouwantoclosethiswindow.msg");
+						int choice = MessageDialog.yesNo(lotInformationDialog, "angal.inventory.areyousureyouwantoclosethiswindow.msg");
 						if (choice == JOptionPane.YES_OPTION) {
-							frame.dispose();
+							lotInformationDialog.dispose();
 						}
 					}
 				});
-				frame.setVisible(true);
+				lotInformationDialog.setVisible(true);
 			});
 		}
 		return selectButton;
@@ -1945,7 +1943,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		}
-		jButtonCancel.addActionListener(actionEvent -> frame.dispose());
+		jButtonCancel.addActionListener(actionEvent -> lotInformationDialog.dispose());
 		return jButtonCancel;
 	}
 
