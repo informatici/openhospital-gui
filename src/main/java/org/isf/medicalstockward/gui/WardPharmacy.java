@@ -590,7 +590,7 @@ public class WardPharmacy extends ModalJFrame implements
 		List<MedicalWard> medicalWardList = new ArrayList<>();
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
-				if (elem.getQty() != 0.0) {
+				if (elem.getQty().signum() != 0) {
 					MedicalWard e = elem;
 					medicalWardList.add(e);
 				}
