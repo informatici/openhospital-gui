@@ -1721,8 +1721,8 @@ public class InventoryWardEdit extends ModalJFrame {
 				ListIterator<Lot> lotListIterator = lots.listIterator();
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
-					inventoryRowTemp = new MedicalInventoryRow(0, BigDecimal.valueOf(lot.getMainStoreQuantity()), BigDecimal.valueOf(lot.getMainStoreQuantity()), null,
-						med, lot);
+					BigDecimal mainStoreQty = BigDecimal.valueOf(lot.getMainStoreQuantity());
+					inventoryRowTemp = new MedicalInventoryRow(0, mainStoreQty, mainStoreQty, null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 						numberOfMedicalWithoutSameLotAdded = numberOfMedicalWithoutSameLotAdded + 1;
