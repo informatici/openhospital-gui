@@ -25,12 +25,15 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -38,6 +41,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
@@ -59,6 +63,9 @@ import org.isf.utils.jobjects.ModalJFrame;
  * (due) date and unit cost are editable through {@link LotBrowserEdit}. The current quantity (main store, wards and
  * overall) and the order of creation are shown read-only and computed live from the movements. The distribution of the
  * remaining quantity within the hospital is shown through {@link LotBrowserDistribution}.
+ * <p>
+ * The search field filters the pharmaceutical combo box by code or description; when the typed text is an existing lot
+ * id, the lot's pharmaceutical is selected and the lot is highlighted in the table.
  */
 public class LotBrowser extends ModalJFrame implements LotListener {
 
@@ -80,6 +87,8 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 	private final int[] columnWidth = { 110, 140, 95, 95, 70, 120, 90, 100 };
 
 	private JComboBox<Medical> medicalBox;
+	private JTextField searchTextField;
+	private JButton searchButton;
 	private JTable jTable;
 	private LotBrowserModel model;
 	private JButton editButton;
@@ -117,7 +126,115 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.pharmaceutical") + ':'));
 		panel.add(getMedicalBox());
+		panel.add(getSearchTextField());
+		panel.add(getSearchButton());
 		return panel;
+	}
+
+	private JTextField getSearchTextField() {
+		if (searchTextField == null) {
+			searchTextField = new JTextField(10);
+			searchTextField.setToolTipText(MessageBundle.getMessage("angal.medicalstock.searchbypharmaceuticalorlotid.tooltip"));
+			searchTextField.addKeyListener(new KeyListener() {
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						searchButton.doClick();
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+				}
+			});
+		}
+		return searchTextField;
+	}
+
+	private JButton getSearchButton() {
+		if (searchButton == null) {
+			searchButton = new JButton();
+			searchButton.setPreferredSize(new Dimension(20, 20));
+			searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+			searchButton.addActionListener(actionEvent -> search());
+		}
+		return searchButton;
+	}
+
+	private void search() {
+		String text = searchTextField.getText().trim();
+		Lot lot = null;
+		if (!text.isEmpty()) {
+			try {
+				lot = movStockInsertingManager.getLot(text);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
+		}
+		try {
+			medicals = medicalBrowsingManager.getMedicalsSortedByName();
+		} catch (OHServiceException e) {
+			medicals = new ArrayList<>();
+			OHServiceExceptionUtil.showMessages(e);
+		}
+		medicalBox.removeAllItems();
+		if (lot != null) {
+			for (Medical medical : medicals) {
+				medicalBox.addItem(medical);
+			}
+			selectLot(lot);
+			return;
+		}
+		for (Medical medical : getSearchMedicalsResults(text, medicals)) {
+			medicalBox.addItem(medical);
+		}
+	}
+
+	private void selectLot(Lot lot) {
+		for (Medical medical : medicals) {
+			if (medical.getCode().equals(lot.getMedical().getCode())) {
+				medicalBox.setSelectedItem(medical); // triggers loadLots()
+				break;
+			}
+		}
+		for (int row = 0; row < lotList.size(); row++) {
+			if (lotList.get(row).getCode().equals(lot.getCode())) {
+				jTable.setRowSelectionInterval(row, row);
+				jTable.scrollRectToVisible(jTable.getCellRect(row, 0, true));
+				break;
+			}
+		}
+	}
+
+	private List<Medical> getSearchMedicalsResults(String s, List<Medical> medicalsList) {
+		String query = s.trim();
+		List<Medical> results = new ArrayList<>();
+		for (Medical medoc : medicalsList) {
+			if (!query.equals("")) {
+				String[] patterns = query.split(" ");
+				String code = medoc.getProdCode().toLowerCase();
+				String description = medoc.getDescription().toLowerCase();
+				boolean patternFound = false;
+				for (String pattern : patterns) {
+					if (code.contains(pattern.toLowerCase()) || description.contains(pattern.toLowerCase())) {
+						patternFound = true;
+						// It is sufficient that only one pattern matches the query
+						break;
+					}
+				}
+				if (patternFound) {
+					results.add(medoc);
+				}
+			} else {
+				results.add(medoc);
+			}
+		}
+		return results;
 	}
 
 	private JComboBox<Medical> getMedicalBox() {
