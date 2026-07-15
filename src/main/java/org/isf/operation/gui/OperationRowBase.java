@@ -73,7 +73,7 @@ abstract class OperationRowBase extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationRowBase.class);
 
 	protected JLabel labelDate;
-	protected JTextField textFieldUnit;
+	protected VoFloatTextField textFieldUnit;
 	protected GoodDateTimeSpinnerChooser textDate;
 	protected JComboBox<Operation> comboOperation;
 	protected JTextField searchOperationTextField;
@@ -391,15 +391,6 @@ abstract class OperationRowBase extends JPanel {
 
 	// Either return opeManager.getOperationOpd() or opeManager.getOperationAdm()
 	abstract List<Operation> getOperationCollection() throws OHServiceException;
-
-	// Returns the Trans Unit field value, or 0.0F when the field is empty or not a valid number
-	protected float getTransUnitValue() {
-		try {
-			return Float.parseFloat(textFieldUnit.getText());
-		} catch (NumberFormatException e) {
-			return 0.0F;
-		}
-	}
 
 	public void addToForm() {
 		int selectedRow = tableData.getSelectedRow();
