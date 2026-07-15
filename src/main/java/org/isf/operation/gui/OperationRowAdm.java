@@ -73,14 +73,14 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionListen
 			MessageDialog.error(this, "angal.operationrowedit.warningdateafter");
 			return;
 		}
+		if (this.comboResult.getSelectedItem() == null) {
+			MessageDialog.error(this, "angal.operationrow.pleaseselectaresult.msg");
+			return;
+		}
 
 		OperationRow operationRow = new OperationRow();
 		operationRow.setOpDate(this.textDate.getLocalDateTime());
-		if (this.comboResult.getSelectedItem() != null) {
-			operationRow.setOpResult(operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
-		} else {
-			operationRow.setOpResult("");
-		}
+		operationRow.setOpResult(operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
 		try {
 			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 		} catch (NumberFormatException e) {
