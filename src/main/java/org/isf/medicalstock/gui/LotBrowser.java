@@ -341,10 +341,18 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 
 	@Override
 	public void lotUpdated(AWTEvent e) {
-		model.fireTableDataChanged();
-		jTable.updateUI();
-		if (selectedRow > -1 && selectedRow < jTable.getRowCount()) {
-			jTable.setRowSelectionInterval(selectedRow, selectedRow);
+		// reload the lots so the table holds the fresh entities: keeping the old instances around would
+		// submit a stale optimistic-lock version (LT_LOCK) on the next edit of the same lot
+		String selectedCode = selectedRow > -1 && selectedRow < lotList.size() ? lotList.get(selectedRow).getCode() : null;
+		loadLots();
+		if (selectedCode != null) {
+			for (int i = 0; i < lotList.size(); i++) {
+				if (selectedCode.equals(lotList.get(i).getCode())) {
+					jTable.setRowSelectionInterval(i, i);
+					selectedRow = i;
+					break;
+				}
+			}
 		}
 	}
 
