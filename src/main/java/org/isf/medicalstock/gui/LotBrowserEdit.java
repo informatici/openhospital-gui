@@ -183,6 +183,9 @@ public class LotBrowserEdit extends JDialog {
 				dispose();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
+				// the shared Lot has already been mutated above: notify the browser anyway so it reloads the
+				// lots from the database, discarding this stale instance and keeping the edit retryable
+				fireLotUpdated();
 			}
 		});
 		return okButton;

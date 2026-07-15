@@ -95,6 +95,7 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 	private JButton distributionButton;
 	private JButton closeButton;
 	private int selectedRow = -1;
+	private boolean populatingMedicalBox;
 
 	private final MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private final MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
@@ -182,26 +183,40 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 			medicals = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		medicalBox.removeAllItems();
-		if (lot != null) {
-			for (Medical medical : medicals) {
-				medicalBox.addItem(medical);
+		// repopulate the combo silently: removeAllItems(), the auto-selecting first addItem() and setSelectedItem()
+		// would each fire the action listener, loading the lots up to three times per search
+		populatingMedicalBox = true;
+		try {
+			medicalBox.removeAllItems();
+			if (lot != null) {
+				for (Medical medical : medicals) {
+					medicalBox.addItem(medical);
+				}
+				selectMedicalOf(lot);
+			} else {
+				for (Medical medical : getSearchMedicalsResults(text, medicals)) {
+					medicalBox.addItem(medical);
+				}
 			}
-			selectLot(lot);
-			return;
+		} finally {
+			populatingMedicalBox = false;
 		}
-		for (Medical medical : getSearchMedicalsResults(text, medicals)) {
-			medicalBox.addItem(medical);
+		loadLots();
+		if (lot != null) {
+			selectLotRow(lot);
 		}
 	}
 
-	private void selectLot(Lot lot) {
+	private void selectMedicalOf(Lot lot) {
 		for (Medical medical : medicals) {
 			if (medical.getCode().equals(lot.getMedical().getCode())) {
-				medicalBox.setSelectedItem(medical); // triggers loadLots()
+				medicalBox.setSelectedItem(medical);
 				break;
 			}
 		}
+	}
+
+	private void selectLotRow(Lot lot) {
 		for (int row = 0; row < lotList.size(); row++) {
 			if (lotList.get(row).getCode().equals(lot.getCode())) {
 				jTable.setRowSelectionInterval(row, row);
@@ -249,7 +264,12 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 			for (Medical medical : medicals) {
 				medicalBox.addItem(medical);
 			}
-			medicalBox.addActionListener(actionEvent -> loadLots());
+			medicalBox.addActionListener(actionEvent -> {
+				if (populatingMedicalBox) {
+					return;
+				}
+				loadLots();
+			});
 		}
 		return medicalBox;
 	}
