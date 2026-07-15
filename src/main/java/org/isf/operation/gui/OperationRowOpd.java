@@ -73,11 +73,7 @@ public class OperationRowOpd extends OperationRowBase implements SurgeryListener
 		OperationRow operationRow = new OperationRow();
 		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		operationRow.setOpResult(operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
-		try {
-			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
-		} catch (NumberFormatException e) {
-			operationRow.setTransUnit(0.0F);
-		}
+		operationRow.setTransUnit(getTransUnitValue());
 		Operation op = (Operation) this.comboOperation.getSelectedItem();
 		operationRow.setOperation(op);
 		if (myOpd != null) {
@@ -93,7 +89,7 @@ public class OperationRowOpd extends OperationRowBase implements SurgeryListener
 			opeInter.setOpDate(this.textDate.getLocalDateTime());
 			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
-			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
+			opeInter.setTransUnit(getTransUnitValue());
 			op = (Operation) this.comboOperation.getSelectedItem();
 			opeInter.setOperation(op);
 			opeInter.setPrescriber(MainMenu.getUser().getUserName());

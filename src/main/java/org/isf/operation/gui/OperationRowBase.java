@@ -392,8 +392,21 @@ abstract class OperationRowBase extends JPanel {
 	// Either return opeManager.getOperationOpd() or opeManager.getOperationAdm()
 	abstract List<Operation> getOperationCollection() throws OHServiceException;
 
+	// Returns the Trans Unit field value, or 0.0F when the field is empty or not a valid number
+	protected float getTransUnitValue() {
+		try {
+			return Float.parseFloat(textFieldUnit.getText());
+		} catch (NumberFormatException e) {
+			return 0.0F;
+		}
+	}
+
 	public void addToForm() {
-		OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
+		int selectedRow = tableData.getSelectedRow();
+		if (selectedRow < 0) {
+			return;
+		}
+		OperationRow opeRow = oprowData.get(selectedRow);
 		/* ** for combo operation **** */
 		List<Operation> opeList = new ArrayList<>();
 		try {
