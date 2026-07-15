@@ -123,10 +123,7 @@ public class LotBrowserEdit extends JDialog {
 			costTextField.setText(lot.getCost().toPlainString());
 		}
 
-		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.pharmaceutical") + ':'));
-		panel.add(new JLabel(lot.getMedical() != null ? lot.getMedical().getDescription() : ""));
-		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.lotid") + ':'));
-		panel.add(new JLabel(lot.getCode()));
+		addLotHeaderRows(panel, lot);
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.prepdate.col") + ':'));
 		panel.add(preparationDateChooser);
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.duedate.col") + ':'));
@@ -136,6 +133,16 @@ public class LotBrowserEdit extends JDialog {
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.overallquantity.col") + ':'));
 		panel.add(new JLabel(String.valueOf(lot.getOverallQuantity())));
 		return panel;
+	}
+
+	/**
+	 * Adds the pharmaceutical and lot id header rows shared by the lot dialogs.
+	 */
+	static void addLotHeaderRows(JPanel panel, Lot lot) {
+		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.pharmaceutical") + ':'));
+		panel.add(new JLabel(lot.getMedical() != null ? lot.getMedical().getDescription() : ""));
+		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.lotid") + ':'));
+		panel.add(new JLabel(lot.getCode()));
 	}
 
 	private JPanel getButtonPanel() {

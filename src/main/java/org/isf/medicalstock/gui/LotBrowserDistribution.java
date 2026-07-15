@@ -24,6 +24,7 @@ package org.isf.medicalstock.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -39,8 +39,10 @@ import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
+import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -49,8 +51,9 @@ import org.isf.ward.model.Ward;
 
 /**
  * Modal dialog to show how the remaining quantity of a {@link Lot} is distributed within the hospital: one row for the
- * main store, one row for each ward holding the lot and a final row with the overall total. Only the wards with a
- * quantity greater than zero are listed; all the values are shown read-only and computed live from the movements.
+ * main store, one row for each ward holding a non-zero quantity of the lot and a final row with the overall total. All
+ * the values are shown read-only and computed live from the movements when the dialog is opened; if the quantities
+ * cannot be loaded, the table is left empty rather than showing a partial distribution.
  */
 public class LotBrowserDistribution extends JDialog {
 
@@ -64,6 +67,7 @@ public class LotBrowserDistribution extends JDialog {
 	};
 	private final int[] columnWidth = { 250, 100 };
 
+	private final MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private final MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private final WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
@@ -83,18 +87,51 @@ public class LotBrowserDistribution extends JDialog {
 	}
 
 	private void loadDistribution() {
-		distributionRows.add(new Object[] { MessageBundle.getMessage("angal.medicalstock.lotdistribution.mainstore.txt"), lot.getMainStoreQuantity() });
+		if (lot.getMedical() == null) {
+			return;
+		}
+		List<Object[]> rows = new ArrayList<>();
 		try {
+			Lot freshLot = getFreshLot();
+			rows.add(new Object[] { MessageBundle.getMessage("angal.medicalstock.lotdistribution.mainstore.txt"), formatQuantity(freshLot.getMainStoreQuantity()) });
 			for (Ward ward : wardBrowserManager.getWards()) {
-				int quantity = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-				if (quantity > 0) {
-					distributionRows.add(new Object[] { ward.getDescription(), quantity });
+				BigDecimal quantity = getQuantityInWard(ward);
+				if (quantity.compareTo(BigDecimal.ZERO) != 0) {
+					rows.add(new Object[] { ward.getDescription(), formatQuantity(quantity) });
 				}
 			}
+			rows.add(new Object[] { MessageBundle.getMessage("angal.common.total.txt"), formatQuantity(freshLot.getOverallQuantity()) });
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
+			return;
 		}
-		distributionRows.add(new Object[] { MessageBundle.getMessage("angal.common.total.txt"), lot.getOverallQuantity() });
+		distributionRows.addAll(rows);
+	}
+
+	private Lot getFreshLot() throws OHServiceException {
+		for (Lot medicalLot : movStockInsertingManager.getLotByMedical(lot.getMedical(), false)) {
+			if (medicalLot.getCode().equals(lot.getCode())) {
+				return medicalLot;
+			}
+		}
+		return lot;
+	}
+
+	private BigDecimal getQuantityInWard(Ward ward) throws OHServiceException {
+		for (MedicalWard medicalWard : movWardBrowserManager.getMedicalsWard(ward.getCode(), lot.getMedical().getCode(), false)) {
+			if (medicalWard.getLot() != null && lot.getCode().equals(medicalWard.getLot().getCode())) {
+				return medicalWard.getQty();
+			}
+		}
+		return BigDecimal.ZERO;
+	}
+
+	private String formatQuantity(Number quantity) {
+		double value = quantity.doubleValue();
+		if (value == Math.rint(value)) {
+			return String.valueOf((long) value);
+		}
+		return String.valueOf(value);
 	}
 
 	private JPanel getContentPanel() {
@@ -108,10 +145,7 @@ public class LotBrowserDistribution extends JDialog {
 	private JPanel getLotPanel() {
 		JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.pharmaceutical") + ':'));
-		panel.add(new JLabel(lot.getMedical() != null ? lot.getMedical().getDescription() : ""));
-		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.lotid") + ':'));
-		panel.add(new JLabel(lot.getCode()));
+		LotBrowserEdit.addLotHeaderRows(panel, lot);
 		return panel;
 	}
 
@@ -146,7 +180,7 @@ public class LotBrowserDistribution extends JDialog {
 
 		@Override
 		public int getRowCount() {
-			return distributionRows == null ? 0 : distributionRows.size();
+			return distributionRows.size();
 		}
 
 		@Override
