@@ -57,7 +57,8 @@ import org.isf.utils.jobjects.ModalJFrame;
  * <p>
  * The lot id is shown read-only (it is the primary key and is referenced by movements); the preparation date, expiring
  * (due) date and unit cost are editable through {@link LotBrowserEdit}. The current quantity (main store, wards and
- * overall) and the order of creation are shown read-only and computed live from the movements.
+ * overall) and the order of creation are shown read-only and computed live from the movements. The distribution of the
+ * remaining quantity within the hospital is shown through {@link LotBrowserDistribution}.
  */
 public class LotBrowser extends ModalJFrame implements LotListener {
 
@@ -82,6 +83,7 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 	private JTable jTable;
 	private LotBrowserModel model;
 	private JButton editButton;
+	private JButton distributionButton;
 	private JButton closeButton;
 	private int selectedRow = -1;
 
@@ -171,6 +173,7 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 	private JPanel getButtonPanel() {
 		JPanel panel = new JPanel();
 		panel.add(getEditButton());
+		panel.add(getDistributionButton());
 		panel.add(getCloseButton());
 		return panel;
 	}
@@ -192,6 +195,22 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 			});
 		}
 		return editButton;
+	}
+
+	private JButton getDistributionButton() {
+		if (distributionButton == null) {
+			distributionButton = new JButton(MessageBundle.getMessage("angal.medicalstock.lotdistribution.btn"));
+			distributionButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.lotdistribution.btn.key"));
+			distributionButton.addActionListener(actionEvent -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");
+					return;
+				}
+				Lot lot = lotList.get(jTable.getSelectedRow());
+				new LotBrowserDistribution(myFrame, lot).setVisible(true);
+			});
+		}
+		return distributionButton;
 	}
 
 	private JButton getCloseButton() {
