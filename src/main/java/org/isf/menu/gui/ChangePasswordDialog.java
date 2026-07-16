@@ -34,6 +34,7 @@ import javax.swing.event.AncestorListener;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.UserBrowsingManager;
+import org.isf.menu.model.User;
 import org.isf.utils.db.BCrypt;
 import org.isf.utils.jobjects.MessageDialog;
 
@@ -56,10 +57,11 @@ public final class ChangePasswordDialog {
 	 *
 	 * @param parent the parent component for the dialogs
 	 * @param userBrowsingManager used to check the password strength policy
+	 * @param user the user whose password is being changed, used to reject reusing the current password (may be {@code null} to skip that check)
 	 * @param title the title shown on the dialogs
 	 * @return the BCrypt-hashed new password, or {@code null} if the user cancelled or the two entries did not match
 	 */
-	public static String promptForNewPassword(Component parent, UserBrowsingManager userBrowsingManager, String title) {
+	public static String promptForNewPassword(Component parent, UserBrowsingManager userBrowsingManager, User user, String title) {
 		JPasswordField pwd = new JPasswordField(10);
 		pwd.addAncestorListener(new AncestorListener() {
 
@@ -106,6 +108,11 @@ public final class ChangePasswordDialog {
 					pwd.setText("");
 				} else if (!userBrowsingManager.isPasswordStrong(newPassword)) {
 					MessageDialog.error(parent, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+					newPassword = "";
+					pwd.setText("");
+				} else if (userBrowsingManager.isSameAsCurrentPassword(user, newPassword)) {
+					// OP-1431: a forced/self password change must not reuse the current password
+					MessageDialog.error(parent, "angal.userbrowser.newpasswordmustbedifferentfromthecurrentone.msg");
 					newPassword = "";
 					pwd.setText("");
 				}
