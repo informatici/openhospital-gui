@@ -128,7 +128,7 @@ public class LotBrowserEdit extends JDialog {
 		panel.add(preparationDateChooser);
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.duedate.col") + ':'));
 		panel.add(dueDateChooser);
-		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.cost.col") + ':'));
+		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.unitcost.col") + ':'));
 		panel.add(costTextField);
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.overallquantity.col") + ':'));
 		panel.add(new JLabel(String.valueOf(lot.getOverallQuantity())));

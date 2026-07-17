@@ -23,6 +23,8 @@ package org.isf.medicalstock.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,10 +34,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
@@ -51,9 +56,9 @@ import org.isf.ward.model.Ward;
 
 /**
  * Modal dialog to show how the remaining quantity of a {@link Lot} is distributed within the hospital: one row for the
- * main store, one row for each ward holding a non-zero quantity of the lot and a final row with the overall total. All
- * the values are shown read-only and computed live from the movements when the dialog is opened; if the quantities
- * cannot be loaded, the table is left empty rather than showing a partial distribution.
+ * main store and one row for each ward holding a non-zero quantity of the lot, with the overall total shown below the
+ * table. All the values are shown read-only and computed live from the movements when the dialog is opened; if the
+ * quantities cannot be loaded, the table is left empty rather than showing a partial distribution.
  */
 public class LotBrowserDistribution extends JDialog {
 
@@ -61,6 +66,7 @@ public class LotBrowserDistribution extends JDialog {
 
 	private final Lot lot;
 	private final List<Object[]> distributionRows = new ArrayList<>();
+	private String totalQuantity = "";
 	private final String[] columns = {
 			MessageBundle.getMessage("angal.common.ward.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase()
@@ -100,7 +106,7 @@ public class LotBrowserDistribution extends JDialog {
 					rows.add(new Object[] { ward.getDescription(), formatQuantity(quantity) });
 				}
 			}
-			rows.add(new Object[] { MessageBundle.getMessage("angal.common.total.txt"), formatQuantity(freshLot.getOverallQuantity()) });
+			totalQuantity = formatQuantity(freshLot.getOverallQuantity());
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 			return;
@@ -138,7 +144,18 @@ public class LotBrowserDistribution extends JDialog {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(getLotPanel(), BorderLayout.NORTH);
 		panel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
-		panel.add(getButtonPanel(), BorderLayout.SOUTH);
+		JPanel southPanel = new JPanel(new BorderLayout());
+		southPanel.add(getTotalPanel(), BorderLayout.NORTH);
+		southPanel.add(getButtonPanel(), BorderLayout.SOUTH);
+		panel.add(southPanel, BorderLayout.SOUTH);
+		return panel;
+	}
+
+	private JPanel getTotalPanel() {
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JLabel totalLabel = new JLabel(MessageBundle.getMessage("angal.common.total.txt").toUpperCase() + ": " + totalQuantity);
+		totalLabel.setFont(totalLabel.getFont().deriveFont(Font.BOLD));
+		panel.add(totalLabel);
 		return panel;
 	}
 
@@ -152,6 +169,9 @@ public class LotBrowserDistribution extends JDialog {
 	private JTable getJTable() {
 		JTable jTable = new JTable(new LotDistributionModel());
 		jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		DefaultTableCellRenderer rightAligned = new DefaultTableCellRenderer();
+		rightAligned.setHorizontalAlignment(SwingConstants.RIGHT);
+		jTable.getColumnModel().getColumn(1).setCellRenderer(rightAligned);
 		int totalWidth = 0;
 		for (int i = 0; i < columnWidth.length; i++) {
 			jTable.getColumnModel().getColumn(i).setPreferredWidth(columnWidth[i]);

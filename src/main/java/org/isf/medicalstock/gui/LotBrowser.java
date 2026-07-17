@@ -42,6 +42,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
@@ -61,8 +63,8 @@ import org.isf.utils.jobjects.ModalJFrame;
  * <p>
  * The lot id is shown read-only (it is the primary key and is referenced by movements); the preparation date, expiring
  * (due) date and unit cost are editable through {@link LotBrowserEdit}. The current quantity (main store, wards and
- * overall) and the order of creation are shown read-only and computed live from the movements. The distribution of the
- * remaining quantity within the hospital is shown through {@link LotBrowserDistribution}.
+ * overall) is shown read-only and computed live from the movements; the lots are listed newest first. The distribution
+ * of the remaining quantity within the hospital is shown through {@link LotBrowserDistribution}.
  * <p>
  * The search field filters the pharmaceutical combo box by code or description; when the typed text is an existing lot
  * id, the lot's pharmaceutical is selected and the lot is highlighted in the table.
@@ -75,16 +77,16 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 	private List<Medical> medicals;
 	private List<Lot> lotList = new ArrayList<>();
 	private final String[] columns = {
-			MessageBundle.getMessage("angal.medicalstock.creationorder.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.lotid").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),
-			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(),
+			MessageBundle.getMessage("angal.medicalstock.unitcost.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.mainstorequantity.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.wardsquantity.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.overallquantity.col").toUpperCase()
 	};
-	private final int[] columnWidth = { 110, 140, 95, 95, 70, 120, 90, 100 };
+	private final int[] columnWidth = { 140, 95, 95, 90, 120, 90, 100 };
+	private final boolean[] columnRightAligned = { false, false, false, true, true, true, true };
 
 	private JComboBox<Medical> medicalBox;
 	private JTextField searchTextField;
@@ -125,7 +127,7 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 
 	private JPanel getSelectionPanel() {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.pharmaceutical") + ':'));
+		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.searchbylotorpharmaceutical.label") + ':'));
 		panel.add(getMedicalBox());
 		panel.add(getSearchTextField());
 		panel.add(getSearchButton());
@@ -135,7 +137,6 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 	private JTextField getSearchTextField() {
 		if (searchTextField == null) {
 			searchTextField = new JTextField(10);
-			searchTextField.setToolTipText(MessageBundle.getMessage("angal.medicalstock.searchbypharmaceuticalorlotid.tooltip"));
 			searchTextField.addKeyListener(new KeyListener() {
 
 				@Override
@@ -284,7 +285,8 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 				lotList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			lotList.sort(Comparator.comparing(Lot::getCreatedDate, Comparator.nullsLast(Comparator.naturalOrder())));
+			// newest first; lots without a creation date (legacy data) sink to the bottom
+			lotList.sort(Comparator.comparing(Lot::getCreatedDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed());
 		}
 		selectedRow = -1;
 		model.fireTableDataChanged();
@@ -296,9 +298,14 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 			model = new LotBrowserModel();
 			jTable = new JTable(model);
 			jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			DefaultTableCellRenderer rightAligned = new DefaultTableCellRenderer();
+			rightAligned.setHorizontalAlignment(SwingConstants.RIGHT);
 			int totalWidth = 0;
 			for (int i = 0; i < columnWidth.length; i++) {
 				jTable.getColumnModel().getColumn(i).setPreferredWidth(columnWidth[i]);
+				if (columnRightAligned[i]) {
+					jTable.getColumnModel().getColumn(i).setCellRenderer(rightAligned);
+				}
 				totalWidth += columnWidth[i];
 			}
 			jTable.setPreferredScrollableViewportSize(new Dimension(totalWidth, 220));
@@ -404,20 +411,18 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 			Lot lot = lotList.get(r);
 			switch (c) {
 				case 0:
-					return r + 1;
-				case 1:
 					return lot.getCode();
-				case 2:
+				case 1:
 					return formatDate(lot.getPreparationDate());
-				case 3:
+				case 2:
 					return formatDate(lot.getDueDate());
-				case 4:
+				case 3:
 					return lot.getCost();
-				case 5:
+				case 4:
 					return lot.getMainStoreQuantity();
-				case 6:
+				case 5:
 					return lot.getWardsTotalQuantity();
-				case 7:
+				case 6:
 					return lot.getOverallQuantity();
 				default:
 					return null;
