@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -257,6 +257,8 @@ public class InventoryEdit extends ModalJFrame {
 	private MovBrowserManager movBrowserManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
 	private boolean allMedicals;
 	private boolean allMedicalsChosen;
+	// OP-1426: set by the save action, read by the close action so the window is only disposed on a successful save
+	private boolean saveSucceeded;
 	private Object[] allMedicalsOrList = {
 			MessageBundle.getMessage("angal.inventory.yesallmedicals.btn"),
 			MessageBundle.getMessage("angal.inventory.noonlytheonesinthelist.btn")
@@ -584,6 +586,7 @@ public class InventoryEdit extends ModalJFrame {
 		saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		saveButton.addActionListener(actionEvent -> {
+			saveSucceeded = false;
 			try {
 				if (inventoryRowSearchList == null || inventoryRowSearchList.isEmpty()) {
 					MessageDialog.error(null, "angal.inventory.cannotsaveinventorywithoutproducts.msg");
@@ -638,6 +641,7 @@ public class InventoryEdit extends ModalJFrame {
 					validateButton.setEnabled(true);
 					confirmButton.setEnabled(false);
 					resetVariables();
+					saveSucceeded = true;
 
 				} else if (mode.equals("update")) {
 					int response = MessageDialog.yesNo(null, "angal.inventory.doyouwanttoupdatethisinventory.msg");
@@ -718,6 +722,7 @@ public class InventoryEdit extends ModalJFrame {
 						resetVariables();
 						validateButton.setEnabled(true);
 						confirmButton.setEnabled(false);
+						saveSucceeded = true;
 					}
 				}
 			} catch (OHServiceException e) {
@@ -1055,7 +1060,9 @@ public class InventoryEdit extends ModalJFrame {
 				int reset = MessageDialog.yesNoCancel(null, "angal.inventory.doyouwanttosavethechanges.msg");
 				if (reset == JOptionPane.YES_OPTION) {
 					this.saveButton.doClick();
-					dispose();
+					if (saveSucceeded) {
+						dispose();
+					}
 				}
 				if (reset == JOptionPane.NO_OPTION) {
 					resetVariables();
