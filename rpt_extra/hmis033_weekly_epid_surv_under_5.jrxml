@@ -13,29 +13,25 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT concat(DIS_DCL_ID_A,' - ',DIS_DESC) description, DIS_DESC, 
-   (select count(*) from OH_ADMISSION a, OH_PATIENT p
+   (select count(*) from OH_ADMISSION a
     where a.ADM_IN_DIS_ID_A = d.dis_id_a
-    and a.ADM_PAT_ID = p.PAT_ID
-    and p.PAT_AGE < 5
+    and a.ADM_AGE < 5
     and DATE(ADM_DATE_ADM) between DATE($P{fromdate}) and DATE($P{todate})
     and a.ADM_DELETED=0 ) ipd_admitted_diagin,
-   (select count(*) from OH_ADMISSION a, OH_PATIENT p
+   (select count(*) from OH_ADMISSION a
     where a.ADM_IN_DIS_ID_A = d.dis_id_a
-    and a.ADM_PAT_ID = p.PAT_ID
-    and p.PAT_AGE < 5
+    and a.ADM_AGE < 5
     and DATE(ADM_DATE_ADM) between DATE($P{fromdate}) and DATE($P{todate})
     and a.ADM_DELETED=0
     and a.ADM_DIST_ID_A='D' ) ipd_dead_diagin,
-   (select count(*) from OH_ADMISSION a, OH_PATIENT p
+   (select count(*) from OH_ADMISSION a
     where a.ADM_OUT_DIS_ID_A = d.dis_id_a
-    and a.ADM_PAT_ID = p.PAT_ID
-    and p.PAT_AGE < 5
+    and a.ADM_AGE < 5
     and DATE(ADM_DATE_ADM) between DATE($P{fromdate}) and DATE($P{todate})
     and a.ADM_DELETED=0 ) ipd_admitted_diagout,
-   (select count(*) from OH_ADMISSION a, OH_PATIENT p
+   (select count(*) from OH_ADMISSION a
     where a.ADM_OUT_DIS_ID_A = d.dis_id_a
-    and a.ADM_PAT_ID = p.PAT_ID
-    and p.PAT_AGE < 5
+    and a.ADM_AGE < 5
     and DATE(ADM_DATE_ADM) between DATE($P{fromdate}) and DATE($P{todate})
     and a.ADM_DELETED=0
     and a.ADM_DIST_ID_A='D' ) ipd_dead_diagout,
