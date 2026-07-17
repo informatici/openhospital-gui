@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -35,7 +35,6 @@ import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -504,21 +503,7 @@ public class MovStockMultipleCharging extends JDialog {
 	 * re-enter it.
 	 */
 	private boolean confirmLotCost(Medical medical, BigDecimal cost) {
-		try {
-			BigDecimal averageCost = movStockInsertingManager.getAverageLotCost(medical);
-			if (movStockInsertingManager.isLotCostWithinVariance(cost, averageCost)) {
-				return true;
-			}
-			int answer = JOptionPane.showConfirmDialog(this,
-				MessageBundle.formatMessage("angal.medicalstock.multiplecharging.lotcostvariance.fmt",
-					cost.setScale(2, RoundingMode.HALF_UP).toPlainString(), averageCost.toPlainString(), GeneralData.LOTCOSTVARIANCEPERCENT),
-				MessageBundle.getMessage("angal.messagedialog.question.title"),
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			return answer == JOptionPane.YES_OPTION;
-		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-			return true; // do not block the user if the average cannot be computed
-		}
+		return LotCostVariance.confirm(this, movStockInsertingManager, medical, cost);
 	}
 
 	private boolean needsCostUpdate(Lot lot) {
