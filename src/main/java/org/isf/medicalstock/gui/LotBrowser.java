@@ -128,9 +128,9 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 	private JPanel getSelectionPanel() {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.searchbylotorpharmaceutical.label") + ':'));
-		panel.add(getMedicalBox());
 		panel.add(getSearchTextField());
 		panel.add(getSearchButton());
+		panel.add(getMedicalBox());
 		return panel;
 	}
 
