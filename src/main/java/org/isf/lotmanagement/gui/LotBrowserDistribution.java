@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package org.isf.medicalstock.gui;
+package org.isf.lotmanagement.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -85,7 +85,7 @@ public class LotBrowserDistribution extends JDialog {
 	}
 
 	private void initialize() {
-		setTitle(MessageBundle.getMessage("angal.medicalstock.lotdistribution.title"));
+		setTitle(MessageBundle.getMessage("angal.lotmanagement.lotdistribution.title"));
 		setContentPane(getContentPanel());
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pack();
@@ -99,7 +99,7 @@ public class LotBrowserDistribution extends JDialog {
 		List<Object[]> rows = new ArrayList<>();
 		try {
 			Lot freshLot = getFreshLot();
-			rows.add(new Object[] { MessageBundle.getMessage("angal.medicalstock.lotdistribution.mainstore.txt"), formatQuantity(freshLot.getMainStoreQuantity()) });
+			rows.add(new Object[] { MessageBundle.getMessage("angal.lotmanagement.lotdistribution.mainstore.txt"), formatQuantity(freshLot.getMainStoreQuantity()) });
 			for (Ward ward : wardBrowserManager.getWards()) {
 				BigDecimal quantity = getQuantityInWard(ward);
 				if (quantity.compareTo(BigDecimal.ZERO) != 0) {

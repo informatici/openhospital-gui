@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package org.isf.medicalstock.gui;
+package org.isf.lotmanagement.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -49,7 +49,7 @@ import javax.swing.table.DefaultTableModel;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
-import org.isf.medicalstock.gui.LotBrowserEdit.LotListener;
+import org.isf.lotmanagement.gui.LotBrowserEdit.LotListener;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.menu.manager.Context;
@@ -80,10 +80,10 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 			MessageBundle.getMessage("angal.medicalstock.lotid").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(),
 			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),
-			MessageBundle.getMessage("angal.medicalstock.unitcost.col").toUpperCase(),
-			MessageBundle.getMessage("angal.medicalstock.mainstorequantity.col").toUpperCase(),
-			MessageBundle.getMessage("angal.medicalstock.wardsquantity.col").toUpperCase(),
-			MessageBundle.getMessage("angal.medicalstock.overallquantity.col").toUpperCase()
+			MessageBundle.getMessage("angal.lotmanagement.unitcost.col").toUpperCase(),
+			MessageBundle.getMessage("angal.lotmanagement.mainstorequantity.col").toUpperCase(),
+			MessageBundle.getMessage("angal.lotmanagement.wardsquantity.col").toUpperCase(),
+			MessageBundle.getMessage("angal.lotmanagement.overallquantity.col").toUpperCase()
 	};
 	private final int[] columnWidth = { 140, 95, 95, 90, 120, 90, 100 };
 	private final boolean[] columnRightAligned = { false, false, false, true, true, true, true };
@@ -111,7 +111,7 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 	}
 
 	private void initialize() {
-		setTitle(MessageBundle.getMessage("angal.medicalstock.lotbrowser.title"));
+		setTitle(MessageBundle.getMessage("angal.lotmanagement.lotbrowser.title"));
 		setContentPane(getContentPanel());
 		pack();
 		setLocationRelativeTo(null);
@@ -127,7 +127,7 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 
 	private JPanel getSelectionPanel() {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.searchbylotorpharmaceutical.label") + ':'));
+		panel.add(new JLabel(MessageBundle.getMessage("angal.lotmanagement.searchbylotorpharmaceutical.label") + ':'));
 		panel.add(getSearchTextField());
 		panel.add(getSearchButton());
 		panel.add(getMedicalBox());
@@ -343,8 +343,8 @@ public class LotBrowser extends ModalJFrame implements LotListener {
 
 	private JButton getDistributionButton() {
 		if (distributionButton == null) {
-			distributionButton = new JButton(MessageBundle.getMessage("angal.medicalstock.lotdistribution.btn"));
-			distributionButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.lotdistribution.btn.key"));
+			distributionButton = new JButton(MessageBundle.getMessage("angal.lotmanagement.lotdistribution.btn"));
+			distributionButton.setMnemonic(MessageBundle.getMnemonic("angal.lotmanagement.lotdistribution.btn.key"));
 			distributionButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(this, "angal.common.pleaseselectarow.msg");

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package org.isf.medicalstock.gui;
+package org.isf.lotmanagement.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -96,7 +96,7 @@ public class LotBrowserEdit extends JDialog {
 	}
 
 	private void initialize() {
-		setTitle(MessageBundle.getMessage("angal.medicalstock.editlot.title"));
+		setTitle(MessageBundle.getMessage("angal.lotmanagement.editlot.title"));
 		setContentPane(getContentPane0());
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pack();
@@ -128,9 +128,9 @@ public class LotBrowserEdit extends JDialog {
 		panel.add(preparationDateChooser);
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.duedate.col") + ':'));
 		panel.add(dueDateChooser);
-		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.unitcost.col") + ':'));
+		panel.add(new JLabel(MessageBundle.getMessage("angal.lotmanagement.unitcost.col") + ':'));
 		panel.add(costTextField);
-		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.overallquantity.col") + ':'));
+		panel.add(new JLabel(MessageBundle.getMessage("angal.lotmanagement.overallquantity.col") + ':'));
 		panel.add(new JLabel(String.valueOf(lot.getOverallQuantity())));
 		return panel;
 	}
