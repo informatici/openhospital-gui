@@ -19,7 +19,7 @@
 		<oh.version>1.15.0</oh.version>
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<license.maven.plugin.version>5.0.0</license.maven.plugin.version>
+		<license.maven.plugin.version>5.1.1</license.maven.plugin.version>
 	</properties>
 
 	<build>
