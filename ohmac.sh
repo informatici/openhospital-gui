@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -69,7 +69,7 @@ TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
 
 ##################### Java configuration #######################
 JAVA_URL="https://cdn.azul.com/zulu/bin"
-JAVA_DISTRO="zulu11.64.19-ca-jre11.0.19-macosx_aarch64"
+JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-macosx_aarch64"
 JAVA_DIR=$JAVA_DISTRO
 JAVA_ARCH="arm64"
 EXT="tar.gz"
