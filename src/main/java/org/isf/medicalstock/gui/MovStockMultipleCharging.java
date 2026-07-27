@@ -486,24 +486,13 @@ public class MovStockMultipleCharging extends JDialog {
 	private boolean setOrValidateCost(Lot lot, int qty) {
 		BigDecimal cost = lot.getCost() != null ? lot.getCost() : BigDecimal.ZERO;
 		if (GeneralData.LOTWITHCOST && (cost.equals(BigDecimal.ZERO) || lot.getCost() == null)) {
-			do {
-				cost = askCost(qty);
-				if (cost.compareTo(BigDecimal.ZERO) == 0) {
-					return false;
-				}
-			} while (!confirmLotCost(lot.getMedical(), cost));
+			cost = LotCostVariance.askNewLotCost(this, movStockInsertingManager, lot.getMedical(), () -> askCost(qty));
+			if (cost == null) {
+				return false;
+			}
 			lot.setCost(cost);
 		}
 		return true;
-	}
-
-	/**
-	 * When the entered {@code cost} deviates from the average cost of the previous lots of {@code medical} by more than the configured
-	 * {@link GeneralData#LOTCOSTVARIANCEPERCENT}, asks the user to confirm. Returns {@code true} to proceed with the entered cost, {@code false} to
-	 * re-enter it.
-	 */
-	private boolean confirmLotCost(Medical medical, BigDecimal cost) {
-		return LotCostVariance.confirm(this, movStockInsertingManager, medical, cost);
 	}
 
 	private boolean needsCostUpdate(Lot lot) {

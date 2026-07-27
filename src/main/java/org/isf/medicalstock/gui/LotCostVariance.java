@@ -24,6 +24,7 @@ package org.isf.medicalstock.gui;
 import java.awt.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.function.Supplier;
 
 import javax.swing.JOptionPane;
 
@@ -46,13 +47,36 @@ public final class LotCostVariance {
 	}
 
 	/**
+	 * Asks the user for the cost of a new lot through {@code costPrompt} and validates it against the average cost of the previous lots of
+	 * {@code medical}: an out-of-variance cost must be confirmed, a refused confirmation re-opens the prompt, and a cancelled or zero cost aborts the
+	 * new-lot operation.
+	 *
+	 * @param parent the dialog parent component
+	 * @param movStockInsertingManager used to compute the average lot cost and the variance
+	 * @param medical the medical whose previous lots provide the average cost
+	 * @param costPrompt the caller's cost prompt, expected to return {@code null} or zero when the user cancels
+	 * @return the entered (and, when needed, confirmed) cost, or {@code null} when the user aborted
+	 */
+	public static BigDecimal askNewLotCost(Component parent, MovStockInsertingManager movStockInsertingManager, Medical medical,
+		Supplier<BigDecimal> costPrompt) {
+		BigDecimal cost;
+		do {
+			cost = costPrompt.get();
+			if (cost == null || cost.compareTo(BigDecimal.ZERO) == 0) {
+				return null;
+			}
+		} while (!confirm(parent, movStockInsertingManager, medical, cost));
+		return cost;
+	}
+
+	/**
 	 * @param parent the dialog parent component
 	 * @param movStockInsertingManager used to compute the average lot cost and the variance
 	 * @param medical the medical whose previous lots provide the average cost
 	 * @param cost the cost entered for the new lot
 	 * @return {@code true} to proceed with the entered cost, {@code false} to re-enter it
 	 */
-	public static boolean confirm(Component parent, MovStockInsertingManager movStockInsertingManager, Medical medical, BigDecimal cost) {
+	private static boolean confirm(Component parent, MovStockInsertingManager movStockInsertingManager, Medical medical, BigDecimal cost) {
 		try {
 			BigDecimal averageCost = movStockInsertingManager.getAverageLotCost(medical);
 			if (movStockInsertingManager.isLotCostWithinVariance(cost, averageCost)) {

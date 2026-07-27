@@ -492,18 +492,18 @@ public class WardPharmacyRectify extends JDialog {
 				return null;
 			}
 
+			if (GeneralData.LOTWITHCOST) {
+				// OP-1300: a cancelled/zero cost aborts the new lot instead of pricing it at zero
+				BigDecimal cost = LotCostVariance.askNewLotCost(this, movStockInsertingManager, medical, this::askCost);
+				if (cost == null) {
+					return null;
+				}
+				addLot.setCost(cost);
+			}
 			jTextFieldLotNumber.setText(addLot.getCode());
 			jSpinnerNewQty.setValue(0.0d);
 			jLabelLotQty.setText("0");
 			jLabelInLot.setVisible(true);
-			if (GeneralData.LOTWITHCOST) {
-				BigDecimal cost = askCost();
-				// OP-1300: warn when the cost is far from the medical's average; a cancelled/zero cost is an abort, not a variance to confirm
-				while (cost.compareTo(BigDecimal.ZERO) > 0 && !LotCostVariance.confirm(this, movStockInsertingManager, medical, cost)) {
-					cost = askCost();
-				}
-				addLot.setCost(cost);
-			}
 			selectedLot = addLot;
 
 		} else {
