@@ -266,20 +266,26 @@ function java_lib_setup {
 
 ###################################################################
 function write_api_config_file {
-	######## application.properties setup - OH API server	
-	SET_FILE=$OHDIR/rsc/$API_SETTINGS
-	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f SET_FILE ]; then
-		[ -f $SET_FILE ] && mv -f $SET_FILE $SET_FILE.old		
-		# generate OH API token and save to settings file		
+	######## application.properties setup - OH API server
+	SET_FILE=./$OH_DIR/rsc/$API_SETTINGS
+	# The API templates only ship in the package that bundles the API server. Saying so beats
+	# writing an empty configuration file out of a template that is not there.
+	if [ ! -f "$SET_FILE.dist" ]; then
+		echo "Warning: $API_SETTINGS.dist not found, this package does not include the API server."
+		return
+	fi
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f "$SET_FILE" ]; then
+		[ -f "$SET_FILE" ] && mv -f "$SET_FILE" "$SET_FILE.old"
+		# generate OH API token and save to settings file
 		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
 
-		echo "Writing OH API configuration file -> $API_SETTINGS..."
-		sed -i '' \
-			-e "s/JWT_TOKEN_SECRET/$JWT_TOKEN_SECRET/g" \
+		echo ">Writing OH API configuration file -> $API_SETTINGS..."
+		# read the template and write the copy, as oh.sh does: editing it in place would substitute
+		# the placeholders in the shipped file, and the next run would find nothing left to replace
+		sed -e "s/JWT_TOKEN_SECRET/$JWT_TOKEN_SECRET/g" \
 			-e "s/API_HOST:API_PORT/localhost:8080/g" \
 			-e "s&OH_API_PID&$OH_API_PID&g" \
-			$SET_FILE.dist
-		cp -f $SET_FILE.dist $SET_FILE	
+			"$SET_FILE.dist" > "$SET_FILE"
 	fi
 }
 
