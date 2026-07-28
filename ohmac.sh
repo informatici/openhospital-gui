@@ -567,7 +567,7 @@ function write_config_files {
 	######## $LOG4J_SETTINGS setup
 	LOG4J_FILE=./$OH_DIR/rsc/$LOG4J_SETTINGS
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $LOG4J_FILE ]; then
-		OH_LOG_DEST="./$OH_DIR/$LOG_DIR/$OH_LOG_FILE"
+		OH_LOG_DEST="./$LOG_DIR/$OH_LOG_FILE"
 		[ -f $LOG4J_FILE ] && mv -f $LOG4J_FILE $LOG4J_FILE.old
 		echo ">Writing OH configuration file -> $LOG4J_SETTINGS..."
 		cp $LOG4J_FILE.dist $LOG4J_FILE
@@ -636,11 +636,11 @@ function start_gui {
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch	
 	
-	$JAVA_BIN -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> $OH_DIR/$LOG_DIR/$LOG_FILE 2>&1
+	$JAVA_BIN -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> ./$LOG_DIR/$LOG_FILE 2>&1
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."
-		shutdown_database;
+		stop_db;
 		cd "$CURRENT_DIR"
 		exit 4
 	fi
@@ -921,7 +921,7 @@ if [ "$OH_MODE" = "SERVER" ]; then
 		trap ctrl_c INT
 		function ctrl_c() {
 			echo "Exiting Open Hospital..."
-			shutdown_database;		
+			stop_db;		
 			cd "$CURRENT_DIR"
 			exit 0
 		}
@@ -937,7 +937,7 @@ else
 
 	# Close and exit
 	echo "Exiting Open Hospital..."
-	shutdown_database;
+	stop_db;
 
 	# go back to starting directory
 	cd "$CURRENT_DIR"
