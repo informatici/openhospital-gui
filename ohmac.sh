@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -231,6 +231,18 @@ function java_lib_setup {
         NATIVE_LIB_PATH="./$OH_DIR/lib/native/macOS/arm64"
         ;;
 	esac
+
+	# macOS tags everything extracted from a downloaded archive with a quarantine
+	# flag. The bundled OpenCV native is only ad-hoc signed, so Gatekeeper refuses
+	# to load it and warns the user that it may contain malware. Clear the flag on
+	# the native libraries, before the JVM tries to load them: once a load has been
+	# blocked, clearing it afterwards no longer helps.
+	# Nothing happens when the flag is absent, e.g. when running from a checkout.
+	if [ -d "$NATIVE_LIB_PATH" ] && ls "$NATIVE_LIB_PATH"/*.dylib >/dev/null 2>&1 &&
+		xattr "$NATIVE_LIB_PATH"/*.dylib 2>/dev/null | grep -q "com.apple.quarantine"; then
+		echo "Removing the macOS quarantine flag from the bundled native libraries..."
+		xattr -dr com.apple.quarantine "$NATIVE_LIB_PATH"
+	fi
 
 	# CLASSPATH setup
 	# include OH jar file
