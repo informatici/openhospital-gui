@@ -193,7 +193,10 @@ function java_check {
 # check if JAVA_BIN is already set and it exists
 echo ""
 echo "is java installed?"
-if [ -e "./$OH_DIR/$JAVA_DIR/bin/java" ]; then
+# Point at the bundled JRE unless a usable one was already given. The download below puts the JRE
+# exactly at this path, so it has to be set before that too: leaving the variable empty would make
+# the launch command start with its first argument instead of the java binary.
+if [ -z "${JAVA_BIN:-}" ] || [ ! -x "$JAVA_BIN" ]; then
 	JAVA_BIN="./$OH_DIR/$JAVA_DIR/bin/java"
 fi
 
@@ -219,6 +222,11 @@ if [ ! -x "$JAVA_BIN" ]; then
 	echo "  Removing downloaded file..."
 	rm ./$OH_DIR/$JAVA_DISTRO.$EXT
 	echo "  Done!"
+fi
+
+if [ ! -x "$JAVA_BIN" ]; then
+	echo "Error: no usable Java found at $JAVA_BIN. Exiting."
+	exit 1
 fi
 
 echo ">Using $JAVA_BIN"
