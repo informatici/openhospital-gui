@@ -397,18 +397,47 @@ function install_db {
 }
 
 ###################################################################
-function test_db_connection {
-    # test if mysql client is available			
-    echo "Testing database connection..."	
-	
+function find_database_client {
+	# The macOS package does not bundle a database client, so there may well be
+	# none available: callers must cope with an empty result.
+	if command -v mysql >/dev/null 2>&1; then
+		DATABASE_CLIENT="mysql"
+	elif command -v mariadb >/dev/null 2>&1; then
+		DATABASE_CLIENT="mariadb"
+	else
+		DATABASE_CLIENT=""
+	fi
+}
 
-	CMD="exit"		
-    if mysql -u $USER -h$DATABASE_SERVER -p$DATABASE_ROOT_PW -e "$CMD">/dev/null 2>&1; then
-        echo ">Database connection successfully established!"
-    else
-        echo "!Error: can't connect to database! Exiting."
-        exit 2
-    fi	 
+###################################################################
+function test_db_connection {
+	# test if a database client is available
+	find_database_client;
+	if [ -z "$DATABASE_CLIENT" ]; then
+		# Without a client the check cannot run. That is not a reason to refuse
+		# to start: the application connects through JDBC, not through this tool.
+		echo "Can't test database connection: no MySQL/MariaDB client found."
+		return
+	fi
+
+	# The caller says which question to ask. Before the database is installed only the server can be
+	# reached, so asking for the [$DATABASE_NAME] database there would refuse to start the very
+	# installation that is about to create it.
+	if [ "$1" = "server" ]; then
+		STATEMENT="SELECT 1"
+	else
+		STATEMENT="USE $DATABASE_NAME"
+	fi
+
+	echo "Testing database connection..."
+	if $DATABASE_CLIENT --user="$DATABASE_USER" --password="$DATABASE_PASSWORD" \
+		--host="$DATABASE_SERVER" --port="$DATABASE_PORT" --protocol=tcp \
+		-e "$STATEMENT" >/dev/null 2>&1; then
+		echo ">Database connection successfully established!"
+	else
+		echo "!Error: can't connect to database! Exiting."
+		exit 2
+	fi
 }
 
 ###################################################################
@@ -731,7 +760,7 @@ function parse_user_input {
 		echo ""
 		echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER]?"
 		get_confirmation 1;
-		test_db_connection;
+		test_db_connection server;
 		import_db;
 		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
