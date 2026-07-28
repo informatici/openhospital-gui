@@ -520,10 +520,13 @@ function write_config_files {
 		-e "s/DBNAME/$DATABASE_NAME/g" -e "s/LOG_LEVEL/$LOG_LEVEL/g" -e "s+LOG_DEST+$OH_LOG_DEST+g" \
 		$LOG4J_FILE		
 	fi
-	######## $DATABASE_SETTINGS setup 
+	######## $DATABASE_SETTINGS setup
+	# Written only when it is not there, unlike the files around it. This one holds where the
+	# installation keeps its data, which is a decision of whoever installed it and not of the
+	# launcher: rewriting it on every run from the values at the top of this script is what kept a
+	# macOS installation tied to isf@localhost. The rest of the configuration is left as it was.
 	DB_FILE=./$OH_DIR/rsc/$DATABASE_SETTINGS
-	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $DB_FILE ]; then
-		[ -f $DB_FILE ] && mv -f $DB_FILE $DB_FILE.old
+	if [ ! -f $DB_FILE ]; then
 		echo ">Writing OH database configuration file -> $DATABASE_SETTINGS..."
 		cp $DB_FILE.dist $DB_FILE
 		sed -i '' -e "s/DBSERVER/$DATABASE_SERVER/g" -e "s/DBPORT/$DATABASE_PORT/g" -e "s/DBNAME/$DATABASE_NAME/g" \
@@ -550,9 +553,23 @@ function read_settings {
 	if [ -f ./$OH_DIR/rsc/version.properties ]; then
 		source "./$OH_DIR/rsc/version.properties"
 		OH_VERSION=$VER_MAJOR.$VER_MINOR.$VER_RELEASE
-	else 		
+	else
 		echo "Error: Open Hospital non found! Exiting."
 		exit 1;
+	fi
+
+	# check for database settings file and read values, as oh.sh does. Without this the connection
+	# details below stay at their defaults whatever the installation was configured with, so the
+	# database test and the generated files all talk about a server nobody asked for.
+	if [ -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ]; then
+		echo "Reading database settings file..."
+		DATABASE_SERVER=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.url" | cut -d"/" -f3 | cut -d":" -f1)
+		DATABASE_PORT=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.url" | cut -d"/" -f3 | cut -d":" -f2)
+		DATABASE_NAME=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.url" | cut -d"/" -f4)
+		DATABASE_USER=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.username" | cut -d"=" -f2)
+		DATABASE_PASSWORD=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.password" | cut -d"=" -f2)
+	else
+		echo "Warning: configuration file $DATABASE_SETTINGS not found."
 	fi
 
     ARCH=`uname -m`
