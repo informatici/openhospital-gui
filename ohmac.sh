@@ -269,6 +269,7 @@ function java_lib_setup {
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rpt_extra
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rpt_stat
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rsc
+	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rsc/images
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/lib
 
 	# include all jar files under lib/
