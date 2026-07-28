@@ -1818,6 +1818,15 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	# config database
 	config_database;
 	# check if OH database already exists
+	#
+	# The data directory alone does not say that: initialize_database creates it as its very first
+	# step, so an installation interrupted at any point afterwards looked complete on the next run
+	# and the launcher went straight to start_database on a database that could not work, with no
+	# hint that the first attempt had never finished. What tells a finished installation apart is
+	# the directory the database engine creates for the [$DATABASE_NAME] schema itself. It is looked
+	# up without regard to case, because the shipped my.cnf sets lower_case_table_names and the
+	# engine then stores the schema of a database named MyHospital in a directory called myhospital,
+	# while DATA_DIR keeps the name as the user typed it.
 	if [ ! -d ./"$DATA_DIR" ]; then
 		echo "OH database not found, starting from scratch..."
 		# prepare database
@@ -1832,6 +1841,11 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 		create_database;
 		# load data
 		import_database;
+	elif [ -z "$(find ./"$DATA_DIR" -mindepth 1 -maxdepth 1 -type d -iname "$DATABASE_NAME" -print -quit 2>/dev/null)" ]; then
+		echo "Error: a previous installation of the [$DATABASE_NAME] database was left unfinished in ./$DATA_DIR."
+		echo "Remove that directory, or reset the installation with option [X] which deletes the data for you,"
+		echo "then run this script again. Exiting."
+		exit 2
 	else
 	        echo "OH database found!"
 		# start database
