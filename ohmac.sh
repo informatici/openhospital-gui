@@ -88,10 +88,26 @@ DB_CREATE_SQL="create_all_en.sql"
 DEMO_DATABASE="ohdemo"
 DB_DEMO="create_all_demo.sql"
 
-# OH API server and web interface
+# OH API server and web interface - same names and values as oh.sh, so that the placeholders in
+# application.properties.dist are filled in the same way on both platforms
+OH_API_PROD="oh-api"
 OH_API_HOST="localhost"
 OH_API_PORT="8080"
-OH_UI_URL="http://$OH_API_HOST:$OH_API_PORT"
+
+OH_UI_HOST="localhost"
+OH_UI_PORT="8080"
+OH_UI_PROD="oh-ui"
+# oh.sh appends /$OH_UI_PROD because it deploys the UI as a Tomcat webapp of that name. Here the
+# bundled Spring Boot artifact is started directly and the shipped template sets
+# server.servlet.context-path=/, so the UI answers on the root path instead.
+OH_UI_URL="http://$OH_UI_HOST:$OH_UI_PORT"
+
+# left empty as in oh.sh, where the assignment is commented out: the shipped template resolves
+# spring.pid.file to an empty value. Declared here so the substitution below has a defined variable.
+OH_API_PID=""
+
+# activate expert mode - set to "on" to enable advanced functions - use at your own risk!
+EXPERT_MODE="off"
 
 OH_LANGUAGE_LIST="en|fr|es|it|pt|ar"
 OH_LANGUAGE="en" # default
@@ -140,6 +156,7 @@ function script_menu_advanced {
 	echo ""
 	echo "   -A  toggle API server - EXPERIMENTAL		| -d  toggle log level INFO/DEBUG"
 	echo "   -i  initialize/install OH database		| -G  setup GSM"
+	echo "   -U  enable UI web interface"
 	echo ""
 }
 
@@ -303,10 +320,16 @@ function write_api_config_file {
 
 		echo ">Writing OH API configuration file -> $API_SETTINGS..."
 		# read the template and write the copy, as oh.sh does: editing it in place would substitute
-		# the placeholders in the shipped file, and the next run would find nothing left to replace
+		# the placeholders in the shipped file, and the next run would find nothing left to replace.
+		# Same substitution list as oh.sh: the older combined API_HOST:API_PORT replacement used here
+		# left the UI_HOST and UI_PORT placeholders of cors.allowed.origins in the generated file.
 		sed -e "s/JWT_TOKEN_SECRET/$JWT_TOKEN_SECRET/g" \
-			-e "s/API_HOST:API_PORT/localhost:8080/g" \
 			-e "s&OH_API_PID&$OH_API_PID&g" \
+			-e "s&UI_HOST&$OH_UI_HOST&g" \
+			-e "s&UI_PORT&$OH_UI_PORT&g" \
+			-e "s&API_HOST&$OH_API_HOST&g" \
+			-e "s&API_PORT&$OH_API_PORT&g" \
+			-e "s&API_URL&$OH_API_PROD&g" \
 			"$SET_FILE.dist" > "$SET_FILE"
 	fi
 }
@@ -561,10 +584,17 @@ function write_config_files {
 		[ -f  $SETTINGS_FILE ] && mv -f $SETTINGS_FILE $SETTINGS_FILE.old
 		echo ">Writing OH configuration file -> $OH_SETTINGS..."
 		cp $SETTINGS_FILE.dist $SETTINGS_FILE
+		# GUI_INTERFACE and UI_INTERFACE are persisted too, so that -U survives a restart: read_settings
+		# reads them back. Their three substitutions are anchored at the start of the line, unlike the
+		# rest, because UI_INTERFACE is a substring of GUI_INTERFACE - unanchored, the UI_INTERFACE
+		# expression rewrites the GUI_INTERFACE line it has just been given.
 		sed -i '' -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
-		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
-		$SETTINGS_FILE	
+		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" \
+		-e "s/^APISERVER=off/APISERVER=$API_SERVER/" \
+		-e "s/^GUI_INTERFACE=on/GUI_INTERFACE=$GUI_INTERFACE/" \
+		-e "s/^UI_INTERFACE=off/UI_INTERFACE=$UI_INTERFACE/" \
+		$SETTINGS_FILE
 	fi
 }
 
@@ -578,6 +608,23 @@ function read_settings {
 	else
 		echo "Error: Open Hospital non found! Exiting."
 		exit 1;
+	fi
+
+	# check for OH settings file and read values, as oh.sh does. Without this every run starts from
+	# the defaults at the top of this script, so the choices the user persisted in the settings file
+	# - the API server above all - are silently dropped on the next launch.
+	if [ -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
+		echo "Reading OH settings file..."
+		. ./$OH_DIR/rsc/$OH_SETTINGS
+
+		OH_MODE=$MODE
+		OH_LANGUAGE=$LANGUAGE
+		OH_SINGLE_USER=$SINGLE_USER
+		OH_DOC_DIR=$OH_DOC_DIR
+		DEMO_DATA=$DEMODATA
+		API_SERVER=$APISERVER
+		GUI_INTERFACE=$GUI_INTERFACE
+		UI_INTERFACE=$UI_INTERFACE
 	fi
 
 	# check for database settings file and read values, as oh.sh does. Without this the connection
@@ -681,7 +728,36 @@ function parse_user_input {
 		echo "Press any key to continue"; 
 		read;
 		;;
-	#E)	# toggle EXPERT_MODE features
+	###################################################
+	U)	# toggle UI Interface
+		case "$UI_INTERFACE" in
+			*on*)
+				UI_INTERFACE="off";
+				GUI_INTERFACE="on";
+			;;
+			*off*)
+				UI_INTERFACE="on";
+				GUI_INTERFACE="off";
+			;;
+		esac
+		#
+		if (( $2==0 )); then UI_INTERFACE="on"; interactive_menu; fi
+		option="Z";
+		;;
+	###################################################
+	E)	# toggle EXPERT_MODE features
+		case "$EXPERT_MODE" in
+			*on*)
+				EXPERT_MODE="off";
+			;;
+			*off*)
+				EXPERT_MODE="on";
+			;;
+		esac
+		#
+		if (( $2==0 )); then EXPERT_MODE="on"; interactive_menu; fi
+		option="Z";
+		;;
 	###################################################
 	C)	# start in CLIENT mode
 		OH_MODE="CLIENT"
@@ -832,8 +908,36 @@ function parse_user_input {
 }
 
 
+###################################################################
+function set_defaults {
+	# Fill in the values read_settings did not find, as oh.sh does. The settings file is not
+	# required to carry every key, and an absent key leaves its variable empty rather than at the
+	# default set at the top of this script, so the defaults have to be reapplied afterwards.
+
+	# EXPERT_MODE features - set default to off
+	if [ -z "$EXPERT_MODE" ]; then
+		EXPERT_MODE="off"
+	fi
+
+	# API server - set default to off
+	if [ -z "$API_SERVER" ]; then
+		API_SERVER="off"
+	fi
+
+	# GUI interface - set default to on
+	if [ -z "$GUI_INTERFACE" ]; then
+		GUI_INTERFACE="on"
+	fi
+
+	# UI interface - set default to off
+	if [ -z "$UI_INTERFACE" ]; then
+		UI_INTERFACE="off"
+	fi
+}
+
 read_settings;
- 
+set_defaults;
+
 #remove_db;
 #import_db;
 
@@ -841,7 +945,7 @@ read_settings;
 OPTIND=1 
 # list of arguments expected in user input (- option)
 # E is excluded from command line option
-OPTSTRING=":AECPSdDGhil:msrtvequQXVZ?" 
+OPTSTRING=":AECPSdDGhil:msrtvequQXUVZ?"
 COMMAND_LINE_ARGS=$@
 
 # Parse arguments passed via command line / interactive input
