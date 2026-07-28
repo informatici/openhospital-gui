@@ -45,9 +45,16 @@ OH_API_JAR="openhospital-api-0.1.0.jar"
 # OH configuration files
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
+EXAMINATION_SETTINGS="examination.properties"
 IMAGING_SETTINGS="dicom.properties"
 LOG4J_SETTINGS="log4j2-spring.properties"
+PRINTER_SETTINGS="txtPrinter.properties"
+SMS_SETTINGS="sms.properties"
+TELEMETRY_SETTINGS="telemetry.properties"
+XMPP_SETTINGS="xmpp.properties"
 API_SETTINGS="application.properties"
+CRED_SETTINGS="default_credentials.properties"
+DEMO_CRED_SETTINGS="default_demo_credentials.properties"
 HELP_FILE="OH-readme.txt"
 
 # logging
@@ -193,7 +200,10 @@ function java_check {
 # check if JAVA_BIN is already set and it exists
 echo ""
 echo "is java installed?"
-if [ -e "./$OH_DIR/$JAVA_DIR/bin/java" ]; then
+# Point at the bundled JRE unless a usable one was already given. The download below puts the JRE
+# exactly at this path, so it has to be set before that too: leaving the variable empty would make
+# the launch command start with its first argument instead of the java binary.
+if [ -z "${JAVA_BIN:-}" ] || [ ! -x "$JAVA_BIN" ]; then
 	JAVA_BIN="./$OH_DIR/$JAVA_DIR/bin/java"
 fi
 
@@ -219,6 +229,11 @@ if [ ! -x "$JAVA_BIN" ]; then
 	echo "  Removing downloaded file..."
 	rm ./$OH_DIR/$JAVA_DISTRO.$EXT
 	echo "  Done!"
+fi
+
+if [ ! -x "$JAVA_BIN" ]; then
+	echo "Error: no usable Java found at $JAVA_BIN. Exiting."
+	exit 1
 fi
 
 echo ">Using $JAVA_BIN"
@@ -254,6 +269,7 @@ function java_lib_setup {
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rpt_extra
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rpt_stat
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rsc
+	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rsc/images
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/lib
 
 	# include all jar files under lib/
@@ -382,18 +398,47 @@ function install_db {
 }
 
 ###################################################################
-function test_db_connection {
-    # test if mysql client is available			
-    echo "Testing database connection..."	
-	
+function find_database_client {
+	# The macOS package does not bundle a database client, so there may well be
+	# none available: callers must cope with an empty result.
+	if command -v mysql >/dev/null 2>&1; then
+		DATABASE_CLIENT="mysql"
+	elif command -v mariadb >/dev/null 2>&1; then
+		DATABASE_CLIENT="mariadb"
+	else
+		DATABASE_CLIENT=""
+	fi
+}
 
-	CMD="exit"		
-    if mysql -u $USER -h$DATABASE_SERVER -p$DATABASE_ROOT_PW -e "$CMD">/dev/null 2>&1; then
-        echo ">Database connection successfully established!"
-    else
-        echo "!Error: can't connect to database! Exiting."
-        exit 2
-    fi	 
+###################################################################
+function test_db_connection {
+	# test if a database client is available
+	find_database_client;
+	if [ -z "$DATABASE_CLIENT" ]; then
+		# Without a client the check cannot run. That is not a reason to refuse
+		# to start: the application connects through JDBC, not through this tool.
+		echo "Can't test database connection: no MySQL/MariaDB client found."
+		return
+	fi
+
+	# The caller says which question to ask. Before the database is installed only the server can be
+	# reached, so asking for the [$DATABASE_NAME] database there would refuse to start the very
+	# installation that is about to create it.
+	if [ "$1" = "server" ]; then
+		STATEMENT="SELECT 1"
+	else
+		STATEMENT="USE $DATABASE_NAME"
+	fi
+
+	echo "Testing database connection..."
+	if $DATABASE_CLIENT --user="$DATABASE_USER" --password="$DATABASE_PASSWORD" \
+		--host="$DATABASE_SERVER" --port="$DATABASE_PORT" --protocol=tcp \
+		-e "$STATEMENT" >/dev/null 2>&1; then
+		echo ">Database connection successfully established!"
+	else
+		echo "!Error: can't connect to database! Exiting."
+		exit 2
+	fi
 }
 
 ###################################################################
@@ -491,6 +536,23 @@ function remove_db {
 }
 
 ###################################################################
+function copy_config_file {
+	# create a configuration file from its template if it is not there yet
+	# usage: copy_config_file [file_name]
+	#
+	# Only when the file is missing, never over an existing one. Unlike settings.properties and
+	# database.properties below, nothing in these files is derived from the launcher, so rewriting
+	# them on every run would achieve nothing while silently discarding what the site configured -
+	# vital sign ranges, SMS gateway credentials. Nor would a backup copy save it: WRITE_CONFIG_FILES
+	# is fixed to "on" in this script with no way to turn it off, so the second run would overwrite
+	# the copy the first run had just made.
+	if [ ! -f ./$OH_DIR/rsc/$1 ]; then
+		echo ">Writing OH configuration file -> $1..."
+		cp ./$OH_DIR/rsc/$1.dist ./$OH_DIR/rsc/$1
+	fi
+}
+
+###################################################################
 function write_config_files {
 	# set up configuration files
 	echo "Checking for OH configuration files..."
@@ -506,7 +568,7 @@ function write_config_files {
 	######## $LOG4J_SETTINGS setup
 	LOG4J_FILE=./$OH_DIR/rsc/$LOG4J_SETTINGS
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $LOG4J_FILE ]; then
-		OH_LOG_DEST="./$OH_DIR/$LOG_DIR/$OH_LOG_FILE"
+		OH_LOG_DEST="./$LOG_DIR/$OH_LOG_FILE"
 		[ -f $LOG4J_FILE ] && mv -f $LOG4J_FILE $LOG4J_FILE.old
 		echo ">Writing OH configuration file -> $LOG4J_SETTINGS..."
 		cp $LOG4J_FILE.dist $LOG4J_FILE
@@ -533,7 +595,25 @@ function write_config_files {
 		sed -i '' -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
 		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
-		$SETTINGS_FILE	
+		$SETTINGS_FILE
+	fi
+	######## OH - other settings, copied as they are
+	# sms.properties and telemetry.properties are declared as @PropertySource in the core, so a
+	# missing file stops the application from starting instead of disabling a feature. The other
+	# three are read through the properties bundle and fall back to defaults, but they are written
+	# here as well so that a site finds the whole set in place, as it does on the other platforms.
+	copy_config_file $EXAMINATION_SETTINGS;
+	copy_config_file $PRINTER_SETTINGS;
+	copy_config_file $SMS_SETTINGS;
+	copy_config_file $TELEMETRY_SETTINGS;
+	copy_config_file $XMPP_SETTINGS;
+
+	######## default credentials
+	if [ "$OH_MODE" == "PORTABLE" ]; then
+		copy_config_file $CRED_SETTINGS;
+	fi
+	if [ "$DEMO_DATA" = "on" ]; then
+		cp ./$OH_DIR/rsc/$DEMO_CRED_SETTINGS.dist ./$OH_DIR/rsc/$CRED_SETTINGS
 	fi
 }
 
@@ -557,11 +637,11 @@ function start_gui {
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch	
 	
-	$JAVA_BIN -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> $OH_DIR/$LOG_DIR/$LOG_FILE 2>&1
+	$JAVA_BIN -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> ./$LOG_DIR/$LOG_FILE 2>&1
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."
-		shutdown_database;
+		stop_db;
 		cd "$CURRENT_DIR"
 		exit 4
 	fi
@@ -681,7 +761,7 @@ function parse_user_input {
 		echo ""
 		echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER]?"
 		get_confirmation 1;
-		test_db_connection;
+		test_db_connection server;
 		import_db;
 		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
@@ -842,7 +922,7 @@ if [ "$OH_MODE" = "SERVER" ]; then
 		trap ctrl_c INT
 		function ctrl_c() {
 			echo "Exiting Open Hospital..."
-			shutdown_database;		
+			stop_db;		
 			cd "$CURRENT_DIR"
 			exit 0
 		}
@@ -858,7 +938,7 @@ else
 
 	# Close and exit
 	echo "Exiting Open Hospital..."
-	shutdown_database;
+	stop_db;
 
 	# go back to starting directory
 	cd "$CURRENT_DIR"
