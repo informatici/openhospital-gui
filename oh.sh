@@ -111,6 +111,9 @@ EXT="tar.gz"
 # mysql configuration file
 MYSQL_CONF_FILE="my.cnf"
 
+# seconds to wait for the database to start listening, or to release its port on shutdown
+DATABASE_WAIT_TIMEOUT=90
+
 # OH configuration files - see also settings.properties
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
@@ -782,6 +785,16 @@ function initialize_database {
 }
 
 ###################################################################
+# Whether the database is accepting connections on its TCP port.
+#
+# The port is probed with bash's own /dev/tcp redirection rather than with `nc`, which is not part
+# of the package and is absent from many minimal installations: there the probe never succeeded, so
+# the wait loop below span forever and the launcher hung with no message and no way to tell why.
+function database_port_open {
+	(exec 3<>/dev/tcp/$DATABASE_SERVER/$DATABASE_PORT) > /dev/null 2>&1
+}
+
+###################################################################
 function start_database {
 	echo "Checking if $MYSQL_NAME is running..."
 	if [ -f "$OH_PATH/$TMP_DIR/mysql.sock" ] || [ -f "$OH_PATH/$TMP_DIR/mysql.pid" ] ; then
@@ -801,7 +814,16 @@ function start_database {
 		exit 2
 	fi
 	# wait till the MariaDB/MySQL tcp port is open
-	until nc -z $DATABASE_SERVER $DATABASE_PORT; do sleep 1; done
+	WAITED=0
+	until database_port_open; do
+		if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+			echo "Error: $MYSQL_NAME server is not listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+			echo "See ./$LOG_DIR/$LOG_FILE for the reason. Exiting."
+			exit 2
+		fi
+		sleep 1
+		WAITED=$((WAITED+1))
+	done
 	echo "$MYSQL_NAME server started!"
 }
 
@@ -920,7 +942,16 @@ function shutdown_database {
 		cd "$OH_PATH"
 		./$MYSQL_DIR/bin/mysqladmin -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
 		# wait till the MySQL tcp port is closed
-		until !( nc -z $DATABASE_SERVER $DATABASE_PORT ); do sleep 1; done
+		WAITED=0
+		while database_port_open; do
+			if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+				echo "Warning: $MYSQL_NAME is still listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+				echo "See ./$LOG_DIR/$LOG_FILE for the reason."
+				return
+			fi
+			sleep 1
+			WAITED=$((WAITED+1))
+		done
 		echo "$MYSQL_NAME stopped!"
 	else
 		exit 1
