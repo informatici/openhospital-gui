@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -69,7 +69,7 @@ TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
 
 ##################### Java configuration #######################
 JAVA_URL="https://cdn.azul.com/zulu/bin"
-JAVA_DISTRO="zulu11.64.19-ca-jre11.0.19-macosx_aarch64"
+JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-macosx_aarch64"
 JAVA_DIR=$JAVA_DISTRO
 JAVA_ARCH="arm64"
 EXT="tar.gz"
@@ -228,15 +228,21 @@ function java_lib_setup {
 	# NATIVE LIB setup
 	case $JAVA_ARCH in
         arm64)
-        NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/arm64"
+        NATIVE_LIB_PATH="./$OH_DIR/lib/native/macOS/arm64"
         ;;
-		64)
-		NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/amd64"
-		;;
-		32)
-		NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/i386"
-		;;
 	esac
+
+	# macOS tags everything extracted from a downloaded archive with a quarantine
+	# flag. The bundled OpenCV native is only ad-hoc signed, so Gatekeeper refuses
+	# to load it and warns the user that it may contain malware. Clear the flag on
+	# the native libraries, before the JVM tries to load them: once a load has been
+	# blocked, clearing it afterwards no longer helps.
+	# Nothing happens when the flag is absent, e.g. when running from a checkout.
+	if [ -d "$NATIVE_LIB_PATH" ] && ls "$NATIVE_LIB_PATH"/*.dylib >/dev/null 2>&1 &&
+		xattr "$NATIVE_LIB_PATH"/*.dylib 2>/dev/null | grep -q "com.apple.quarantine"; then
+		echo "Removing the macOS quarantine flag from the bundled native libraries..."
+		xattr -dr com.apple.quarantine "$NATIVE_LIB_PATH"
+	fi
 
 	# CLASSPATH setup
 	# include OH jar file
@@ -551,7 +557,7 @@ function start_gui {
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch	
 	
-	$JAVA_BIN -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> $OH_DIR/$LOG_DIR/$LOG_FILE 2>&1
+	$JAVA_BIN -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> $OH_DIR/$LOG_DIR/$LOG_FILE 2>&1
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."

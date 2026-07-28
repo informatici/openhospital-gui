@@ -791,7 +791,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JPanel getPanelChoosePatient() {
 		JPanel priceListLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-		JButton jAffiliatePersonJButtonAdd = new JButton();
+		JButton jAffiliatePersonJButtonAdd = new JButton(MessageBundle.getMessage("angal.billbrowser.findpatient.btn"));
+		jAffiliatePersonJButtonAdd.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.findpatient.btn.key"));
 		jAffiliatePersonJButtonAdd.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
 		jAffiliatePersonJButtonAdd.setToolTipText(MessageBundle.getMessage("angal.billbrowser.selectapatient.tooltip"));
 
@@ -805,20 +806,16 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		priceListLabelPanel.add(jAffiliatePersonJButtonAdd);
 		priceListLabelPanel.add(jAffiliatePersonJButtonSupp);
 
-		jAffiliatePersonJButtonAdd.addMouseListener(new MouseAdapter() {
+		jAffiliatePersonJButtonAdd.addActionListener(actionEvent -> {
+			SelectPatient selectPatient = new SelectPatient(BillBrowser.this, false, true);
+			selectPatient.addSelectionListener(BillBrowser.this);
+			selectPatient.setVisible(true);
+			Patient pat = selectPatient.getPatient();
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				SelectPatient selectPatient = new SelectPatient(BillBrowser.this, false, true);
-				selectPatient.addSelectionListener(BillBrowser.this);
-				selectPatient.setVisible(true);
-				Patient pat = selectPatient.getPatient();
-
-				try {
-					patientSelected(pat);
-				} catch (OHServiceException ohServiceException) {
-					MessageDialog.showExceptions(ohServiceException);
-				}
+			try {
+				patientSelected(pat);
+			} catch (OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		});
 

@@ -39,7 +39,7 @@ public class PaymentsTotal {
 	public BigDecimal getValue() {
 		return paymentsPeriod.stream()
 				.filter(payment -> notDeletedBills.contains(payment.getBill().getId()))
-				.map(payment -> new BigDecimal(Double.toString(payment.getAmount())))
+				.map(BillPayments::getAmount)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
