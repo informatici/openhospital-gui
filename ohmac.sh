@@ -41,6 +41,7 @@ WRITE_CONFIG_FILES="on"
 # OH jar bin files
 OH_GUI_JAR="OH-gui.jar"
 OH_API_JAR="openhospital-api-0.1.0.jar"
+OH_API_WAR="openhospital-api-0.1.0.war"
 
 # OH configuration files
 OH_SETTINGS="settings.properties"
@@ -83,6 +84,15 @@ DATABASE_USER="isf"
 DATABASE_PASSWORD="isf123"
 DB_CREATE_SQL="create_all_en.sql"
 
+# demo data - the demo branch below uses both of these
+DEMO_DATABASE="ohdemo"
+DB_DEMO="create_all_demo.sql"
+
+# OH API server and web interface
+OH_API_HOST="localhost"
+OH_API_PORT="8080"
+OH_UI_URL="http://$OH_API_HOST:$OH_API_PORT"
+
 OH_LANGUAGE_LIST="en|fr|es|it|pt|ar"
 OH_LANGUAGE="en" # default
 OH_MODE="PORTABLE"
@@ -119,6 +129,18 @@ function script_menu {
 	if [ "$EXPERT_MODE" == "on" ]; then
 		script_menu_advanced;
 	fi
+}
+
+###################################################################
+function script_menu_advanced {
+	# show advanced user options. Only the ones this script implements: the list in oh.sh is longer
+	# because several of its options are commented out of parse_user_input here.
+	echo "   -------------------------------- "
+	echo "    EXPERT MODE - advanced options"
+	echo ""
+	echo "   -A  toggle API server - EXPERIMENTAL		| -d  toggle log level INFO/DEBUG"
+	echo "   -i  initialize/install OH database		| -G  setup GSM"
+	echo ""
 }
 
 ###################################################################
@@ -576,6 +598,56 @@ function read_settings {
 	}
 
 ###################################################################
+function start_api_server {
+	# The packages that carry the API ship a self-contained Spring Boot artifact, not the Tomcat
+	# layout oh.sh starts, and the client package carries none at all. Where it cannot be started
+	# this says so and returns: until now the call failed with "command not found" and the run
+	# carried on, so refusing to start Open Hospital at all would take away something that works.
+	API_ARTIFACT=""
+	for candidate in "./$OH_DIR/bin/$OH_API_JAR" "./$OH_DIR/bin/$OH_API_WAR"; do
+		[ -f "$candidate" ] && API_ARTIFACT="$candidate" && break
+	done
+	if [ -z "$API_ARTIFACT" ]; then
+		echo "Warning: no API server found in ./$OH_DIR/bin, this package does not include it."
+		return
+	fi
+	if [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
+		echo "Warning: missing $API_SETTINGS settings file, the API server will not be started."
+		return
+	fi
+
+	echo "------------------------"
+	echo "---- EXPERIMENTAL ------"
+	echo "------------------------"
+	echo "Starting API server..."
+	echo "Please wait, it might take some time..."
+	echo ""
+	echo "Connect to $OH_UI_URL for OH web interface"
+	echo ""
+
+	case "$API_ARTIFACT" in
+		*.war) LAUNCHER="org.springframework.boot.loader.launch.WarLauncher" ;;
+		*)     LAUNCHER="org.springframework.boot.loader.launch.JarLauncher" ;;
+	esac
+	$JAVA_BIN -client -Xms64m -Xmx1024m \
+		-cp "$API_ARTIFACT:./$OH_DIR/rsc:./$OH_DIR/static" $LAUNCHER >> ./$LOG_DIR/$API_LOG_FILE 2>&1 &
+
+	if [ $? -ne 0 ]; then
+		echo "An error occurred while starting the Open Hospital API server. Exiting."
+		stop_db;
+		cd "$CURRENT_DIR"
+		exit 4
+	fi
+}
+
+###################################################################
+function start_ui {
+	echo "Starting Open Hospital UI at $OH_UI_URL..."
+	# OH UI launch - `open` is the macOS equivalent of the xdg-open oh.sh uses
+	open "$OH_UI_URL" || echo "Could not open a web browser, please go to $OH_UI_URL yourself."
+}
+
+###################################################################
 function start_gui {
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch	
@@ -802,7 +874,6 @@ function demo_mode(){
 			echo "Error: no $DB_DEMO found! Exiting."
 			exit 1
 		fi
-		set_db_name;
 	else
 		echo ">no"
 	fi
