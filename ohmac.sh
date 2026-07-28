@@ -45,9 +45,16 @@ OH_API_JAR="openhospital-api-0.1.0.jar"
 # OH configuration files
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
+EXAMINATION_SETTINGS="examination.properties"
 IMAGING_SETTINGS="dicom.properties"
 LOG4J_SETTINGS="log4j2-spring.properties"
+PRINTER_SETTINGS="txtPrinter.properties"
+SMS_SETTINGS="sms.properties"
+TELEMETRY_SETTINGS="telemetry.properties"
+XMPP_SETTINGS="xmpp.properties"
 API_SETTINGS="application.properties"
+CRED_SETTINGS="default_credentials.properties"
+DEMO_CRED_SETTINGS="default_demo_credentials.properties"
 HELP_FILE="OH-readme.txt"
 
 # logging
@@ -499,6 +506,23 @@ function remove_db {
 }
 
 ###################################################################
+function copy_config_file {
+	# create a configuration file from its template if it is not there yet
+	# usage: copy_config_file [file_name]
+	#
+	# Only when the file is missing, never over an existing one. Unlike settings.properties and
+	# database.properties below, nothing in these files is derived from the launcher, so rewriting
+	# them on every run would achieve nothing while silently discarding what the site configured -
+	# vital sign ranges, SMS gateway credentials. Nor would a backup copy save it: WRITE_CONFIG_FILES
+	# is fixed to "on" in this script with no way to turn it off, so the second run would overwrite
+	# the copy the first run had just made.
+	if [ ! -f ./$OH_DIR/rsc/$1 ]; then
+		echo ">Writing OH configuration file -> $1..."
+		cp ./$OH_DIR/rsc/$1.dist ./$OH_DIR/rsc/$1
+	fi
+}
+
+###################################################################
 function write_config_files {
 	# set up configuration files
 	echo "Checking for OH configuration files..."
@@ -541,7 +565,25 @@ function write_config_files {
 		sed -i '' -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
 		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
-		$SETTINGS_FILE	
+		$SETTINGS_FILE
+	fi
+	######## OH - other settings, copied as they are
+	# sms.properties and telemetry.properties are declared as @PropertySource in the core, so a
+	# missing file stops the application from starting instead of disabling a feature. The other
+	# three are read through the properties bundle and fall back to defaults, but they are written
+	# here as well so that a site finds the whole set in place, as it does on the other platforms.
+	copy_config_file $EXAMINATION_SETTINGS;
+	copy_config_file $PRINTER_SETTINGS;
+	copy_config_file $SMS_SETTINGS;
+	copy_config_file $TELEMETRY_SETTINGS;
+	copy_config_file $XMPP_SETTINGS;
+
+	######## default credentials
+	if [ "$OH_MODE" == "PORTABLE" ]; then
+		copy_config_file $CRED_SETTINGS;
+	fi
+	if [ "$DEMO_DATA" = "on" ]; then
+		cp ./$OH_DIR/rsc/$DEMO_CRED_SETTINGS.dist ./$OH_DIR/rsc/$CRED_SETTINGS
 	fi
 }
 
