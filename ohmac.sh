@@ -98,8 +98,7 @@ DATABASE_WAIT_TIMEOUT=90
 DEMO_DATABASE="ohdemo"
 DB_DEMO="create_all_demo.sql"
 
-# OH API server and web interface - same names and values as oh.sh, so that the placeholders in
-# application.properties.dist are filled in the same way on both platforms
+# OH API server and web interface - same names and values as oh.sh
 OH_API_PROD="oh-api"
 OH_API_HOST="localhost"
 OH_API_PORT="8080"
@@ -107,13 +106,11 @@ OH_API_PORT="8080"
 OH_UI_HOST="localhost"
 OH_UI_PORT="8080"
 OH_UI_PROD="oh-ui"
-# oh.sh appends /$OH_UI_PROD because it deploys the UI as a Tomcat webapp of that name. Here the
-# bundled Spring Boot artifact is started directly and the shipped template sets
-# server.servlet.context-path=/, so the UI answers on the root path instead.
+# no /$OH_UI_PROD here: the bundled artifact is started directly and its template sets
+# server.servlet.context-path=/, where oh.sh deploys a Tomcat webapp of that name
 OH_UI_URL="http://$OH_UI_HOST:$OH_UI_PORT"
 
-# left empty as in oh.sh, where the assignment is commented out: the shipped template resolves
-# spring.pid.file to an empty value. Declared here so the substitution below has a defined variable.
+# empty as in oh.sh, where the assignment is commented out
 OH_API_PID=""
 
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
@@ -159,8 +156,7 @@ function script_menu {
 
 ###################################################################
 function script_menu_advanced {
-	# show advanced user options. Only the ones this script implements: the list in oh.sh is longer
-	# because several of its options are commented out of parse_user_input here.
+	# only the options this script implements; oh.sh lists more
 	echo "   -------------------------------- "
 	echo "    EXPERT MODE - advanced options"
 	echo ""
@@ -326,8 +322,7 @@ function java_lib_setup {
 function write_api_config_file {
 	######## application.properties setup - OH API server
 	SET_FILE=./$OH_DIR/rsc/$API_SETTINGS
-	# The API templates only ship in the package that bundles the API server. Saying so beats
-	# writing an empty configuration file out of a template that is not there.
+	# the API templates only ship in the package that bundles the API server
 	if [ ! -f "$SET_FILE.dist" ]; then
 		echo "Warning: $API_SETTINGS.dist not found, this package does not include the API server."
 		return
@@ -338,10 +333,8 @@ function write_api_config_file {
 		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
 
 		echo ">Writing OH API configuration file -> $API_SETTINGS..."
-		# read the template and write the copy, as oh.sh does: editing it in place would substitute
-		# the placeholders in the shipped file, and the next run would find nothing left to replace.
-		# Same substitution list as oh.sh: the older combined API_HOST:API_PORT replacement used here
-		# left the UI_HOST and UI_PORT placeholders of cors.allowed.origins in the generated file.
+		# read the template and write the copy: editing it in place would consume the placeholders
+		# in the shipped file, leaving the next run nothing to replace
 		sed -e "s/JWT_TOKEN_SECRET/$JWT_TOKEN_SECRET/g" \
 			-e "s&OH_API_PID&$OH_API_PID&g" \
 			-e "s&UI_HOST&$OH_UI_HOST&g" \
@@ -567,19 +560,14 @@ function create_db {
     fi	
 }
 ###################################################################
-# Whether the database is accepting connections on its TCP port.
-#
-# The port is probed with bash's own /dev/tcp redirection rather than with `nc`, which is not part
-# of a stock macOS and cannot be relied on being there.
+# Probed with bash's own /dev/tcp rather than `nc`, which a stock macOS does not have.
 function database_port_open {
 	(exec 3<>/dev/tcp/$DATABASE_SERVER/$DATABASE_PORT) > /dev/null 2>&1
 }
 
 ###################################################################
-# `brew services start` returns as soon as launchd has accepted the job, not when the server is
-# ready, so everything that follows used to race it: the very next thing this script does is run a
-# mysql client, and on a cold start that client would be refused. Waiting for the port removes the
-# race, and the timeout keeps a server that never comes up from hanging the launcher silently.
+# `brew services start` returns when launchd accepts the job, not when the server is ready, and
+# the next thing this script runs is a mysql client - on a cold start that client was refused.
 function wait_for_database {
 	WAITED=0
 	until database_port_open; do
@@ -680,10 +668,8 @@ function write_config_files {
 		$LOG4J_FILE		
 	fi
 	######## $DATABASE_SETTINGS setup
-	# Written only when it is not there, unlike the files around it. This one holds where the
-	# installation keeps its data, which is a decision of whoever installed it and not of the
-	# launcher: rewriting it on every run from the values at the top of this script is what kept a
-	# macOS installation tied to isf@localhost. The rest of the configuration is left as it was.
+	# written only when absent, unlike the files around it: where the installation keeps its data is
+	# the installer's decision, and rewriting it on every run tied macOS to isf@localhost
 	DB_FILE=./$OH_DIR/rsc/$DATABASE_SETTINGS
 	if [ ! -f $DB_FILE ]; then
 		echo ">Writing OH database configuration file -> $DATABASE_SETTINGS..."
@@ -698,10 +684,7 @@ function write_config_files {
 		[ -f  $SETTINGS_FILE ] && mv -f $SETTINGS_FILE $SETTINGS_FILE.old
 		echo ">Writing OH configuration file -> $OH_SETTINGS..."
 		cp $SETTINGS_FILE.dist $SETTINGS_FILE
-		# GUI_INTERFACE and UI_INTERFACE are persisted too, so that -U survives a restart: read_settings
-		# reads them back. Their three substitutions are anchored at the start of the line, unlike the
-		# rest, because UI_INTERFACE is a substring of GUI_INTERFACE - unanchored, the UI_INTERFACE
-		# expression rewrites the GUI_INTERFACE line it has just been given.
+		# persisted so that -U survives a restart; anchored: UI_INTERFACE is a substring of GUI_INTERFACE
 		sed -i '' -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
 		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" \
