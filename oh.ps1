@@ -1154,10 +1154,10 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set API_SERVER
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("APISERVER=off","APISERVER=$API_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
-		# set GUI INTERFACE
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("GUI_INTERFACE=on","GUI_INTERFACE=$GUI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		# set GUI INTERFACE - anchored: UI_INTERFACE is a substring of GUI_INTERFACE
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS") -replace "^GUI_INTERFACE=on","GUI_INTERFACE=$GUI_INTERFACE" | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set UI INTERFACE
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("UI_INTERFACE=off","UI_INTERFACE=$UI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS") -replace "^UI_INTERFACE=off","UI_INTERFACE=$UI_INTERFACE" | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 	}
 
 	######## OH - Other settings setup
