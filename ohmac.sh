@@ -1125,7 +1125,11 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	import_db;
 fi
 
+# Database setup...
 test_db_connection;
+
+# Generate configuration before starting any application that consumes it.
+write_config_files
 
 # check for API server
 if [ "$API_SERVER" = "on" ]; then
@@ -1162,11 +1166,6 @@ if [ "$OH_MODE" = "SERVER" ]; then
 	done
 else
 	######## Open Hospital GUI startup - only for CLIENT or PORTABLE mode
-
-	# generate config files if not existent
-	write_config_files;
-
-	# start OH gui
 	start_gui;
 
 	# Close and exit

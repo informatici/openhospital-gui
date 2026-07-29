@@ -1884,9 +1884,10 @@ test_database_connection;
 
 # check for API server
 if [ "$API_SERVER" = "on" ]; then
-	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# Deploy API and copy the updated properties.
+	tomcat_setup;
 	# workaround to have UI files in correct place
 	setup_ui;
 	# start API server

@@ -1989,9 +1989,10 @@ test_database_connection;
 
 # check for API server
 if ( $API_SERVER -eq "on" ) {
-	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# Deploy the API and copy the updated configuration.
+	tomcat_setup;
 	# workaround to have UI files in correct place
 	setup_ui;
 	# start API server
