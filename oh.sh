@@ -1013,10 +1013,19 @@ function write_config_files {
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
 		[ -f ./$OH_DIR/rsc/$OH_SETTINGS ] && mv -f ./$OH_DIR/rsc/$OH_SETTINGS ./$OH_DIR/rsc/$OH_SETTINGS.old
 		echo "Writing OH configuration file -> $OH_SETTINGS..."
+		# The three interface expressions are anchored at the start of the line, and name the key on
+		# both sides of the substitution:
+		#  - the GUI_INTERFACE replacement used to expand the variable on the left of the '=' as well,
+		#    so it wrote "on=on" (or "off=off") and the key itself was lost from the settings file;
+		#  - UI_INTERFACE is a substring of GUI_INTERFACE, so an unanchored UI_INTERFACE expression
+		#    matches inside the GUI_INTERFACE line the previous expression has just produced and
+		#    rewrites it. Anchoring is what keeps the two apart.
 		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
-		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
-		-e "s/GUI_INTERFACE=on/"$GUI_INTERFACE=$GUI_INTERFACE"/g" -e "s/UI_INTERFACE=off/"UI_INTERFACE=$UI_INTERFACE"/g" \
+		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" \
+		-e "s/^APISERVER=off/APISERVER=$API_SERVER/" \
+		-e "s/^GUI_INTERFACE=on/GUI_INTERFACE=$GUI_INTERFACE/" \
+		-e "s/^UI_INTERFACE=off/UI_INTERFACE=$UI_INTERFACE/" \
 		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS
 	fi
 
