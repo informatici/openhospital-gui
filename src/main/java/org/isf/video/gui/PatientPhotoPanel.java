@@ -153,10 +153,10 @@ public class PatientPhotoPanel extends JPanel {
 				}
 			});
 
-			// only touch the webcam stack when the video module is enabled; Webcam.getDefault() loads a native library
+			// only touch the webcam stack when the video module is enabled; the lookup loads a native library
 			// (BridJ) that is not available on every platform (e.g. Apple Silicon), and calling it unconditionally
 			// would throw an UnsatisfiedLinkError and break the whole patient form even with the video module off
-			final Webcam webcam = GeneralData.VIDEOMODULEENABLED ? defaultWebcam() : null;
+			final Webcam webcam = GeneralData.VIDEOMODULEENABLED ? WebcamProvider.getDefault() : null;
 
 			if (webcam != null) {
 				JButton jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.newphoto.btn"));
@@ -190,25 +190,6 @@ public class PatientPhotoPanel extends JPanel {
 		}
 
 		add(jPhotoPanel);
-	}
-
-	
-	/**
-	 * The default webcam, or {@code null} when none can be used.
-	 * <p>
-	 * Enabling the video module only states that the user wants a webcam, not that the platform can provide one: the
-	 * capture driver loads a native library (BridJ) that ships for a limited set of architectures, so on the others the
-	 * lookup fails at run time. Without this the failure escapes the constructor and no patient can be opened at all,
-	 * which is a far worse outcome than losing the photo booth. Falling back to {@code null} reuses the path already
-	 * taken when the video module is off, where the photo is attached from a file instead.
-	 */
-	private static Webcam defaultWebcam() {
-		try {
-			return Webcam.getDefault();
-		} catch (RuntimeException | LinkageError e) {
-			LOGGER.warn("No usable webcam on this platform: taking the photo from a file instead.", e);
-			return null;
-		}
 	}
 
 	private JPanel setMyBorder(JPanel c, String title) {
