@@ -809,17 +809,35 @@ function start_database {
 
 	echo "Starting $MYSQL_NAME server... "
 	./$MYSQL_DIR/bin/mysqld_safe --defaults-file=./$CONF_DIR/$MYSQL_CONF_FILE >> ./$LOG_DIR/$LOG_FILE 2>&1 &
+	DATABASE_LAUNCHER_PID=$!
 	if [ $? -ne 0 ]; then
 		echo "Error: $MYSQL_NAME server not started! Exiting."
 		exit 2
 	fi
-	# wait till the MariaDB/MySQL tcp port is open
+	# wait till the MariaDB/MySQL tcp port is open.
+	#
+	# A start that has already failed is not waited out: mysqld_safe stays alive for as long as the
+	# server does, so once it is gone the port will never open and there is nothing left to wait for.
+	# That is the common failure - a port already taken, a data directory the server will not accept,
+	# a bad configuration - and it is now reported in about a second rather than at the end of the
+	# timeout. The timeout is what remains for the rarer case of a server that runs but does not get
+	# to listening, where waiting is the right thing to do: a start that has to build its system
+	# tables, or one recovering after an unclean shutdown, takes its time and does succeed.
 	WAITED=0
 	until database_port_open; do
+		if ! kill -0 $DATABASE_LAUNCHER_PID 2>/dev/null; then
+			echo "Error: $MYSQL_NAME server exited before it started listening on $DATABASE_SERVER:$DATABASE_PORT."
+			echo "See ./$LOG_DIR/$LOG_FILE for the reason. Exiting."
+			exit 2
+		fi
 		if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
 			echo "Error: $MYSQL_NAME server is not listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
 			echo "See ./$LOG_DIR/$LOG_FILE for the reason. Exiting."
 			exit 2
+		fi
+		# say something while waiting, so that a slow start is not mistaken for the hang this replaced
+		if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+			echo "Still waiting for $MYSQL_NAME to listen on $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
 		fi
 		sleep 1
 		WAITED=$((WAITED+1))
@@ -948,6 +966,9 @@ function shutdown_database {
 				echo "Warning: $MYSQL_NAME is still listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
 				echo "See ./$LOG_DIR/$LOG_FILE for the reason."
 				return
+			fi
+			if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+				echo "Still waiting for $MYSQL_NAME to release $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
 			fi
 			sleep 1
 			WAITED=$((WAITED+1))
