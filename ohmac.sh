@@ -84,6 +84,9 @@ DATABASE_USER="isf"
 DATABASE_PASSWORD="isf123"
 DB_CREATE_SQL="create_all_en.sql"
 
+# seconds to wait for the database to start listening, or to release its port on shutdown
+DATABASE_WAIT_TIMEOUT=90
+
 # demo data - the demo branch below uses both of these
 DEMO_DATABASE="ohdemo"
 DB_DEMO="create_all_demo.sql"
@@ -519,13 +522,62 @@ function create_db {
     fi	
 }
 ###################################################################
-function start_db {    
+# Whether the database is accepting connections on its TCP port.
+#
+# The port is probed with bash's own /dev/tcp redirection rather than with `nc`, which is not part
+# of a stock macOS and cannot be relied on being there.
+function database_port_open {
+	(exec 3<>/dev/tcp/$DATABASE_SERVER/$DATABASE_PORT) > /dev/null 2>&1
+}
+
+###################################################################
+# `brew services start` returns as soon as launchd has accepted the job, not when the server is
+# ready, so everything that follows used to race it: the very next thing this script does is run a
+# mysql client, and on a cold start that client would be refused. Waiting for the port removes the
+# race, and the timeout keeps a server that never comes up from hanging the launcher silently.
+function wait_for_database {
+	WAITED=0
+	until database_port_open; do
+		if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+			echo "Error: MariaDB is not listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+			echo "Check it with 'brew services info mariadb'. Exiting."
+			exit 2
+		fi
+		if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+			echo "Still waiting for MariaDB to listen on $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
+		fi
+		sleep 1
+		WAITED=$((WAITED+1))
+	done
+}
+
+###################################################################
+function wait_for_database_stopped {
+	WAITED=0
+	while database_port_open; do
+		if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+			echo "Warning: MariaDB is still listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+			echo "Check it with 'brew services info mariadb'."
+			return
+		fi
+		if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+			echo "Still waiting for MariaDB to release $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
+		fi
+		sleep 1
+		WAITED=$((WAITED+1))
+	done
+}
+
+###################################################################
+function start_db {
     create_db;
     brew services start mariadb >/dev/null;
+    wait_for_database;
 }
 ###################################################################
 function stop_db {
-    brew services stop mariadb    
+    brew services stop mariadb
+    wait_for_database_stopped;
 }
 
 ###################################################################
