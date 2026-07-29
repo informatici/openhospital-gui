@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -97,8 +97,10 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         this.photoboothPanelPresentationModel = model;
         this.owner = owner;
 
-        this.allWebcams = Webcam.getWebcams();
-        this.webcam = Webcam.getDefault();
+        // through the provider, so a platform whose capture driver cannot load fails here the way it
+        // does in PatientPhotoPanel: once, rather than with a stack trace per patient
+        this.allWebcams = WebcamProvider.getWebcams();
+        this.webcam = WebcamProvider.getDefault();
 
         this.supportedResolutions = new ArrayList<>();
         Collections.addAll(supportedResolutions, webcam.getDevice().getResolutions());
