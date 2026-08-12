@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.21.2.final using JasperReports Library version 6.21.2-8434a0bd7c3bbc37cbf916f2968d35e4b165821a  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH010_OutPatientReport" pageWidth="1133" pageHeight="793" orientation="Landscape" columnWidth="1073" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="OH010_OutPatientReport" whenResourceMissingType="Key" uuid="1ae95539-9794-4bfc-954e-7879664f4181">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="344"/>
@@ -176,7 +175,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jTitle}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-4" x="0" y="49" width="1073" height="22" uuid="ac94292f-01bd-48ee-ad16-f2b014e15ec5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -189,7 +188,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-5" x="0" y="71" width="1073" height="17" uuid="7a880592-39cf-460e-84a4-9af62bc13461"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -202,7 +201,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-6" x="0" y="88" width="1073" height="17" uuid="9ea7c0e8-de1c-441e-90c5-1cbdd0b71e6d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -215,7 +214,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-7" x="-1" y="105" width="1073" height="17" uuid="ec7f622b-3368-4c77-9f99-50391a32eb95"/>
 				<box>
 					<pen lineColor="#706C6C"/>
@@ -229,7 +228,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-8" x="50" y="122" width="85" height="17" uuid="83adc030-5739-4a9e-83a9-1a3017e5bfa6">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
@@ -276,7 +275,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-9" x="165" y="122" width="95" height="17" uuid="1985a4d2-3de0-4911-8639-a40e4614dbe4">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>

@@ -2,7 +2,7 @@
 #!/usr/bin/pwsh
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -137,6 +137,9 @@ $script:OH_DIR="."
 $script:OH_DOC_DIR="doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
+
+# seconds to wait for the database to start listening, or to release its port on shutdown
+$script:DATABASE_WAIT_TIMEOUT=90
 $script:PHOTO_DIR="data/photo"
 $script:BACKUP_DIR="data/dump"
 $script:LOG_DIR="data/log"
@@ -155,6 +158,9 @@ $script:LOG_FILE_ERR="startup_error.log"
 $script:OH_LOG_FILE="openhospital.log"
 $script:API_LOG_FILE="api.log"
 $script:API_ERR_LOG_FILE="api_error.log"
+$script:API_STOP_LOG_FILE="api_stop.log"
+$script:API_STOP_ERR_LOG_FILE="api_stop_error.log"
+$script:TMP_LOG_FILE="tmp.log"
 
 # SQL creation files
 #$script:DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
@@ -890,18 +896,38 @@ function start_database {
 
 	Write-Host "Starting $MYSQL_NAME server... "
 	try {
-		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--defaults-file=`"$OH_PATH\$CONF_DIR\$MYSQL_CONF_FILE`" --tmpdir=`"$OH_PATH\$TMP_DIR`" --standalone") -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-		Start-Sleep -Seconds 2
+		$script:DATABASE_PROCESS = Start-Process -PassThru -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--defaults-file=`"$OH_PATH\$CONF_DIR\$MYSQL_CONF_FILE`" --tmpdir=`"$OH_PATH\$TMP_DIR`" --standalone") -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 	}
 	catch {
 		Write-Host "Error: $MYSQL_NAME server not started! Exiting." -ForegroundColor Red
 		Read-Host; exit 2
 	}
 
-	# wait till the MariaDB/MySQL socket file is created -> TO BE IMPLEMENTED
-	# while ( -e $OH_PATH/$MYSQL_SOCKET ); do sleep 1; done
-	# # Wait till the MariaDB/MySQL tcp port is open
-	# until nc -z $DATABASE_SERVER $DATABASE_PORT; do sleep 1; done
+	# Wait till the MariaDB/MySQL tcp port is open, instead of assuming two seconds are enough: the
+	# next thing this script does is run a mysql client, and on a slow machine, or on a start that
+	# has to build the system tables or recover after an unclean shutdown, two seconds are not.
+	#
+	# A start that has already failed is not waited out either - once mysqld has exited, the port
+	# will never open and there is nothing left to wait for. That is the common failure and it is
+	# reported at once; the timeout covers the rarer server that runs but does not get to listening.
+	$WAITED = 0
+	while ( !(database_port_open) ) {
+		if ( $script:DATABASE_PROCESS -And $script:DATABASE_PROCESS.HasExited ) {
+			Write-Host "Error: $MYSQL_NAME server exited before it started listening on $DATABASE_SERVER port $DATABASE_PORT." -ForegroundColor Red
+			Write-Host "See $LOG_DIR/$LOG_FILE_ERR for the reason. Exiting." -ForegroundColor Red
+			Read-Host; exit 2
+		}
+		if ( $WAITED -ge $DATABASE_WAIT_TIMEOUT ) {
+			Write-Host "Error: $MYSQL_NAME server is not listening on $DATABASE_SERVER port $DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds." -ForegroundColor Red
+			Write-Host "See $LOG_DIR/$LOG_FILE_ERR for the reason. Exiting." -ForegroundColor Red
+			Read-Host; exit 2
+		}
+		if ( ($WAITED -gt 0) -And ($WAITED % 10 -eq 0) ) {
+			Write-Host "Still waiting for $MYSQL_NAME to listen on $DATABASE_SERVER port $DATABASE_PORT ($WAITED s)..."
+		}
+		Start-Sleep -Seconds 1
+		$WAITED++
+	}
 
 	Write-Host "$MYSQL_NAME server started!"
 }
@@ -1017,13 +1043,43 @@ function dump_database {
 }
 
 ###################################################################
+# Whether the database is accepting connections on its TCP port.
+#
+# A refused connection makes Task.Wait throw rather than return false, so the call is guarded: left
+# uncaught the failure would surface as an error from the loops below instead of as a closed port.
+function database_port_open {
+	$client = New-Object System.Net.Sockets.TcpClient
+	try {
+		return $client.ConnectAsync("$DATABASE_SERVER", $DATABASE_PORT).Wait(1000)
+	}
+	catch {
+		return $false
+	}
+	finally {
+		$client.Dispose()
+	}
+}
+
+###################################################################
 function shutdown_database {
 	if ( !( $OH_MODE -eq "CLIENT" ) ) {
 		Write-Host "Shutting down $MYSQL_NAME..."
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqladmin.exe" -ArgumentList ("-u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-		# wait till the $MYSQL_NAME socket file is removed -> TO BE IMPLEMENTED
-		# while ( -e $OH_PATH/$MYSQL_SOCKET ); do sleep 1; done
-		Start-Sleep -Seconds 2
+		# wait till the port is released, rather than assuming two seconds are enough: a server with
+		# work still to flush takes longer, and the next start would then find the port still taken
+		$WAITED = 0
+		while ( database_port_open ) {
+			if ( $WAITED -ge $DATABASE_WAIT_TIMEOUT ) {
+				Write-Host "Warning: $MYSQL_NAME is still listening on $DATABASE_SERVER port $DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds." -ForegroundColor Yellow
+				Write-Host "See $LOG_DIR/$LOG_FILE_ERR for the reason." -ForegroundColor Yellow
+				return
+			}
+			if ( ($WAITED -gt 0) -And ($WAITED % 10 -eq 0) ) {
+				Write-Host "Still waiting for $MYSQL_NAME to release $DATABASE_SERVER port $DATABASE_PORT ($WAITED s)..."
+			}
+			Start-Sleep -Seconds 1
+			$WAITED++
+		}
 		Write-Host "$MYSQL_NAME stopped!"
 	}
 
@@ -1151,10 +1207,10 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set API_SERVER
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("APISERVER=off","APISERVER=$API_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
-		# set GUI INTERFACE
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("GUI_INTERFACE=on","GUI_INTERFACE=$GUI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		# set GUI INTERFACE - anchored: UI_INTERFACE is a substring of GUI_INTERFACE
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS") -replace "^GUI_INTERFACE=on","GUI_INTERFACE=$GUI_INTERFACE" | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set UI INTERFACE
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("UI_INTERFACE=off","UI_INTERFACE=$UI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS") -replace "^UI_INTERFACE=off","UI_INTERFACE=$UI_INTERFACE" | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 	}
 
 	######## OH - Other settings setup
@@ -1229,7 +1285,7 @@ function start_gui {
 	#$JAVA_ARGS="-client -Dlog4j.configuration=`"`'$OH_PATH\$OH_DIR\rsc\$LOG4J_SETTINGS`'`" -Dsun.java2d.dpiaware=false -Djava.library.path=`"`'$NATIVE_LIB_PATH`'`" -cp `"`'$OH_CLASSPATH`'`" org.isf.Application"
 
 	# log4j configuration is now read directly
-$JAVA_ARGS="-client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=`"$NATIVE_LIB_PATH`" -cp `"`'$OH_CLASSPATH`'`" org.isf.Application"
+$JAVA_ARGS="-client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=`"$NATIVE_LIB_PATH`" -cp `"`'$OH_CLASSPATH`'`" org.isf.Application"
 
 	Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_ARGS -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 	
@@ -1295,9 +1351,8 @@ function stop_api_server {
 	if ( !($OH_MODE -eq "CLIENT") -And ( $API_SERVER -eq "on" ) ) {
 		# shutdown tomcat
                 Write-Host "Shutting down Tomcat - Open Hospital API server..."
-		Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("stop") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_ERR_LOG_FILE"
+		Start-Process -FilePath "$OH_PATH/$TOMCAT_DIR/bin/catalina.bat" -ArgumentList ("stop") -WindowStyle Hidden -RedirectStandardOutput "$OH_PATH/$LOG_DIR/$API_STOP_LOG_FILE" -RedirectStandardError "$OH_PATH/$LOG_DIR/$API_STOP_ERR_LOG_FILE" -Wait
                 Write-Host "Tomcat stopped!"
-
 	}
 }
 
@@ -1891,7 +1946,20 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 	mysql_check;
 	# config database
 	config_database;
-	# check if OH database already exists
+	# check if OH database already exists.
+	#
+	# The data directory alone does not say that: initialize_database creates it as its very first
+	# step, so an installation interrupted at any point afterwards looked complete on the next run
+	# and the launcher went straight to start_database on a database that could not work, with no
+	# hint that the first attempt had never finished. What tells a finished installation apart is
+	# the directory the database engine creates for the [$DATABASE_NAME] schema itself, inside the
+	# data directory.
+	if ( (Test-Path "$OH_PATH/$DATA_DIR") -And !(Test-Path "$OH_PATH/$DATA_DIR/$DATABASE_NAME") ) {
+		Write-Host "Error: a previous installation of the [$DATABASE_NAME] database was left unfinished in $DATA_DIR." -ForegroundColor Red
+		Write-Host "Remove that directory, or reset the installation with option [X] which deletes the data for you," -ForegroundColor Red
+		Write-Host "then run this script again. Exiting." -ForegroundColor Red
+		Read-Host; exit 2
+	}
 	if ( !(Test-Path "$OH_PATH/$DATA_DIR") ) {
 		Write-Host "OH database not found, starting from scratch..."
 		# prepare database

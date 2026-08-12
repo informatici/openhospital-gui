@@ -1,6 +1,6 @@
 @echo off
 REM # Open Hospital (www.open-hospital.org)
-REM # Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+REM # Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 REM #
 REM # Open Hospital is a free and open source software for healthcare data management.
 REM #
@@ -171,7 +171,7 @@ REM # JRE 8 32bit - i686 - zulu
 REM set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
 REM set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
-REM # JRE 11 32bit - i686 - zulu - default
+REM # JRE 17 32bit - i686 - zulu - default
 set JAVA_DIR=zulu17.60.17-ca-jre17.0.16-win_%ARCH%
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
@@ -346,7 +346,7 @@ REM ###### Start Open Hospital #####
 echo Starting Open Hospital GUI...
 
 cd /d %OH_PATH%\%OH_DIR%
-%JAVA_BIN% -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=%NATIVE_LIB_PATH% -cp %CLASSPATH% org.isf.Application
+%JAVA_BIN% -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=%NATIVE_LIB_PATH% -cp %CLASSPATH% org.isf.Application
 
 REM # Shutdown MySQL
 echo Shutting down MySQL...

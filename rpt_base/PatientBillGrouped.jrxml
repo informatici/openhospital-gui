@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillGrouped" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PatientBillGrouped" whenResourceMissingType="Key" uuid="71489815-736e-4d54-ac77-256fdc80e356">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -140,7 +139,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{PATIENT_BILLS_SUMMARY}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-16" x="70" y="45" width="465" height="15" uuid="725bd5ec-28d0-414c-82aa-69e64cd04c02"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -153,7 +152,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_USR_ID_A}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-17" x="70" y="31" width="465" height="15" uuid="6882d07b-a9e4-43c0-bdfe-3b2cd7f26ccc"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -166,7 +165,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_ID_PAT} + " - " + $F{PAT_NAME}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-23" x="70" y="60" width="172" height="15" uuid="3f595b30-9461-4a08-acdb-ec21f9feea05"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

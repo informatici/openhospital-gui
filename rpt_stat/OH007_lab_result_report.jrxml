@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH007_lab_result_report" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="OH007_lab_result_report" whenResourceMissingType="Key" uuid="732dcc8d-84fd-4fe5-b24c-b307694ef353">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -129,7 +128,7 @@ ORDER BY EXA_DESC, LAB_RES, LAB_SEX, LAB_AGE, PAT_CITY, PAT_ADDR]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jTitle}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-1" x="0" y="49" width="535" height="22" uuid="3d7b2881-e64a-4743-b8e4-36753008ef13"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -142,7 +141,7 @@ ORDER BY EXA_DESC, LAB_RES, LAB_SEX, LAB_AGE, PAT_CITY, PAT_ADDR]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-2" x="0" y="71" width="535" height="17" uuid="dd82baf2-f724-4cd7-a330-b06323750b5a"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -153,7 +152,7 @@ ORDER BY EXA_DESC, LAB_RES, LAB_SEX, LAB_AGE, PAT_CITY, PAT_ADDR]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-3" x="0" y="105" width="535" height="17" uuid="0f43681e-ea71-4b69-925d-2049881ecd83"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -164,7 +163,7 @@ ORDER BY EXA_DESC, LAB_RES, LAB_SEX, LAB_AGE, PAT_CITY, PAT_ADDR]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-4" x="65" y="122" width="64" height="17" uuid="ecbf3e39-9c0e-4cd2-96ad-0dc7e857b613"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -203,7 +202,7 @@ ORDER BY EXA_DESC, LAB_RES, LAB_SEX, LAB_AGE, PAT_CITY, PAT_ADDR]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-5" x="194" y="122" width="64" height="17" uuid="3b12eb06-ba56-435a-8f0a-d81a093b057d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -216,7 +215,7 @@ ORDER BY EXA_DESC, LAB_RES, LAB_SEX, LAB_AGE, PAT_CITY, PAT_ADDR]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{todate}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-6" x="0" y="88" width="535" height="17" uuid="2f2b55c0-9938-4e7d-b55c-a8e77d7ca292"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

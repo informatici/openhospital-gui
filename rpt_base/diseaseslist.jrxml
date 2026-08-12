@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="diseaseslist" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="diseaseslist" whenResourceMissingType="Key" uuid="a8aeb358-3c54-4b47-8cab-951ce45420a5">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -22,7 +21,7 @@ order by DCL_DESC, DIS_DESC]]>
 		<groupExpression><![CDATA[$F{DCL_DESC}]]></groupExpression>
 		<groupHeader>
 			<band height="15" splitType="Stretch">
-				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 					<reportElement key="textField" x="0" y="0" width="535" height="13" uuid="7c7cd7a2-3f60-4b7b-bdd5-0bbead1b98d7"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

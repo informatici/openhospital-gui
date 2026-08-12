@@ -37,7 +37,7 @@ public class BalanceTotal {
 	public BigDecimal getValue() {
 		return billPeriod.stream()
 				.filter(bill -> !bill.getStatus().equals("D"))
-				.map(bill -> new BigDecimal(Double.toString(bill.getBalance())))
+				.map(Bill::getBalance)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 

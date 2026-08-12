@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillPaymentsTxt" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="PatientBillPaymentsTxt" whenResourceMissingType="Key" isIgnorePagination="true" uuid="b2c3bea1-dfff-4c9e-ac34-4d0a464bf8b9">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -47,7 +46,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-19" x="0" y="18" width="555" height="18" uuid="e8eb1198-33e1-4803-a74f-2215bb83b40c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -60,7 +59,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-20" x="0" y="36" width="555" height="18" uuid="48e3ac1e-17a0-44b6-8912-2f1feb182762"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -73,7 +72,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement key="textField-21" x="0" y="54" width="555" height="18" uuid="6475066b-0810-4d0f-aee2-f96ef2b03b8f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -103,7 +102,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["BILL N. " + $F{BLL_ID}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-16" x="0" y="54" width="555" height="18" uuid="04e53f9e-4b48-497b-aed7-a80de85fd77f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -116,7 +115,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Date: " + $F{BLL_UPDATE}.toLocaleString()]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-17" x="0" y="18" width="555" height="18" uuid="6931689b-4028-4c91-8ed7-025dd2a17b6b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -129,7 +128,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["PAT. N. " + $F{BLL_ID_PAT} + " - " + $F{BLL_PAT_NAME}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-22" x="0" y="36" width="555" height="18" uuid="36ecac4c-8976-4f82-9cf6-5b035533c03c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

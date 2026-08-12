@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_clinical_sheet_ver3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_clinical_sheet_ver3" whenResourceMissingType="Key" uuid="9d971b4c-5fa3-4819-adfb-28dfac75b382">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -352,7 +351,7 @@ ORDER BY DATE DESC]]>
 			<printWhenExpression><![CDATA[!($F{TYPE}.equals( "Operations" ) && $P{All}) 
 && !($F{TYPE}.equals( "Operations" ) && $P{Admission}) 
 && !($F{TYPE}.equals( "Operations" ) && $P{Opd})]]></printWhenExpression>
-			<textField textAdjust="ScaleFont" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="0" y="21" width="70" height="13" uuid="e8b6c04a-0d0d-4fab-87b2-fde877b88b93"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -378,7 +377,7 @@ ORDER BY DATE DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TYPE}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-3" mode="Transparent" x="80" y="60" width="455" height="13" isRemoveLineWhenBlank="true" uuid="8c6b7e88-2a94-4b49-b949-1b0f9ac14e54"/>
 				<textElement>
 					<font fontName="DejaVu Sans" isItalic="true"/>
@@ -392,7 +391,7 @@ ORDER BY DATE DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DETAILS_1}.equals( "OPD" ) ? $R{OPD} : $F{DETAILS_1}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-5" x="80" y="21" width="455" height="13" isRemoveLineWhenBlank="true" uuid="76b9dd4e-f6aa-421a-8577-4792fd3c2100"/>
 				<textElement>
 					<font fontName="DejaVu Sans"/>
@@ -428,7 +427,7 @@ ORDER BY DATE DESC]]>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_ver3_subreport_Operation.jasper"]]></subreportExpression>
 			</subreport>
-			<textField textAdjust="ScaleFont" pattern="HH:mm" isBlankWhenNull="true">
+			<textField pattern="HH:mm" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="0" y="34" width="70" height="13" uuid="294e84bf-c024-4d98-b169-ecdaf3cc470d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

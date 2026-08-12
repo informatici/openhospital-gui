@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_clinical_sheet_patsubreport" pageWidth="535" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="patient_clinical_sheet_patsubreport" whenResourceMissingType="Key" uuid="dfd8ed2e-99db-4e93-bf8b-45a42f8a6dbf">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -241,7 +240,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$R{Passport}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="80" y="19" width="322" height="14" uuid="c2c91e76-befb-4a4b-9532-363eae1da554"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -293,7 +292,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Name}+":"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement key="textField-3" x="80" y="33" width="322" height="14" uuid="da99dd12-7482-46d5-b349-03bef9843b43"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -303,7 +302,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</box>
 				<textFieldExpression><![CDATA[$F{PAT_SEX}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement key="textField-4" x="80" y="61" width="322" height="14" uuid="b02c12a6-4225-4d04-82c0-1a79b2f7e49f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -339,7 +338,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Age}+":"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement key="textField-5" x="80" y="75" width="322" height="14" uuid="f2b51898-d307-4e9e-bfb8-57f0ae2a0d7d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -349,7 +348,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</box>
 				<textFieldExpression><![CDATA[$F{PAT_ADDR}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement key="textField-6" x="80" y="89" width="322" height="14" uuid="32b89989-52b4-4c50-84ec-799abaec9a4c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -427,7 +426,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Weight}+":"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement key="textField-7" x="80" y="117" width="322" height="14" uuid="63262052-8e79-4504-86bd-5dbd778f58fb"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -437,7 +436,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</box>
 				<textFieldExpression><![CDATA[$F{PEX_WEIGHT}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement key="textField-8" x="80" y="103" width="322" height="14" uuid="b5e05450-d4cc-46c3-8bb1-54a46f687799"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -460,7 +459,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{BirthDate}+":"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement key="textField-9" x="80" y="47" width="322" height="14" uuid="05b19552-68b1-49e2-b7a8-d977a1aafa52"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

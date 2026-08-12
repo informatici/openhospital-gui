@@ -1,10 +1,24 @@
 # This file contains text printing information
 # MODE = TXT, PDF or ZPL
+
+# TXT_CHAR_HEIGHT: height of a text row used by JRTextExporter to convert the
+# JRXML layout into a text grid. It should match (or be proportional to)
+# the height of the fields in the jrxml report (e.g. 18 in our templates).
+
+# TXT_CHAR_WIDTH: width of a text column used by JRTextExporter. It depends on
+# the printable width of the report and determines how many characters fit
+# on one line (typically around 42–48 columns for 80mm receipts).
+
+# TXT_FEED_LINES: number of blank lines sent before finishing the print
+# TXT_CUTTER: enable/disable the ESC/POS cut command
+
 USE_DEFAULT_PRINTER=yes
 PRINT_AS_PAID=no
 PRINT_WITHOUT_ASK=no
 MODE=PDF
-#TXT_CHAR_HEIGHT=10
-#TXT_CHAR_WIDTH=10
+TXT_CHAR_HEIGHT=18
+TXT_CHAR_WIDTH=12
+TXT_FEED_LINES=3
+TXT_CUTTER=yes
 ZPL_FONT_TYPE=0
 ZPL_ROW_HEIGHT=25

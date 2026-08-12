@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalStockWard" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoPages" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PharmaceuticalStockWard" whenResourceMissingType="Key" uuid="ecf7f030-6e55-49a9-97f9-6cb7ca169e31">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -330,7 +329,7 @@ ORDER BY MDSRT_DESC, MDSR_DESC
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Date} +":"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
 				<reportElement key="textField-22" x="44" y="70" width="219" height="20" uuid="19c66d96-d407-40de-8561-5ccd016d13e8"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -356,7 +355,7 @@ ORDER BY MDSRT_DESC, MDSR_DESC
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Ward}+":"+"	"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
 				<reportElement key="textField-30" x="44" y="49" width="219" height="20" uuid="49204c1e-3235-468d-b69a-9a6db0086d57"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
