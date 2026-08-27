@@ -47,10 +47,9 @@ public class LogViewer extends JDialog {
 		} catch (IOException e) {
 			// the path is null when no file appender is configured, and then the reason why there is
 			// no folder to open is all this dialog can show
-			MessageDialog.error(this, "angal.log.foldererror.fmt.msg",
-							logfile == null ? e.getMessage() : new File(logfile).getAbsoluteFile().getParent());
+			String folder = logfile != null ? new File(logfile).getAbsoluteFile().getParent() : e.getMessage();
+			MessageDialog.error(this, "angal.log.foldererror.fmt.msg", folder);
 		}
-
 	}
 
 }
