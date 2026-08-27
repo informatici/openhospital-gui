@@ -1007,7 +1007,7 @@ function import_database {
 	cd "./$SQL_DIR"
 
     $SQLCOMMAND=@"
-   --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./$DB_CREATE_SQL"
+   --abort-source-on-error --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./$DB_CREATE_SQL"
 "@
 	try {
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"

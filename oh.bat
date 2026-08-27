@@ -305,7 +305,9 @@ if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
 
 	echo Importing database %DATABASE_NAME% with user %DATABASE_USER%@%DATABASE_SERVER%...
 	cd /d %OH_PATH%\%SQL_DIR%
-	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe --local-infile=1 -u %DATABASE_USER% -p%DATABASE_PASSWORD% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% %DATABASE_NAME% < "%OH_PATH%\sql\%DB_CREATE_SQL%"  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+	rem --abort-source-on-error: without it the client carries on after a failed statement inside a
+	rem sourced file and still exits 0, so a half-loaded database reported success
+	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe --abort-source-on-error --local-infile=1 -u %DATABASE_USER% -p%DATABASE_PASSWORD% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% %DATABASE_NAME% < "%OH_PATH%\sql\%DB_CREATE_SQL%"  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 	if ERRORLEVEL 1 (goto error)
 	cd /d %OH_PATH%
 	echo Database imported!

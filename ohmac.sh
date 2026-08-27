@@ -516,7 +516,9 @@ function import_db {
 
 		CURRPATH=`pwd`
 		cd "$SCRIPTDIR"
-		mysql --local-infile=1 -u $USER $DATABASE_NAME < $SCRIPT
+		# --abort-source-on-error: without it the client carries on after a failed statement inside
+		# a sourced file and still exits 0, so a half-loaded database reported success
+		mysql --abort-source-on-error --local-infile=1 -u $USER $DATABASE_NAME < $SCRIPT
 		if [ $? -ne 0 ]; then
 			echo "  >Error: Database not imported! Exiting."
 			stop_db;
