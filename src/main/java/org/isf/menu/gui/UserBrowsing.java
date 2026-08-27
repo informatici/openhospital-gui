@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -143,7 +143,8 @@ public class UserBrowsing extends ModalJFrame implements UserListener {
 				selectedrow = table.getSelectedRow();
 				user = (User) model.getValueAt(table.getSelectedRow(), -1);
 
-				String hashed = ChangePasswordDialog.promptForNewPassword(this, userBrowsingManager,
+				// null user: an administrator reset does not check the target user's current password (the admin does not know it)
+				String hashed = ChangePasswordDialog.promptForNewPassword(this, userBrowsingManager, null,
 					MessageBundle.getMessage("angal.userbrowser.resetpassword.title"));
 				if (hashed == null) {
 					return;
