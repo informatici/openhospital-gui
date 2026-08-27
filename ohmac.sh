@@ -320,8 +320,9 @@ function java_lib_setup {
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/lib
 
 	# include all jar files under lib/
-	DIRLIBS="$OH_PATH"/$OH_DIR/lib/*.jar
-	for i in ${DIRLIBS}
+	# the pattern is expanded by the loop itself: going through a variable would split an
+	# installation path that contains a space and leave the jars out of the classpath
+	for i in "$OH_PATH"/$OH_DIR/lib/*.jar
 	do
 		OH_CLASSPATH="$i":$OH_CLASSPATH
 	done
@@ -801,7 +802,7 @@ function start_api_server {
 		*)     LAUNCHER="org.springframework.boot.loader.launch.JarLauncher" ;;
 	esac
 	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
-	$JAVA_BIN -client -Xms64m -Xmx1024m \
+	"$JAVA_BIN" -client -Xms64m -Xmx1024m \
 		-cp "$API_ARTIFACT:$OH_PATH/$OH_DIR/rsc:$OH_PATH/$OH_DIR/static" $LAUNCHER >> "$OH_PATH/$LOG_DIR/$API_LOG_FILE" 2>&1 &
 
 	if [ $? -ne 0 ]; then
@@ -826,7 +827,7 @@ function start_gui {
 	# OH GUI launch	
 	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
 
-	$JAVA_BIN -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> "$OH_PATH/$LOG_DIR/$LOG_FILE" 2>&1
+	"$JAVA_BIN" -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path="${NATIVE_LIB_PATH}" -classpath "$OH_CLASSPATH" org.isf.Application >> "$OH_PATH/$LOG_DIR/$LOG_FILE" 2>&1
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."
@@ -930,7 +931,7 @@ function parse_user_input {
 		echo "Setting up GSM..."
 		java_check;
 		java_lib_setup;
-		$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
+		"$JAVA_BIN" -Djava.library.path="${NATIVE_LIB_PATH}" -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
 		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;  
