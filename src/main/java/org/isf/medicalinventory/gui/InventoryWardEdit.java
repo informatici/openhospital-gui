@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -90,6 +90,7 @@ import org.isf.medicalinventory.model.MedicalInventory;
 import org.isf.medicalinventory.model.MedicalInventoryRow;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
+import org.isf.medicalstock.gui.LotCostVariance;
 import org.isf.medicalstock.manager.MovBrowserManager;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
@@ -1224,10 +1225,11 @@ public class InventoryWardEdit extends ModalJFrame {
 			}
 			String lotCode = (lotToUpdate != null) ? lotToUpdate.getCode() : "";
 			lot = new Lot(assignedMedical, lotCode, preparationDate, expiringDate);
-			BigDecimal cost = (lotToUpdate != null && lotToUpdate.getCost() != null) ? lotToUpdate.getCost() : BigDecimal.ZERO;
+			BigDecimal lastCost = (lotToUpdate != null && lotToUpdate.getCost() != null) ? lotToUpdate.getCost() : BigDecimal.ZERO;
+			BigDecimal cost = lastCost;
 			if (isLotWithCost()) {
-				cost = askCost(2, cost);
-				if (cost.compareTo(BigDecimal.ZERO) == 0) {
+				cost = LotCostVariance.askNewLotCost(this, movStockInsertingManager, assignedMedical, () -> askCost(2, lastCost));
+				if (cost == null) {
 					return null;
 				}
 			}
@@ -1297,19 +1299,13 @@ public class InventoryWardEdit extends ModalJFrame {
 						expiringDate = expireDateChooser.getDateEndOfDay();
 						preparationDate = preparationDateChooser.getDateStartOfDay();
 						lot = new Lot(assignedMedical, lotCode, preparationDate, expiringDate);
-						BigDecimal cost = BigDecimal.ZERO;
 						if (isLotWithCost()) {
-							if (lotToUpdate != null) {
-								cost = askCost(2, lotToUpdate.getCost());
-							} else {
-								cost = askCost(2, cost);
-							}
-
-							if (cost.compareTo(BigDecimal.ZERO) == 0) {
+							BigDecimal lastCost = (lotToUpdate != null) ? lotToUpdate.getCost() : BigDecimal.ZERO;
+							BigDecimal cost = LotCostVariance.askNewLotCost(this, movStockInsertingManager, assignedMedical, () -> askCost(2, lastCost));
+							if (cost == null) {
 								return null;
-							} else {
-								lot.setCost(cost);
 							}
+							lot.setCost(cost);
 						}
 					}
 				} catch (OHServiceException e) {
