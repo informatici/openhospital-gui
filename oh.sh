@@ -111,6 +111,9 @@ EXT="tar.gz"
 # mysql configuration file
 MYSQL_CONF_FILE="my.cnf"
 
+# seconds to wait for the database to start listening, or to release its port on shutdown
+DATABASE_WAIT_TIMEOUT=90
+
 # OH configuration files - see also settings.properties
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
@@ -782,6 +785,16 @@ function initialize_database {
 }
 
 ###################################################################
+# Whether the database is accepting connections on its TCP port.
+#
+# The port is probed with bash's own /dev/tcp redirection rather than with `nc`, which is not part
+# of the package and is absent from many minimal installations: there the probe never succeeded, so
+# the wait loop below span forever and the launcher hung with no message and no way to tell why.
+function database_port_open {
+	(exec 3<>/dev/tcp/$DATABASE_SERVER/$DATABASE_PORT) > /dev/null 2>&1
+}
+
+###################################################################
 function start_database {
 	echo "Checking if $MYSQL_NAME is running..."
 	if [ -f "$OH_PATH/$TMP_DIR/mysql.sock" ] || [ -f "$OH_PATH/$TMP_DIR/mysql.pid" ] ; then
@@ -796,12 +809,39 @@ function start_database {
 
 	echo "Starting $MYSQL_NAME server... "
 	./$MYSQL_DIR/bin/mysqld_safe --defaults-file=./$CONF_DIR/$MYSQL_CONF_FILE >> ./$LOG_DIR/$LOG_FILE 2>&1 &
+	DATABASE_LAUNCHER_PID=$!
 	if [ $? -ne 0 ]; then
 		echo "Error: $MYSQL_NAME server not started! Exiting."
 		exit 2
 	fi
-	# wait till the MariaDB/MySQL tcp port is open
-	until nc -z $DATABASE_SERVER $DATABASE_PORT; do sleep 1; done
+	# wait till the MariaDB/MySQL tcp port is open.
+	#
+	# A start that has already failed is not waited out: mysqld_safe stays alive for as long as the
+	# server does, so once it is gone the port will never open and there is nothing left to wait for.
+	# That is the common failure - a port already taken, a data directory the server will not accept,
+	# a bad configuration - and it is now reported in about a second rather than at the end of the
+	# timeout. The timeout is what remains for the rarer case of a server that runs but does not get
+	# to listening, where waiting is the right thing to do: a start that has to build its system
+	# tables, or one recovering after an unclean shutdown, takes its time and does succeed.
+	WAITED=0
+	until database_port_open; do
+		if ! kill -0 $DATABASE_LAUNCHER_PID 2>/dev/null; then
+			echo "Error: $MYSQL_NAME server exited before it started listening on $DATABASE_SERVER:$DATABASE_PORT."
+			echo "See ./$LOG_DIR/$LOG_FILE for the reason. Exiting."
+			exit 2
+		fi
+		if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+			echo "Error: $MYSQL_NAME server is not listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+			echo "See ./$LOG_DIR/$LOG_FILE for the reason. Exiting."
+			exit 2
+		fi
+		# say something while waiting, so that a slow start is not mistaken for the hang this replaced
+		if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+			echo "Still waiting for $MYSQL_NAME to listen on $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
+		fi
+		sleep 1
+		WAITED=$((WAITED+1))
+	done
 	echo "$MYSQL_NAME server started!"
 }
 
@@ -920,7 +960,19 @@ function shutdown_database {
 		cd "$OH_PATH"
 		./$MYSQL_DIR/bin/mysqladmin -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
 		# wait till the MySQL tcp port is closed
-		until !( nc -z $DATABASE_SERVER $DATABASE_PORT ); do sleep 1; done
+		WAITED=0
+		while database_port_open; do
+			if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+				echo "Warning: $MYSQL_NAME is still listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+				echo "See ./$LOG_DIR/$LOG_FILE for the reason."
+				return
+			fi
+			if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+				echo "Still waiting for $MYSQL_NAME to release $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
+			fi
+			sleep 1
+			WAITED=$((WAITED+1))
+		done
 		echo "$MYSQL_NAME stopped!"
 	else
 		exit 1
@@ -1013,10 +1065,13 @@ function write_config_files {
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
 		[ -f ./$OH_DIR/rsc/$OH_SETTINGS ] && mv -f ./$OH_DIR/rsc/$OH_SETTINGS ./$OH_DIR/rsc/$OH_SETTINGS.old
 		echo "Writing OH configuration file -> $OH_SETTINGS..."
+		# anchored: UI_INTERFACE is a substring of GUI_INTERFACE
 		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
-		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
-		-e "s/GUI_INTERFACE=on/"$GUI_INTERFACE=$GUI_INTERFACE"/g" -e "s/UI_INTERFACE=off/"UI_INTERFACE=$UI_INTERFACE"/g" \
+		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" \
+		-e "s/^APISERVER=off/APISERVER=$API_SERVER/" \
+		-e "s/^GUI_INTERFACE=on/GUI_INTERFACE=$GUI_INTERFACE/" \
+		-e "s/^UI_INTERFACE=off/UI_INTERFACE=$UI_INTERFACE/" \
 		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS
 	fi
 
@@ -1787,6 +1842,15 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	# config database
 	config_database;
 	# check if OH database already exists
+	#
+	# The data directory alone does not say that: initialize_database creates it as its very first
+	# step, so an installation interrupted at any point afterwards looked complete on the next run
+	# and the launcher went straight to start_database on a database that could not work, with no
+	# hint that the first attempt had never finished. What tells a finished installation apart is
+	# the directory the database engine creates for the [$DATABASE_NAME] schema itself. It is looked
+	# up without regard to case, because the shipped my.cnf sets lower_case_table_names and the
+	# engine then stores the schema of a database named MyHospital in a directory called myhospital,
+	# while DATA_DIR keeps the name as the user typed it.
 	if [ ! -d ./"$DATA_DIR" ]; then
 		echo "OH database not found, starting from scratch..."
 		# prepare database
@@ -1801,6 +1865,11 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 		create_database;
 		# load data
 		import_database;
+	elif [ -z "$(find ./"$DATA_DIR" -mindepth 1 -maxdepth 1 -type d -iname "$DATABASE_NAME" -print -quit 2>/dev/null)" ]; then
+		echo "Error: a previous installation of the [$DATABASE_NAME] database was left unfinished in ./$DATA_DIR."
+		echo "Remove that directory, or reset the installation with option [X] which deletes the data for you,"
+		echo "then run this script again. Exiting."
+		exit 2
 	else
 	        echo "OH database found!"
 		# start database
@@ -1815,9 +1884,10 @@ test_database_connection;
 
 # check for API server
 if [ "$API_SERVER" = "on" ]; then
-	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# Deploy API and copy the updated properties.
+	tomcat_setup;
 	# workaround to have UI files in correct place
 	setup_ui;
 	# start API server

@@ -610,8 +610,8 @@ public class InventoryWardEdit extends ModalJFrame {
 									lot = movStockInsertingManager.updateLot(lot);
 									medicalInventoryRow.setLot(lot);
 								} else {
-									int idInvRow = medicalInventoryRow.getId();
-									MedicalInventoryRow invRow = medicalInventoryRowManager.getMedicalInventoryRowById(idInvRow);
+									Integer idInvRow = medicalInventoryRow.getId();
+									MedicalInventoryRow invRow = idInvRow == null ? null : medicalInventoryRowManager.getMedicalInventoryRowById(idInvRow);
 									if (invRow != null && invRow.getLock() != medicalInventoryRow.getLock()) {
 										Lot newLot = movStockInsertingManager.storeLot(lotCode, lot, medical);
 										invRow.setLot(newLot);
@@ -627,8 +627,7 @@ public class InventoryWardEdit extends ModalJFrame {
 							}
 
 							medicalInventoryRow.setInventory(inventory);
-							int id = medicalInventoryRow.getId();
-							if (id == 0) {
+							if (medicalInventoryRow.getId() == null) {
 								MedicalInventoryRow savedRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 								inventoryRowSearchListIterator.set(savedRow);
 							} else {
@@ -869,7 +868,7 @@ public class InventoryWardEdit extends ModalJFrame {
 						inventoryRowSearchList.remove(inventoryRow);
 						model.fireTableDataChanged();
 						jTableInventoryRow.setModel(model);
-						if (inventoryRow.getId() != 0) {
+						if (inventoryRow.getId() != null) {
 							inventoryRowsToDelete.add(inventoryRow);
 						}
 					}
@@ -1093,7 +1092,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			if (!inventoryRowList.isEmpty()) {
 				for (MedicalInventoryRow invRow : inventoryRowList) {
 					addMedInRowInInventorySearchList(invRow);
-					if (!includeAll && invRow.getId() == 0) {
+					if (!includeAll && invRow.getId() == null) {
 						inventoryRowListAdded.add(invRow);
 					}
 				}
@@ -1568,7 +1567,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			double actualQty = 0.;
 			if (lots.isEmpty()) {
-				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, actualQty, actualQty, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
@@ -1578,7 +1577,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(0, lotQuantityInWard, lotQuantityInWard, null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, lotQuantityInWard, lotQuantityInWard, null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1602,7 +1601,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			double actualQty = 0.;
 			if (lots.isEmpty()) {
-				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, actualQty, actualQty, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
@@ -1612,7 +1611,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(0, lotQuantityInWard, lotQuantityInWard, null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, lotQuantityInWard, lotQuantityInWard, null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1657,7 +1656,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			double actualQty = 0.;
 			if (lots.isEmpty()) {
-				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, actualQty, actualQty, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
@@ -1667,7 +1666,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(0, lotQuantityInWard, lotQuantityInWard, null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, lotQuantityInWard, lotQuantityInWard, null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1703,7 +1702,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			Medical med = medicalListIterator.next();
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			if (lots.isEmpty()) {
-				inventoryRowTemp = new MedicalInventoryRow(0, 0.0, 0.0, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, 0.0, 0.0, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
@@ -1718,7 +1717,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				ListIterator<Lot> lotListIterator = lots.listIterator();
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
-					inventoryRowTemp = new MedicalInventoryRow(0, lot.getMainStoreQuantity(), lot.getMainStoreQuantity(), null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, lot.getMainStoreQuantity(), lot.getMainStoreQuantity(), null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 						numberOfMedicalWithoutSameLotAdded = numberOfMedicalWithoutSameLotAdded + 1;
@@ -1729,7 +1728,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		if (medicalWithLot != null && numberOfMedicalWithoutSameLotAdded == 0) {
 			int info = MessageDialog.yesNo(null, "angal.inventory.productalreadyexist.fmt.msg", medicalWithLot.getDescription());
 			if (info == JOptionPane.YES_OPTION) {
-				inventoryRowTemp = new MedicalInventoryRow(0, 0.0, 0.0, null, medicalWithLot, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, 0.0, 0.0, null, medicalWithLot, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				inventoryRowsList.add(inventoryRowTemp);
 			}
@@ -1876,7 +1875,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		} else {
 			inventoryRowSearchList.add(position + 1, inventoryRow);
 		}
-		if (inventoryRow.getId() == 0) {
+		if (inventoryRow.getId() == null) {
 			inventoryRowListAdded.add(inventoryRow);
 		}
 	}

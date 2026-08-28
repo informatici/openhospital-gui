@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -153,10 +153,10 @@ public class PatientPhotoPanel extends JPanel {
 				}
 			});
 
-			// only touch the webcam stack when the video module is enabled; Webcam.getDefault() loads a native library
+			// only touch the webcam stack when the video module is enabled; the lookup loads a native library
 			// (BridJ) that is not available on every platform (e.g. Apple Silicon), and calling it unconditionally
 			// would throw an UnsatisfiedLinkError and break the whole patient form even with the video module off
-			final Webcam webcam = GeneralData.VIDEOMODULEENABLED ? Webcam.getDefault() : null;
+			final Webcam webcam = GeneralData.VIDEOMODULEENABLED ? WebcamProvider.getDefault() : null;
 
 			if (webcam != null) {
 				JButton jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.newphoto.btn"));
@@ -192,7 +192,6 @@ public class PatientPhotoPanel extends JPanel {
 		add(jPhotoPanel);
 	}
 
-	
 	private JPanel setMyBorder(JPanel c, String title) {
 		Border b1 = BorderFactory.createLineBorder(Color.lightGray);
 		Border b2 = BorderFactory.createTitledBorder(b1, title, TitledBorder.LEFT, TitledBorder.TOP);

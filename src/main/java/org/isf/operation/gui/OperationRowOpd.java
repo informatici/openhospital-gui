@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -65,15 +65,14 @@ public class OperationRowOpd extends OperationRowBase implements SurgeryListener
 			MessageDialog.error(this, "angal.operationrowedit.warningdateope");
 			return;
 		}
+		if (this.comboResult.getSelectedItem() == null) {
+			MessageDialog.error(this, "angal.operationrow.pleaseselectaresult.msg");
+			return;
+		}
 
 		OperationRow operationRow = new OperationRow();
 		operationRow.setOpDate(this.textDate.getLocalDateTime());
-		if (this.comboResult.getSelectedItem() != null) {
-			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
-			operationRow.setOpResult(opResult);
-		} else {
-			operationRow.setOpResult(""); //$NON-NLS-1$
-		}
+		operationRow.setOpResult(operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
 		try {
 			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 		} catch (NumberFormatException e) {
@@ -92,7 +91,6 @@ public class OperationRowOpd extends OperationRowBase implements SurgeryListener
 		} else {
 			OperationRow opeInter = oprowData.get(index);
 			opeInter.setOpDate(this.textDate.getLocalDateTime());
-			opeInter.setOpResult(this.comboResult.getSelectedItem().toString());
 			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
