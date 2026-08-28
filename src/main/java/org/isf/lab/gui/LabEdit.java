@@ -535,7 +535,11 @@ public class LabEdit extends ModalJFrame {
 				if (insert) {
 					lab.setAge(tmpAge);
 					try {
-						labManager.newLaboratory(lab, labRow);
+						List<LaboratoryRow> labRows = new ArrayList<>();
+						for (String description : labRow) {
+							labRows.add(new LaboratoryRow(lab, description));
+						}
+						labManager.newLaboratory2(lab, labRows);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
