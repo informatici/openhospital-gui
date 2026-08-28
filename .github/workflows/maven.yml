@@ -79,7 +79,11 @@ jobs:
         run: |
           git clone --depth=1 --no-single-branch https://github.com/${{ env.FORK_REPO }}.git openhospital-core
           pushd openhospital-core
-          git checkout -B ${{ env.BRANCH_NAME }} origin/${{ env.BRANCH_NAME }} || git checkout develop
+          # a branch of the same name comes first, as before; a pull request against a release
+          # branch then builds core from that same branch, and anything else falls back to develop
+          git checkout -B ${{ env.BRANCH_NAME }} origin/${{ env.BRANCH_NAME }} \
+            || git checkout "${{ github.base_ref }}" \
+            || git checkout develop
           popd
         
       - name: Install core
