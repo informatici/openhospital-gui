@@ -73,11 +73,7 @@ public class OperationRowOpd extends OperationRowBase implements SurgeryListener
 		OperationRow operationRow = new OperationRow();
 		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		operationRow.setOpResult(operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
-		try {
-			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
-		} catch (NumberFormatException e) {
-			operationRow.setTransUnit(0.0F);
-		}
+		operationRow.setTransUnit(textFieldUnit.getValue());
 		Operation op = (Operation) this.comboOperation.getSelectedItem();
 		operationRow.setOperation(op);
 		if (myOpd != null) {
@@ -93,7 +89,7 @@ public class OperationRowOpd extends OperationRowBase implements SurgeryListener
 			opeInter.setOpDate(this.textDate.getLocalDateTime());
 			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
-			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
+			opeInter.setTransUnit(textFieldUnit.getValue());
 			op = (Operation) this.comboOperation.getSelectedItem();
 			opeInter.setOperation(op);
 			opeInter.setPrescriber(MainMenu.getUser().getUserName());
@@ -132,14 +128,26 @@ public class OperationRowOpd extends OperationRowBase implements SurgeryListener
 	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager rowManager, Opd opd) throws OHServiceException {
 		for (OperationRow opRow : listOpe) {
 			if ((opRow.getId() > 0) && (opRow.getOpd().getCode() > 0)) {
-				rowManager.updateOperationRow(opRow);
+				try {
+					rowManager.updateOperationRow(opRow);
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+				}
 			}
 			if ((opRow.getId() <= 0) && (opRow.getOpd().getCode() > 0)) {
-				rowManager.newOperationRow(opRow);
+				try {
+					rowManager.newOperationRow(opRow);
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+				}
 			}
 			if ((opRow.getId() <= 0) && (opRow.getOpd().getCode() <= 0)) {
 				opRow.setOpd(opd);
-				rowManager.newOperationRow(opRow);
+				try {
+					rowManager.newOperationRow(opRow);
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+				}
 			}
 		}
 	}
