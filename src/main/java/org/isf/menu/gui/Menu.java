@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -26,6 +26,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -39,6 +40,7 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.Version;
 import org.isf.menu.manager.Context;
+import org.isf.stat.manager.JasperReportCompiler;
 import org.isf.utils.jobjects.WaitCursorEventQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,10 +63,22 @@ public class Menu {
 		checkOHVersion();
 		checkJavaVersion();
 		fontChecker();
+		compileReports();
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "splash.png", null, 3000);
 		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
 		Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQueue);
+	}
+
+	/**
+	 * When {@code AUTOCOMPILEJRXML} is enabled, (re)compiles at startup every report template whose {@code .jasper} is
+	 * missing or older than its {@code .jrxml} (OP-1403). Disabled by default; see the security note in the settings.
+	 */
+	private static void compileReports() {
+		if (GeneralData.AUTOCOMPILEJRXML) {
+			int compiled = JasperReportCompiler.compileStaleReports(List.of("rpt_base", "rpt_extra", "rpt_stat"));
+			LOGGER.info("Automatic JRXML compilation is enabled: {} report(s) (re)compiled.", compiled);
+		}
 	}
 
 	private static void checkOHVersion() {
