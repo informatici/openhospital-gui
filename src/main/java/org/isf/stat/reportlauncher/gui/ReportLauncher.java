@@ -236,7 +236,7 @@ public class ReportLauncher extends ModalJFrame {
 
 				reportNameFileMap = new HashMap<>();
 				List<String> jRptComboBoxList = new LinkedList<>();
-				String language = new Locale(GeneralData.LANGUAGE).getLanguage();
+				String language = GeneralData.LANGUAGE;
 
 				for (File f : jasperFilesInFolder) {
 					try {
@@ -245,12 +245,18 @@ public class ReportLauncher extends ModalJFrame {
 							continue;
 						}
 						Path localizedPropsPath = parent.resolve(language).resolve(f.getName().replace(".jasper", ".properties"));
+						Path fallbackPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", ".properties"));
 
-						Properties props = MessageBundle.loadPropertiesFileUtf8(localizedPropsPath, LOGGER);
+						Properties props = null;
+						if (Files.exists(localizedPropsPath)) {
+							props = MessageBundle.loadPropertiesFileUtf8(localizedPropsPath, LOGGER);
+						}
 
-						String title = props.getProperty("jTitle");
+						String title = props != null ? props.getProperty("jTitle") : null;
 						if (title == null || title.isBlank()) {
-							Path fallbackPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", ".properties"));
+							if (props == null && !Locale.ENGLISH.getLanguage().equals(language)) {
+								LOGGER.debug(">> no bundle for '{}' in language '{}', using default", f.getName(), language);
+							}
 							props = MessageBundle.loadPropertiesFileUtf8(fallbackPropsPath, LOGGER);
 							title = props.getProperty("jTitle");
 						}

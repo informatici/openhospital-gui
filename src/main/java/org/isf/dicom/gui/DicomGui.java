@@ -30,8 +30,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -311,7 +314,10 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 				dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
 				dummyFileDicom.setDicomType(preLoadDialog.getDicomType());
 
-				//TODO: to specify in which already existing series to load the file
+				//OP-219: let the user load the file(s) into an already existing series instead of always creating a new one
+				if (!chooseSeries(dummyFileDicom)) {
+					return; //user cancelled the series selection
+				}
 
 				if (selectedFile.isDirectory()) {
 					//folder
@@ -328,6 +334,104 @@ public class DicomGui extends ModalJFrame implements WindowListener {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Lets the user load the incoming file(s) into one of the patient's already existing DICOM series, instead of
+	 * always creating a new one (OP-219). When an existing series is picked, its number is set on {@code dummyFileDicom}
+	 * so that {@link SourceFiles} reuses it; otherwise a new series is created as before. The series currently selected
+	 * in the thumbnail panel, if any, is pre-selected.
+	 *
+	 * @param dummyFileDicom the temporary {@link FileDicom} holding the settings for the file(s) to load
+	 * @return {@code false} if the user cancelled the selection, {@code true} otherwise
+	 */
+	private boolean chooseSeries(FileDicom dummyFileDicom) {
+		FileDicom[] patientFiles;
+		try {
+			patientFiles = DicomManagerFactory.getManager().loadPatientFiles(patient);
+		} catch (OHServiceException ohServiceException) {
+			OHServiceExceptionUtil.showMessages(ohServiceException, this);
+			return false;
+		}
+
+		List<SeriesItem> series = new ArrayList<>();
+		Set<String> seenSeries = new HashSet<>();
+		for (FileDicom patientFile : patientFiles) {
+			String seriesInstanceUID = patientFile.getDicomSeriesInstanceUID();
+			if (seriesInstanceUID != null && !seriesInstanceUID.isEmpty() && seenSeries.add(seriesInstanceUID)) {
+				series.add(new SeriesItem(patientFile));
+			}
+		}
+
+		if (series.isEmpty()) {
+			return true; //no existing series: keep the current behaviour and let a new series be created
+		}
+
+		SeriesItem newSeries = new SeriesItem(null);
+		List<SeriesItem> options = new ArrayList<>();
+		options.add(newSeries);
+		options.addAll(series);
+
+		SeriesItem preselected = newSeries;
+		if (!thumbnail.isSelectionEmpty()) {
+			FileDicom selectedInstance = thumbnail.getSelectedInstance();
+			String selectedSeriesUID = selectedInstance == null ? null : selectedInstance.getDicomSeriesInstanceUID();
+			for (SeriesItem item : series) {
+				if (item.getSeriesInstanceUID().equals(selectedSeriesUID)) {
+					preselected = item;
+					break;
+				}
+			}
+		}
+
+		SeriesItem choice = (SeriesItem) JOptionPane.showInputDialog(this,
+				MessageBundle.getMessage("angal.dicom.selectserieswheretoloadthefiles.msg"),
+				MessageBundle.getMessage("angal.dicom.selectseries.title"),
+				JOptionPane.QUESTION_MESSAGE, null, options.toArray(), preselected);
+
+		if (choice == null) {
+			return false; //user pressed CANCEL
+		}
+		FileDicom targetSeries = choice.getSeries();
+		if (targetSeries != null) {
+			//load into the chosen existing series: copy the identifiers the viewer uses (instance UID for grouping, number for lookups)
+			dummyFileDicom.setDicomSeriesNumber(targetSeries.getDicomSeriesNumber());
+			dummyFileDicom.setDicomSeriesInstanceUID(targetSeries.getDicomSeriesInstanceUID());
+			dummyFileDicom.setDicomSeriesUID(targetSeries.getDicomSeriesUID());
+			dummyFileDicom.setDicomSeriesDescription(targetSeries.getDicomSeriesDescription());
+		}
+		return true;
+	}
+
+	/**
+	 * Wraps an existing patient DICOM series shown in the selection dialog. A {@code null} series represents the
+	 * "new series" option.
+	 */
+	private static final class SeriesItem {
+
+		private final FileDicom series;
+
+		private SeriesItem(FileDicom series) {
+			this.series = series;
+		}
+
+		private FileDicom getSeries() {
+			return series;
+		}
+
+		private String getSeriesInstanceUID() {
+			return series.getDicomSeriesInstanceUID();
+		}
+
+		@Override
+		public String toString() {
+			if (series == null) {
+				return MessageBundle.getMessage("angal.dicom.newseries.txt");
+			}
+			String description = series.getDicomSeriesDescription();
+			String number = series.getDicomSeriesNumber();
+			return description == null || description.isEmpty() ? number : description + " (" + number + ')';
+		}
 	}
 
 	private void actionListenerJButtonDeleteDicom() {

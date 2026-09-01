@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -41,13 +41,21 @@ WRITE_CONFIG_FILES="on"
 # OH jar bin files
 OH_GUI_JAR="OH-gui.jar"
 OH_API_JAR="openhospital-api-0.1.0.jar"
+OH_API_WAR="openhospital-api-0.1.0.war"
 
 # OH configuration files
 OH_SETTINGS="settings.properties"
 DATABASE_SETTINGS="database.properties"
+EXAMINATION_SETTINGS="examination.properties"
 IMAGING_SETTINGS="dicom.properties"
 LOG4J_SETTINGS="log4j2-spring.properties"
+PRINTER_SETTINGS="txtPrinter.properties"
+SMS_SETTINGS="sms.properties"
+TELEMETRY_SETTINGS="telemetry.properties"
+XMPP_SETTINGS="xmpp.properties"
 API_SETTINGS="application.properties"
+CRED_SETTINGS="default_credentials.properties"
+DEMO_CRED_SETTINGS="default_demo_credentials.properties"
 HELP_FILE="OH-readme.txt"
 
 # logging
@@ -69,7 +77,7 @@ TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
 
 ##################### Java configuration #######################
 JAVA_URL="https://cdn.azul.com/zulu/bin"
-JAVA_DISTRO="zulu11.64.19-ca-jre11.0.19-macosx_aarch64"
+JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-macosx_aarch64"
 JAVA_DIR=$JAVA_DISTRO
 JAVA_ARCH="arm64"
 EXT="tar.gz"
@@ -82,6 +90,31 @@ DATABASE_NAME="oh"
 DATABASE_USER="isf"
 DATABASE_PASSWORD="isf123"
 DB_CREATE_SQL="create_all_en.sql"
+
+# seconds to wait for the database to start listening, or to release its port on shutdown
+DATABASE_WAIT_TIMEOUT=90
+
+# demo data - the demo branch below uses both of these
+DEMO_DATABASE="ohdemo"
+DB_DEMO="create_all_demo.sql"
+
+# OH API server and web interface - same names and values as oh.sh
+OH_API_PROD="oh-api"
+OH_API_HOST="localhost"
+OH_API_PORT="8080"
+
+OH_UI_HOST="localhost"
+OH_UI_PORT="8080"
+OH_UI_PROD="oh-ui"
+# no /$OH_UI_PROD here: the bundled artifact is started directly and its template sets
+# server.servlet.context-path=/, where oh.sh deploys a Tomcat webapp of that name
+OH_UI_URL="http://$OH_UI_HOST:$OH_UI_PORT"
+
+# empty as in oh.sh, where the assignment is commented out
+OH_API_PID=""
+
+# activate expert mode - set to "on" to enable advanced functions - use at your own risk!
+EXPERT_MODE="off"
 
 OH_LANGUAGE_LIST="en|fr|es|it|pt|ar"
 OH_LANGUAGE="en" # default
@@ -119,6 +152,18 @@ function script_menu {
 	if [ "$EXPERT_MODE" == "on" ]; then
 		script_menu_advanced;
 	fi
+}
+
+###################################################################
+function script_menu_advanced {
+	# only the options this script implements; oh.sh lists more
+	echo "   -------------------------------- "
+	echo "    EXPERT MODE - advanced options"
+	echo ""
+	echo "   -A  toggle API server - EXPERIMENTAL		| -d  toggle log level INFO/DEBUG"
+	echo "   -i  initialize/install OH database		| -G  setup GSM"
+	echo "   -U  enable UI web interface"
+	echo ""
 }
 
 ###################################################################
@@ -193,7 +238,10 @@ function java_check {
 # check if JAVA_BIN is already set and it exists
 echo ""
 echo "is java installed?"
-if [ -e "./$OH_DIR/$JAVA_DIR/bin/java" ]; then
+# Point at the bundled JRE unless a usable one was already given. The download below puts the JRE
+# exactly at this path, so it has to be set before that too: leaving the variable empty would make
+# the launch command start with its first argument instead of the java binary.
+if [ -z "${JAVA_BIN:-}" ] || [ ! -x "$JAVA_BIN" ]; then
 	JAVA_BIN="./$OH_DIR/$JAVA_DIR/bin/java"
 fi
 
@@ -221,6 +269,11 @@ if [ ! -x "$JAVA_BIN" ]; then
 	echo "  Done!"
 fi
 
+if [ ! -x "$JAVA_BIN" ]; then
+	echo "Error: no usable Java found at $JAVA_BIN. Exiting."
+	exit 1
+fi
+
 echo ">Using $JAVA_BIN"
 }
 ###################################################################
@@ -228,15 +281,21 @@ function java_lib_setup {
 	# NATIVE LIB setup
 	case $JAVA_ARCH in
         arm64)
-        NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/arm64"
+        NATIVE_LIB_PATH="./$OH_DIR/lib/native/macOS/arm64"
         ;;
-		64)
-		NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/amd64"
-		;;
-		32)
-		NATIVE_LIB_PATH="./$OH_DIR/lib/native/Linux/i386"
-		;;
 	esac
+
+	# macOS tags everything extracted from a downloaded archive with a quarantine
+	# flag. The bundled OpenCV native is only ad-hoc signed, so Gatekeeper refuses
+	# to load it and warns the user that it may contain malware. Clear the flag on
+	# the native libraries, before the JVM tries to load them: once a load has been
+	# blocked, clearing it afterwards no longer helps.
+	# Nothing happens when the flag is absent, e.g. when running from a checkout.
+	if [ -d "$NATIVE_LIB_PATH" ] && ls "$NATIVE_LIB_PATH"/*.dylib >/dev/null 2>&1 &&
+		xattr "$NATIVE_LIB_PATH"/*.dylib 2>/dev/null | grep -q "com.apple.quarantine"; then
+		echo "Removing the macOS quarantine flag from the bundled native libraries..."
+		xattr -dr com.apple.quarantine "$NATIVE_LIB_PATH"
+	fi
 
 	# CLASSPATH setup
 	# include OH jar file
@@ -248,6 +307,7 @@ function java_lib_setup {
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rpt_extra
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rpt_stat
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rsc
+	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rsc/images
 	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/lib
 
 	# include all jar files under lib/
@@ -260,20 +320,29 @@ function java_lib_setup {
 
 ###################################################################
 function write_api_config_file {
-	######## application.properties setup - OH API server	
-	SET_FILE=$OHDIR/rsc/$API_SETTINGS
-	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f SET_FILE ]; then
-		[ -f $SET_FILE ] && mv -f $SET_FILE $SET_FILE.old		
-		# generate OH API token and save to settings file		
+	######## application.properties setup - OH API server
+	SET_FILE=./$OH_DIR/rsc/$API_SETTINGS
+	# the API templates only ship in the package that bundles the API server
+	if [ ! -f "$SET_FILE.dist" ]; then
+		echo "Warning: $API_SETTINGS.dist not found, this package does not include the API server."
+		return
+	fi
+	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f "$SET_FILE" ]; then
+		[ -f "$SET_FILE" ] && mv -f "$SET_FILE" "$SET_FILE.old"
+		# generate OH API token and save to settings file
 		JWT_TOKEN_SECRET=`LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 66`
 
-		echo "Writing OH API configuration file -> $API_SETTINGS..."
-		sed -i '' \
-			-e "s/JWT_TOKEN_SECRET/$JWT_TOKEN_SECRET/g" \
-			-e "s/API_HOST:API_PORT/localhost:8080/g" \
+		echo ">Writing OH API configuration file -> $API_SETTINGS..."
+		# read the template and write the copy: editing it in place would consume the placeholders
+		# in the shipped file, leaving the next run nothing to replace
+		sed -e "s/JWT_TOKEN_SECRET/$JWT_TOKEN_SECRET/g" \
 			-e "s&OH_API_PID&$OH_API_PID&g" \
-			$SET_FILE.dist
-		cp -f $SET_FILE.dist $SET_FILE	
+			-e "s&UI_HOST&$OH_UI_HOST&g" \
+			-e "s&UI_PORT&$OH_UI_PORT&g" \
+			-e "s&API_HOST&$OH_API_HOST&g" \
+			-e "s&API_PORT&$OH_API_PORT&g" \
+			-e "s&API_URL&$OH_API_PROD&g" \
+			"$SET_FILE.dist" > "$SET_FILE"
 	fi
 }
 
@@ -376,18 +445,47 @@ function install_db {
 }
 
 ###################################################################
-function test_db_connection {
-    # test if mysql client is available			
-    echo "Testing database connection..."	
-	
+function find_database_client {
+	# The macOS package does not bundle a database client, so there may well be
+	# none available: callers must cope with an empty result.
+	if command -v mysql >/dev/null 2>&1; then
+		DATABASE_CLIENT="mysql"
+	elif command -v mariadb >/dev/null 2>&1; then
+		DATABASE_CLIENT="mariadb"
+	else
+		DATABASE_CLIENT=""
+	fi
+}
 
-	CMD="exit"		
-    if mysql -u $USER -h$DATABASE_SERVER -p$DATABASE_ROOT_PW -e "$CMD">/dev/null 2>&1; then
-        echo ">Database connection successfully established!"
-    else
-        echo "!Error: can't connect to database! Exiting."
-        exit 2
-    fi	 
+###################################################################
+function test_db_connection {
+	# test if a database client is available
+	find_database_client;
+	if [ -z "$DATABASE_CLIENT" ]; then
+		# Without a client the check cannot run. That is not a reason to refuse
+		# to start: the application connects through JDBC, not through this tool.
+		echo "Can't test database connection: no MySQL/MariaDB client found."
+		return
+	fi
+
+	# The caller says which question to ask. Before the database is installed only the server can be
+	# reached, so asking for the [$DATABASE_NAME] database there would refuse to start the very
+	# installation that is about to create it.
+	if [ "$1" = "server" ]; then
+		STATEMENT="SELECT 1"
+	else
+		STATEMENT="USE $DATABASE_NAME"
+	fi
+
+	echo "Testing database connection..."
+	if $DATABASE_CLIENT --user="$DATABASE_USER" --password="$DATABASE_PASSWORD" \
+		--host="$DATABASE_SERVER" --port="$DATABASE_PORT" --protocol=tcp \
+		-e "$STATEMENT" >/dev/null 2>&1; then
+		echo ">Database connection successfully established!"
+	else
+		echo "!Error: can't connect to database! Exiting."
+		exit 2
+	fi
 }
 
 ###################################################################
@@ -462,13 +560,57 @@ function create_db {
     fi	
 }
 ###################################################################
-function start_db {    
+# Probed with bash's own /dev/tcp rather than `nc`, which a stock macOS does not have.
+function database_port_open {
+	(exec 3<>/dev/tcp/$DATABASE_SERVER/$DATABASE_PORT) > /dev/null 2>&1
+}
+
+###################################################################
+# `brew services start` returns when launchd accepts the job, not when the server is ready, and
+# the next thing this script runs is a mysql client - on a cold start that client was refused.
+function wait_for_database {
+	WAITED=0
+	until database_port_open; do
+		if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+			echo "Error: MariaDB is not listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+			echo "Check it with 'brew services info mariadb'. Exiting."
+			exit 2
+		fi
+		if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+			echo "Still waiting for MariaDB to listen on $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
+		fi
+		sleep 1
+		WAITED=$((WAITED+1))
+	done
+}
+
+###################################################################
+function wait_for_database_stopped {
+	WAITED=0
+	while database_port_open; do
+		if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+			echo "Warning: MariaDB is still listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+			echo "Check it with 'brew services info mariadb'."
+			return
+		fi
+		if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+			echo "Still waiting for MariaDB to release $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
+		fi
+		sleep 1
+		WAITED=$((WAITED+1))
+	done
+}
+
+###################################################################
+function start_db {
     create_db;
     brew services start mariadb >/dev/null;
+    wait_for_database;
 }
 ###################################################################
 function stop_db {
-    brew services stop mariadb    
+    brew services stop mariadb
+    wait_for_database_stopped;
 }
 
 ###################################################################
@@ -482,6 +624,23 @@ function remove_db {
     rm -rf /opt/homebrew/var/mysql
     rm -rf /opt/homebrew/var/undo*
     rm -rf /opt/homebrew/var/maria*
+}
+
+###################################################################
+function copy_config_file {
+	# create a configuration file from its template if it is not there yet
+	# usage: copy_config_file [file_name]
+	#
+	# Only when the file is missing, never over an existing one. Unlike settings.properties and
+	# database.properties below, nothing in these files is derived from the launcher, so rewriting
+	# them on every run would achieve nothing while silently discarding what the site configured -
+	# vital sign ranges, SMS gateway credentials. Nor would a backup copy save it: WRITE_CONFIG_FILES
+	# is fixed to "on" in this script with no way to turn it off, so the second run would overwrite
+	# the copy the first run had just made.
+	if [ ! -f ./$OH_DIR/rsc/$1 ]; then
+		echo ">Writing OH configuration file -> $1..."
+		cp ./$OH_DIR/rsc/$1.dist ./$OH_DIR/rsc/$1
+	fi
 }
 
 ###################################################################
@@ -500,7 +659,7 @@ function write_config_files {
 	######## $LOG4J_SETTINGS setup
 	LOG4J_FILE=./$OH_DIR/rsc/$LOG4J_SETTINGS
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $LOG4J_FILE ]; then
-		OH_LOG_DEST="./$OH_DIR/$LOG_DIR/$OH_LOG_FILE"
+		OH_LOG_DEST="./$LOG_DIR/$OH_LOG_FILE"
 		[ -f $LOG4J_FILE ] && mv -f $LOG4J_FILE $LOG4J_FILE.old
 		echo ">Writing OH configuration file -> $LOG4J_SETTINGS..."
 		cp $LOG4J_FILE.dist $LOG4J_FILE
@@ -508,10 +667,11 @@ function write_config_files {
 		-e "s/DBNAME/$DATABASE_NAME/g" -e "s/LOG_LEVEL/$LOG_LEVEL/g" -e "s+LOG_DEST+$OH_LOG_DEST+g" \
 		$LOG4J_FILE		
 	fi
-	######## $DATABASE_SETTINGS setup 
+	######## $DATABASE_SETTINGS setup
+	# written only when absent, unlike the files around it: where the installation keeps its data is
+	# the installer's decision, and rewriting it on every run tied macOS to isf@localhost
 	DB_FILE=./$OH_DIR/rsc/$DATABASE_SETTINGS
-	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f $DB_FILE ]; then
-		[ -f $DB_FILE ] && mv -f $DB_FILE $DB_FILE.old
+	if [ ! -f $DB_FILE ]; then
 		echo ">Writing OH database configuration file -> $DATABASE_SETTINGS..."
 		cp $DB_FILE.dist $DB_FILE
 		sed -i '' -e "s/DBSERVER/$DATABASE_SERVER/g" -e "s/DBPORT/$DATABASE_PORT/g" -e "s/DBNAME/$DATABASE_NAME/g" \
@@ -524,10 +684,32 @@ function write_config_files {
 		[ -f  $SETTINGS_FILE ] && mv -f $SETTINGS_FILE $SETTINGS_FILE.old
 		echo ">Writing OH configuration file -> $OH_SETTINGS..."
 		cp $SETTINGS_FILE.dist $SETTINGS_FILE
+		# persisted so that -U survives a restart; anchored: UI_INTERFACE is a substring of GUI_INTERFACE
 		sed -i '' -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
-		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
-		$SETTINGS_FILE	
+		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" \
+		-e "s/^APISERVER=off/APISERVER=$API_SERVER/" \
+		-e "s/^GUI_INTERFACE=on/GUI_INTERFACE=$GUI_INTERFACE/" \
+		-e "s/^UI_INTERFACE=off/UI_INTERFACE=$UI_INTERFACE/" \
+		$SETTINGS_FILE
+	fi
+	######## OH - other settings, copied as they are
+	# sms.properties and telemetry.properties are declared as @PropertySource in the core, so a
+	# missing file stops the application from starting instead of disabling a feature. The other
+	# three are read through the properties bundle and fall back to defaults, but they are written
+	# here as well so that a site finds the whole set in place, as it does on the other platforms.
+	copy_config_file $EXAMINATION_SETTINGS;
+	copy_config_file $PRINTER_SETTINGS;
+	copy_config_file $SMS_SETTINGS;
+	copy_config_file $TELEMETRY_SETTINGS;
+	copy_config_file $XMPP_SETTINGS;
+
+	######## default credentials
+	if [ "$OH_MODE" == "PORTABLE" ]; then
+		copy_config_file $CRED_SETTINGS;
+	fi
+	if [ "$DEMO_DATA" = "on" ]; then
+		cp ./$OH_DIR/rsc/$DEMO_CRED_SETTINGS.dist ./$OH_DIR/rsc/$CRED_SETTINGS
 	fi
 }
 
@@ -538,24 +720,105 @@ function read_settings {
 	if [ -f ./$OH_DIR/rsc/version.properties ]; then
 		source "./$OH_DIR/rsc/version.properties"
 		OH_VERSION=$VER_MAJOR.$VER_MINOR.$VER_RELEASE
-	else 		
+	else
 		echo "Error: Open Hospital non found! Exiting."
 		exit 1;
+	fi
+
+	# check for OH settings file and read values, as oh.sh does. Without this every run starts from
+	# the defaults at the top of this script, so the choices the user persisted in the settings file
+	# - the API server above all - are silently dropped on the next launch.
+	if [ -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
+		echo "Reading OH settings file..."
+		. ./$OH_DIR/rsc/$OH_SETTINGS
+
+		OH_MODE=$MODE
+		OH_LANGUAGE=$LANGUAGE
+		OH_SINGLE_USER=$SINGLE_USER
+		OH_DOC_DIR=$OH_DOC_DIR
+		DEMO_DATA=$DEMODATA
+		API_SERVER=$APISERVER
+		GUI_INTERFACE=$GUI_INTERFACE
+		UI_INTERFACE=$UI_INTERFACE
+	fi
+
+	# check for database settings file and read values, as oh.sh does. Without this the connection
+	# details below stay at their defaults whatever the installation was configured with, so the
+	# database test and the generated files all talk about a server nobody asked for.
+	if [ -f ./$OH_DIR/rsc/$DATABASE_SETTINGS ]; then
+		echo "Reading database settings file..."
+		DATABASE_SERVER=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.url" | cut -d"/" -f3 | cut -d":" -f1)
+		DATABASE_PORT=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.url" | cut -d"/" -f3 | cut -d":" -f2)
+		DATABASE_NAME=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.url" | cut -d"/" -f4)
+		DATABASE_USER=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.username" | cut -d"=" -f2)
+		DATABASE_PASSWORD=$(cat ./$OH_DIR/rsc/$DATABASE_SETTINGS | grep "jdbc.password" | cut -d"=" -f2)
+	else
+		echo "Warning: configuration file $DATABASE_SETTINGS not found."
 	fi
 
     ARCH=`uname -m`
 	}
 
 ###################################################################
+function start_api_server {
+	# The packages that carry the API ship a self-contained Spring Boot artifact, not the Tomcat
+	# layout oh.sh starts, and the client package carries none at all. Where it cannot be started
+	# this says so and returns: until now the call failed with "command not found" and the run
+	# carried on, so refusing to start Open Hospital at all would take away something that works.
+	API_ARTIFACT=""
+	for candidate in "./$OH_DIR/bin/$OH_API_JAR" "./$OH_DIR/bin/$OH_API_WAR"; do
+		[ -f "$candidate" ] && API_ARTIFACT="$candidate" && break
+	done
+	if [ -z "$API_ARTIFACT" ]; then
+		echo "Warning: no API server found in ./$OH_DIR/bin, this package does not include it."
+		return
+	fi
+	if [ ! -f ./$OH_DIR/rsc/$API_SETTINGS ]; then
+		echo "Warning: missing $API_SETTINGS settings file, the API server will not be started."
+		return
+	fi
+
+	echo "------------------------"
+	echo "---- EXPERIMENTAL ------"
+	echo "------------------------"
+	echo "Starting API server..."
+	echo "Please wait, it might take some time..."
+	echo ""
+	echo "Connect to $OH_UI_URL for OH web interface"
+	echo ""
+
+	case "$API_ARTIFACT" in
+		*.war) LAUNCHER="org.springframework.boot.loader.launch.WarLauncher" ;;
+		*)     LAUNCHER="org.springframework.boot.loader.launch.JarLauncher" ;;
+	esac
+	$JAVA_BIN -client -Xms64m -Xmx1024m \
+		-cp "$API_ARTIFACT:./$OH_DIR/rsc:./$OH_DIR/static" $LAUNCHER >> ./$LOG_DIR/$API_LOG_FILE 2>&1 &
+
+	if [ $? -ne 0 ]; then
+		echo "An error occurred while starting the Open Hospital API server. Exiting."
+		stop_db;
+		cd "$CURRENT_DIR"
+		exit 4
+	fi
+}
+
+###################################################################
+function start_ui {
+	echo "Starting Open Hospital UI at $OH_UI_URL..."
+	# OH UI launch - `open` is the macOS equivalent of the xdg-open oh.sh uses
+	open "$OH_UI_URL" || echo "Could not open a web browser, please go to $OH_UI_URL yourself."
+}
+
+###################################################################
 function start_gui {
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch	
 	
-	$JAVA_BIN -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> $OH_DIR/$LOG_DIR/$LOG_FILE 2>&1
+	$JAVA_BIN -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> ./$LOG_DIR/$LOG_FILE 2>&1
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."
-		shutdown_database;
+		stop_db;
 		cd "$CURRENT_DIR"
 		exit 4
 	fi
@@ -580,7 +843,36 @@ function parse_user_input {
 		echo "Press any key to continue"; 
 		read;
 		;;
-	#E)	# toggle EXPERT_MODE features
+	###################################################
+	U)	# toggle UI Interface
+		case "$UI_INTERFACE" in
+			*on*)
+				UI_INTERFACE="off";
+				GUI_INTERFACE="on";
+			;;
+			*off*)
+				UI_INTERFACE="on";
+				GUI_INTERFACE="off";
+			;;
+		esac
+		#
+		if (( $2==0 )); then UI_INTERFACE="on"; interactive_menu; fi
+		option="Z";
+		;;
+	###################################################
+	E)	# toggle EXPERT_MODE features
+		case "$EXPERT_MODE" in
+			*on*)
+				EXPERT_MODE="off";
+			;;
+			*off*)
+				EXPERT_MODE="on";
+			;;
+		esac
+		#
+		if (( $2==0 )); then EXPERT_MODE="on"; interactive_menu; fi
+		option="Z";
+		;;
 	###################################################
 	C)	# start in CLIENT mode
 		OH_MODE="CLIENT"
@@ -675,7 +967,7 @@ function parse_user_input {
 		echo ""
 		echo "Do you want to install the [$DATABASE_NAME] database on [$DATABASE_SERVER]?"
 		get_confirmation 1;
-		test_db_connection;
+		test_db_connection server;
 		import_db;
 		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
@@ -731,8 +1023,36 @@ function parse_user_input {
 }
 
 
+###################################################################
+function set_defaults {
+	# Fill in the values read_settings did not find, as oh.sh does. The settings file is not
+	# required to carry every key, and an absent key leaves its variable empty rather than at the
+	# default set at the top of this script, so the defaults have to be reapplied afterwards.
+
+	# EXPERT_MODE features - set default to off
+	if [ -z "$EXPERT_MODE" ]; then
+		EXPERT_MODE="off"
+	fi
+
+	# API server - set default to off
+	if [ -z "$API_SERVER" ]; then
+		API_SERVER="off"
+	fi
+
+	# GUI interface - set default to on
+	if [ -z "$GUI_INTERFACE" ]; then
+		GUI_INTERFACE="on"
+	fi
+
+	# UI interface - set default to off
+	if [ -z "$UI_INTERFACE" ]; then
+		UI_INTERFACE="off"
+	fi
+}
+
 read_settings;
- 
+set_defaults;
+
 #remove_db;
 #import_db;
 
@@ -740,7 +1060,7 @@ read_settings;
 OPTIND=1 
 # list of arguments expected in user input (- option)
 # E is excluded from command line option
-OPTSTRING=":AECPSdDGhil:msrtvequQXVZ?" 
+OPTSTRING=":AECPSdDGhil:msrtvequQXUVZ?"
 COMMAND_LINE_ARGS=$@
 
 # Parse arguments passed via command line / interactive input
@@ -773,7 +1093,6 @@ function demo_mode(){
 			echo "Error: no $DB_DEMO found! Exiting."
 			exit 1
 		fi
-		set_db_name;
 	else
 		echo ">no"
 	fi
@@ -836,7 +1155,7 @@ if [ "$OH_MODE" = "SERVER" ]; then
 		trap ctrl_c INT
 		function ctrl_c() {
 			echo "Exiting Open Hospital..."
-			shutdown_database;		
+			stop_db;		
 			cd "$CURRENT_DIR"
 			exit 0
 		}
@@ -852,7 +1171,7 @@ else
 
 	# Close and exit
 	echo "Exiting Open Hospital..."
-	shutdown_database;
+	stop_db;
 
 	# go back to starting directory
 	cd "$CURRENT_DIR"

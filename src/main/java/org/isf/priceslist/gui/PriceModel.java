@@ -61,6 +61,7 @@ package org.isf.priceslist.gui;
  * maintenance of any nuclear facility.
  */
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,7 +114,7 @@ public class PriceModel extends AbstractTreeTableModel {
 	@Override
 	public void setValueAt(Object aValue, Object node, int column) {
 		if (column == 1) {
-			((PriceNode) node).getPrice().setPrice((Double) aValue);
+			((PriceNode) node).getPrice().setPrice(BigDecimal.valueOf((Double) aValue));
 		}
 	}
 
@@ -126,7 +127,7 @@ public class PriceModel extends AbstractTreeTableModel {
 				displayValue = price.getDesc();
 				break;
 			case 1:
-				displayValue = price.getPrice();
+				displayValue = price.getPrice() != null ? price.getPrice().doubleValue() : null;
 				break;
 			default:
 				break;

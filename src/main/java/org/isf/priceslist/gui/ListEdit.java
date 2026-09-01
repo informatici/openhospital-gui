@@ -35,6 +35,7 @@ import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.hospital.manager.HospitalBrowsingManager;
 import org.isf.menu.manager.Context;
 import org.isf.priceslist.manager.PriceListManager;
 import org.isf.priceslist.model.PriceList;
@@ -86,6 +87,8 @@ public class ListEdit extends JDialog {
 	}
 
 	private PriceListManager priceListManager = Context.getApplicationContext().getBean(PriceListManager.class);
+	private HospitalBrowsingManager hospitalManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
+	private String currencyCod;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jPanelData;
@@ -113,6 +116,11 @@ public class ListEdit extends JDialog {
 	}
 
 	private void initComponents() {
+		try {
+			currencyCod = hospitalManager.getHospitalCurrencyCod();
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
 		add(getJPanelData(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		setSize(400, 200);
@@ -120,6 +128,11 @@ public class ListEdit extends JDialog {
 			this.setTitle(MessageBundle.getMessage("angal.priceslist.newlist.title"));
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.priceslist.editlist.title"));
+		}
+		if (currencyCod == null || currencyCod.isEmpty()) {
+			// without a global hospital currency the list cannot pass core validation: warn and block saving
+			MessageDialog.warning(null, "angal.priceslist.pleasesethospitalcurrency.msg");
+			getJButtonOK().setEnabled(false);
 		}
 	}
 
@@ -242,18 +255,16 @@ public class ListEdit extends JDialog {
 	private JTextField getJTextFieldCurrency() {
 		if (jTextFieldCurrency == null) {
 			jTextFieldCurrency = new VoLimitedTextField(10, 20);
-			if (!insert) {
-				jTextFieldCurrency.setText(list.getCurrency());
-			} else {
-				jTextFieldCurrency.setText(""); //$NON-NLS-1$
-			}
+			// Currency is no longer user input: all price lists share the global hospital currency
+			jTextFieldCurrency.setText(currencyCod != null ? currencyCod : ""); //$NON-NLS-1$
+			jTextFieldCurrency.setEnabled(false);
 		}
 		return jTextFieldCurrency;
 	}
 
 	private JLabel getJLabelCurrency() {
 		if (jLabelCurrency == null) {
-			jLabelCurrency = new JLabel(MessageBundle.getMessage("angal.priceslist.currencystar")); //$NON-NLS-1$
+			jLabelCurrency = new JLabel(MessageBundle.getMessage("angal.priceslist.currency.col"));
 		}
 		return jLabelCurrency;
 	}

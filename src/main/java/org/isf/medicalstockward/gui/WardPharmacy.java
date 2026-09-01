@@ -404,12 +404,21 @@ public class WardPharmacy extends ModalJFrame implements
 				try {
 					MovementWard movWard = movWardBrowserManager.getLastMovementWard(wardSelected);
 					if (movWard.getCode() == selectedMovement.getCode()) {
-						int delete = MessageDialog.yesNo(null, "angal.medicalstock.doyoureallywanttodeletethismovement.msg");
-						if (delete == JOptionPane.YES_OPTION) {
-							movWardBrowserManager.deleteLastMovementWard(movWard);
-						} else {
-							return;
-						}
+						JTextField reasonField = new JTextField(20);
+						Object[] message = { MessageBundle.getMessage("angal.medicalstock.deletemovementreason.msg"), reasonField };
+						String reason;
+						do {
+							int answer = JOptionPane.showConfirmDialog(this, message,
+								MessageBundle.getMessage("angal.common.delete.btn"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+							if (answer != JOptionPane.YES_OPTION) {
+								return;
+							}
+							reason = reasonField.getText().trim();
+							if (reason.isEmpty()) {
+								MessageDialog.error(this, "angal.medicalstock.deletemovementreasonrequired.msg");
+							}
+						} while (reason.isEmpty());
+						movWardBrowserManager.deleteLastMovementWard(movWard, reason);
 					} else {
 						MessageDialog.error(this, "angal.medicalstock.onlythelastmovementcanbedeleted.msg");
 						return;
@@ -581,7 +590,7 @@ public class WardPharmacy extends ModalJFrame implements
 		List<MedicalWard> medicalWardList = new ArrayList<>();
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
-				if (elem.getQty() != 0.0) {
+				if (elem.getQty().signum() != 0) {
 					MedicalWard e = elem;
 					medicalWardList.add(e);
 				}
