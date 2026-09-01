@@ -1238,8 +1238,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						thisBill.getBillPatient(), // Patient
 						thisBill.isPatient() ? thisBill.getBillPatient().getName() : jTextFieldPatient.getText(), // Patient Name
 						paid ? "C" : "O", // CLOSED or OPEN TODO: enumerate bills status
-						total.doubleValue(), // Total
-						balance.doubleValue(), // Balance
+						total, // Total
+						balance, // Balance
 						user, // User
 						thisBill.getAdmission()); // Admission
 
@@ -1265,8 +1265,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						thisBill.getBillPatient(), // Patient
 						thisBill.isPatient() ? thisBill.getPatName() : jTextFieldPatient.getText(), // Patient Name
 						paid ? "C" : "O", // CLOSED or OPEN
-						total.doubleValue(), // Total
-						balance.doubleValue(), // Balance
+						total, // Total
+						balance, // Balance
 						user, // User
 						thisBill.getAdmission()); // Admission
 
@@ -1358,13 +1358,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						}
 
 						if (isValidPaymentDate(datePay)) {
-							addPayment(datePay, balance.doubleValue());
+							addPayment(datePay, balance);
 						} else {
 							return;
 						}
 					} else {
 						datePay = TimeTools.getNow();
-						addPayment(datePay, balance.doubleValue());
+						addPayment(datePay, balance);
 					}
 				}
 				paid = true;
@@ -1447,11 +1447,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					}
 
 					if (isValidPaymentDate(datePay)) {
-						addPayment(datePay, amount.doubleValue());
+						addPayment(datePay, amount);
 					}
 				} else {
 					datePay = TimeTools.getNow();
-					addPayment(datePay, amount.doubleValue());
+					addPayment(datePay, amount);
 				}
 			});
 		}
@@ -1522,11 +1522,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					}
 
 					if (isValidPaymentDate(datePay)) {
-						addPayment(datePay, amount.doubleValue());
+						addPayment(datePay, amount);
 					}
 				} else {
 					datePay = TimeTools.getNow();
-					addPayment(datePay, amount.doubleValue());
+					addPayment(datePay, amount);
 				}
 			});
 		}
@@ -1586,7 +1586,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							if (price == null) {
 								return;
 							}
-							double amount = Double.parseDouble(price);
+							BigDecimal amount = new BigDecimal(price.trim());
 							oth.setPrice(amount);
 							isPrice = false;
 						} catch (Exception eee) {
@@ -1595,8 +1595,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						}
 					}
 					if (othersHashMap.get(Integer.valueOf(oth.getItem())).isDischarge()) {
-						double amount = oth.getPrice();
-						oth.setPrice(-amount);
+						BigDecimal amount = oth.getPrice();
+						oth.setPrice(amount.negate());
 					}
 					if (othersHashMap.get(Integer.valueOf(oth.getItem())).isDaily()) {
 						int qty = 1;
@@ -1720,7 +1720,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonCustom.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonCustom.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonCustom.addActionListener(actionEvent -> {
-				double amount;
+				BigDecimal amount;
 				Icon icon = new ImageIcon("rsc/icons/custom_dialog.png"); //$NON-NLS-1$
 				String desc = (String) JOptionPane.showInputDialog(this, MessageBundle.getMessage("angal.newbill.chooseadescription.txt"),
 					MessageBundle.getMessage("angal.newbill.customitem.title"), JOptionPane.PLAIN_MESSAGE, icon, null,
@@ -1732,7 +1732,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					String price = (String) JOptionPane.showInputDialog(this, MessageBundle.getMessage("angal.newbill.howmuchisit.txt"),
 						MessageBundle.getMessage("angal.newbill.customitem.title"), JOptionPane.PLAIN_MESSAGE, icon, null, "0"); //$NON-NLS-2$
 					try {
-						amount = Double.parseDouble(price);
+						amount = new BigDecimal(price.trim());
 					} catch (Exception eee) {
 						MessageDialog.error(this, "angal.newbill.invalidpricepleasetryagain.msg");
 						return;
@@ -1772,9 +1772,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private void updateTotal() { // only positive items make the bill's total
 		total = BigDecimal.ZERO;
 		for (BillItems item : billItems) {
-			double amount = item.getItemAmount();
-			if (amount > 0) {
-				BigDecimal itemAmount = new BigDecimal(Double.toString(amount));
+			BigDecimal itemAmount = item.getItemAmount();
+			if (itemAmount.compareTo(BigDecimal.ZERO) > 0) {
 				total = total.add(itemAmount.multiply(new BigDecimal(item.getItemQuantity())));
 			}
 		}
@@ -1783,7 +1782,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private void updateBigTotal() { // the big total (to pay) is made by all items
 		bigTotal = BigDecimal.ZERO;
 		for (BillItems item : billItems) {
-			BigDecimal itemAmount = new BigDecimal(Double.toString(item.getItemAmount()));
+			BigDecimal itemAmount = item.getItemAmount();
 			bigTotal = bigTotal.add(itemAmount.multiply(new BigDecimal(item.getItemQuantity())));
 		}
 	}
@@ -1792,7 +1791,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		balance = BigDecimal.ZERO;
 		BigDecimal payments = BigDecimal.ZERO;
 		for (BillPayments pay : payItems) {
-			BigDecimal payAmount = new BigDecimal(Double.toString(pay.getAmount()));
+			BigDecimal payAmount = pay.getAmount();
 			payments = payments.add(payAmount);
 		}
 		balance = bigTotal.subtract(payments);
@@ -1806,7 +1805,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private void addItem(Price prc, int qty, boolean isPrice) {
 		if (prc != null) {
-			double amount = prc.getPrice();
+			BigDecimal amount = prc.getPrice();
 			try {
 				BillItems item = new BillItems(0, billBrowserManager.getBill(thisBill.getId()), isPrice, prc.getGroup() + prc.getItem(), prc.getDesc(), amount,
 					qty);
@@ -1835,8 +1834,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		}
 	}
 
-	private void addPayment(LocalDateTime datePay, double qty) {
-		if (qty != 0) {
+	private void addPayment(LocalDateTime datePay, BigDecimal qty) {
+		if (qty.compareTo(BigDecimal.ZERO) != 0) {
 			try {
 				BillPayments pay = new BillPayments(0, billBrowserManager.getBill(thisBill.getId()), datePay, qty, user);
 				payItems.add(pay);
@@ -1907,7 +1906,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			}
 			if (c == 2) {
 				BigDecimal qty = new BigDecimal(item.getItemQuantity());
-				BigDecimal amount = new BigDecimal(Double.toString(item.getItemAmount()));
+				BigDecimal amount = item.getItemAmount();
 				return amount.multiply(qty).doubleValue();
 			}
 			return null;

@@ -206,9 +206,9 @@ public class InventoryWardEdit extends ModalJFrame {
 	private boolean[] columnVisible = { false, true, true, true, !GeneralData.AUTOMATICLOT_IN, true, true, true, true, GeneralData.LOTWITHCOST,
 			GeneralData.LOTWITHCOST };
 	private boolean[] columnCentered = { false, false, false, true, true, true, true, true, true, true, true };
-	private boolean[] columnDecimalNumber = { false, false, false, false, false, false, false, false, false, true, true };
-	private Class< ? >[] columnsClasses = { String.class, Integer.class, String.class, String.class, String.class, LocalDate.class, Integer.class,
-			Integer.class, Integer.class, BigDecimal.class, BigDecimal.class };
+	private boolean[] columnDecimalNumber = { false, false, false, false, false, false, true, true, true, true, true };
+	private Class< ? >[] columnsClasses = { String.class, Integer.class, String.class, String.class, String.class, LocalDate.class, BigDecimal.class,
+			BigDecimal.class, BigDecimal.class, BigDecimal.class, BigDecimal.class };
 	private MedicalInventory inventory;
 	private JLabel addMedicalLabel;
 	private JButton selectButton;
@@ -694,7 +694,8 @@ public class InventoryWardEdit extends ModalJFrame {
 			}
 			String lastReference = inventory.getInventoryReference();
 			LocalDateTime lastInventoryDate = inventory.getInventoryDate();
-			List<MedicalInventoryRow> invRowWithoutRealQty = inventoryRowSearchList.stream().filter(invRow -> invRow.getRealQty() == 0 && invRow.isNewLot())
+			List<MedicalInventoryRow> invRowWithoutRealQty = inventoryRowSearchList.stream()
+				.filter(invRow -> invRow.getRealQty().compareTo(BigDecimal.ZERO) == 0 && invRow.isNewLot())
 				.collect(Collectors.toList());
 			if (!invRowWithoutRealQty.isEmpty()) {
 				MessageDialog.error(null, "angal.inventory.allinventoryrowswithnewlotshouldhaverealqtygreatterthanzero.msg");
@@ -782,7 +783,8 @@ public class InventoryWardEdit extends ModalJFrame {
 				}
 				String lastReference = inventory.getInventoryReference();
 				LocalDateTime lastDate = inventory.getInventoryDate();
-				List<MedicalInventoryRow> invRowWithoutRealQty = inventoryRowSearchList.stream().filter(invRow -> invRow.getRealQty() == 0 && invRow.isNewLot())
+				List<MedicalInventoryRow> invRowWithoutRealQty = inventoryRowSearchList.stream()
+					.filter(invRow -> invRow.getRealQty().compareTo(BigDecimal.ZERO) == 0 && invRow.isNewLot())
 					.collect(Collectors.toList());
 				if (!invRowWithoutRealQty.isEmpty()) {
 					MessageDialog.error(null, "angal.inventory.allinventoryrowswithnewlotshouldhaverealqtygreatterthanzero.msg");
@@ -1159,14 +1161,13 @@ public class InventoryWardEdit extends ModalJFrame {
 				} else if (c == 6) {
 					return medInvtRow.getTheoreticQty();
 				} else if (c == 7) {
-					double dblValue = medInvtRow.getRealQty();
-					return (int) dblValue;
+					return medInvtRow.getRealQty();
 				} else if (c == 8) {
-					double difference = medInvtRow.getRealQty() - medInvtRow.getTheoreticQty();
-					return difference == 0. ? "" : (int) difference;
+					BigDecimal difference = medInvtRow.getRealQty().subtract(medInvtRow.getTheoreticQty());
+					return difference.signum() == 0 ? "" : difference;
 				} else if (c == 9) {
 					if (lot != null && lot.getCost() != null) {
-						medInvtRow.setTotal(lot.getCost().multiply(BigDecimal.valueOf(medInvtRow.getRealQty())));
+						medInvtRow.setTotal(lot.getCost().multiply(medInvtRow.getRealQty()));
 						return lot.getCost();
 					}
 					return BigDecimal.ZERO;
@@ -1185,21 +1186,21 @@ public class InventoryWardEdit extends ModalJFrame {
 			if (r < inventoryRowSearchList.size()) {
 				MedicalInventoryRow invRow = inventoryRowSearchList.get(r);
 				if (c == 7) {
-					double doubleValue = 0.0;
+					BigDecimal newQty = BigDecimal.ZERO;
 					if (value != null) {
 						try {
-							doubleValue = Double.parseDouble(value.toString());
+							newQty = new BigDecimal(value.toString());
 						} catch (NumberFormatException e) {
 							return;
 						}
 					}
-					if (doubleValue < 0) {
+					if (newQty.signum() < 0) {
 						MessageDialog.error(null, "angal.inventory.invalidquantity.msg");
 						return;
 					}
-					invRow.setRealqty(doubleValue);
+					invRow.setRealqty(newQty);
 					if (invRow.getLot() != null && invRow.getLot().getCost() != null) {
-						BigDecimal total = invRow.getLot().getCost().multiply(BigDecimal.valueOf(invRow.getRealQty()));
+						BigDecimal total = invRow.getLot().getCost().multiply(invRow.getRealQty());
 						invRow.setTotal(total);
 					}
 					inventoryRowListAdded.add(invRow);
@@ -1572,7 +1573,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		while (medicalListIterator.hasNext()) {
 			Medical med = medicalListIterator.next();
 			lots = movStockInsertingManager.getLotByMedical(med, false);
-			double actualQty = 0.;
+			BigDecimal actualQty = BigDecimal.ZERO;
 			if (lots.isEmpty()) {
 				inventoryRowTemp = new MedicalInventoryRow(null, actualQty, actualQty, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
@@ -1584,7 +1585,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(null, lotQuantityInWard, lotQuantityInWard, null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1606,7 +1607,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		while (medicalListIterator.hasNext()) {
 			Medical med = medicalListIterator.next();
 			lots = movStockInsertingManager.getLotByMedical(med, false);
-			double actualQty = 0.;
+			BigDecimal actualQty = BigDecimal.ZERO;
 			if (lots.isEmpty()) {
 				inventoryRowTemp = new MedicalInventoryRow(null, actualQty, actualQty, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
@@ -1618,7 +1619,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(null, lotQuantityInWard, lotQuantityInWard, null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1661,7 +1662,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		while (medicalListIterator.hasNext()) {
 			Medical med = medicalListIterator.next();
 			lots = movStockInsertingManager.getLotByMedical(med, false);
-			double actualQty = 0.;
+			BigDecimal actualQty = BigDecimal.ZERO;
 			if (lots.isEmpty()) {
 				inventoryRowTemp = new MedicalInventoryRow(null, actualQty, actualQty, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
@@ -1673,7 +1674,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(null, lotQuantityInWard, lotQuantityInWard, null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1709,7 +1710,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			Medical med = medicalListIterator.next();
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			if (lots.isEmpty()) {
-				inventoryRowTemp = new MedicalInventoryRow(null, 0.0, 0.0, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.ZERO, BigDecimal.ZERO, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
@@ -1724,7 +1725,8 @@ public class InventoryWardEdit extends ModalJFrame {
 				ListIterator<Lot> lotListIterator = lots.listIterator();
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
-					inventoryRowTemp = new MedicalInventoryRow(null, lot.getMainStoreQuantity(), lot.getMainStoreQuantity(), null, med, lot);
+					BigDecimal mainStoreQty = BigDecimal.valueOf(lot.getMainStoreQuantity());
+					inventoryRowTemp = new MedicalInventoryRow(null, mainStoreQty, mainStoreQty, null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 						numberOfMedicalWithoutSameLotAdded = numberOfMedicalWithoutSameLotAdded + 1;
@@ -1735,7 +1737,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		if (medicalWithLot != null && numberOfMedicalWithoutSameLotAdded == 0) {
 			int info = MessageDialog.yesNo(null, "angal.inventory.productalreadyexist.fmt.msg", medicalWithLot.getDescription());
 			if (info == JOptionPane.YES_OPTION) {
-				inventoryRowTemp = new MedicalInventoryRow(null, 0.0, 0.0, null, medicalWithLot, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.ZERO, BigDecimal.ZERO, null, medicalWithLot, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				inventoryRowsList.add(inventoryRowTemp);
 			}
@@ -1956,7 +1958,7 @@ public class InventoryWardEdit extends ModalJFrame {
 	private List<MedicalInventoryRow> loadNewInventoryTable(boolean withNonZeroQty, MedicalType medicalTypeSelected) throws OHServiceException {
 		List<MedicalInventoryRow> inventoryRowsList = getMedicalInventoryRows(null);
 		if (withNonZeroQty) {
-			inventoryRowsList = inventoryRowsList.stream().filter(inv -> inv.getTheoreticQty() > 0).collect(Collectors.toList());
+			inventoryRowsList = inventoryRowsList.stream().filter(inv -> inv.getTheoreticQty().compareTo(BigDecimal.ZERO) > 0).collect(Collectors.toList());
 		}
 		if (medicalTypeSelected != null) {
 			inventoryRowsList = inventoryRowsList.stream()

@@ -187,6 +187,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		return jButtonPanel;
 	}
 
+	@SuppressWarnings("deprecation") // getLaboratoryForPrint is deprecated but kept for this GUI print action (OP-1065)
 	private JButton getPrintTableButton() {
 		if (printTableButton == null) {
 			printTableButton = new JButton(MessageBundle.getMessage("angal.lab.printtable.btn"));
@@ -199,7 +200,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 				try {
 					List<LaboratoryForPrint> labs;
-					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDateStartOfDay(), dateTo.getDateEndOfDay());
+					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDateStartOfDay(), dateTo.getDateEndOfDay(), null);
 					if (!labs.isEmpty()) {
 						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 					}

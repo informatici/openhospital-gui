@@ -20,46 +20,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      
+      - uses: actions/checkout@v7
+
       - name: Debug GitHub variables
+        env:
+          PR_HEAD_OWNER: ${{ github.event.pull_request.head.repo.owner.login }}
+          PR_HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
         run: |
           echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
-          echo "GITHUB_HEAD_REPOSITORY: ${GITHUB_HEAD_REPOSITORY}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
+          echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
           echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_REPOSITORY_OWNER: ${GITHUB_REPOSITORY_OWNER}"
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+          echo "PR_HEAD_OWNER: ${PR_HEAD_OWNER}"
+          echo "PR_HEAD_REPOSITORY: ${PR_HEAD_REPOSITORY}"
 
       - name: Determine PR source branch and fork repository
         id: vars
+        env:
+          PR_HEAD_OWNER: ${{ github.event.pull_request.head.repo.owner.login }}
         run: |
-          # Set default FORK_REPO and BRANCH_NAME values.
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
-          
-          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REPOSITORY" == "informatici/openhospital-gui" ]]; then
-            # For pushes to the main repository, default to the main core repo
+          BRANCH_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" && -n "$PR_HEAD_OWNER" ]]; then
+            FORK_REPO="${PR_HEAD_OWNER}/openhospital-core"
+          elif [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REPOSITORY" == "informatici/openhospital-gui" ]]; then
             FORK_REPO="informatici/openhospital-core"
           else
-            # For pull requests or other pushes, use the contributor fork if applicable
-            if [[ -n "$GITHUB_HEAD_REPOSITORY" ]]; then
-              FORK_REPO="$GITHUB_HEAD_REPOSITORY"
-            else
-              # Check if the actor's repo exists with the branch
-              FORK_REPO="${GITHUB_ACTOR}/openhospital-core"
-              CHECK_BRANCH_URL="https://github.com/$FORK_REPO/tree/$BRANCH_NAME"
-              echo "Checking branch existence with: curl -s -o /dev/null -w \"%{http_code}\" $CHECK_BRANCH_URL"
-
-              if curl -s -o /dev/null -w "%{http_code}" "$CHECK_BRANCH_URL" | grep -q "200"; then
-                echo "Branch $BRANCH_NAME exists in $FORK_REPO."
-              else
-                # Fallback to the main repository if the branch doesn’t exist in the fork
-                FORK_REPO="informatici/openhospital-core"
-              fi
-            fi
+            FORK_REPO="${GITHUB_REPOSITORY_OWNER}/openhospital-core"
           fi
-          
-          # Export FORK_REPO and BRANCH_NAME to GITHUB_ENV for the next step
+
+          CHECK_BRANCH_URL="https://github.com/$FORK_REPO/tree/$BRANCH_NAME"
+          echo "Checking branch existence with: curl -s -o /dev/null -w \"%{http_code}\" $CHECK_BRANCH_URL"
+
+          if curl -s -o /dev/null -w "%{http_code}" "$CHECK_BRANCH_URL" | grep -q "200"; then
+            echo "Branch $BRANCH_NAME exists in $FORK_REPO."
+          else
+            echo "Branch $BRANCH_NAME does not exist in $FORK_REPO. Falling back to informatici/openhospital-core."
+            FORK_REPO="informatici/openhospital-core"
+          fi
+
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
           echo "FORK_REPO=$FORK_REPO" >> $GITHUB_ENV
 
@@ -69,7 +71,7 @@ jobs:
           echo "BRANCH_NAME: ${{ env.BRANCH_NAME }}"
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5.6.0
         with:
           distribution: 'zulu'
           java-version: 17
@@ -85,7 +87,7 @@ jobs:
             || git checkout "${{ github.base_ref }}" \
             || git checkout develop
           popd
-        
+
       - name: Install core
         run: |
           pushd openhospital-core
