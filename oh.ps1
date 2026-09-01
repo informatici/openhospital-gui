@@ -1019,7 +1019,7 @@ function import_database {
 		}
  	}
 	catch {
-		Write-Host "Error: Database not imported! Exiting." -ForeGroundColor Red
+		Write-Host "Error: Database [$DATABASE_NAME] not imported! Exiting." -ForeGroundColor Red
 		shutdown_database;
 		cd "$CURRENT_DIR"
 		Read-Host; exit 2
@@ -1918,7 +1918,7 @@ if ( $DEMO_DATA -eq "on" ) {
 		$DB_CREATE_SQL=$DB_DEMO
 	}
 	else {
-	      	Write-Host "Error: no $DB_DEMO found! Exiting." -ForegroundColor Red
+	      	Write-Host "Error: no database [$DB_DEMO] found! Exiting." -ForegroundColor Red
 		Read-Host;
 		exit 1
 	}
@@ -1969,7 +1969,7 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 	}
 	if ( !(Test-Path "$OH_PATH/$DATA_DIR") ) {
 		# if mariadb data directory does not exist, start from scratch
-		Write-Host "OH database not found, starting from scratch..."
+		Write-Host "OH database [$DATABASE_NAME] not found, starting from scratch..."
 		# prepare database
 		initialize_database;
 		# start database
@@ -1984,7 +1984,7 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 		import_database;
 	}
 	else {
-		Write-Host "OH database found!"
+		Write-Host "OH database [$DATABASE_NAME] found!"
 		# start database
 		start_database;
 	}

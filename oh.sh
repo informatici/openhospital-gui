@@ -907,7 +907,7 @@ function import_database {
 	# --abort-source-on-error: the client otherwise carries on after a failed statement inside a sourced file and still exits 0
 	../$MYSQL_DIR/bin/mysql --abort-source-on-error --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
 	if [ $? -ne 0 ]; then
-		echo "Error: Database not imported! Exiting."
+		echo "Error: Database [$DATABASE_NAME] not imported! Exiting."
 		shutdown_database;
 		cd "$CURRENT_DIR"
 		exit 2
@@ -1811,7 +1811,7 @@ if [ "$DEMO_DATA" = "on" ]; then
 		echo "Found SQL demo database, starting OH with Demo data..."
 		DB_CREATE_SQL=$DB_DEMO
 	else
-		echo "Error: no $DB_DEMO found! Exiting."
+		echo "Error: no database [$DB_DEMO] found! Exiting."
 		exit 1
 	fi
 	set_db_name;
@@ -1876,7 +1876,7 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 		echo "then run this script again. Exiting."
 		exit 2
 	else
-	        echo "OH database found!"
+	        echo "OH database [$DATABASE_NAME] found!"
 		# start database
 		start_database;
 	fi
