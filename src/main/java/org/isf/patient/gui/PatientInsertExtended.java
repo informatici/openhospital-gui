@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -397,9 +397,11 @@ public class PatientInsertExtended extends JDialog {
 			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
 			jAnamnesisButton.addActionListener(actionEvent -> {
-				patientHistory = new PatientHistory();
-				if (patient.getCode() != null) {
-					patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(patientHistory);
+				if (patientHistory == null) {
+					patientHistory = new PatientHistory();
+					if (patient.getCode() != null) {
+						patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(patientHistory);
+					}
 				}
 				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
 				PatientHistoryEdit dialog = new PatientHistoryEdit(this, pph, false);

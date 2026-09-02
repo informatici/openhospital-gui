@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -64,7 +64,6 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -225,7 +224,7 @@ public class InventoryWardEdit extends ModalJFrame {
 	private JLabel wardLabel;
 	private JComboBox<Ward> wardComboBox;
 	private String newReference;
-	private JFrame frame;
+	private JDialog lotInformationDialog;
 	private JPanel mainPanel;
 	private JRadioButton radioButtonAll;
 	private JRadioButton radioOnlyNonZero;
@@ -246,6 +245,8 @@ public class InventoryWardEdit extends ModalJFrame {
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private boolean allMedicals;
 	private boolean allMedicalsChosen;
+	// OP-1426: set by the save action, read by the close action so the window is only disposed on a successful save
+	private boolean saveSucceeded;
 	private Object[] allMedicalsOrList = {
 			MessageBundle.getMessage("angal.inventory.yesallmedicals.btn"),
 			MessageBundle.getMessage("angal.inventory.noonlytheonesinthelist.btn")
@@ -509,23 +510,22 @@ public class InventoryWardEdit extends ModalJFrame {
 				mainPanel.add(rightPanel, BorderLayout.EAST);
 				mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-				frame = new JFrame();
-				frame.add(mainPanel);
-				frame.setSize(450, 200);
-				frame.setTitle(MessageBundle.getMessage("angal.inventory.lotinformation.title"));
-				frame.setLocationRelativeTo(null);
-				frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-				frame.addWindowListener(new WindowAdapter() {
+				lotInformationDialog = new JDialog(this, MessageBundle.getMessage("angal.inventory.lotinformation.title"), true);
+				lotInformationDialog.add(mainPanel);
+				lotInformationDialog.setSize(450, 200);
+				lotInformationDialog.setLocationRelativeTo(null);
+				lotInformationDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+				lotInformationDialog.addWindowListener(new WindowAdapter() {
 
 					@Override
 					public void windowClosing(WindowEvent e) {
-						int choice = MessageDialog.yesNo(frame, "angal.inventory.areyousureyouwantoclosethiswindow.msg");
+						int choice = MessageDialog.yesNo(lotInformationDialog, "angal.inventory.areyousureyouwantoclosethiswindow.msg");
 						if (choice == JOptionPane.YES_OPTION) {
-							frame.dispose();
+							lotInformationDialog.dispose();
 						}
 					}
 				});
-				frame.setVisible(true);
+				lotInformationDialog.setVisible(true);
 			});
 		}
 		return selectButton;
@@ -535,6 +535,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		saveButton.addActionListener(actionEvent -> {
+			saveSucceeded = false;
 			try {
 				if (inventoryRowSearchList == null || inventoryRowSearchList.isEmpty()) {
 					MessageDialog.error(null, "angal.inventory.cannotsaveinventorywithoutproducts.msg");
@@ -586,6 +587,7 @@ public class InventoryWardEdit extends ModalJFrame {
 					validateButton.setEnabled(true);
 					confirmButton.setEnabled(false);
 					resetVariables();
+					saveSucceeded = true;
 
 				} else if (mode.equals("update")) {
 					int response = MessageDialog.yesNo(null, "angal.inventory.doyouwanttoupdatethisinventory.msg");
@@ -612,8 +614,8 @@ public class InventoryWardEdit extends ModalJFrame {
 									lot = movStockInsertingManager.updateLot(lot);
 									medicalInventoryRow.setLot(lot);
 								} else {
-									int idInvRow = medicalInventoryRow.getId();
-									MedicalInventoryRow invRow = medicalInventoryRowManager.getMedicalInventoryRowById(idInvRow);
+									Integer idInvRow = medicalInventoryRow.getId();
+									MedicalInventoryRow invRow = idInvRow == null ? null : medicalInventoryRowManager.getMedicalInventoryRowById(idInvRow);
 									if (invRow != null && invRow.getLock() != medicalInventoryRow.getLock()) {
 										Lot newLot = movStockInsertingManager.storeLot(lotCode, lot, medical);
 										invRow.setLot(newLot);
@@ -629,8 +631,7 @@ public class InventoryWardEdit extends ModalJFrame {
 							}
 
 							medicalInventoryRow.setInventory(inventory);
-							int id = medicalInventoryRow.getId();
-							if (id == 0) {
+							if (medicalInventoryRow.getId() == null) {
 								MedicalInventoryRow savedRow = medicalInventoryRowManager.newMedicalInventoryRow(medicalInventoryRow);
 								inventoryRowSearchListIterator.set(savedRow);
 							} else {
@@ -662,6 +663,7 @@ public class InventoryWardEdit extends ModalJFrame {
 						resetVariables();
 						validateButton.setEnabled(true);
 						confirmButton.setEnabled(false);
+						saveSucceeded = true;
 					}
 				}
 			} catch (OHServiceException e) {
@@ -873,7 +875,7 @@ public class InventoryWardEdit extends ModalJFrame {
 						inventoryRowSearchList.remove(inventoryRow);
 						model.fireTableDataChanged();
 						jTableInventoryRow.setModel(model);
-						if (inventoryRow.getId() != 0) {
+						if (inventoryRow.getId() != null) {
 							inventoryRowsToDelete.add(inventoryRow);
 						}
 					}
@@ -974,7 +976,9 @@ public class InventoryWardEdit extends ModalJFrame {
 				int reset = MessageDialog.yesNoCancel(null, "angal.inventory.doyouwanttosavethechanges.msg");
 				if (reset == JOptionPane.YES_OPTION) {
 					this.saveButton.doClick();
-					dispose();
+					if (saveSucceeded) {
+						dispose();
+					}
 				}
 				if (reset == JOptionPane.NO_OPTION) {
 					resetVariables();
@@ -1097,7 +1101,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			if (!inventoryRowList.isEmpty()) {
 				for (MedicalInventoryRow invRow : inventoryRowList) {
 					addMedInRowInInventorySearchList(invRow);
-					if (!includeAll && invRow.getId() == 0) {
+					if (!includeAll && invRow.getId() == null) {
 						inventoryRowListAdded.add(invRow);
 					}
 				}
@@ -1571,7 +1575,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			BigDecimal actualQty = BigDecimal.ZERO;
 			if (lots.isEmpty()) {
-				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, actualQty, actualQty, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
@@ -1581,7 +1585,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(0, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1605,7 +1609,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			BigDecimal actualQty = BigDecimal.ZERO;
 			if (lots.isEmpty()) {
-				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, actualQty, actualQty, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
@@ -1615,7 +1619,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(0, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1660,7 +1664,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			BigDecimal actualQty = BigDecimal.ZERO;
 			if (lots.isEmpty()) {
-				inventoryRowTemp = new MedicalInventoryRow(0, actualQty, actualQty, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, actualQty, actualQty, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
@@ -1670,7 +1674,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(0, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1706,7 +1710,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			Medical med = medicalListIterator.next();
 			lots = movStockInsertingManager.getLotByMedical(med, false);
 			if (lots.isEmpty()) {
-				inventoryRowTemp = new MedicalInventoryRow(0, BigDecimal.ZERO, BigDecimal.ZERO, null, med, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.ZERO, BigDecimal.ZERO, null, med, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				if (!existInInventorySearchList(inventoryRowTemp)) {
 					inventoryRowsList.add(inventoryRowTemp);
@@ -1722,7 +1726,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					BigDecimal mainStoreQty = BigDecimal.valueOf(lot.getMainStoreQuantity());
-					inventoryRowTemp = new MedicalInventoryRow(0, mainStoreQty, mainStoreQty, null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, mainStoreQty, mainStoreQty, null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 						numberOfMedicalWithoutSameLotAdded = numberOfMedicalWithoutSameLotAdded + 1;
@@ -1733,7 +1737,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		if (medicalWithLot != null && numberOfMedicalWithoutSameLotAdded == 0) {
 			int info = MessageDialog.yesNo(null, "angal.inventory.productalreadyexist.fmt.msg", medicalWithLot.getDescription());
 			if (info == JOptionPane.YES_OPTION) {
-				inventoryRowTemp = new MedicalInventoryRow(0, BigDecimal.ZERO, BigDecimal.ZERO, null, medicalWithLot, null);
+				inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.ZERO, BigDecimal.ZERO, null, medicalWithLot, null);
 				inventoryRowTemp.setNewLot(true); // missing parameter in the above constructor
 				inventoryRowsList.add(inventoryRowTemp);
 			}
@@ -1880,7 +1884,7 @@ public class InventoryWardEdit extends ModalJFrame {
 		} else {
 			inventoryRowSearchList.add(position + 1, inventoryRow);
 		}
-		if (inventoryRow.getId() == 0) {
+		if (inventoryRow.getId() == null) {
 			inventoryRowListAdded.add(inventoryRow);
 		}
 	}
@@ -1947,7 +1951,7 @@ public class InventoryWardEdit extends ModalJFrame {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		}
-		jButtonCancel.addActionListener(actionEvent -> frame.dispose());
+		jButtonCancel.addActionListener(actionEvent -> lotInformationDialog.dispose());
 		return jButtonCancel;
 	}
 

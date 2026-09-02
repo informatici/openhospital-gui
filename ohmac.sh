@@ -30,6 +30,15 @@ PHOTO_DIR="data/photo"
 BACKUP_DIR="data/dump"
 
 OH_DIR="oh"
+# Open Hospital resolves part of its own paths against the working directory - the reports are
+# looked up as rpt_base/... - so the application has to run from inside $OH_DIR, and every path
+# handed to the JVM has to be absolute to survive that. oh.sh carries the same workaround in its
+# own start_gui. The script already used $OH_PATH without ever setting it, so the DICOM storage
+# path was written as /data/dicom_storage, at the filesystem root.
+# Derived from the script location, as oh.sh does, and overridable the same way.
+if [ -z "${OH_PATH+x}" ]; then
+	OH_PATH=$(cd "$(dirname "$0")" && pwd)
+fi
 OH_DOC_DIR="doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
@@ -242,7 +251,7 @@ echo "is java installed?"
 # exactly at this path, so it has to be set before that too: leaving the variable empty would make
 # the launch command start with its first argument instead of the java binary.
 if [ -z "${JAVA_BIN:-}" ] || [ ! -x "$JAVA_BIN" ]; then
-	JAVA_BIN="./$OH_DIR/$JAVA_DIR/bin/java"
+	JAVA_BIN="$OH_PATH/$OH_DIR/$JAVA_DIR/bin/java"
 fi
 
 # if JAVA_BIN is not found download JRE
@@ -281,7 +290,7 @@ function java_lib_setup {
 	# NATIVE LIB setup
 	case $JAVA_ARCH in
         arm64)
-        NATIVE_LIB_PATH="./$OH_DIR/lib/native/macOS/arm64"
+        NATIVE_LIB_PATH="$OH_PATH/$OH_DIR/lib/native/macOS/arm64"
         ;;
 	esac
 
@@ -299,20 +308,21 @@ function java_lib_setup {
 
 	# CLASSPATH setup
 	# include OH jar file
-	OH_CLASSPATH=$OH_DIR/bin/$OH_GUI_JAR
+	OH_CLASSPATH="$OH_PATH"/$OH_DIR/bin/$OH_GUI_JAR
 	
 	# include all needed directories
-	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/bundle
-	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rpt_base
-	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rpt_extra
-	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rpt_stat
-	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rsc
-	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/rsc/images
-	OH_CLASSPATH=$OH_CLASSPATH:$OH_DIR/lib
+	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/bundle
+	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_base
+	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_extra
+	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt_stat
+	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc
+	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rsc/images
+	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/lib
 
 	# include all jar files under lib/
-	DIRLIBS=./$OH_DIR/lib/*.jar
-	for i in ${DIRLIBS}
+	# the pattern is expanded by the loop itself: going through a variable would split an
+	# installation path that contains a space and leave the jars out of the classpath
+	for i in "$OH_PATH"/$OH_DIR/lib/*.jar
 	do
 		OH_CLASSPATH="$i":$OH_CLASSPATH
 	done
@@ -516,7 +526,8 @@ function import_db {
 
 		CURRPATH=`pwd`
 		cd "$SCRIPTDIR"
-		mysql --local-infile=1 -u $USER $DATABASE_NAME < $SCRIPT
+		# --abort-source-on-error: the client otherwise carries on after a failed statement inside a sourced file and still exits 0
+		mysql --abort-source-on-error --local-infile=1 -u $USER $DATABASE_NAME < $SCRIPT
 		if [ $? -ne 0 ]; then
 			echo "  >Error: Database not imported! Exiting."
 			stop_db;
@@ -766,7 +777,7 @@ function start_api_server {
 	# this says so and returns: until now the call failed with "command not found" and the run
 	# carried on, so refusing to start Open Hospital at all would take away something that works.
 	API_ARTIFACT=""
-	for candidate in "./$OH_DIR/bin/$OH_API_JAR" "./$OH_DIR/bin/$OH_API_WAR"; do
+	for candidate in "$OH_PATH/$OH_DIR/bin/$OH_API_JAR" "$OH_PATH/$OH_DIR/bin/$OH_API_WAR"; do
 		[ -f "$candidate" ] && API_ARTIFACT="$candidate" && break
 	done
 	if [ -z "$API_ARTIFACT" ]; then
@@ -791,8 +802,9 @@ function start_api_server {
 		*.war) LAUNCHER="org.springframework.boot.loader.launch.WarLauncher" ;;
 		*)     LAUNCHER="org.springframework.boot.loader.launch.JarLauncher" ;;
 	esac
-	$JAVA_BIN -client -Xms64m -Xmx1024m \
-		-cp "$API_ARTIFACT:./$OH_DIR/rsc:./$OH_DIR/static" $LAUNCHER >> ./$LOG_DIR/$API_LOG_FILE 2>&1 &
+	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+	"$JAVA_BIN" -client -Xms64m -Xmx1024m \
+		-cp "$API_ARTIFACT:$OH_PATH/$OH_DIR/rsc:$OH_PATH/$OH_DIR/static" $LAUNCHER >> "$OH_PATH/$LOG_DIR/$API_LOG_FILE" 2>&1 &
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting the Open Hospital API server. Exiting."
@@ -800,6 +812,7 @@ function start_api_server {
 		cd "$CURRENT_DIR"
 		exit 4
 	fi
+	cd "$OH_PATH"
 }
 
 ###################################################################
@@ -813,8 +826,9 @@ function start_ui {
 function start_gui {
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch	
-	
-	$JAVA_BIN -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> ./$LOG_DIR/$LOG_FILE 2>&1
+	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
+
+	"$JAVA_BIN" -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path="${NATIVE_LIB_PATH}" -classpath "$OH_CLASSPATH" org.isf.Application >> "$OH_PATH/$LOG_DIR/$LOG_FILE" 2>&1
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."
@@ -822,6 +836,7 @@ function start_gui {
 		cd "$CURRENT_DIR"
 		exit 4
 	fi
+	cd "$OH_PATH"
 }
 ###################################################################
 function parse_user_input {
@@ -917,7 +932,7 @@ function parse_user_input {
 		echo "Setting up GSM..."
 		java_check;
 		java_lib_setup;
-		$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
+		"$JAVA_BIN" -Djava.library.path="${NATIVE_LIB_PATH}" -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
 		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;  
@@ -1125,7 +1140,11 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	import_db;
 fi
 
+# Database setup...
 test_db_connection;
+
+# Generate configuration before starting any application that consumes it.
+write_config_files
 
 # check for API server
 if [ "$API_SERVER" = "on" ]; then
@@ -1162,11 +1181,6 @@ if [ "$OH_MODE" = "SERVER" ]; then
 	done
 else
 	######## Open Hospital GUI startup - only for CLIENT or PORTABLE mode
-
-	# generate config files if not existent
-	write_config_files;
-
-	# start OH gui
 	start_gui;
 
 	# Close and exit
