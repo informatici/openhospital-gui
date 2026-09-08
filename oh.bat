@@ -154,13 +154,13 @@ set ARCH=x64
 
 REM ######## MySQL Software
 REM # MariaDB 64bit download URL
-REM https://archive.mariadb.org/mariadb-10.6.20/winx64-packages/mariadb-10.6.20-winx64.zip
+REM https://archive.mariadb.org/mariadb-10.6.28/winx64-packages/mariadb-10.6.28-winx64.zip
 
 REM # MariaDB 32bit download  URL
 REM https://archive.mariadb.org/mariadb-10.6.5/win32-packages/mariadb-10.6.5-win32.zip
 
 REM set MYSQL_DIR=mariadb-10.6.5-win%ARCH%
-set MYSQL_DIR=mariadb-10.6.23-win%ARCH%
+set MYSQL_DIR=mariadb-10.6.28-win%ARCH%
 
 REM ####### JAVA Software
 REM # JRE 11 64bit - x86_64 - openjdk
@@ -172,7 +172,7 @@ REM set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
 REM set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 REM # JRE 17 32bit - i686 - zulu - default
-set JAVA_DIR=zulu17.60.17-ca-jre17.0.16-win_%ARCH%
+set JAVA_DIR=zulu17.68.203-ca-fx-jre17.0.20.1-win_%ARCH%
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin
@@ -305,7 +305,8 @@ if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
 
 	echo Importing database %DATABASE_NAME% with user %DATABASE_USER%@%DATABASE_SERVER%...
 	cd /d %OH_PATH%\%SQL_DIR%
-	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe --local-infile=1 -u %DATABASE_USER% -p%DATABASE_PASSWORD% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% %DATABASE_NAME% < "%OH_PATH%\sql\%DB_CREATE_SQL%"  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+	rem --abort-source-on-error: the client otherwise carries on after a failed statement inside a sourced file and still exits 0
+	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe --abort-source-on-error --local-infile=1 -u %DATABASE_USER% -p%DATABASE_PASSWORD% --host=%DATABASE_SERVER% --port=%DATABASE_PORT% %DATABASE_NAME% < "%OH_PATH%\sql\%DB_CREATE_SQL%"  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 	if ERRORLEVEL 1 (goto error)
 	cd /d %OH_PATH%
 	echo Database imported!

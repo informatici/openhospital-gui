@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -45,9 +45,11 @@ public class LogViewer extends JDialog {
 			LOGGER.debug("Opening location for: {}", logfile);
 			LogUtil.openLogFileLocation();
 		} catch (IOException e) {
-			MessageDialog.error(this, "angal.log.foldererror.fmt.msg", new File(logfile).getParent());
+			// the path is null when no file appender is configured, and then the reason why there is
+			// no folder to open is all this dialog can show
+			String folder = logfile != null ? new File(logfile).getAbsoluteFile().getParent() : e.getMessage();
+			MessageDialog.error(this, "angal.log.foldererror.fmt.msg", folder);
 		}
-
 	}
 
 }

@@ -166,9 +166,9 @@ EXPERT_MODE="off"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-MYSQL_VERSION="10.6.23"
+MYSQL_VERSION="10.6.28"
 #MYSQL_VERSION="11.6.2"
-MYSQL32_VERSION="10.5.27"
+MYSQL32_VERSION="10.5.28"
 PACKAGE_TYPE="systemd" 
 
 ######## define system and software architecture
@@ -209,12 +209,12 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ### JRE 17 - zulu distribution
 #JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-linux_$JAVA_PACKAGE_ARCH"
-JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu17.68.203-ca-fx-jre17.0.20.1-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
 
 # Tomcat 11
-TOMCAT_VERSION="11.0.15"
+TOMCAT_VERSION="11.0.25"
 TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION"
 TOMCAT_DIR=$TOMCAT_DISTRO
@@ -228,7 +228,7 @@ function script_menu {
 	# show help / user options
 	echo " ------------------------------------------------------------------------"
 	echo "|                                                                        |"
-	echo "|                Open Hospital - v$OH_VERSION                                 |"
+	echo "|                   Open Hospital - v$OH_VERSION                              |"
 	echo "|                                                                        |"
 	echo " ------------------------------------------------------------------------"
 	echo "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
@@ -784,6 +784,14 @@ function initialize_database {
 	fi
 }
 
+
+###################################################################
+function database_port_open {
+	# Check if the database server is accepting connections on its TCP port.
+
+	(exec 3<>/dev/tcp/$DATABASE_SERVER/$DATABASE_PORT) > /dev/null 2>&1
+}
+
 ###################################################################
 # Whether the database is accepting connections on its TCP port.
 #
@@ -814,6 +822,7 @@ function start_database {
 		echo "Error: $MYSQL_NAME server not started! Exiting."
 		exit 2
 	fi
+
 	# wait till the MariaDB/MySQL tcp port is open.
 	#
 	# A start that has already failed is not waited out: mysqld_safe stays alive for as long as the
@@ -823,6 +832,7 @@ function start_database {
 	# timeout. The timeout is what remains for the rarer case of a server that runs but does not get
 	# to listening, where waiting is the right thing to do: a start that has to build its system
 	# tables, or one recovering after an unclean shutdown, takes its time and does succeed.
+
 	WAITED=0
 	until database_port_open; do
 		if ! kill -0 $DATABASE_LAUNCHER_PID 2>/dev/null; then
@@ -904,9 +914,10 @@ function import_database {
 	echo "Importing database [$DATABASE_NAME] with user [$DATABASE_USER@$DATABASE_SERVER]..."
 	cd "./$SQL_DIR"
 #	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
-	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
+	# --abort-source-on-error: the client otherwise carries on after a failed statement inside a sourced file and still exits 0
+	../$MYSQL_DIR/bin/mysql --abort-source-on-error --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
 	if [ $? -ne 0 ]; then
-		echo "Error: Database not imported! Exiting."
+		echo "Error: Database [$DATABASE_NAME] not imported! Exiting."
 		shutdown_database;
 		cd "$CURRENT_DIR"
 		exit 2
@@ -1810,7 +1821,7 @@ if [ "$DEMO_DATA" = "on" ]; then
 		echo "Found SQL demo database, starting OH with Demo data..."
 		DB_CREATE_SQL=$DB_DEMO
 	else
-		echo "Error: no $DB_DEMO found! Exiting."
+		echo "Error: no database [$DB_DEMO] found! Exiting."
 		exit 1
 	fi
 	set_db_name;
@@ -1841,6 +1852,7 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	mysql_check;
 	# config database
 	config_database;
+
 	# check if OH database already exists
 	#
 	# The data directory alone does not say that: initialize_database creates it as its very first
@@ -1851,7 +1863,9 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	# up without regard to case, because the shipped my.cnf sets lower_case_table_names and the
 	# engine then stores the schema of a database named MyHospital in a directory called myhospital,
 	# while DATA_DIR keeps the name as the user typed it.
+
 	if [ ! -d ./"$DATA_DIR" ]; then
+		# if mariadb data directory does not exist, start from scratch
 		echo "OH database not found, starting from scratch..."
 		# prepare database
 		initialize_database;
@@ -1865,13 +1879,14 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 		create_database;
 		# load data
 		import_database;
+		# check if broken/unfinished OH database references already exist
 	elif [ -z "$(find ./"$DATA_DIR" -mindepth 1 -maxdepth 1 -type d -iname "$DATABASE_NAME" -print -quit 2>/dev/null)" ]; then
 		echo "Error: a previous installation of the [$DATABASE_NAME] database was left unfinished in ./$DATA_DIR."
 		echo "Remove that directory, or reset the installation with option [X] which deletes the data for you,"
 		echo "then run this script again. Exiting."
 		exit 2
 	else
-	        echo "OH database found!"
+	        echo "OH database [$DATABASE_NAME] found!"
 		# start database
 		start_database;
 	fi
@@ -1884,9 +1899,10 @@ test_database_connection;
 
 # check for API server
 if [ "$API_SERVER" = "on" ]; then
-	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# Deploy API and copy the updated properties.
+	tomcat_setup;
 	# workaround to have UI files in correct place
 	setup_ui;
 	# start API server
