@@ -82,6 +82,8 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.jobjects.TextPrompt;
+import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.video.gui.PatientPhotoPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,6 +151,8 @@ public class PatientInsertExtended extends JDialog {
 	private Patient patient;
 
 	private PatientConsensus consensus;
+
+	private VoLimitedTextField jAdministrativeReasonTextField;
 
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
@@ -524,6 +528,7 @@ public class PatientInsertExtended extends JDialog {
 						patient.setNote(jNoteTextArea.getText().trim());
 						try {
 							patient = patientBrowserManager.savePatient(patient);
+							consensus.setAdministrativeReason(getAdministrativeReason());
 							consensus.setPatient(patient);
 							patientConsensusManager.updatePatientConsensus(consensus);
 							if (patientHistory != null) {
@@ -611,6 +616,7 @@ public class PatientInsertExtended extends JDialog {
 					patient.setNote(jNoteTextArea.getText().trim());
 					try {
 						patient = patientBrowserManager.savePatient(patient);
+						consensus.setAdministrativeReason(getAdministrativeReason());
 						consensus.setPatient(patient);
 						patientConsensusManager.updatePatientConsensus(consensus);
 						if (patientHistory != null) {
@@ -2171,7 +2177,7 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel getJPanelConsensus() {
 		try {
 			if (patient != null && patient.getCode() != null) {
-				consensus = this.patientConsensusManager.getPatientConsensusByUserId(patient.getCode()).get();
+				consensus = this.patientConsensusManager.getPatientConsensusByUserId(patient.getCode()).orElseGet(PatientConsensus::new);
 			} else {
 				consensus = new PatientConsensus();
 			}
@@ -2196,6 +2202,28 @@ public class PatientInsertExtended extends JDialog {
 		checkboxService.setSelected(consensus.isServiceFlag());
 		panel.add(checkboxService);
 
+		JCheckBox checkboxAdministrative = new JCheckBox("<html><body style='width: 150px; padding-left: 10px;'>" +
+						MessageBundle.getMessage("angal.patient.consensus.administrative.txt") +
+						"</body></html>");
+		jAdministrativeReasonTextField = new VoLimitedTextField(PatientConsensus.ADMINISTRATIVE_REASON_LENGTH, 15);
+		jAdministrativeReasonTextField.setText(consensus.getAdministrativeReason());
+		new TextPrompt(MessageBundle.getMessage("angal.patient.consensus.administrative.reason.txt"), jAdministrativeReasonTextField);
+
+		JPanel administrativePanel = new JPanel();
+		administrativePanel.setLayout(new BoxLayout(administrativePanel, BoxLayout.Y_AXIS));
+		administrativePanel.add(checkboxAdministrative);
+		administrativePanel.add(jAdministrativeReasonTextField);
+		checkboxAdministrative.addActionListener(e -> {
+			consensus.setAdministrativeFlag(checkboxAdministrative.isSelected());
+			if (!checkboxAdministrative.isSelected()) {
+				jAdministrativeReasonTextField.setText(null);
+			}
+			showAdministrativeFlag(administrativePanel, checkboxAdministrative.isSelected());
+		});
+		checkboxAdministrative.setSelected(consensus.isAdministrativeFlag());
+		showAdministrativeFlag(administrativePanel, consensus.isAdministrativeFlag());
+		panel.add(administrativePanel);
+
 		panel.setBorder(
 						BorderFactory.createCompoundBorder(
 										BorderFactory.createTitledBorder(
@@ -2203,6 +2231,19 @@ public class PatientInsertExtended extends JDialog {
 										BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		return panel;
+	}
+
+	private String getAdministrativeReason() {
+		String reason = jAdministrativeReasonTextField.getText().trim();
+		return reason.isEmpty() ? null : reason;
+	}
+
+	/** Borders the flagged block in red, so that it stands out while editing the patient. */
+	private void showAdministrativeFlag(JPanel administrativePanel, boolean flagged) {
+		jAdministrativeReasonTextField.setEnabled(flagged);
+		administrativePanel.setBorder(flagged
+						? BorderFactory.createLineBorder(Color.RED)
+						: BorderFactory.createEmptyBorder(1, 1, 1, 1));
 	}
 
 	private JScrollPane getJNoteScrollPane() {

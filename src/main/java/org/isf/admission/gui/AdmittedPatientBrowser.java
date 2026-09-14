@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -91,6 +91,7 @@ import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.opd.gui.OpdEditExtended;
 import org.isf.opd.model.Opd;
+import org.isf.patient.gui.PatientAdministrativeFlagWarning;
 import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.gui.PatientInsertExtended.PatientListener;
@@ -751,6 +752,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				}
 				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 				Patient pat = patient.getPatient();
+				PatientAdministrativeFlagWarning.showIfFlagged(this, pat);
 
 				PatientExamination patex;
 
@@ -868,6 +870,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				return;
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
+			PatientAdministrativeFlagWarning.showIfFlagged(this, patient.getPatient());
 			if (patient.getAdmission() != null) {
 				// edit previous admission or discharge
 				new AdmissionBrowser(myFrame, patient, true);
@@ -896,6 +899,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			patient = reloadSelectedPatient(table.getSelectedRow());
 
 			if (patient != null) {
+				PatientAdministrativeFlagWarning.showIfFlagged(this, patient.getPatient());
 				Opd opd = new Opd(0, ' ', -1, new Disease());
 				OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
 				newrecord.setLocationRelativeTo(null);
@@ -914,6 +918,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				return;
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
+			PatientAdministrativeFlagWarning.showIfFlagged(this, patient.getPatient());
 			Laboratory laboratory = new Laboratory(0, new Exam("", "", new ExamType("", ""), 0, ""), TimeTools.getNow(), "P", "", new Patient(), "");
 			if (GeneralData.LABEXTENDED) {
 				if (GeneralData.LABMULTIPLEINSERT) {
@@ -943,6 +948,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 
 			if (patient != null) {
 				Patient pat = patient.getPatient();
+				PatientAdministrativeFlagWarning.showIfFlagged(this, pat);
 				PatientBillEdit pbe = new PatientBillEdit(this, pat);
 				pbe.setVisible(true);
 			}
@@ -1006,6 +1012,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				return;
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
+			PatientAdministrativeFlagWarning.showIfFlagged(this, patient.getPatient());
 
 			TherapyEdit therapy = new TherapyEdit(this, patient.getPatient(), patient.getAdmission() != null);
 			therapy.setLocationRelativeTo(null);
