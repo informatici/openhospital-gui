@@ -96,3 +96,14 @@ jobs:
 
       - name: Build GUI with Maven
         run: mvn -B package --file pom.xml
+
+  # Separate from the build: it needs neither the JDK nor a companion core checkout, so it still
+  # reports when the build is held up by a dependent pull request in openhospital-core.
+  launchers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check that the launchers pin the same third-party versions
+        run: .github/scripts/check-launcher-versions.sh
