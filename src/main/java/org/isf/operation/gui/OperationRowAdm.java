@@ -81,11 +81,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionListen
 		OperationRow operationRow = new OperationRow();
 		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		operationRow.setOpResult(operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
-		try {
-			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
-		} catch (NumberFormatException e) {
-			operationRow.setTransUnit(0.0F);
-		}
+		operationRow.setTransUnit(textFieldUnit.getValue());
 		Operation op = (Operation) this.comboOperation.getSelectedItem();
 		operationRow.setOperation(op);
 		if (myAdmission != null) {
@@ -101,7 +97,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionListen
 			opeInter.setOpDate(this.textDate.getLocalDateTime());
 			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
-			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
+			opeInter.setTransUnit(textFieldUnit.getValue());
 			op = (Operation) this.comboOperation.getSelectedItem();
 			opeInter.setOperation(op);
 			opeInter.setPrescriber(MainMenu.getUser().getUserName());
