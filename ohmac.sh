@@ -86,7 +86,7 @@ TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
 
 ##################### Java configuration #######################
 JAVA_URL="https://cdn.azul.com/zulu/bin"
-JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-macosx_aarch64"
+JAVA_DISTRO="zulu17.68.17-ca-jre17.0.20-macosx_aarch64"
 JAVA_DIR=$JAVA_DISTRO
 JAVA_ARCH="arm64"
 EXT="tar.gz"
