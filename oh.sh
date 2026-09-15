@@ -784,14 +784,6 @@ function initialize_database {
 	fi
 }
 
-
-###################################################################
-function database_port_open {
-	# Check if the database server is accepting connections on its TCP port.
-
-	(exec 3<>/dev/tcp/$DATABASE_SERVER/$DATABASE_PORT) > /dev/null 2>&1
-}
-
 ###################################################################
 # Whether the database is accepting connections on its TCP port.
 #
