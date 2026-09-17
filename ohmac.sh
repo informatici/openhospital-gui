@@ -86,7 +86,7 @@ TMP_DIR_ESCAPED=$(echo $TMP_DIR | sed -e 's/\//\\\//g')
 
 ##################### Java configuration #######################
 JAVA_URL="https://cdn.azul.com/zulu/bin"
-JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-macosx_aarch64"
+JAVA_DISTRO="zulu17.68.203-ca-fx-jre17.0.20.1-macosx_aarch64"
 JAVA_DIR=$JAVA_DISTRO
 JAVA_ARCH="arm64"
 EXT="tar.gz"
@@ -243,6 +243,19 @@ function set_log_level {
 }
 
 ###################################################################
+# Zulu's macOS archives changed shape between 17.0.16 and 17.0.20.1: the older ones extracted a
+# flat JRE directory holding bin/java, the newer ones extract an .app-style bundle that keeps it
+# under Contents/Home. Look for both, so that bumping JAVA_DISTRO does not leave the launcher
+# pointing at a path the archive no longer has.
+function bundled_java_bin {
+	if [ -x "$OH_PATH/$OH_DIR/$JAVA_DIR/Contents/Home/bin/java" ]; then
+		echo "$OH_PATH/$OH_DIR/$JAVA_DIR/Contents/Home/bin/java"
+	else
+		echo "$OH_PATH/$OH_DIR/$JAVA_DIR/bin/java"
+	fi
+}
+
+###################################################################
 function java_check {
 # check if JAVA_BIN is already set and it exists
 echo ""
@@ -251,7 +264,7 @@ echo "is java installed?"
 # exactly at this path, so it has to be set before that too: leaving the variable empty would make
 # the launch command start with its first argument instead of the java binary.
 if [ -z "${JAVA_BIN:-}" ] || [ ! -x "$JAVA_BIN" ]; then
-	JAVA_BIN="$OH_PATH/$OH_DIR/$JAVA_DIR/bin/java"
+	JAVA_BIN="$(bundled_java_bin)"
 fi
 
 # if JAVA_BIN is not found download JRE
@@ -276,6 +289,7 @@ if [ ! -x "$JAVA_BIN" ]; then
 	echo "  Removing downloaded file..."
 	rm ./$OH_DIR/$JAVA_DISTRO.$EXT
 	echo "  Done!"
+	JAVA_BIN="$(bundled_java_bin)"
 fi
 
 if [ ! -x "$JAVA_BIN" ]; then
