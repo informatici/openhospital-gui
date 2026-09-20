@@ -384,7 +384,7 @@ where adm.ADM_DELETED = 'N'
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Disease Out}+":"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{DiseaseOut}+":"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField-21" x="107" y="113" width="157" height="14" uuid="883683e7-e068-48f0-832f-1d1dfbd4bd55"/>
