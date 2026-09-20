@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -67,6 +67,7 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
+import org.isf.medicalstock.gui.LotCostVariance;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
@@ -491,14 +492,18 @@ public class WardPharmacyRectify extends JDialog {
 				return null;
 			}
 
+			if (GeneralData.LOTWITHCOST) {
+				// OP-1300: a cancelled/zero cost aborts the new lot instead of pricing it at zero
+				BigDecimal cost = LotCostVariance.askNewLotCost(this, movStockInsertingManager, medical, this::askCost);
+				if (cost == null) {
+					return null;
+				}
+				addLot.setCost(cost);
+			}
 			jTextFieldLotNumber.setText(addLot.getCode());
 			jSpinnerNewQty.setValue(0.0d);
 			jLabelLotQty.setText("0");
 			jLabelInLot.setVisible(true);
-			if (GeneralData.LOTWITHCOST) {
-				BigDecimal cost = askCost();
-				addLot.setCost(cost);
-			}
 			selectedLot = addLot;
 
 		} else {
