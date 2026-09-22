@@ -22,19 +22,20 @@
 package org.isf.patient.gui;
 
 import java.awt.Component;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.isf.menu.manager.Context;
-import org.isf.patconsensus.manager.PatientConsensusBrowserManager;
-import org.isf.patconsensus.model.PatientConsensus;
+import org.isf.patadminissue.manager.PatientAdminIssueBrowserManager;
+import org.isf.patadminissue.model.PatientAdminIssue;
 import org.isf.patient.model.Patient;
 import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Signals that a patient has been flagged by the administration, so that the staff can check with them before providing
- * further services. The warning is informational only: it never prevents the operation the user is starting.
+ * Signals that a patient has open administrative issues, so that the staff can check with the administration before
+ * providing further services. The warning is informational only: it never prevents the operation the user is starting.
  */
 public final class PatientAdministrativeFlagWarning {
 
@@ -44,7 +45,7 @@ public final class PatientAdministrativeFlagWarning {
 	}
 
 	/**
-	 * Shows a dismissable warning when the given patient has been flagged by the administration.
+	 * Shows a dismissable warning listing the open administrative issues of the given patient, if any.
 	 *
 	 * @param parentComponent the component the dialog is shown over
 	 * @param patient the patient being selected, may be {@code null}
@@ -53,23 +54,18 @@ public final class PatientAdministrativeFlagWarning {
 		if (patient == null || patient.getCode() == null) {
 			return;
 		}
-		Optional<PatientConsensus> consensus;
+		List<PatientAdminIssue> openIssues;
 		try {
-			consensus = Context.getApplicationContext().getBean(PatientConsensusBrowserManager.class)
-							.getPatientConsensusByUserId(patient.getCode());
+			openIssues = Context.getApplicationContext().getBean(PatientAdminIssueBrowserManager.class).getOpenIssues(patient.getCode());
 		} catch (Exception e) {
 			// a warning must never get in the way of the operation the user is starting
-			LOGGER.error("Unable to read the consensus of patient {}", patient.getCode(), e);
+			LOGGER.error("Unable to read the administrative issues of patient {}", patient.getCode(), e);
 			return;
 		}
-		if (consensus.isEmpty() || !consensus.get().isAdministrativeFlag()) {
+		if (openIssues.isEmpty()) {
 			return;
 		}
-		String reason = consensus.get().getAdministrativeReason();
-		if (reason == null || reason.isBlank()) {
-			MessageDialog.warning(parentComponent, "angal.patient.consensus.administrative.warning.msg");
-		} else {
-			MessageDialog.warning(parentComponent, "angal.patient.consensus.administrative.warning.reason.fmt.msg", reason);
-		}
+		String reasons = openIssues.stream().map(issue -> "- " + issue.getReason()).collect(Collectors.joining("\n"));
+		MessageDialog.warning(parentComponent, "angal.patadminissue.warning.fmt.msg", reasons);
 	}
 }

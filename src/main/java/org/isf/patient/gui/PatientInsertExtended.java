@@ -35,6 +35,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -44,22 +45,28 @@ import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.EventListenerList;
 
 import org.isf.agetype.manager.AgeTypeBrowserManager;
@@ -72,6 +79,8 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
 import org.isf.menu.manager.Context;
+import org.isf.patadminissue.manager.PatientAdminIssueBrowserManager;
+import org.isf.patadminissue.model.PatientAdminIssue;
 import org.isf.patconsensus.manager.PatientConsensusBrowserManager;
 import org.isf.patconsensus.model.PatientConsensus;
 import org.isf.patient.manager.PatientBrowserManager;
@@ -82,8 +91,8 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
-import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.TimeTools;
 import org.isf.video.gui.PatientPhotoPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +107,7 @@ public class PatientInsertExtended extends JDialog {
 
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 	private PatientConsensusBrowserManager patientConsensusManager = Context.getApplicationContext().getBean(PatientConsensusBrowserManager.class);
+	private PatientAdminIssueBrowserManager patientAdminIssueManager = Context.getApplicationContext().getBean(PatientAdminIssueBrowserManager.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
 
@@ -152,7 +162,12 @@ public class PatientInsertExtended extends JDialog {
 
 	private PatientConsensus consensus;
 
-	private VoLimitedTextField jAdministrativeReasonTextField;
+	// COMPONENTS: Administrative issues (opened and resolved in the form, persisted on save)
+	private JPanel jAdministrativeIssuesPanel;
+	private JList<PatientAdminIssue> jOpenIssuesList;
+	private DefaultListModel<PatientAdminIssue> openIssuesModel;
+	private List<PatientAdminIssue> issuesToOpen = new ArrayList<>();
+	private List<PatientAdminIssue> issuesToResolve = new ArrayList<>();
 
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
@@ -526,9 +541,9 @@ public class PatientInsertExtended extends JDialog {
 						patient.setNote(jNoteTextArea.getText().trim());
 						try {
 							patient = patientBrowserManager.savePatient(patient);
-							consensus.setAdministrativeReason(getAdministrativeReason());
 							consensus.setPatient(patient);
 							patientConsensusManager.updatePatientConsensus(consensus);
+							saveAdministrativeIssues(patient);
 							if (patientHistory != null) {
 								patientHistory.setPatientId(patient.getCode());
 								patientHistoryManager.saveOrUpdate(patientHistory);
@@ -614,9 +629,9 @@ public class PatientInsertExtended extends JDialog {
 					patient.setNote(jNoteTextArea.getText().trim());
 					try {
 						patient = patientBrowserManager.savePatient(patient);
-						consensus.setAdministrativeReason(getAdministrativeReason());
 						consensus.setPatient(patient);
 						patientConsensusManager.updatePatientConsensus(consensus);
+						saveAdministrativeIssues(patient);
 						if (patientHistory != null) {
 							patientHistory.setPatientId(patient.getCode());
 							patientHistoryManager.saveOrUpdate(patientHistory);
@@ -2166,7 +2181,10 @@ public class PatientInsertExtended extends JDialog {
 				jRightPanel.add(photoPanel, BorderLayout.NORTH);
 			}
 			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);
-			jRightPanel.add(getJPanelConsensus(), BorderLayout.SOUTH);
+			JPanel jSouthPanel = new JPanel(new BorderLayout());
+			jSouthPanel.add(getJPanelConsensus(), BorderLayout.NORTH);
+			jSouthPanel.add(getJPanelAdministrativeIssues(), BorderLayout.SOUTH);
+			jRightPanel.add(jSouthPanel, BorderLayout.SOUTH);
 
 		}
 		return jRightPanel;
@@ -2200,28 +2218,6 @@ public class PatientInsertExtended extends JDialog {
 		checkboxService.setSelected(consensus.isServiceFlag());
 		panel.add(checkboxService);
 
-		JCheckBox checkboxAdministrative = new JCheckBox("<html><body style='width: 150px; padding-left: 10px;'>" +
-						MessageBundle.getMessage("angal.patient.consensus.administrative.txt") +
-						"</body></html>");
-		jAdministrativeReasonTextField = new VoLimitedTextField(PatientConsensus.ADMINISTRATIVE_REASON_LENGTH, 15);
-		jAdministrativeReasonTextField.setText(consensus.getAdministrativeReason());
-		new TextPrompt(MessageBundle.getMessage("angal.patient.consensus.administrative.reason.txt"), jAdministrativeReasonTextField);
-
-		JPanel administrativePanel = new JPanel();
-		administrativePanel.setLayout(new BoxLayout(administrativePanel, BoxLayout.Y_AXIS));
-		administrativePanel.add(checkboxAdministrative);
-		administrativePanel.add(jAdministrativeReasonTextField);
-		checkboxAdministrative.addActionListener(e -> {
-			consensus.setAdministrativeFlag(checkboxAdministrative.isSelected());
-			if (!checkboxAdministrative.isSelected()) {
-				jAdministrativeReasonTextField.setText(null);
-			}
-			showAdministrativeFlag(administrativePanel, checkboxAdministrative.isSelected());
-		});
-		checkboxAdministrative.setSelected(consensus.isAdministrativeFlag());
-		showAdministrativeFlag(administrativePanel, consensus.isAdministrativeFlag());
-		panel.add(administrativePanel);
-
 		panel.setBorder(
 						BorderFactory.createCompoundBorder(
 										BorderFactory.createTitledBorder(
@@ -2231,17 +2227,122 @@ public class PatientInsertExtended extends JDialog {
 		return panel;
 	}
 
-	private String getAdministrativeReason() {
-		String reason = jAdministrativeReasonTextField.getText().trim();
-		return reason.isEmpty() ? null : reason;
+	/**
+	 * The open administrative issues of the patient, with the buttons to open a new one and to resolve the selected one.
+	 * Changes are persisted together with the patient, on save.
+	 */
+	private JPanel getJPanelAdministrativeIssues() {
+		openIssuesModel = new DefaultListModel<>();
+		if (patient != null && patient.getCode() != null) {
+			try {
+				openIssuesModel.addAll(patientAdminIssueManager.getOpenIssues(patient.getCode()));
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
+		}
+		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		jOpenIssuesList = new JList<>(openIssuesModel);
+		jOpenIssuesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jOpenIssuesList.setVisibleRowCount(3);
+		jOpenIssuesList.setCellRenderer((list, issue, index, isSelected, cellHasFocus) -> renderer.getListCellRendererComponent(list,
+						MessageBundle.formatMessage("angal.patadminissue.openissue.fmt.txt", issue.getFromDate().format(dateFormatter), issue.getReason()),
+						index, isSelected, cellHasFocus));
+
+		JButton jOpenIssueButton = new JButton(MessageBundle.getMessage("angal.patadminissue.openissue.btn"));
+		jOpenIssueButton.setMnemonic(MessageBundle.getMnemonic("angal.patadminissue.openissue.btn.key"));
+		jOpenIssueButton.addActionListener(e -> openAdministrativeIssue());
+		JButton jResolveIssueButton = new JButton(MessageBundle.getMessage("angal.patadminissue.resolveissue.btn"));
+		jResolveIssueButton.setMnemonic(MessageBundle.getMnemonic("angal.patadminissue.resolveissue.btn.key"));
+		jResolveIssueButton.setEnabled(false);
+		jResolveIssueButton.addActionListener(e -> resolveSelectedAdministrativeIssue());
+		jOpenIssuesList.addListSelectionListener(e -> jResolveIssueButton.setEnabled(!jOpenIssuesList.isSelectionEmpty()));
+		JPanel buttonsPanel = new JPanel();
+		buttonsPanel.add(jOpenIssueButton);
+		buttonsPanel.add(jResolveIssueButton);
+
+		jAdministrativeIssuesPanel = new JPanel(new BorderLayout());
+		jAdministrativeIssuesPanel.add(new JScrollPane(jOpenIssuesList), BorderLayout.CENTER);
+		jAdministrativeIssuesPanel.add(buttonsPanel, BorderLayout.SOUTH);
+		showAdministrativeIssuesBorder();
+		return jAdministrativeIssuesPanel;
 	}
 
-	/** Borders the flagged block in red, so that it stands out while editing the patient. */
-	private void showAdministrativeFlag(JPanel administrativePanel, boolean flagged) {
-		jAdministrativeReasonTextField.setEnabled(flagged);
-		administrativePanel.setBorder(flagged
-						? BorderFactory.createLineBorder(Color.RED)
-						: BorderFactory.createEmptyBorder(1, 1, 1, 1));
+	/** Borders the panel in red while the patient has open issues, so that it stands out while editing the patient. */
+	private void showAdministrativeIssuesBorder() {
+		Border outer = openIssuesModel.isEmpty() ? BorderFactory.createEmptyBorder(1, 1, 1, 1) : BorderFactory.createLineBorder(Color.RED);
+		jAdministrativeIssuesPanel.setBorder(BorderFactory.createCompoundBorder(outer,
+						BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patadminissue.border"))));
+	}
+
+	private void openAdministrativeIssue() {
+		VoLimitedTextField reasonField = new VoLimitedTextField(PatientAdminIssue.REASON_LENGTH, 30);
+		reasonField.addAncestorListener(new AncestorListener() {
+
+			@Override
+			public void ancestorAdded(AncestorEvent event) {
+				reasonField.requestFocusInWindow();
+			}
+
+			@Override
+			public void ancestorRemoved(AncestorEvent event) {
+			}
+
+			@Override
+			public void ancestorMoved(AncestorEvent event) {
+			}
+		});
+		Object[] message = { MessageBundle.getMessage("angal.patadminissue.reason.txt"), reasonField };
+		int choice = JOptionPane.showConfirmDialog(this, message, MessageBundle.getMessage("angal.patadminissue.openissue.title"),
+						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (choice != JOptionPane.OK_OPTION) {
+			return;
+		}
+		String reason = reasonField.getText().trim();
+		if (reason.isEmpty()) {
+			MessageDialog.error(this, "angal.patadminissue.thereasonismandatory.msg");
+			return;
+		}
+		PatientAdminIssue issue = new PatientAdminIssue(patient, reason);
+		issue.setFromDate(TimeTools.getNow());
+		issuesToOpen.add(issue);
+		openIssuesModel.addElement(issue);
+		showAdministrativeIssuesBorder();
+	}
+
+	private void resolveSelectedAdministrativeIssue() {
+		PatientAdminIssue issue = jOpenIssuesList.getSelectedValue();
+		if (issue == null) {
+			return;
+		}
+		// an issue opened in this form and not saved yet is simply dropped
+		if (!issuesToOpen.remove(issue)) {
+			issuesToResolve.add(issue);
+		}
+		openIssuesModel.removeElement(issue);
+		showAdministrativeIssuesBorder();
+	}
+
+	/**
+	 * Persists the issues opened and resolved in this form, then reloads the list from the database so that the form
+	 * only ever holds persisted rows.
+	 *
+	 * @param savedPatient the patient, already saved
+	 * @throws OHServiceException
+	 */
+	private void saveAdministrativeIssues(Patient savedPatient) throws OHServiceException {
+		for (PatientAdminIssue issue : issuesToOpen) {
+			issue.setPatient(savedPatient);
+			patientAdminIssueManager.openIssue(issue);
+		}
+		for (PatientAdminIssue issue : issuesToResolve) {
+			patientAdminIssueManager.resolveIssue(issue);
+		}
+		issuesToOpen.clear();
+		issuesToResolve.clear();
+		openIssuesModel.clear();
+		openIssuesModel.addAll(patientAdminIssueManager.getOpenIssues(savedPatient.getCode()));
+		showAdministrativeIssuesBorder();
 	}
 
 	private JScrollPane getJNoteScrollPane() {
