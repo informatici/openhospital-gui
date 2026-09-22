@@ -35,7 +35,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -2233,21 +2232,15 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JPanel getJPanelAdministrativeIssues() {
 		openIssuesModel = new DefaultListModel<>();
-		if (patient != null && patient.getCode() != null) {
-			try {
-				openIssuesModel.addAll(patientAdminIssueManager.getOpenIssues(patient.getCode()));
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			}
-		}
 		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		jOpenIssuesList = new JList<>(openIssuesModel);
 		jOpenIssuesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jOpenIssuesList.setVisibleRowCount(3);
-		jOpenIssuesList.setCellRenderer((list, issue, index, isSelected, cellHasFocus) -> renderer.getListCellRendererComponent(list,
-						MessageBundle.formatMessage("angal.patadminissue.openissue.fmt.txt", issue.getFromDate().format(dateFormatter), issue.getReason()),
-						index, isSelected, cellHasFocus));
+		jOpenIssuesList.setCellRenderer((list, issue, index, isSelected, cellHasFocus) -> {
+			String openedOn = TimeTools.formatDateTime(issue.getFromDate(), TimeTools.DD_MM_YYYY);
+			String text = MessageBundle.formatMessage("angal.patadminissue.openissue.fmt.txt", openedOn, issue.getReason());
+			return renderer.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+		});
 
 		JButton jOpenIssueButton = new JButton(MessageBundle.getMessage("angal.patadminissue.openissue.btn"));
 		jOpenIssueButton.setMnemonic(MessageBundle.getMnemonic("angal.patadminissue.openissue.btn.key"));
@@ -2264,6 +2257,16 @@ public class PatientInsertExtended extends JDialog {
 		jAdministrativeIssuesPanel = new JPanel(new BorderLayout());
 		jAdministrativeIssuesPanel.add(new JScrollPane(jOpenIssuesList), BorderLayout.CENTER);
 		jAdministrativeIssuesPanel.add(buttonsPanel, BorderLayout.SOUTH);
+		if (patient != null && patient.getCode() != null) {
+			try {
+				openIssuesModel.addAll(patientAdminIssueManager.getOpenIssues(patient.getCode()));
+			} catch (OHServiceException e) {
+				// an empty list would look like a patient without issues: leave the panel unusable instead
+				OHServiceExceptionUtil.showMessages(e);
+				jOpenIssuesList.setEnabled(false);
+				jOpenIssueButton.setEnabled(false);
+			}
+		}
 		showAdministrativeIssuesBorder();
 		return jAdministrativeIssuesPanel;
 	}
@@ -2324,24 +2327,30 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	/**
-	 * Persists the issues opened and resolved in this form, then reloads the list from the database so that the form
-	 * only ever holds persisted rows.
+	 * Persists, all at once, the issues opened and resolved in this form, then reloads the list from the database so
+	 * that the form only ever holds persisted rows.
 	 *
 	 * @param savedPatient the patient, already saved
-	 * @throws OHServiceException
+	 * @throws OHServiceException if the issues could not be saved; the form keeps them for a further attempt
 	 */
 	private void saveAdministrativeIssues(Patient savedPatient) throws OHServiceException {
-		for (PatientAdminIssue issue : issuesToOpen) {
-			issue.setPatient(savedPatient);
-			patientAdminIssueManager.openIssue(issue);
+		if (issuesToOpen.isEmpty() && issuesToResolve.isEmpty()) {
+			return;
 		}
-		for (PatientAdminIssue issue : issuesToResolve) {
-			patientAdminIssueManager.resolveIssue(issue);
-		}
+		issuesToOpen.forEach(issue -> issue.setPatient(savedPatient));
+		patientAdminIssueManager.saveIssues(issuesToOpen, issuesToResolve);
 		issuesToOpen.clear();
 		issuesToResolve.clear();
+		List<PatientAdminIssue> openIssues;
+		try {
+			openIssues = patientAdminIssueManager.getOpenIssues(savedPatient.getCode());
+		} catch (OHServiceException e) {
+			// everything is saved: a failure here is only worth reporting
+			OHServiceExceptionUtil.showMessages(e);
+			return;
+		}
 		openIssuesModel.clear();
-		openIssuesModel.addAll(patientAdminIssueManager.getOpenIssues(savedPatient.getCode()));
+		openIssuesModel.addAll(openIssues);
 		showAdministrativeIssuesBorder();
 	}
 
