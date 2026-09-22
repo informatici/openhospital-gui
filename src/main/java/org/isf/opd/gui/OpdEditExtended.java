@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.swing.BorderFactory;
@@ -90,6 +91,7 @@ import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.operation.gui.OperationRowOpd;
+import org.isf.patient.gui.PatientAdministrativeFlagWarning;
 import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsert.PatientListener;
 import org.isf.patient.gui.PatientInsertExtended;
@@ -365,7 +367,21 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		opdNextVisitDate.setEnabled(true);
 		nextVisitWardBox.setEnabled(true);
 	}
-	
+
+	/**
+	 * Binds the form to a patient picked in this window, warning the user when the administration has flagged them. A
+	 * search selects its first result on its own, so the warning is only shown when the patient actually changes.
+	 */
+	private void selectPatient(Patient patient) {
+		boolean alreadyOnThisPatient = opdPatient != null && Objects.equals(opdPatient.getCode(), patient.getCode());
+		opdPatient = patient;
+		setPatient(opdPatient);
+		jPatientEditButton.setEnabled(true);
+		if (!alreadyOnThisPatient) {
+			PatientAdministrativeFlagWarning.showIfFlagged(this, opdPatient);
+		}
+	}
+
 	private void resetPatient() {
 		jFieldAge.setText("");
 		jFieldFirstName.setText("");
@@ -1303,17 +1319,13 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		}
 		//ADDED: Workaround for one item only
 		if (jComboPatResult.getItemCount() == 1) {
-			opdPatient = (Patient) jComboPatResult.getSelectedItem();
-			setPatient(opdPatient);
-			jPatientEditButton.setEnabled(true);
+			selectPatient((Patient) jComboPatResult.getSelectedItem());
 		}
 		//ADDED: Workaround for first item
 		if (jComboPatResult.getItemCount() > 0) {
 
 			if (jComboPatResult.getItemAt(0) instanceof Patient) {
-				opdPatient = (Patient) jComboPatResult.getItemAt(0);
-				setPatient(opdPatient);
-				jPatientEditButton.setEnabled(true);
+				selectPatient((Patient) jComboPatResult.getItemAt(0));
 			}
 		}
 		jTextPatientSrc.requestFocus();
@@ -1351,9 +1363,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 						jPatientEditButton.setEnabled(false);
 
 					} else {
-						opdPatient = (Patient) jComboPatResult.getSelectedItem();
-						setPatient(opdPatient);
-						jPatientEditButton.setEnabled(true);
+						selectPatient((Patient) jComboPatResult.getSelectedItem());
 					}
 				}
 			});
