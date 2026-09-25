@@ -114,7 +114,7 @@ public class TelemetryEdit extends ModalJFrame {
 		Map<String, Boolean> settings = telemetry != null && telemetry.getConsentMap() != null
 						? telemetry.getConsentMap()
 						: new HashMap<>();
-		List<CheckBoxWrapper> checkboxes = buildPermissionCheckboxes(Context.getApplicationContext(), settings);
+		List<CheckBoxWrapper> checkboxes = buildPermissionCheckboxes(Context.getApplicationContext(), settings, telemetry == null);
 		JButton confirmButton = buildConfirmButton(checkboxes);
 		JButton askMeLaterButton = buildAskMeLaterButton();
 		JButton disableNeverAskButton = buildDisableNeverAskButton();
@@ -178,8 +178,8 @@ public class TelemetryEdit extends ModalJFrame {
 	 * 
 	 * @return
 	 */
-	private List<CheckBoxWrapper> buildPermissionCheckboxes(ApplicationContext applicationContext,
-					Map<String, Boolean> consentMap) {
+	static List<CheckBoxWrapper> buildPermissionCheckboxes(ApplicationContext applicationContext,
+					Map<String, Boolean> consentMap, boolean initialConfiguration) {
 
 		Map<String, AbstractDataCollector> checkboxContractMap = applicationContext.getBeansOfType(AbstractDataCollector.class);
 		List<AbstractDataCollector> checkboxContractList = new ArrayList<>(checkboxContractMap.values());
@@ -190,7 +190,7 @@ public class TelemetryEdit extends ModalJFrame {
 		int[] i = { 0 };
 		checkboxContractList.forEach(springCheckboxConfigurationBean -> {
 			JCheckBox chb = new JCheckBox(springCheckboxConfigurationBean.getDescription(),
-							springCheckboxConfigurationBean.isSelected(consentMap));
+							initialConfiguration || springCheckboxConfigurationBean.isSelected(consentMap));
 			CheckBoxWrapper wrapper = new CheckBoxWrapper();
 			wrapper.setCheckbox(chb);
 			wrapper.setId(springCheckboxConfigurationBean.getId());
@@ -345,7 +345,9 @@ public class TelemetryEdit extends ModalJFrame {
 
 	private ActionListener buildDisableNeverAskButtonActionListener(TelemetryManager telemetryManager) {
 		return actionEvent -> {
-			Telemetry telemetry = telemetryManager.disable(new HashMap<>());
+			Telemetry settings = telemetryManager.retrieveSettings();
+			Map<String, Boolean> savedConsents = settings == null ? null : settings.getConsentMap();
+			Telemetry telemetry = telemetryManager.disable(savedConsents == null ? new HashMap<>() : savedConsents);
 			telemetryManager.save(telemetry);
 
 			// send opt-out info before stopping
