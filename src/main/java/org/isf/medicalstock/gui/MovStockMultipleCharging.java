@@ -71,9 +71,13 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
+import org.isf.medicalstock.manager.MovStockDraftManager;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
+import org.isf.medicalstock.model.MovementDraft;
+import org.isf.medicalstock.model.MovementDraftKind;
+import org.isf.medicalstock.model.MovementDraftRow;
 import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
@@ -133,6 +137,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private boolean[] columnBold = { false, false, false, false, false, true, false, false, false, true };
 	private Map<String, Medical> medicalMap;
 	private List<Integer> units;
+	private List<Integer> quantities;
 	private JTableModel model;
 	private String[] qtyOption = {
 			MessageBundle.getMessage("angal.medicalstock.multiplecharging.units"), // $NON-NLS-2$
@@ -157,6 +162,9 @@ public class MovStockMultipleCharging extends JDialog {
 	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext()
 		.getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
+	private MovStockDraftManager movStockDraftManager = Context.getApplicationContext().getBean(MovStockDraftManager.class);
+
+	private MovementDraft currentDraft;
 
 	private boolean isAutomaticLotIn() {
 		return GeneralData.AUTOMATICLOT_IN;
@@ -169,6 +177,7 @@ public class MovStockMultipleCharging extends JDialog {
 		super(owner, true);
 		initialize();
 		initcomponents();
+		offerDraftResume();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
@@ -294,15 +303,25 @@ public class MovStockMultipleCharging extends JDialog {
 		});
 		buttonPane.add(deleteButton);
 
+		JButton saveDraftButton = new JButton(MessageBundle.getMessage("angal.medicalstock.draft.btn"));
+		saveDraftButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.draft.btn.key"));
+		saveDraftButton.addActionListener(actionEvent -> saveDraft());
+		buttonPane.add(saveDraftButton);
+
 		JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		saveButton.addActionListener(actionEvent -> {
+			if (!checkStaleDraft()) {
+				return;
+			}
 			if (!checkAndPrepareMovements()) {
 				return;
 			}
 			if (!save()) {
+				rollBackMovements();
 				return;
 			}
+			deleteCurrentDraft();
 			dispose();
 		});
 		buttonPane.add(saveButton);
@@ -835,6 +854,10 @@ public class MovStockMultipleCharging extends JDialog {
 			fireTableDataChanged();
 		}
 
+		public boolean isNewLot(int row) {
+			return newLots.get(row);
+		}
+
 		@Override
 		public int getRowCount() {
 			return movements.size();
@@ -949,6 +972,7 @@ public class MovStockMultipleCharging extends JDialog {
 
 	private boolean checkAndPrepareMovements() {
 		boolean ok = true;
+		quantities = new ArrayList<>();
 
 		List<Movement> movements = model.getMovements();
 		if (movements.isEmpty()) {
@@ -969,11 +993,22 @@ public class MovStockMultipleCharging extends JDialog {
 			int option = units.get(i);
 			mov.setDate(jDateChooser.getLocalDateTime());
 			mov.setRefNo(jTextFieldReference.getText());
+			quantities.add(mov.getQuantity());
 			mov.setQuantity(calcTotal(mov, option));
 			mov.setType((MovementType) jComboBoxChargeType.getSelectedItem());
 			mov.setSupplier(((Supplier) jComboBoxSupplier.getSelectedItem()));
 		}
 		return ok;
+	}
+
+	private void rollBackMovements() {
+		List<Movement> movements = model.getMovements();
+
+		// Set back changed quantities
+		for (int i = 0; i < movements.size(); i++) {
+			Movement mov = movements.get(i);
+			mov.setQuantity(quantities.get(i));
+		}
 	}
 
 	private int calcTotal(Movement mov, int option) {
@@ -994,6 +1029,204 @@ public class MovStockMultipleCharging extends JDialog {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		return ok;
+	}
+
+	private void offerDraftResume() {
+		List<MovementDraft> drafts;
+		try {
+			drafts = movStockDraftManager.getMovementDrafts(MovementDraftKind.charge);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			return;
+		}
+		if (drafts.isEmpty()) {
+			return;
+		}
+		MovStockDraftChooser draftChooser = new MovStockDraftChooser(this, MovementDraftKind.charge, drafts);
+		draftChooser.setVisible(true);
+		MovementDraft selectedDraft = draftChooser.getSelectedDraft();
+		if (selectedDraft != null) {
+			resumeDraft(selectedDraft);
+		}
+	}
+
+	private void saveDraft() {
+		if (currentDraft != null && currentDraft.getId() != null) {
+			// re-fetch to survive a draft deleted or finalized elsewhere: a null result makes the mapper create a fresh draft
+			try {
+				currentDraft = movStockDraftManager.getMovementDraft(currentDraft.getId());
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+				return;
+			}
+		}
+		Object selectedSupplier = jComboBoxSupplier.getSelectedItem();
+		MovementDraft draft = MovStockDraftMapper.toDraft(currentDraft, MovementDraftKind.charge, (MovementType) jComboBoxChargeType.getSelectedItem(),
+			jDateChooser.getLocalDateTime(), jTextFieldReference.getText().trim(), selectedSupplier instanceof Supplier supplier ? supplier : null, null);
+		List<MovementDraftRow> draftRows = new ArrayList<>();
+		List<Movement> movements = model.getMovements();
+		for (int i = 0; i < movements.size(); i++) {
+			Movement movement = movements.get(i);
+			draftRows.add(MovStockDraftMapper.toDraftRow(movement, units.get(i), model.isNewLot(i), updateLots.contains(movement.getLot())));
+		}
+		try {
+			currentDraft = movStockDraftManager.saveMovementDraft(draft, draftRows);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			return;
+		}
+		MessageDialog.info(this, "angal.medicalstock.draft.draftsavedsuccessfully.msg");
+		dispose();
+	}
+
+	private void resumeDraft(MovementDraft draft) {
+		currentDraft = draft;
+		boolean headerRestored = restoreDraftHeader(draft);
+		List<MovementDraftRow> draftRows;
+		try {
+			draftRows = movStockDraftManager.getMovementDraftRows(draft.getId());
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			return;
+		}
+		List<String> skippedRows = new ArrayList<>();
+		List<String> reusedLots = new ArrayList<>();
+		for (MovementDraftRow draftRow : draftRows) {
+			restoreDraftRow(draftRow, skippedRows, reusedLots);
+		}
+		if (!headerRestored) {
+			MessageDialog.warning(this, "angal.medicalstock.draft.someheaderfieldscouldnotberestored.msg");
+		}
+		if (!reusedLots.isEmpty()) {
+			MessageDialog.warning(this, "angal.medicalstock.draft.somelotswerecreatedmeanwhile.fmt.msg", String.join(", ", reusedLots));
+		}
+		if (!skippedRows.isEmpty()) {
+			MessageDialog.warning(this, "angal.medicalstock.draft.somerowscouldnotberestored.fmt.msg", String.join(", ", skippedRows));
+		}
+	}
+
+	private boolean restoreDraftHeader(MovementDraft draft) {
+		boolean ok = true;
+		if (draft.getDate() != null) {
+			jDateChooser.setDateTime(draft.getDate());
+		}
+		jTextFieldReference.setText(draft.getRefNo() == null ? "" : draft.getRefNo());
+		if (draft.getType() != null) {
+			boolean found = false;
+			for (int i = 0; i < jComboBoxChargeType.getItemCount(); i++) {
+				if (jComboBoxChargeType.getItemAt(i).getCode().equals(draft.getType().getCode())) {
+					jComboBoxChargeType.setSelectedIndex(i);
+					found = true;
+					break;
+				}
+			}
+			ok = ok && found;
+		}
+		if (draft.getSupplier() != null) {
+			boolean found = false;
+			for (int i = 0; i < jComboBoxSupplier.getItemCount(); i++) {
+				Object item = jComboBoxSupplier.getItemAt(i);
+				if (item instanceof Supplier supplier && supplier.getSupId().equals(draft.getSupplier().getSupId())) {
+					jComboBoxSupplier.setSelectedIndex(i);
+					found = true;
+					break;
+				}
+			}
+			ok = ok && found;
+		}
+		return ok;
+	}
+
+	private void restoreDraftRow(MovementDraftRow draftRow, List<String> skippedRows, List<String> reusedLots) {
+		Medical medical = draftRow.getMedical();
+		if (medical == null || medical.getDeleted() != 'N') {
+			skippedRows.add(describeDraftRow(draftRow));
+			return;
+		}
+		boolean isNewLot = draftRow.isNewLot();
+		boolean updateLot = false;
+		String lotCode = draftRow.getLotCode() == null ? "" : draftRow.getLotCode();
+		Lot lot = null;
+		try {
+			if (isNewLot) {
+				if (!lotCode.isEmpty() && movStockInsertingManager.lotExists(lotCode)) {
+					// the lot code has been created meanwhile by someone else: downgrade the row to an existing lot
+					lot = movStockInsertingManager.getLot(lotCode);
+					isNewLot = false;
+					if (lot != null) {
+						reusedLots.add(lotCode);
+						updateLot = needsCostUpdate(lot) && applyDraftCost(lot, draftRow);
+					}
+				} else {
+					lot = MovStockDraftMapper.toNewLot(draftRow);
+				}
+			} else {
+				lot = movStockInsertingManager.getLot(lotCode);
+				if (lot != null) {
+					updateLot = draftRow.isUpdateLotCost() && needsCostUpdate(lot) && applyDraftCost(lot, draftRow);
+				}
+			}
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			lot = null;
+		}
+		if (lot == null) {
+			skippedRows.add(describeDraftRow(draftRow));
+			return;
+		}
+		Movement movement = new Movement(medical, (MovementType) jComboBoxChargeType.getSelectedItem(), null, lot, jDateChooser.getLocalDateTime(),
+			draftRow.getQuantity(), new Supplier(), jTextFieldReference.getText().trim());
+		model.addItem(movement, isNewLot, updateLot);
+		units.add(draftRow.getUnitsOrPackets());
+	}
+
+	private boolean applyDraftCost(Lot lot, MovementDraftRow draftRow) {
+		if (draftRow.getLotCost() == null) {
+			return false;
+		}
+		lot.setCost(draftRow.getLotCost());
+		return true;
+	}
+
+	private String describeDraftRow(MovementDraftRow draftRow) {
+		return draftRow.getMedical() == null ? String.valueOf(draftRow.getId()) : draftRow.getMedical().getDescription();
+	}
+
+	private boolean checkStaleDraft() {
+		if (currentDraft == null || currentDraft.getId() == null) {
+			return true;
+		}
+		MovementDraft draft = null;
+		try {
+			draft = movStockDraftManager.getMovementDraft(currentDraft.getId());
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
+		if (draft != null) {
+			return true;
+		}
+		int answer = MessageDialog.yesNo(this, "angal.medicalstock.draft.draftnolongerexists.msg");
+		if (answer != JOptionPane.YES_OPTION) {
+			return false;
+		}
+		currentDraft = null;
+		return true;
+	}
+
+	private void deleteCurrentDraft() {
+		if (currentDraft == null || currentDraft.getId() == null) {
+			return;
+		}
+		try {
+			MovementDraft draft = movStockDraftManager.getMovementDraft(currentDraft.getId());
+			if (draft != null) {
+				movStockDraftManager.deleteMovementDraft(draft);
+			}
+		} catch (OHServiceException e) {
+			// the movements have already been inserted: only warn about the leftover draft
+			OHServiceExceptionUtil.showMessages(e);
+		}
+		currentDraft = null;
 	}
 
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
