@@ -71,6 +71,8 @@ HELP_FILE="OH-readme.txt"
 LOG_FILE="startup.log"
 OH_LOG_FILE="openhospital.log"
 API_LOG_FILE="api.log"
+API_PID_FILE="oh-api.pid"
+API_SERVER_PID="" # set when this script starts the API server
 
 # imaging / dicom
 DICOM_MAX_SIZE="4M"
@@ -634,6 +636,10 @@ function start_db {
 }
 ###################################################################
 function stop_db {
+	# only the modes that start the database server stop it: in CLIENT mode it is not this script's
+	if [ "$OH_MODE" != "PORTABLE" ] && [ "$OH_MODE" != "SERVER" ]; then
+		return
+	fi
     brew services stop mariadb
     wait_for_database_stopped;
 }
@@ -817,8 +823,12 @@ function start_api_server {
 		*)     LAUNCHER="org.springframework.boot.loader.launch.JarLauncher" ;;
 	esac
 	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
-	"$JAVA_BIN" -client -Xms64m -Xmx1024m \
+	# Started directly, not by Tomcat as in oh.sh, the API writes its pid file at startup and stops
+	# if it cannot. The path is given here because $API_SETTINGS leaves it empty, and a copy of that
+	# file written by an earlier run is not rewritten on the next one.
+	"$JAVA_BIN" -client -Xms64m -Xmx1024m -Dspring.pid.file="$OH_PATH/$TMP_DIR/$API_PID_FILE" \
 		-cp "$API_ARTIFACT:$OH_PATH/$OH_DIR/rsc:$OH_PATH/$OH_DIR/static" $LAUNCHER >> "$OH_PATH/$LOG_DIR/$API_LOG_FILE" 2>&1 &
+	API_SERVER_PID=$!
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting the Open Hospital API server. Exiting."
@@ -827,6 +837,16 @@ function start_api_server {
 		exit 4
 	fi
 	cd "$OH_PATH"
+}
+
+###################################################################
+function stop_api_server {
+	# a process of its own here, not a Tomcat webapp: left alone it would outlive the launcher,
+	# keep its port and, in PORTABLE mode, run on without its database
+	if [ -n "$API_SERVER_PID" ]; then
+		echo "Stopping API server..."
+		kill "$API_SERVER_PID" 2>/dev/null
+	fi
 }
 
 ###################################################################
@@ -846,6 +866,7 @@ function start_gui {
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."
+		stop_api_server;
 		stop_db;
 		cd "$CURRENT_DIR"
 		exit 4
@@ -1188,6 +1209,7 @@ if [ "$OH_MODE" = "SERVER" ]; then
 		trap ctrl_c INT
 		function ctrl_c() {
 			echo "Exiting Open Hospital..."
+			stop_api_server;
 			stop_db;		
 			cd "$CURRENT_DIR"
 			exit 0
@@ -1199,6 +1221,7 @@ else
 
 	# Close and exit
 	echo "Exiting Open Hospital..."
+	stop_api_server;
 	stop_db;
 
 	# go back to starting directory
