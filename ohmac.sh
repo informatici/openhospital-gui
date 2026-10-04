@@ -119,8 +119,11 @@ OH_UI_PROD="oh-ui"
 # server.servlet.context-path=/, where oh.sh deploys a Tomcat webapp of that name
 OH_UI_URL="http://$OH_UI_HOST:$OH_UI_PORT"
 
-# empty as in oh.sh, where the assignment is commented out
-OH_API_PID=""
+# oh.sh keeps this commented out because there Tomcat starts the API. Started directly, as here,
+# the API writes its pid file at startup and stops if it cannot. Relative to $OH_DIR, where it runs.
+OH_API_PID="../$TMP_DIR/oh-api.pid"
+# pid of the API server process, set when this script starts it
+API_SERVER_PID=""
 
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 EXPERT_MODE="off"
@@ -634,6 +637,10 @@ function start_db {
 }
 ###################################################################
 function stop_db {
+    # only the modes that start the database server stop it: in CLIENT mode it is not this script's
+    if [ "$OH_MODE" != "PORTABLE" ] && [ "$OH_MODE" != "SERVER" ]; then
+        return
+    fi
     brew services stop mariadb
     wait_for_database_stopped;
 }
@@ -817,8 +824,11 @@ function start_api_server {
 		*)     LAUNCHER="org.springframework.boot.loader.launch.JarLauncher" ;;
 	esac
 	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
-	"$JAVA_BIN" -client -Xms64m -Xmx1024m \
+	# the pid file path is also given here: a copy of $API_SETTINGS written by an earlier run has
+	# it empty, and that file is rewritten only when the API server is switched on again
+	"$JAVA_BIN" -client -Xms64m -Xmx1024m -Dspring.pid.file="$OH_API_PID" \
 		-cp "$API_ARTIFACT:$OH_PATH/$OH_DIR/rsc:$OH_PATH/$OH_DIR/static" $LAUNCHER >> "$OH_PATH/$LOG_DIR/$API_LOG_FILE" 2>&1 &
+	API_SERVER_PID=$!
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting the Open Hospital API server. Exiting."
@@ -827,6 +837,16 @@ function start_api_server {
 		exit 4
 	fi
 	cd "$OH_PATH"
+}
+
+###################################################################
+function stop_api_server {
+	# a process of its own here, not a Tomcat webapp: left alone it would outlive the launcher,
+	# keep its port and, in PORTABLE mode, run on without its database
+	if [ -n "$API_SERVER_PID" ]; then
+		echo "Stopping API server..."
+		kill "$API_SERVER_PID" 2>/dev/null
+	fi
 }
 
 ###################################################################
@@ -846,6 +866,7 @@ function start_gui {
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."
+		stop_api_server;
 		stop_db;
 		cd "$CURRENT_DIR"
 		exit 4
@@ -1188,6 +1209,7 @@ if [ "$OH_MODE" = "SERVER" ]; then
 		trap ctrl_c INT
 		function ctrl_c() {
 			echo "Exiting Open Hospital..."
+			stop_api_server;
 			stop_db;		
 			cd "$CURRENT_DIR"
 			exit 0
@@ -1199,6 +1221,7 @@ else
 
 	# Close and exit
 	echo "Exiting Open Hospital..."
+	stop_api_server;
 	stop_db;
 
 	# go back to starting directory
