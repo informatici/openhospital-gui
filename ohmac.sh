@@ -71,8 +71,6 @@ HELP_FILE="OH-readme.txt"
 LOG_FILE="startup.log"
 OH_LOG_FILE="openhospital.log"
 API_LOG_FILE="api.log"
-API_PID_FILE="oh-api.pid"
-API_SERVER_PID="" # set when this script starts the API server
 
 # imaging / dicom
 DICOM_MAX_SIZE="4M"
@@ -121,8 +119,11 @@ OH_UI_PROD="oh-ui"
 # server.servlet.context-path=/, where oh.sh deploys a Tomcat webapp of that name
 OH_UI_URL="http://$OH_UI_HOST:$OH_UI_PORT"
 
-# empty as in oh.sh, where the assignment is commented out
-OH_API_PID=""
+# oh.sh keeps this commented out because there Tomcat starts the API. Started directly, as here,
+# the API writes its pid file at startup and stops if it cannot. Relative to $OH_DIR, where it runs.
+OH_API_PID="../$TMP_DIR/oh-api.pid"
+# pid of the API server process, set when this script starts it
+API_SERVER_PID=""
 
 # activate expert mode - set to "on" to enable advanced functions - use at your own risk!
 EXPERT_MODE="off"
@@ -636,10 +637,10 @@ function start_db {
 }
 ###################################################################
 function stop_db {
-	# only the modes that start the database server stop it: in CLIENT mode it is not this script's
-	if [ "$OH_MODE" != "PORTABLE" ] && [ "$OH_MODE" != "SERVER" ]; then
-		return
-	fi
+    # only the modes that start the database server stop it: in CLIENT mode it is not this script's
+    if [ "$OH_MODE" != "PORTABLE" ] && [ "$OH_MODE" != "SERVER" ]; then
+        return
+    fi
     brew services stop mariadb
     wait_for_database_stopped;
 }
@@ -823,10 +824,9 @@ function start_api_server {
 		*)     LAUNCHER="org.springframework.boot.loader.launch.JarLauncher" ;;
 	esac
 	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
-	# Started directly, not by Tomcat as in oh.sh, the API writes its pid file at startup and stops
-	# if it cannot. The path is given here because $API_SETTINGS leaves it empty, and a copy of that
-	# file written by an earlier run is not rewritten on the next one.
-	"$JAVA_BIN" -client -Xms64m -Xmx1024m -Dspring.pid.file="$OH_PATH/$TMP_DIR/$API_PID_FILE" \
+	# the pid file path is also given here: a copy of $API_SETTINGS written by an earlier run has
+	# it empty, and that file is rewritten only when the API server is switched on again
+	"$JAVA_BIN" -client -Xms64m -Xmx1024m -Dspring.pid.file="$OH_API_PID" \
 		-cp "$API_ARTIFACT:$OH_PATH/$OH_DIR/rsc:$OH_PATH/$OH_DIR/static" $LAUNCHER >> "$OH_PATH/$LOG_DIR/$API_LOG_FILE" 2>&1 &
 	API_SERVER_PID=$!
 
