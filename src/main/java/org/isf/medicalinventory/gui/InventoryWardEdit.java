@@ -1689,6 +1689,8 @@ public class InventoryWardEdit extends ModalJFrame {
 		List<Lot> lots = null;
 		Medical medical = null;
 		MedicalInventoryRow inventoryRowTemp = null;
+		wardCode = ((Ward) Objects.requireNonNull(wardComboBox.getSelectedItem())).getCode();
+		Ward ward = wardManager.findWard(wardCode);
 		if (code != null) {
 			medical = medicalBrowsingManager.getMedicalByMedicalCode(code);
 			if (medical != null) {
@@ -1724,7 +1726,8 @@ public class InventoryWardEdit extends ModalJFrame {
 				ListIterator<Lot> lotListIterator = lots.listIterator();
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
-					inventoryRowTemp = new MedicalInventoryRow(null, lot.getMainStoreQuantity(), lot.getMainStoreQuantity(), null, med, lot);
+					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, lotQuantityInWard, lotQuantityInWard, null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 						numberOfMedicalWithoutSameLotAdded = numberOfMedicalWithoutSameLotAdded + 1;
