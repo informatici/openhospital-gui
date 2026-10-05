@@ -62,9 +62,14 @@ LOG_LEVEL="INFO"
 DEMO_DATA="off"
 DEMO_DATABASE="ohdemo"
 
+##################### JAVA/JRE configuration ######################
 # set JAVA_BIN
 # Uncomment this if you want to use system wide JAVA
 #JAVA_BIN=`which java`
+
+# set JAVA_HOME
+# Uncomment this if you want to use system wide JAVA_HOME
+#JAVA_HOME="/opt/jdk/"
 
 ##################### Database configuration #######################
 DATABASE_SERVER="localhost"
@@ -234,7 +239,7 @@ function script_menu {
 	echo "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
 	echo " ------------------------------------------------------------------------"
 	if [ "$EXPERT_MODE" == "on" ]; then
-		echo "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		echo "| Expert mode: $EXPERT_MODE | EXPERIMENTAL: API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
 		echo " ------------------------------------------------------------------------"
 	fi
 	echo ""
@@ -350,7 +355,7 @@ function read_settings {
 		
 		OH_MODE=$MODE
 		OH_LANGUAGE=$LANGUAGE
-		OH_SINGLE_USER=$SINGLE_USER
+		OH_SINGLE_USER=$SINGLEUSER
 		OH_DOC_DIR=$OH_DOC_DIR
 		DEMO_DATA=$DEMODATA
 		API_SERVER=$APISERVER
@@ -646,6 +651,12 @@ fi
 
 echo "Java found!"
 echo "Using $JAVA_BIN"
+
+# set JAVA_HOME
+if ( [ ! -x "$JAVA_HOME" ] ); then
+	echo "Setting JAVA_HOME..."
+	JAVA_HOME="$OH_PATH/$JAVA_DIR"
+fi
 }
 
 ###################################################################
@@ -783,7 +794,6 @@ function initialize_database {
 		exit 2
 	fi
 }
-
 
 ###################################################################
 function database_port_open {
