@@ -656,7 +656,7 @@ echo "Using $JAVA_BIN"
 if ( [ ! -x "$JAVA_HOME" ] ); then
 	echo "Setting JAVA_HOME..."
 	JAVA_HOME="$OH_PATH/$JAVA_DIR"
-	export $JAVA_HOME
+	export JAVA_HOME
 fi
 }
 
