@@ -68,6 +68,10 @@ EXAMINATIONCHART=patient_examination
 OPDCHART=patient_opd_chart
 PATIENTSHEET=patient_clinical_sheet_ver3
 VISITSHEET=WardVisits
+# Compile the .jrxml report templates into .jasper at startup when the .jasper is missing or older than the .jrxml.
+# WARNING: JRXML templates can contain executable expressions; only enable this when the report files are trusted
+# (i.e. not writable by untrusted users). Default: no.
+AUTOCOMPILEJRXML=no
 
 # security
 SESSIONTIMEOUT=5
