@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -369,7 +369,7 @@ public class WardPharmacyRectify extends JDialog {
 
 			BigDecimal lotQty = BigDecimal.ZERO;
 			try {
-				lotQty = BigDecimal.valueOf(movWardBrowserManager.getCurrentQuantityInWard(selectedWard, selectedLot));
+				lotQty = movWardBrowserManager.getCurrentQuantityInWard(selectedWard, selectedLot);
 			} catch (OHServiceException e2) {
 				OHServiceExceptionUtil.showMessages(e2);
 			}
@@ -378,6 +378,12 @@ public class WardPharmacyRectify extends JDialog {
 
 			if (movQuantity.signum() == 0 || newQty.signum() < 0) {
 				MessageDialog.error(this, "angal.medicalstockward.rectify.pleaseinsertavalidvalue");
+				return;
+			}
+			// an increase is credited through the integer incoming quantity of the ward: MovWardBrowserManager
+			// refuses a fractional one, it is checked here as well so that nothing is stored before the refusal
+			if (movQuantity.signum() < 0 && movQuantity.remainder(BigDecimal.ONE).signum() != 0) {
+				MessageDialog.error(this, "angal.medicalstockwardedit.increasequantitymustbeaninteger.msg");
 				return;
 			}
 			if (newQty.signum() == 0) {
