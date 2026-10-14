@@ -119,9 +119,14 @@ $script:OH_SINGLE_USER="no"
 $script:DEMO_DATA="off"
 $script:DEMO_DATABASE="ohdemo"
 
+##################### JAVA/JRE configuration #######################
 # set JAVA_BIN 
 # Uncomment this if you want to use system wide JAVA
 #$script:JAVA_BIN="C:\Program Files\JAVA\bin\java.exe"
+
+# set JAVA_HOME
+# Uncomment this if you want to use system wide JAVA_HOME
+#$script:JAVA_HOME="C:\Program Files\JAVA\"
 
 ##################### Database configuration #######################
 $script:DATABASE_SERVER="127.0.0.1"
@@ -138,8 +143,6 @@ $script:OH_DOC_DIR="doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
 
-# seconds to wait for the database to start listening, or to release its port on shutdown
-$script:DATABASE_WAIT_TIMEOUT=90
 $script:PHOTO_DIR="data/photo"
 $script:BACKUP_DIR="data/dump"
 $script:LOG_DIR="data/log"
@@ -175,6 +178,9 @@ $script:EXT="zip"
 
 # mysql configuration file
 $script:MYSQL_CONF_FILE="my.cnf"
+
+# seconds to wait for the database to start listening, or to release its port on shutdown
+$script:DATABASE_WAIT_TIMEOUT=90
 
 # OH configuration files - see also settings.properties
 $script:OH_SETTINGS="settings.properties"
@@ -306,7 +312,7 @@ function script_menu {
 	Write-Host "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
 	Write-Host " ------------------------------------------------------------------------"
 	if ( $EXPERT_MODE -eq "on" ) {
-		Write-Host "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		Write-Host "| Expert mode: $EXPERT_MODE | EXPERIMENTAL: API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
 		Write-Host " ------------------------------------------------------------------------"
 	}
 	Write-Host ""
@@ -406,7 +412,7 @@ function read_settings {
 		
 		$script:OH_MODE=$oh_settings.MODE
 		$script:OH_LANGUAGE=$oh_settings.LANGUAGE
-		$script:OH_SINGLE_USER=$oh_settings.SINGLE_USER
+		$script:OH_SINGLE_USER=$oh_settings.SINGLEUSER
 		$script:OH_DOC_DIR=$oh_settings.OH_DOC_DIR
 		$script:DEMO_DATA=$oh_settings.DEMODATA
 		$script:API_SERVER=$oh_settings.APISERVER
@@ -712,6 +718,13 @@ function java_check {
 	}
 	Write-Host "Java found!"
 	Write-Host "Using $JAVA_BIN"
+
+	# set JAVA_HOME
+	if ( !( $JAVA_HOME ) ) {
+		# set default
+		Write-Host "Setting JAVA_HOME..."
+		$script:JAVA_HOME="$OH_PATH\$JAVA_DIR"
+	}
 }
 
 ###################################################################
