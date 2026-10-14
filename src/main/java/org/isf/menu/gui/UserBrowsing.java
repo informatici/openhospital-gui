@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -23,7 +23,6 @@ package org.isf.menu.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -31,21 +30,16 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.UserEdit.UserListener;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
 import org.isf.menu.model.UserGroup;
-import org.isf.utils.db.BCrypt;
 import org.isf.utils.exception.OHDataIntegrityViolationException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -149,94 +143,15 @@ public class UserBrowsing extends ModalJFrame implements UserListener {
 				selectedrow = table.getSelectedRow();
 				user = (User) model.getValueAt(table.getSelectedRow(), -1);
 
-				// 1. Insert new password
-				JPasswordField pwd = new JPasswordField(10);
-				pwd.addAncestorListener(new AncestorListener() {
-
-					@Override
-					public void ancestorRemoved(AncestorEvent event) {
-					}
-
-					@Override
-					public void ancestorMoved(AncestorEvent event) {
-					}
-
-					@Override
-					public void ancestorAdded(AncestorEvent event) {
-						event.getComponent().requestFocusInWindow();
-					}
-				});
-				String newPassword = "";
-				JPanel stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-				if (GeneralData.STRONGLENGTH != 0) {
-					stepPanel.add(
-						new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.fmt.msg", GeneralData.STRONGLENGTH)));
-				} else {
-					stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.msg")));
-				}
-
-				stepPanel.add(pwd);
-
-				while (newPassword.isEmpty()) {
-					int action = JOptionPane
-						.showConfirmDialog(this, stepPanel, MessageBundle.getMessage("angal.userbrowser.resetpassword.title"),
-							JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-					if (JOptionPane.CANCEL_OPTION == action) {
-						return;
-					}
-					newPassword = new String(pwd.getPassword());
-					if (newPassword.isEmpty()) {
-						MessageDialog.error(this, "angal.userbrowser.passwordmustnotbeblank.msg");
-						newPassword = "";
-						pwd.setText("");
-					} else {
-						if (GeneralData.STRONGLENGTH != 0 && newPassword.length() < GeneralData.STRONGLENGTH) {
-							MessageDialog.error(this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
-							newPassword = "";
-							pwd.setText("");
-						} else {
-							if (!userBrowsingManager.isPasswordStrong(newPassword)) {
-								MessageDialog.error(this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
-								newPassword = "";
-								pwd.setText("");
-							}
-						}
-					}
-				}
-
-				// 2. Retype new password
-				pwd.setText("");
-				stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-				stepPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step2.pleaserepeatthenewpassword.label")));
-				stepPanel.add(pwd);
-				int action = JOptionPane
-					.showConfirmDialog(this, stepPanel, MessageBundle.getMessage("angal.userbrowser.resetpassword.title"),
-						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-				if (JOptionPane.CANCEL_OPTION == action) {
+				// null user: an administrator reset does not check the target user's current password (the admin does not know it)
+				String hashed = ChangePasswordDialog.promptForNewPassword(this, userBrowsingManager, null,
+					MessageBundle.getMessage("angal.userbrowser.resetpassword.title"));
+				if (hashed == null) {
 					return;
 				}
-				String newPassword2 = new String(pwd.getPassword());
-
-				// 3. Check & Save
-				if (!newPassword.equals(newPassword2)) {
-					MessageDialog.error(this, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
-					newPassword = null;
-					newPassword2 = null;
-					return;
-				}
-
-				// BCrypt has a maximum length of 72 characters
-				// see for example, https://security.stackexchange.com/questions/152430/what-maximum-password-length-to-choose-when-using-bcrypt
-				if (newPassword.length() > 72) {
-					MessageDialog.error(this, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
-					newPassword = null;
-					newPassword2 = null;
-					return;
-				}
-				String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-				newPassword = null;
-				newPassword2 = null;
 				user.setPasswd(hashed);
+				// OP-896: a password set by an administrator must be changed by the user at next login
+				user.setPasswdMustChange(true);
 				try {
 					if (userBrowsingManager.updatePassword(user) != null) {
 						MessageDialog.info(this, "angal.userbrowser.thepasswordhasbeenchanged.msg");

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -204,6 +204,27 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				}
 			}
 			if (found) {
+				// OP-896: force a password change before granting access when required (admin reset or expired lease)
+				boolean passwordExpired = userBrowsingManager.isPasswordExpired(user);
+				if (user.isPasswdMustChange() || passwordExpired) {
+					// explain why the change is being forced, before opening the change-password dialog
+					if (passwordExpired) {
+						MessageDialog.info(this, "angal.login.yourpasswordhasexpiredafterdays.fmt.msg", userBrowsingManager.getPasswordLeaseDays());
+					} else {
+						MessageDialog.info(this, "angal.login.yourpasswordwasresetbyanadministrator.msg");
+					}
+					String hashed = ChangePasswordDialog.promptForNewPassword(this, userBrowsingManager, user,
+						MessageBundle.getMessage("angal.login.changepassword.title"));
+					if (hashed == null) {
+						MessageDialog.error(this, "angal.login.youmustchangethepasswordbeforeloggingin.msg");
+						pwd.setText("");
+						pwd.grabFocus();
+						return;
+					}
+					user.setPasswd(hashed);
+					user.setPasswdMustChange(false);
+					userBrowsingManager.updatePassword(user);
+				}
 				userBrowsingManager.setLastLogin(user);
 				// good PW, so reset failed attempts if there are any
 				if (user.getFailedAttempts() > 0) {

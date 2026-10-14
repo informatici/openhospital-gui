@@ -297,7 +297,7 @@ ORDER BY DATE DESC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{to}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-22" x="158" y="33" width="155" height="18" uuid="e9a133fe-d920-478c-8e32-715adc027093"/>

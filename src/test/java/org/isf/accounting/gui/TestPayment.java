@@ -21,6 +21,8 @@
  */
 package org.isf.accounting.gui;
 
+import java.math.BigDecimal;
+
 import org.isf.accounting.model.Bill;
 import org.isf.accounting.model.BillPayments;
 
@@ -28,7 +30,7 @@ public class TestPayment {
 
 	public static BillPayments withAmountAndBill(double amount, Bill bill) {
 		BillPayments billPayments = new BillPayments();
-		billPayments.setAmount(amount);
+		billPayments.setAmount(BigDecimal.valueOf(amount));
 		billPayments.setBill(bill);
 		return billPayments;
 	}
