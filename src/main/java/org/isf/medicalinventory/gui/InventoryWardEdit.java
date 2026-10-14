@@ -1585,7 +1585,8 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med,
+						lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1619,7 +1620,8 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med,
+						lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1674,7 +1676,8 @@ public class InventoryWardEdit extends ModalJFrame {
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
 					int lotQuantityInWard = movWardBrowserManager.getCurrentQuantityInWard(ward, lot);
-					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med, lot);
+					inventoryRowTemp = new MedicalInventoryRow(null, BigDecimal.valueOf(lotQuantityInWard), BigDecimal.valueOf(lotQuantityInWard), null, med,
+						lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
 					}
@@ -1727,7 +1730,7 @@ public class InventoryWardEdit extends ModalJFrame {
 				ListIterator<Lot> lotListIterator = lots.listIterator();
 				while (lotListIterator.hasNext()) {
 					Lot lot = lotListIterator.next();
-					BigDecimal mainStoreQty = BigDecimal.valueOf(movWardBrowserManager.getCurrentQuantityInWard(ward, lot));
+					BigDecimal lotQuantityInWard = BigDecimal.valueOf(movWardBrowserManager.getCurrentQuantityInWard(ward, lot));
 					inventoryRowTemp = new MedicalInventoryRow(null, lotQuantityInWard, lotQuantityInWard, null, med, lot);
 					if (!existInInventorySearchList(inventoryRowTemp)) {
 						inventoryRowsList.add(inventoryRowTemp);
