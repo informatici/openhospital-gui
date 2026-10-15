@@ -1,51 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WardPharmacyOutcomes" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="WardPharmacyOutcomes" whenResourceMissingType="Key" uuid="ce0e3de5-8e25-4ad5-bb74-0019a2ccae19">
+<jasperReport name="WardPharmacyOutcomes" language="java" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="WardPharmacyOutcomes" whenResourceMissingType="Key" uuid="ce0e3de5-8e25-4ad5-bb74-0019a2ccae19">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<import value="net.sf.jasperreports.engine.*"/>
-	<import value="java.util.*"/>
-	<import value="net.sf.jasperreports.engine.data.*"/>
-	<parameter name="ospedaleNome" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="ospedaleTel" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="ospedaleFax" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="ospedaleMail" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="ospedaleIndirizzo" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="ospedaleCitta" class="java.lang.String" isForPrompting="false"/>
+	<import>java.util.*</import>
+	<import>net.sf.jasperreports.engine.data.*</import>
+	<import>net.sf.jasperreports.engine.*</import>
+	<parameter name="ospedaleNome" forPrompting="false" class="java.lang.String"/>
+	<parameter name="ospedaleTel" forPrompting="false" class="java.lang.String"/>
+	<parameter name="ospedaleFax" forPrompting="false" class="java.lang.String"/>
+	<parameter name="ospedaleMail" forPrompting="false" class="java.lang.String"/>
+	<parameter name="ospedaleIndirizzo" forPrompting="false" class="java.lang.String"/>
+	<parameter name="ospedaleCitta" forPrompting="false" class="java.lang.String"/>
 	<field name="ward" class="java.lang.String"/>
 	<field name="date" class="java.util.Date"/>
 	<field name="medical" class="java.lang.String"/>
-	<field name="quantity" class="java.lang.Double"/>
+	<field name="quantity" class="java.math.BigDecimal"/>
 	<field name="patient" class="java.lang.Boolean"/>
 	<field name="lot" class="java.lang.String"/>
-	<variable name="Count" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{date}]]></variableExpression>
+	<variable name="Count" calculation="Count" class="java.lang.Integer">
+		<expression><![CDATA[$F{date}]]></expression>
 	</variable>
-	<variable name="CountDay" class="java.lang.Integer" resetType="Group" resetGroup="DATE" calculation="Count">
-		<variableExpression><![CDATA[$F{date}]]></variableExpression>
+	<variable name="CountDay" resetType="Group" calculation="Count" resetGroup="DATE" class="java.lang.Integer">
+		<expression><![CDATA[$F{date}]]></expression>
 	</variable>
-	<variable name="MEDICAL_TOTAL" class="java.lang.Double" resetType="Group" resetGroup="MEDICAL" calculation="Sum">
-		<variableExpression><![CDATA[$F{patient}.booleanValue() ? $F{quantity} : new Double(0)]]></variableExpression>
+	<variable name="MEDICAL_TOTAL" resetType="Group" calculation="Sum" resetGroup="MEDICAL" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{patient}.booleanValue() ? $F{quantity} : java.math.BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="MEDICAL_RECTIFY" class="java.lang.Double" resetType="Group" resetGroup="MEDICAL" calculation="Sum">
-		<variableExpression><![CDATA[$F{patient}.booleanValue() ? new Double(0) : $F{quantity}]]></variableExpression>
+	<variable name="MEDICAL_RECTIFY" resetType="Group" calculation="Sum" resetGroup="MEDICAL" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{patient}.booleanValue() ? java.math.BigDecimal.ZERO : $F{quantity}]]></expression>
 	</variable>
 	<group name="DATE">
-		<groupExpression><![CDATA[$F{date}]]></groupExpression>
+		<expression><![CDATA[$F{date}]]></expression>
 		<groupHeader>
 			<band height="13" splitType="Stretch">
-				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
-					<reportElement key="textField-12" x="3" y="0" width="70" height="13" uuid="a431dbea-5790-4715-bc96-4fad80ed269b"/>
+				<element kind="textField" uuid="a431dbea-5790-4715-bc96-4fad80ed269b" key="textField-12" x="3" y="0" width="70" height="13" fontName="DejaVu Sans" fontSize="12.0" textAdjust="StretchHeight" pattern="dd/MM/yyyy" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Left" vTextAlign="Middle">
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
-				</textField>
+					<expression><![CDATA[$F{date}]]></expression>
+				</element>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -53,278 +48,190 @@
 		</groupFooter>
 	</group>
 	<group name="MEDICAL">
-		<groupExpression><![CDATA[$F{medical}]]></groupExpression>
+		<expression><![CDATA[$F{medical}]]></expression>
 		<groupHeader>
 			<band splitType="Stretch"/>
 		</groupHeader>
 		<groupFooter>
 			<band height="13" splitType="Stretch">
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement key="textField" x="149" y="0" width="132" height="13" uuid="ea6bedda-b145-410a-b7f0-9fe94b86c7da"/>
+				<element kind="textField" uuid="ea6bedda-b145-410a-b7f0-9fe94b86c7da" key="textField" x="149" y="0" width="132" height="13" fontName="DejaVu Sans" fontSize="12.0" textAdjust="StretchHeight" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Left">
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Left">
-						<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{medical}.toString()]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement key="textField-10" x="483" y="0" width="52" height="13" uuid="fd8ab686-0434-4465-9ae3-c6bc510fb9d9">
-						<printWhenExpression><![CDATA[new Boolean($V{MEDICAL_TOTAL}.compareTo( new Double(0) ) != 0)]]></printWhenExpression>
-					</reportElement>
+					<expression><![CDATA[$F{medical}.toString()]]></expression>
+				</element>
+				<element kind="textField" uuid="fd8ab686-0434-4465-9ae3-c6bc510fb9d9" key="textField-10" x="483" y="0" width="52" height="13" fontName="DejaVu Sans" fontSize="12.0" textAdjust="StretchHeight" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Right">
+					<printWhenExpression><![CDATA[new Boolean($V{MEDICAL_TOTAL}.compareTo( java.math.BigDecimal.ZERO ) != 0)]]></printWhenExpression>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Right">
-						<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{MEDICAL_TOTAL}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement key="textField-24" x="97" y="0" width="52" height="13" uuid="cf1a7210-c684-4d32-bd2c-146300e7275c"/>
+					<expression><![CDATA[$V{MEDICAL_TOTAL}]]></expression>
+				</element>
+				<element kind="textField" uuid="cf1a7210-c684-4d32-bd2c-146300e7275c" key="textField-24" x="97" y="0" width="52" height="13" fontName="DejaVu Sans" fontSize="12.0" textAdjust="StretchHeight" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Left">
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Left">
-						<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{MEDICAL_COUNT}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="false">
-					<reportElement key="textField-25" x="406" y="0" width="77" height="13" uuid="d27aad99-83f1-4084-96b2-bd482c237b78">
-						<printWhenExpression><![CDATA[new Boolean($V{MEDICAL_RECTIFY}.compareTo( new Double(0) ) != 0)]]></printWhenExpression>
-					</reportElement>
+					<expression><![CDATA[$V{MEDICAL_COUNT}]]></expression>
+				</element>
+				<element kind="textField" uuid="d27aad99-83f1-4084-96b2-bd482c237b78" key="textField-25" x="406" y="0" width="77" height="13" fontName="DejaVu Sans" fontSize="12.0" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Right">
+					<printWhenExpression><![CDATA[new Boolean($V{MEDICAL_RECTIFY}.compareTo( java.math.BigDecimal.ZERO ) != 0)]]></printWhenExpression>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Right">
-						<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{MEDICAL_RECTIFY}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-					<reportElement key="textField-26" x="276" y="0" width="132" height="13" uuid="4e760c6a-a525-4ffc-a7f6-6e6f0a7cb813"/>
+					<expression><![CDATA[$V{MEDICAL_RECTIFY}]]></expression>
+				</element>
+				<element kind="textField" uuid="4e760c6a-a525-4ffc-a7f6-6e6f0a7cb813" key="textField-26" x="276" y="0" width="132" height="13" fontName="DejaVu Sans" fontSize="12.0" textAdjust="StretchHeight" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Left">
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Left">
-						<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{lot}]]></textFieldExpression>
-				</textField>
+					<expression><![CDATA[$F{lot}]]></expression>
+				</element>
 			</band>
 		</groupFooter>
 	</group>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<title>
-		<band height="144" splitType="Stretch">
-			<textField isBlankWhenNull="false">
-				<reportElement key="textField-17" x="0" y="0" width="535" height="15" uuid="59b60ff3-571e-4be1-a297-79fc046b7433"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{ospedaleNome}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement key="textField-18" x="0" y="15" width="535" height="15" uuid="a5bd1d6f-6cd5-4a9e-8158-9b15be5d0ead"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{ospedaleCitta} + ", " + $P{ospedaleIndirizzo}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement key="textField-19" x="0" y="30" width="535" height="15" uuid="b1041d0a-a15b-4a96-931c-64d2fd58f44e"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{ospedaleTel}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement key="textField-20" x="0" y="45" width="535" height="15" uuid="d5ae16f2-2240-47c3-a873-2b412c9e4ace"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{ospedaleFax}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement key="textField-21" x="0" y="60" width="535" height="15" uuid="a91ca811-1e72-41ff-a8b1-280d3174e9fd"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{ospedaleMail}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement key="textField-22" x="0" y="90" width="535" height="18" uuid="e0a220ef-976f-487d-a1f5-aeb3e3e7176f"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["" + $F{ward} + " - OUTCOMING DRUGS"]]></textFieldExpression>
-			</textField>
-		</band>
+	<background splitType="Stretch"/>
+	<title height="144" splitType="Stretch">
+		<element kind="textField" uuid="59b60ff3-571e-4be1-a297-79fc046b7433" key="textField-17" x="0" y="0" width="535" height="15" fontName="DejaVu Sans" fontSize="12.0" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Right">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$P{ospedaleNome}]]></expression>
+		</element>
+		<element kind="textField" uuid="a5bd1d6f-6cd5-4a9e-8158-9b15be5d0ead" key="textField-18" x="0" y="15" width="535" height="15" fontName="DejaVu Sans" fontSize="12.0" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Right">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$P{ospedaleCitta} + ", " + $P{ospedaleIndirizzo}]]></expression>
+		</element>
+		<element kind="textField" uuid="b1041d0a-a15b-4a96-931c-64d2fd58f44e" key="textField-19" x="0" y="30" width="535" height="15" fontName="DejaVu Sans" fontSize="12.0" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Right">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$P{ospedaleTel}]]></expression>
+		</element>
+		<element kind="textField" uuid="d5ae16f2-2240-47c3-a873-2b412c9e4ace" key="textField-20" x="0" y="45" width="535" height="15" fontName="DejaVu Sans" fontSize="12.0" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Right">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$P{ospedaleFax}]]></expression>
+		</element>
+		<element kind="textField" uuid="a91ca811-1e72-41ff-a8b1-280d3174e9fd" key="textField-21" x="0" y="60" width="535" height="15" fontName="DejaVu Sans" fontSize="12.0" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false" hTextAlign="Right">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$P{ospedaleMail}]]></expression>
+		</element>
+		<element kind="textField" uuid="e0a220ef-976f-487d-a1f5-aeb3e3e7176f" key="textField-22" x="0" y="90" width="535" height="18" fontName="DejaVu Sans" fontSize="12.0" bold="true" blankWhenNull="false" hTextAlign="Center" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["" + $F{ward} + " - OUTCOMING DRUGS"]]></expression>
+		</element>
 	</title>
-	<pageHeader>
-		<band splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
-		<band height="30" splitType="Stretch">
-			<textField>
-				<reportElement key="staticText-1" x="149" y="4" width="132" height="24" uuid="162d1d21-c7ce-421b-a3c1-c9d5bf191d05"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{Medical}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement key="staticText-2" x="3" y="4" width="34" height="24" uuid="202a89f1-2286-48aa-9f99-d5869edf545e"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement key="staticText-6" x="483" y="4" width="52" height="24" uuid="90db9f03-508f-4feb-a487-1d4aed048803"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{Qty}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement key="staticText-7" x="97" y="4" width="52" height="24" uuid="c2db6061-4a8f-4eb1-b591-90bf433939b6"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{N.}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement key="staticText-8" x="406" y="4" width="77" height="24" uuid="7ebe854b-422b-4a35-8010-0a07e6d047d3"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{Rectified}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement key="staticText-9" x="278" y="4" width="132" height="24" uuid="b8065596-dc40-446c-8bd4-0b9d6e41cf9b"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{LotN}]]></textFieldExpression>
-			</textField>
-		</band>
+	<pageHeader splitType="Stretch"/>
+	<columnHeader height="30" splitType="Stretch">
+		<element kind="textField" uuid="162d1d21-c7ce-421b-a3c1-c9d5bf191d05" key="staticText-1" x="149" y="4" width="132" height="24" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$R{Medical}]]></expression>
+		</element>
+		<element kind="textField" uuid="202a89f1-2286-48aa-9f99-d5869edf545e" key="staticText-2" x="3" y="4" width="34" height="24" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$R{Date}]]></expression>
+		</element>
+		<element kind="textField" uuid="90db9f03-508f-4feb-a487-1d4aed048803" key="staticText-6" x="483" y="4" width="52" height="24" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$R{Qty}]]></expression>
+		</element>
+		<element kind="textField" uuid="c2db6061-4a8f-4eb1-b591-90bf433939b6" key="staticText-7" x="97" y="4" width="52" height="24" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$R{N.}]]></expression>
+		</element>
+		<element kind="textField" uuid="7ebe854b-422b-4a35-8010-0a07e6d047d3" key="staticText-8" x="406" y="4" width="77" height="24" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$R{Rectified}]]></expression>
+		</element>
+		<element kind="textField" uuid="b8065596-dc40-446c-8bd4-0b9d6e41cf9b" key="staticText-9" x="278" y="4" width="132" height="24" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$R{LotN}]]></expression>
+		</element>
 	</columnHeader>
 	<detail>
 		<band splitType="Prevent"/>
 	</detail>
-	<columnFooter>
-		<band height="25" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="27" splitType="Stretch">
-			<textField evaluationTime="Report" pattern="dd/MM/yyyy" isBlankWhenNull="false">
-				<reportElement key="textField-23" x="406" y="7" width="129" height="20" uuid="6e6afdf0-712d-4ed5-b8b6-df56d1bc9388"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-		</band>
+	<columnFooter height="25" splitType="Stretch"/>
+	<pageFooter height="27" splitType="Stretch">
+		<element kind="textField" uuid="6e6afdf0-712d-4ed5-b8b6-df56d1bc9388" key="textField-23" x="406" y="7" width="129" height="20" fontName="DejaVu Sans" fontSize="12.0" evaluationTime="Report" pattern="dd/MM/yyyy" bold="false" blankWhenNull="false" italic="false" strikeThrough="false" underline="false">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
 	</pageFooter>
-	<summary>
-		<band splitType="Stretch"/>
-	</summary>
+	<summary splitType="Stretch"/>
 </jasperReport>
