@@ -679,6 +679,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		if (MainMenu.checkUserGrants("btnadmdel")) {
 			buttonPanel.add(getButtonDelete());
 		}
+		if (MainMenu.checkUserGrants("btnpatientanonymize")) {
+			buttonPanel.add(getButtonAnonymize());
+		}
 		if (MainMenu.checkUserGrants("btnadmadm")) {
 			buttonPanel.add(getButtonAdmission());
 		}
@@ -857,6 +860,32 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			}
 		});
 		return buttonDel;
+	}
+
+	private JButton getButtonAnonymize() {
+		JButton buttonAnonymize = new JButton(MessageBundle.getMessage("angal.admission.anonymizepatient.btn"));
+		buttonAnonymize.setMnemonic(MessageBundle.getMnemonic("angal.admission.anonymizepatient.btn.key"));
+		buttonAnonymize.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
+				return;
+			}
+			patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+			Patient pat = patient.getPatient();
+
+			// GDPR Art. 17: overwriting the personal data is irreversible, so ask for an explicit confirmation
+			int n = MessageDialog.yesNo(this, "angal.admission.anonymizepatientirreversible.fmt.msg", pat.getName());
+			if (n == JOptionPane.YES_OPTION) {
+				try {
+					patientBrowserManager.anonymizePatient(pat.getCode());
+					MessageDialog.info(this, "angal.admission.thepatienthasbeenanonymized.msg");
+					filterPatient(searchString.getText());
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+				}
+			}
+		});
+		return buttonAnonymize;
 	}
 
 	private JButton getButtonAdmission() {
