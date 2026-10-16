@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -35,9 +36,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.WindowConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.isf.exa.gui.ExamEdit.ExamListener;
 import org.isf.exa.manager.ExamBrowsingManager;
@@ -69,10 +75,13 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			MessageBundle.getMessage("angal.exa.default.col").toUpperCase()
 	};
 	private int[] pColumnWidth = { 60, 330, 160, 60, 200 };
+	private Class[] pColumnClass = { String.class, String.class, String.class, Integer.class, String.class };
 	private Exam exam;
 
 	private DefaultTableModel model ;
 	private JTable table;
+	private JTextField searchField;
+	private TableRowSorter<DefaultTableModel> sorter;
 	private final JFrame myFrame;
 	private JButton jButtonNew;
 	private JButton jButtonEdit;
@@ -109,6 +118,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 			buttonPanel.add(new JLabel(MessageBundle.getMessage("angal.exa.selecttype")));
 			buttonPanel.add(getJComboBoxExamType());
+			buttonPanel.add(new JLabel(MessageBundle.getMessage("angal.common.search.txt")));
+			buttonPanel.add(getSearchField());
 			buttonPanel.add(getJButtonNew());
 			buttonPanel.add(getJButtonEdit());
 			buttonPanel.add(getJButtonDelete());
@@ -143,6 +154,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 		if (table == null) {
 			model = new ExamBrowsingModel();
 			table = new JTable(model);
+			sorter = new TableRowSorter<>(model);
+			table.setRowSorter(sorter);
 			table.setAutoCreateColumnsFromModel(false);
 			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
@@ -152,13 +165,76 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table.getSelectionModel().addListSelectionListener(selectionEvent -> {
 				if (!selectionEvent.getValueIsAdjusting()) {
-					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
+					int selectedViewRow = table.getSelectedRow();
+					if (selectedViewRow < 0) {
+						selectedrow = -1;
+						exam = null;
+						jButtonShow.setEnabled(false);
+						return;
+					}
+					selectedrow = table.convertRowIndexToModel(selectedViewRow);
 					exam = (Exam) model.getValueAt(selectedrow, -1);
 					jButtonShow.setEnabled(exam.getProcedure() != 3);
 				}
 			});
 		}
 		return table;
+	}
+
+	private JTextField getSearchField() {
+		if (searchField == null) {
+			searchField = new JTextField(15);
+			searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					applySearchFilter();
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					applySearchFilter();
+				}
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					applySearchFilter();
+				}
+			});
+		}
+		return searchField;
+	}
+
+	private void applySearchFilter() {
+		if (sorter == null || searchField == null) {
+			return;
+		}
+		String searchText = searchField.getText().trim().toLowerCase(Locale.ROOT);
+		if (searchText.isEmpty()) {
+			sorter.setRowFilter(null);
+			return;
+		}
+		String[] chunks = searchText.split("\\s+");
+		sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
+
+			@Override
+			public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+				for (String chunk : chunks) {
+					boolean found = false;
+					for (int i = 0; i < entry.getValueCount(); i++) {
+						String value = entry.getStringValue(i);
+						if (value != null && value.toLowerCase(Locale.ROOT).contains(chunk)) {
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						return false;
+					}
+				}
+				return true;
+			}
+		});
 	}
 
 	private JButton getJButtonDelete() {
@@ -305,6 +381,11 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			}
 			return null;
 		}
+
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
+			return pColumnClass[columnIndex];
+		}
 		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
@@ -316,7 +397,10 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 	public void examUpdated(AWTEvent e) {
 		reloadTable();
 		if (table.getRowCount() > 0 && selectedrow > -1) {
-			table.setRowSelectionInterval(selectedrow, selectedrow);
+			int selectedViewRow = table.convertRowIndexToView(selectedrow);
+			if (selectedViewRow > -1) {
+				table.setRowSelectionInterval(selectedViewRow, selectedViewRow);
+			}
 		}
 	}
 
@@ -336,6 +420,10 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			model = new ExamBrowsingModel(pSelection);
 		}
 		model.fireTableDataChanged();
+		table.setModel(model);
+		sorter = new TableRowSorter<>(model);
+		table.setRowSorter(sorter);
+		applySearchFilter();
 		table.updateUI();
 	}
 
