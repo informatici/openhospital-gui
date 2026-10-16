@@ -205,34 +205,26 @@ public class VaccineTypeEdit extends JDialog {
 				vaccineType.setDescription(descriptionTextField.getText());
 				vaccineType.setCode(codeTextField.getText());
 
-				if (insert) {	// inserting
-					try {
-						VaccineType insertedVaccineType = vaccineTypeBrowserManager.newVaccineType(vaccineType);
-						if (insertedVaccineType != null) {
-							fireVaccineInserted();
-							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
+				try {
+					VaccineType savedVaccineType;
+					if (insert) {
+						savedVaccineType = vaccineTypeBrowserManager.newVaccineType(vaccineType);
+					} else {
+						savedVaccineType = vaccineTypeBrowserManager.updateVaccineType(vaccineType);
 					}
-				} else {	// updating
-					if (descriptionTextField.getText().equals(lastdescription)) {
+
+					if (savedVaccineType != null) {
+						if (insert) {
+							fireVaccineInserted();
+						} else {
+							fireVaccineUpdated();
+						}
 						dispose();
 					} else {
-						try {
-							VaccineType updatedVaccineType = vaccineTypeBrowserManager.updateVaccineType(vaccineType);
-							if (updatedVaccineType != null) {
-								fireVaccineUpdated();
-								dispose();
-							} else {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							}
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-						}
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			});
 		}

@@ -60,8 +60,10 @@ public class OperationEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final EventListenerList operationListeners = new EventListenerList();
-	private final OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-	private final OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+	private final OperationBrowserManager operationBrowserManager = Context.getApplicationContext()
+			.getBean(OperationBrowserManager.class);
+	private final OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext()
+			.getBean(OperationTypeBrowserManager.class);
 	private final Operation operation;
 	private final boolean insert;
 	private JPanel jContentPane;
@@ -76,8 +78,10 @@ public class OperationEdit extends JDialog {
 	private JRadioButton major;
 	private JPanel radioButtonPanel;
 	private JComboBox<String> opeForBox;
+
 	/**
-	 * This is the default constructor; we pass the arraylist and the selectedrow because we need to update them
+	 * This is the default constructor; we pass the arraylist and the selectedrow
+	 * because we need to update them
 	 */
 	public OperationEdit(JFrame parent, Operation old, boolean inserting) {
 		super(parent, true);
@@ -85,12 +89,15 @@ public class OperationEdit extends JDialog {
 		operation = old; // operation will be used for every operation
 		initialize();
 	}
+
 	public void addOperationListener(OperationListener l) {
 		operationListeners.add(OperationListener.class, l);
 	}
+
 	public void removeOperationListener(OperationListener listener) {
 		operationListeners.remove(OperationListener.class, listener);
 	}
+
 	private void fireOperationInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
@@ -102,6 +109,7 @@ public class OperationEdit extends JDialog {
 			((OperationListener) listener).operationInserted(event);
 		}
 	}
+
 	private void fireOperationUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
@@ -113,6 +121,7 @@ public class OperationEdit extends JDialog {
 			((OperationListener) listener).operationUpdated(event);
 		}
 	}
+
 	/**
 	 * This method initializes this
 	 */
@@ -127,8 +136,10 @@ public class OperationEdit extends JDialog {
 		pack();
 		setLocationRelativeTo(null);
 	}
+
 	/**
 	 * This method initializes jContentPane
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -140,8 +151,10 @@ public class OperationEdit extends JDialog {
 		}
 		return jContentPane;
 	}
+
 	/**
 	 * This method initializes dataPanel
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getDataPanel() {
@@ -166,10 +179,11 @@ public class OperationEdit extends JDialog {
 		}
 		return dataPanel;
 	}
+
 	private JComboBox<String> getOpeFor() {
 
 		opeForBox = new JComboBox<>();
-		//TODO: replace integer values with mnemonic ones
+		// TODO: replace integer values with mnemonic ones
 		opeForBox.addItem(OperationBrowser.OPD_ADMISSION);
 		opeForBox.addItem(OperationBrowser.ADMISSION);
 		opeForBox.addItem(OperationBrowser.OPD);
@@ -186,8 +200,10 @@ public class OperationEdit extends JDialog {
 		return opeForBox;
 
 	}
+
 	/**
 	 * This method initializes buttonPanel
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getButtonPanel() {
@@ -198,8 +214,10 @@ public class OperationEdit extends JDialog {
 		}
 		return buttonPanel;
 	}
+
 	/**
 	 * This method initializes cancelButton
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getCancelButton() {
@@ -210,8 +228,10 @@ public class OperationEdit extends JDialog {
 		}
 		return cancelButton;
 	}
+
 	/**
 	 * This method initializes okButton
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
@@ -244,7 +264,7 @@ public class OperationEdit extends JDialog {
 					} else {
 
 						if (operationBrowserManager.descriptionControl(descriptionTextField.getText(),
-							((OperationType) operationTypeComboBox.getSelectedItem()).getCode())) {
+								((OperationType) operationTypeComboBox.getSelectedItem()).getCode())) {
 							MessageDialog.error(null, "angal.operation.operationalreadypresent");
 							return;
 						}
@@ -265,23 +285,26 @@ public class OperationEdit extends JDialog {
 					}
 
 					boolean result = false;
-					if (insert) { // inserting
-						Operation insertedOperation = operationBrowserManager.newOperation(operation);
-						if (insertedOperation != null) {
-							result = true;
+					Operation savedOperation;
+					if (insert) {
+						savedOperation = operationBrowserManager.newOperation(operation);
+					} else {
+						savedOperation = operationBrowserManager.updateOperation(operation);
+					}
+
+					if (savedOperation != null) {
+						result = true;
+						if (insert) {
 							fireOperationInserted();
-						}
-					} else { // updating
-						Operation updatedOperation = operationBrowserManager.updateOperation(operation);
-						if (updatedOperation != null) {
-							result = true;
+						} else {
 							fireOperationUpdated();
 						}
 					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-					} else {
+
+					if (result) {
 						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
@@ -290,8 +313,10 @@ public class OperationEdit extends JDialog {
 		}
 		return okButton;
 	}
+
 	/**
 	 * This method initializes descriptionTextField
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getDescriptionTextField() {
@@ -304,8 +329,10 @@ public class OperationEdit extends JDialog {
 		}
 		return descriptionTextField;
 	}
+
 	/**
 	 * This method initializes radioButtonPanel
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getRadioButtonPanel() {
@@ -339,14 +366,17 @@ public class OperationEdit extends JDialog {
 		}
 		return radioButtonPanel;
 	}
+
 	private JRadioButton getRadioButton(String label, boolean active) {
 		JRadioButton rb = new JRadioButton(label);
 		rb.setSelected(active);
 		rb.setName(label);
 		return rb;
 	}
+
 	/**
 	 * This method initializes codeTextField
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getCodeTextField() {
@@ -359,8 +389,10 @@ public class OperationEdit extends JDialog {
 		}
 		return codeTextField;
 	}
+
 	/**
 	 * This method initializes operationTypeComboBox
+	 * 
 	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox<OperationType> getOperationTypeComboBox() {
