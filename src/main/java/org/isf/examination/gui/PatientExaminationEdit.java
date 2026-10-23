@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -225,12 +226,21 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private void initComponents() {
 		ExaminationParameters.initialize();
 		setTitle(MessageBundle.getMessage("angal.examination.title"));
+		getContentPane().add(getJPanelPatient(), BorderLayout.NORTH);
 		getContentPane().add(getJPanelCenter(), BorderLayout.CENTER);
 		getContentPane().add(getJPanelButtons(), BorderLayout.SOUTH);
 		// updateSummary();
 		updateBMI();
 		pack();
 		setResizable(false);
+	}
+
+	private JPanel getJPanelPatient() {
+		JPanel patientPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JLabel patientLabel = new JLabel(MessageBundle.formatMessage("angal.examination.patient.fmt", patex.getPatient().getName()));
+		patientLabel.setFont(patientLabel.getFont().deriveFont(Font.BOLD, 16f));
+		patientPanel.add(patientLabel);
+		return patientPanel;
 	}
 
 	private JPanel getJPanelCenter() {
