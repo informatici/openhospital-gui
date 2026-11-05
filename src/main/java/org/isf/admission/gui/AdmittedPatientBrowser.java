@@ -52,6 +52,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.RowSorter;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -62,6 +63,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.isf.accounting.gui.PatientBillEdit;
 import org.isf.admission.gui.AdmissionBrowser.AdmissionListener;
@@ -104,6 +106,7 @@ import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.table.OHTableSortFilter;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -155,6 +158,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	private boolean[] pColumnResizable = { false, false, false, false, true, false };
 	private AdmittedPatient patient;
 	private JTable table;
+	private AdmittedPatientBrowserModel model;
+	private TableRowSorter<AdmittedPatientBrowserModel> sorter;
 	private AdmittedPatientBrowser myFrame;
 
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
@@ -207,9 +212,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		lastKey = "";
 		filterPatient(searchString.getText());
 		try {
-			if (table.getRowCount() > 0) {
-				table.setRowSelectionInterval(row, row);
-			}
+			restoreSelectedViewRow(row);
 		} catch (Exception e1) {
 		}
 	}
@@ -235,9 +238,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		lastKey = "";
 		filterPatient(searchString.getText());
 		try {
-			if (table.getRowCount() > 0) {
-				table.setRowSelectionInterval(row, row);
-			}
+			restoreSelectedViewRow(row);
 		} catch (Exception e1) {
 		}
 	}
@@ -277,9 +278,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		lastKey = "";
 		filterPatient(searchString.getText());
 		try {
-			if (table.getRowCount() > 0) {
-				table.setRowSelectionInterval(row, row);
-			}
+			restoreSelectedViewRow(row);
 		} catch (Exception e1) {
 		}
 	}
@@ -296,9 +295,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		lastKey = "";
 		filterPatient(searchString.getText());
 		try {
-			if (table.getRowCount() > 0) {
-				table.setRowSelectionInterval(0, 0);
-			}
+			restoreSelectedViewRow(0);
 		} catch (Exception e1) {
 		}
 		searchString.requestFocus();
@@ -324,7 +321,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		lastKey = "";
 		filterPatient(searchString.getText());
 		try {
-			table.setRowSelectionInterval(row, row);
+			restoreSelectedViewRow(row);
 		} catch (Exception e1) {
 		}
 		searchString.requestFocus();
@@ -496,6 +493,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 						jSearchButton.doClick();
 					}
 				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					applyNaturalTextFilter();
+				}
 			});
 		} else {
 			searchString.addKeyListener(new KeyListener() {
@@ -644,7 +646,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	}
 
 	private JScrollPane getScrollPane() {
-		table = new JTable(new AdmittedPatientBrowserModel(null));
+		model = new AdmittedPatientBrowserModel(null);
+		table = new JTable(model);
+		sorter = OHTableSortFilter.installSorter(table, model);
 		table.setAutoCreateColumnsFromModel(false);
 
 		for (int i = 0; i < pColumns.length; i++) {
@@ -725,7 +729,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+			patient = getSelectedAdmittedPatient();
 			PatientHistory ph = new PatientHistory();
 			ph.setPatientId(patient.getPatient().getCode());
 			PatientHistory patientHistory = Optional.ofNullable(patientHistoryManager.getByPatientId(patient.getPatient().getCode())).orElse(ph);
@@ -749,7 +753,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 					MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
-				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+				patient = getSelectedAdmittedPatient();
 				Patient pat = patient.getPatient();
 
 				PatientExamination patex;
@@ -805,7 +809,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = reloadSelectedPatient(table.getSelectedRow());
+			patient = reloadSelectedPatient();
 			if (GeneralData.PATIENTEXTENDED) {
 
 				PatientInsertExtended editrecord = new PatientInsertExtended(this, patient.getPatient(), false);
@@ -828,7 +832,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+			patient = getSelectedAdmittedPatient();
 			Patient pat = patient.getPatient();
 
 			int n = MessageDialog.yesNo(this, "angal.admission.deletepatient.fmt.msg", pat.getName());
@@ -867,7 +871,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = reloadSelectedPatient(table.getSelectedRow());
+			patient = reloadSelectedPatient();
 			if (patient.getAdmission() != null) {
 				// edit previous admission or discharge
 				new AdmissionBrowser(myFrame, patient, true);
@@ -879,8 +883,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		return buttonAdmission;
 	}
 
-	private AdmittedPatient reloadSelectedPatient(int selectedRow) {
-		AdmittedPatient selectedPatient = (AdmittedPatient) table.getValueAt(selectedRow, -1);
+	private AdmittedPatient reloadSelectedPatient() {
+		AdmittedPatient selectedPatient = getSelectedAdmittedPatient();
 		// Reloading patient, with profile initialised.
 		return admissionBrowserManager.loadAdmittedPatients(selectedPatient.getPatient().getCode());
 	}
@@ -893,7 +897,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = reloadSelectedPatient(table.getSelectedRow());
+			patient = reloadSelectedPatient();
 
 			if (patient != null) {
 				Opd opd = new Opd(0, ' ', -1, new Disease());
@@ -913,7 +917,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = reloadSelectedPatient(table.getSelectedRow());
+			patient = reloadSelectedPatient();
 			Laboratory laboratory = new Laboratory(0, new Exam("", "", new ExamType("", ""), 0, ""), TimeTools.getNow(), "P", "", new Patient(), "");
 			if (GeneralData.LABEXTENDED) {
 				if (GeneralData.LABMULTIPLEINSERT) {
@@ -939,7 +943,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = reloadSelectedPatient(table.getSelectedRow());
+			patient = reloadSelectedPatient();
 
 			if (patient != null) {
 				Patient pat = patient.getPatient();
@@ -958,7 +962,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = reloadSelectedPatient(table.getSelectedRow());
+			patient = reloadSelectedPatient();
 
 			PatientDataBrowser pdb = new PatientDataBrowser(myFrame, patient.getPatient());
 			pdb.addDeleteAdmissionListener(myFrame);
@@ -975,7 +979,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = reloadSelectedPatient(table.getSelectedRow());
+			patient = reloadSelectedPatient();
 			DicomGui dg = new DicomGui(patient.getPatient(), this);
 			dg.showAsModal(this);
 		});
@@ -990,7 +994,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = reloadSelectedPatient(table.getSelectedRow());
+			patient = reloadSelectedPatient();
 
 			new PatientFolderBrowser(myFrame, patient.getPatient()).showAsModal(this);
 		});
@@ -1005,7 +1009,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				MessageDialog.error(this, "angal.common.pleaseselectapatient.msg");
 				return;
 			}
-			patient = reloadSelectedPatient(table.getSelectedRow());
+			patient = reloadSelectedPatient();
 
 			TherapyEdit therapy = new TherapyEdit(this, patient.getPatient(), patient.getAdmission() != null);
 			therapy.setLocationRelativeTo(null);
@@ -1024,11 +1028,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				return;
 			}
 
-			int[] indexes = table.getSelectedRows();
+			int[] indexes = OHTableSortFilter.getSelectedModelRows(table);
 
 			Patient mergedPatient;
-			Patient patient1 = ((AdmittedPatient) table.getValueAt(indexes[0], -1)).getPatient();
-			Patient patient2 = ((AdmittedPatient) table.getValueAt(indexes[1], -1)).getPatient();
+			Patient patient1 = ((AdmittedPatient) model.getValueAt(indexes[0], -1)).getPatient();
+			Patient patient2 = ((AdmittedPatient) model.getValueAt(indexes[1], -1)).getPatient();
 
 			// Select most recent patient
 			if (patient1.getCode() > patient2.getCode()) {
@@ -1088,9 +1092,32 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	}
 
 	private void filterPatient(String key) {
-		table.setModel(new AdmittedPatientBrowserModel(key));
+		List<? extends RowSorter.SortKey> sortKeys = sorter == null ? List.of() : new ArrayList<>(sorter.getSortKeys());
+		model = new AdmittedPatientBrowserModel(key);
+		sorter = OHTableSortFilter.installSorter(table, model);
+		sorter.setSortKeys(sortKeys);
+		applyNaturalTextFilter();
 		rowCounter.setText(MessageBundle.formatMessage("angal.admission.count.fmt.txt", table.getRowCount()));
 		searchString.requestFocus();
+	}
+
+	private void applyNaturalTextFilter() {
+		OHTableSortFilter.applyNaturalTextFilter(table, sorter, searchString.getText());
+		if (rowCounter != null && table != null) {
+			rowCounter.setText(MessageBundle.formatMessage("angal.admission.count.fmt.txt", table.getRowCount()));
+		}
+	}
+
+	private AdmittedPatient getSelectedAdmittedPatient() {
+		int selectedModelRow = OHTableSortFilter.getSelectedModelRow(table);
+		return (AdmittedPatient) model.getValueAt(selectedModelRow, -1);
+	}
+
+	private void restoreSelectedViewRow(int selectedViewRow) {
+		if (table.getRowCount() > 0 && selectedViewRow > -1) {
+			int row = Math.min(selectedViewRow, table.getRowCount() - 1);
+			table.setRowSelectionInterval(row, row);
+		}
 	}
 
 	private void searchPatient() {
