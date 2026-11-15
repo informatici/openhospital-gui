@@ -85,9 +85,6 @@ public class SelectPatient extends JDialog implements PatientListener {
 			private static final long serialVersionUID = 1L;
 		};
 
-		// warn before the listeners open their own window, which may be modal
-		PatientAdministrativeFlagWarning.showIfFlagged(getParent(), patient);
-
 		EventListener[] listeners = selectionListener.getListeners(SelectionListener.class);
 		for (EventListener listener : listeners) {
 			((SelectionListener) listener).patientSelected(patient);
@@ -398,6 +395,9 @@ public class SelectPatient extends JDialog implements PatientListener {
 			jButtonSelect.addActionListener(actionEvent -> {
 
 				if (patient != null) {
+					if (!PatientAdministrativeFlagWarning.confirmIfFlagged(this, patient)) {
+						return;
+					}
 					// to free memory
 					patArray.clear();
 					patSearch.clear();

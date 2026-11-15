@@ -233,6 +233,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JLabel jFieldLastOpdNote;
 
 	private Patient opdPatient;
+	private boolean searchingPatients;
 	private JPanel jNotePanel;
 	private JTextArea jNoteTextArea;
 	private JPanel jPatientNotePanel;
@@ -369,17 +370,28 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	}
 
 	/**
-	 * Binds the form to a patient picked in this window, warning the user when the administration has flagged them. A
-	 * search selects its first result on its own, so the warning is only shown when the patient actually changes.
+	 * Binds the form to a patient picked in this window. When the administration has flagged the patient the user is
+	 * asked first, and the form is left without a patient if they give up.
 	 */
 	private void selectPatient(Patient patient) {
 		boolean alreadyOnThisPatient = opdPatient != null && Objects.equals(opdPatient.getCode(), patient.getCode());
+		if (!alreadyOnThisPatient && !PatientAdministrativeFlagWarning.confirmIfFlagged(this, patient)) {
+			jComboPatResult.setSelectedIndex(-1);
+			resetPatient();
+			resetLastOpd();
+			jPatientEditButton.setEnabled(false);
+			return;
+		}
 		opdPatient = patient;
 		setPatient(opdPatient);
 		jPatientEditButton.setEnabled(true);
-		if (!alreadyOnThisPatient) {
-			PatientAdministrativeFlagWarning.showIfFlagged(this, opdPatient);
-		}
+	}
+
+	private void resetLastOpd() {
+		jLabelLastOpdVisit.setText(" ");
+		jFieldLastOpdVisit.setText(" ");
+		jLabelLastOpdNote.setText(" ");
+		jFieldLastOpdNote.setText(" ");
 	}
 
 	private void resetPatient() {
@@ -1280,10 +1292,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		if (key == null || key.compareTo("") == 0) {
 			jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.selectapatient.txt"));
 			jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.enteranewpatient.txt"));
-			jLabelLastOpdVisit.setText(" ");
-			jFieldLastOpdVisit.setText(" ");
-			jLabelLastOpdNote.setText(" ");
-			jFieldLastOpdNote.setText(" ");
+			resetLastOpd();
 			if (jNoteTextArea != null) {
 				jNoteTextArea.setText("");
 			}
@@ -1292,22 +1301,28 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			}
 		}
 
-		for (Patient elem : pat) {
-			if (key != null) {
-				s1 = key.split(" ");
-				String name = elem.getSearchString();
-				int a = 0;
-				for (String value : s1) {
-					if (name.contains(value.toLowerCase())) {
-						a++;
+		// the first patient added gets selected by the combo box: it is bound to the form once, below
+		searchingPatients = true;
+		try {
+			for (Patient elem : pat) {
+				if (key != null) {
+					s1 = key.split(" ");
+					String name = elem.getSearchString();
+					int a = 0;
+					for (String value : s1) {
+						if (name.contains(value.toLowerCase())) {
+							a++;
+						}
 					}
-				}
-				if (a == s1.length) {
+					if (a == s1.length) {
+						jComboPatResult.addItem(elem);
+					}
+				} else {
 					jComboPatResult.addItem(elem);
 				}
-			} else {
-				jComboPatResult.addItem(elem);
 			}
+		} finally {
+			searchingPatients = false;
 		}
 		//ADDED: Workaround for no items
 		if (jComboPatResult.getItemCount() == 0) {
@@ -1316,10 +1331,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				resetPatient();
 			}
 			jPatientEditButton.setEnabled(true);
-		}
-		//ADDED: Workaround for one item only
-		if (jComboPatResult.getItemCount() == 1) {
-			selectPatient((Patient) jComboPatResult.getSelectedItem());
 		}
 		//ADDED: Workaround for first item
 		if (jComboPatResult.getItemCount() > 0) {
@@ -1362,7 +1373,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 					} else if (jComboPatResult.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.opd.selectapatient.txt")) == 0) {
 						jPatientEditButton.setEnabled(false);
 
-					} else {
+					} else if (!searchingPatients) {
 						selectPatient((Patient) jComboPatResult.getSelectedItem());
 					}
 				}

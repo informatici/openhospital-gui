@@ -22,9 +22,17 @@
 package org.isf.patient.gui;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
+
+import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patadminissue.manager.PatientAdminIssueBrowserManager;
 import org.isf.patadminissue.model.PatientAdminIssue;
@@ -35,24 +43,28 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Signals that a patient has open administrative issues, so that the staff can check with the administration before
- * providing further services. The warning is informational only: it never prevents the operation the user is starting.
+ * providing further services. The warning never prevents the operation: the user chooses whether to go on with it.
  */
 public final class PatientAdministrativeFlagWarning {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientAdministrativeFlagWarning.class);
 
+	private static final int TEXT_WIDTH = 450;
+	private static final int TEXT_MAX_HEIGHT = 300;
+
 	private PatientAdministrativeFlagWarning() {
 	}
 
 	/**
-	 * Shows a dismissable warning listing the open administrative issues of the given patient, if any.
+	 * Shows a warning listing the open administrative issues of the given patient, if any, and asks whether to continue.
 	 *
 	 * @param parentComponent the component the dialog is shown over
 	 * @param patient the patient being selected, may be {@code null}
+	 * @return {@code false} if the user gave up the operation, {@code true} otherwise
 	 */
-	public static void showIfFlagged(Component parentComponent, Patient patient) {
+	public static boolean confirmIfFlagged(Component parentComponent, Patient patient) {
 		if (patient == null || patient.getCode() == null) {
-			return;
+			return true;
 		}
 		List<PatientAdminIssue> openIssues;
 		try {
@@ -60,12 +72,44 @@ public final class PatientAdministrativeFlagWarning {
 		} catch (Exception e) {
 			// a warning must never get in the way of the operation the user is starting
 			LOGGER.error("Unable to read the administrative issues of patient {}", patient.getCode(), e);
-			return;
+			return true;
 		}
 		if (openIssues.isEmpty()) {
-			return;
+			return true;
 		}
 		String reasons = openIssues.stream().map(issue -> "- " + issue.getReason()).collect(Collectors.joining("\n"));
-		MessageDialog.warning(parentComponent, "angal.patadminissue.warning.fmt.msg", reasons);
+		String cancel = MessageBundle.getMessage("angal.common.cancel.btn");
+		String[] options = { cancel, MessageBundle.getMessage("angal.patadminissue.continueanyway.btn") };
+		int choice = JOptionPane.showOptionDialog(parentComponent,
+						wrappedText(MessageBundle.formatMessage("angal.patadminissue.warning.fmt.msg", reasons)), MessageDialog.WARNING_MESSAGE,
+						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, cancel);
+		return choice == 1;
+	}
+
+	/**
+	 * Lays out a text of any length on several lines, to show it in a dialog that stays within the screen.
+	 *
+	 * @param text the text to show
+	 * @return a read-only component that looks like a label, with a scroll bar when the text is very long
+	 */
+	static Component wrappedText(String text) {
+		JTextArea textArea = new JTextArea(text);
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
+		textArea.setEditable(false);
+		textArea.setFocusable(false);
+		textArea.setOpaque(false);
+		textArea.setFont(UIManager.getFont("Label.font"));
+		// the height of a wrapped text is only known once the width is set
+		textArea.setSize(new Dimension(TEXT_WIDTH, Short.MAX_VALUE));
+		if (textArea.getPreferredSize().height <= TEXT_MAX_HEIGHT) {
+			return textArea;
+		}
+		JScrollPane scrollPane = new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBorder(null);
+		scrollPane.setOpaque(false);
+		scrollPane.getViewport().setOpaque(false);
+		scrollPane.setPreferredSize(new Dimension(TEXT_WIDTH + scrollPane.getVerticalScrollBar().getPreferredSize().width, TEXT_MAX_HEIGHT));
+		return scrollPane;
 	}
 }

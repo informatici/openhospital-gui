@@ -162,6 +162,7 @@ public class PatientInsertExtended extends JDialog {
 	private PatientConsensus consensus;
 
 	// COMPONENTS: Administrative issues (opened and resolved in the form, persisted on save)
+	private static final int ISSUES_LIST_WIDTH = 250;
 	private JPanel jAdministrativeIssuesPanel;
 	private JList<PatientAdminIssue> jOpenIssuesList;
 	private DefaultListModel<PatientAdminIssue> openIssuesModel;
@@ -2236,11 +2237,11 @@ public class PatientInsertExtended extends JDialog {
 		jOpenIssuesList = new JList<>(openIssuesModel);
 		jOpenIssuesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jOpenIssuesList.setVisibleRowCount(3);
-		jOpenIssuesList.setCellRenderer((list, issue, index, isSelected, cellHasFocus) -> {
-			String openedOn = TimeTools.formatDateTime(issue.getFromDate(), TimeTools.DD_MM_YYYY);
-			String text = MessageBundle.formatMessage("angal.patadminissue.openissue.fmt.txt", openedOn, issue.getReason());
-			return renderer.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
-		});
+		// a long reason is cropped to the width of the panel: the whole text is in the details
+		jOpenIssuesList.setFixedCellWidth(ISSUES_LIST_WIDTH);
+		jOpenIssuesList.setCellRenderer(
+						(list, issue, index, isSelected, cellHasFocus) -> renderer.getListCellRendererComponent(list, describe(issue), index, isSelected,
+										cellHasFocus));
 
 		JButton jOpenIssueButton = new JButton(MessageBundle.getMessage("angal.patadminissue.openissue.btn"));
 		jOpenIssueButton.setMnemonic(MessageBundle.getMnemonic("angal.patadminissue.openissue.btn.key"));
@@ -2249,10 +2250,18 @@ public class PatientInsertExtended extends JDialog {
 		jResolveIssueButton.setMnemonic(MessageBundle.getMnemonic("angal.patadminissue.resolveissue.btn.key"));
 		jResolveIssueButton.setEnabled(false);
 		jResolveIssueButton.addActionListener(e -> resolveSelectedAdministrativeIssue());
-		jOpenIssuesList.addListSelectionListener(e -> jResolveIssueButton.setEnabled(!jOpenIssuesList.isSelectionEmpty()));
+		JButton jIssueDetailsButton = new JButton(MessageBundle.getMessage("angal.patadminissue.seedetails.btn"));
+		jIssueDetailsButton.setMnemonic(MessageBundle.getMnemonic("angal.patadminissue.seedetails.btn.key"));
+		jIssueDetailsButton.setEnabled(false);
+		jIssueDetailsButton.addActionListener(e -> showSelectedAdministrativeIssue());
+		jOpenIssuesList.addListSelectionListener(e -> {
+			jResolveIssueButton.setEnabled(!jOpenIssuesList.isSelectionEmpty());
+			jIssueDetailsButton.setEnabled(!jOpenIssuesList.isSelectionEmpty());
+		});
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.add(jOpenIssueButton);
 		buttonsPanel.add(jResolveIssueButton);
+		buttonsPanel.add(jIssueDetailsButton);
 
 		jAdministrativeIssuesPanel = new JPanel(new BorderLayout());
 		jAdministrativeIssuesPanel.add(new JScrollPane(jOpenIssuesList), BorderLayout.CENTER);
@@ -2311,6 +2320,20 @@ public class PatientInsertExtended extends JDialog {
 		issuesToOpen.add(issue);
 		openIssuesModel.addElement(issue);
 		showAdministrativeIssuesBorder();
+	}
+
+	private static String describe(PatientAdminIssue issue) {
+		String openedOn = TimeTools.formatDateTime(issue.getFromDate(), TimeTools.DD_MM_YYYY);
+		return MessageBundle.formatMessage("angal.patadminissue.openissue.fmt.txt", openedOn, issue.getReason());
+	}
+
+	private void showSelectedAdministrativeIssue() {
+		PatientAdminIssue issue = jOpenIssuesList.getSelectedValue();
+		if (issue == null) {
+			return;
+		}
+		JOptionPane.showMessageDialog(this, PatientAdministrativeFlagWarning.wrappedText(describe(issue)),
+						MessageBundle.getMessage("angal.patadminissue.issuedetails.title"), JOptionPane.PLAIN_MESSAGE);
 	}
 
 	private void resolveSelectedAdministrativeIssue() {
