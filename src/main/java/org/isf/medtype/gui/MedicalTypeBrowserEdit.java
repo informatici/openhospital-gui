@@ -200,38 +200,33 @@ public class MedicalTypeBrowserEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 
+				// Update model with values from UI fields
 				medicalType.setDescription(descriptionTextField.getText());
 				medicalType.setCode(codeTextField.getText());
 				medicalType.setDeleted(deletedCheckbox.isSelected() ? 'Y' : 'N');
 				
-				if (insert) { // inserting
-					try {
-						MedicalType insertedMedicalType = medicalTypeBrowserManager.newMedicalType(medicalType);
-						if (insertedMedicalType != null) {
-							fireMedicalInserted();
-							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
+				try {
+					MedicalType savedMedicalType;
+					if (insert) {
+						// Insert new MedicalType record
+						savedMedicalType = medicalTypeBrowserManager.newMedicalType(medicalType);
+					} else {
+						// Update existing MedicalType record
+						savedMedicalType = medicalTypeBrowserManager.updateMedicalType(medicalType);
 					}
-				} else { // updating
-					if (descriptionTextField.getText().equals(lastdescription) && medicalType.getDeleted() == isLastDeleted) {
+
+					if (savedMedicalType != null) {
+						if (insert) {
+							fireMedicalInserted();
+						} else {
+							fireMedicalUpdated();
+						}
 						dispose();
 					} else {
-						try {
-							MedicalType updatedMedicalType = medicalTypeBrowserManager.updateMedicalType(medicalType);
-							if (updatedMedicalType != null) {
-								fireMedicalUpdated();
-								dispose();
-							} else {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							}
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-						}
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			});
 		}
