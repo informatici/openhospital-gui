@@ -797,6 +797,7 @@ public class PatientInsertExtended extends JDialog {
 			}
 
 			GoodDateChooser jBirthDateChooser = new GoodDateChooser(birthDate, false);
+			jBirthDateChooser.setEnabled(!patient.isAnonymized());
 			jBirthDateChooser.addDateChangeListener(event -> {
 				LocalDate newDate = event.getNewDate();
 				if (newDate != null) {
@@ -845,6 +846,7 @@ public class PatientInsertExtended extends JDialog {
 			jFirstNameTextField = new JTextField(15);
 			if (!insert) {
 				jFirstNameTextField.setText(patient.getFirstName());
+				jFirstNameTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jFirstNameTextField;
@@ -873,6 +875,7 @@ public class PatientInsertExtended extends JDialog {
 			jSecondNameTextField = new JTextField(15);
 			if (!insert) {
 				jSecondNameTextField.setText(patient.getSecondName());
+				jSecondNameTextField.setEnabled(!patient.isAnonymized());
 			}
 
 		}
@@ -945,6 +948,7 @@ public class PatientInsertExtended extends JDialog {
 			jAddressTextField = new JTextField(15);
 			if (!insert) {
 				jAddressTextField.setText(patient.getAddress());
+				jAddressTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jAddressTextField;
@@ -960,6 +964,7 @@ public class PatientInsertExtended extends JDialog {
 			jTaxCodeTextField = new JTextField(15);
 			if (!insert) {
 				jTaxCodeTextField.setText(patient.getTaxCode());
+				jTaxCodeTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jTaxCodeTextField;
@@ -989,6 +994,7 @@ public class PatientInsertExtended extends JDialog {
 			jCityTextField = new JTextField(15);
 			if (!insert) {
 				jCityTextField.setText(patient.getCity());
+				jCityTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jCityTextField;
@@ -1020,6 +1026,7 @@ public class PatientInsertExtended extends JDialog {
 			jTelephoneTextField.setText(SmsParameters.ICC);
 			if (!insert) {
 				jTelephoneTextField.setText(patient.getTelephone());
+				jTelephoneTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jTelephoneTextField;
@@ -2403,6 +2410,7 @@ public class PatientInsertExtended extends JDialog {
 			jFatherNameTextField = new JTextField(15);
 			if (!insert) {
 				jFatherNameTextField.setText(patient.getFatherName());
+				jFatherNameTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jFatherNameTextField;
@@ -2418,6 +2426,7 @@ public class PatientInsertExtended extends JDialog {
 			jMotherNameTextField = new JTextField(15);
 			if (!insert) {
 				jMotherNameTextField.setText(patient.getMotherName());
+				jMotherNameTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jMotherNameTextField;

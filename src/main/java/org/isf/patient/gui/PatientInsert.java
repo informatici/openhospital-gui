@@ -441,6 +441,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			jFirstNameTextField = new JTextField(15);
 			if (!insert) {
 				jFirstNameTextField.setText(patient.getFirstName());
+				jFirstNameTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jFirstNameTextField;
@@ -469,6 +470,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			jSecondNameTextField = new JTextField(15);
 			if (!insert) {
 				jSecondNameTextField.setText(patient.getSecondName());
+				jSecondNameTextField.setEnabled(!patient.isAnonymized());
 			}
 			
 		}
@@ -530,6 +532,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			jAddressTextField = new JTextField(15);
 			if (!insert) {
 				jAddressTextField.setText(patient.getAddress());
+				jAddressTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jAddressTextField;
@@ -559,6 +562,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			jCityTextField = new JTextField(15);
 			if (!insert) {
 				jCityTextField.setText(patient.getCity());
+				jCityTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jCityTextField;
@@ -588,6 +592,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			jTelephoneTextField = new JTextField(15);
 			if (!insert) {
 				jTelephoneTextField.setText(patient.getTelephone());
+				jTelephoneTextField.setEnabled(!patient.isAnonymized());
 			}
 		}
 		return jTelephoneTextField;
