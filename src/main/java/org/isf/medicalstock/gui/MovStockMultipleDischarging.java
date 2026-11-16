@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -43,11 +43,13 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -745,6 +747,19 @@ public class MovStockMultipleDischarging extends JDialog {
 			for (Ward elem : wardsList) {
 				jComboBoxDestination.addItem(elem);
 			}
+			jComboBoxDestination.setRenderer(new DefaultListCellRenderer() {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+					super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+					if (value instanceof Ward ward && ward.isVirtual()) {
+						setText(ward + " " + MessageBundle.getMessage("angal.common.virtual.txt"));
+					}
+					return this;
+				}
+			});
 		}
 		return jComboBoxDestination;
 	}
