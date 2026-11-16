@@ -73,7 +73,7 @@ abstract class OperationRowBase extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationRowBase.class);
 
 	protected JLabel labelDate;
-	protected JTextField textFieldUnit;
+	protected VoFloatTextField textFieldUnit;
 	protected GoodDateTimeSpinnerChooser textDate;
 	protected JComboBox<Operation> comboOperation;
 	protected JTextField searchOperationTextField;
@@ -393,7 +393,11 @@ abstract class OperationRowBase extends JPanel {
 	abstract List<Operation> getOperationCollection() throws OHServiceException;
 
 	public void addToForm() {
-		OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
+		int selectedRow = tableData.getSelectedRow();
+		if (selectedRow < 0) {
+			return;
+		}
+		OperationRow opeRow = oprowData.get(selectedRow);
 		/* ** for combo operation **** */
 		List<Operation> opeList = new ArrayList<>();
 		try {
