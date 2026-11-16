@@ -52,7 +52,6 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.MessageDialog;
-import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
@@ -113,7 +112,7 @@ public class MedicalEdit extends JDialog {
 	private VoIntegerTextField pcsperpckField;
 	private VoLimitedTextField descriptionTextField;
 	private VoLimitedTextField codeTextField;
-	private VoDoubleTextField minQtiField;
+	private VoIntegerTextField minQtiField;
 	private JComboBox<MedicalType> typeComboBox;
 	private JCheckBox activeCheckbox;
 	private Medical oldMedical;
@@ -404,9 +403,9 @@ public class MedicalEdit extends JDialog {
 	private JTextField getMinQtiField() {
 		if (minQtiField == null) {
 			if (insert) {
-				minQtiField = new VoDoubleTextField(0, 3);
+				minQtiField = new VoIntegerTextField(0, 3);
 			} else {
-				minQtiField = new VoDoubleTextField(medical.getMinqty(), 3);
+				minQtiField = new VoIntegerTextField(medical.getMinqty(), 3);
 			}
 		}
 		return minQtiField;

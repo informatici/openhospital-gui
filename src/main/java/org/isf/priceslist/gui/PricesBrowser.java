@@ -25,6 +25,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -333,28 +334,28 @@ public class PricesBrowser extends ModalJFrame {
 		examNodes = new PriceNode(new Price(null, "", "", cCategoriesNames[0], null)); //$NON-NLS-1$ //$NON-NLS-2$
 		for (Exam exa : examArray) {
 			Price p = priceHashTable.get(listSelected.getId() + cCategories[0] + exa.getCode());
-			double priceValue = p != null ? p.getPrice() : 0.;
+			BigDecimal priceValue = p != null ? p.getPrice() : BigDecimal.ZERO;
 			examNodes.addItem(new PriceNode(new Price(null, cCategories[0], exa.getCode(), exa.getDescription(), priceValue)));
 		}
 
 		opeNodes = new PriceNode(new Price(null, "", "", cCategoriesNames[1], null)); //$NON-NLS-1$ //$NON-NLS-2$
 		for (Operation ope : operArray) {
 			Price p = priceHashTable.get(listSelected.getId() + cCategories[1] + ope.getCode());
-			double priceValue = p != null ? p.getPrice() : 0.;
+			BigDecimal priceValue = p != null ? p.getPrice() : BigDecimal.ZERO;
 			opeNodes.addItem(new PriceNode(new Price(null, cCategories[1], ope.getCode(), ope.getDescription(), priceValue)));
 		}
 
 		medNodes = new PriceNode(new Price(null, "", "", cCategoriesNames[2], null)); //$NON-NLS-1$ //$NON-NLS-2$
 		for (Medical med : mediArray) {
 			Price p = priceHashTable.get(listSelected.getId() + cCategories[2] + med.getCode().toString());
-			double priceValue = p != null ? p.getPrice() : 0.;
+			BigDecimal priceValue = p != null ? p.getPrice() : BigDecimal.ZERO;
 			medNodes.addItem(new PriceNode(new Price(null, cCategories[2], med.getCode().toString(), med.getDescription(), priceValue)));
 		}
 
 		othNodes = new PriceNode(new Price(null, "", "", cCategoriesNames[3], null)); //$NON-NLS-1$ //$NON-NLS-2$
 		for (PricesOthers oth : othArray) {
 			Price p = priceHashTable.get(listSelected.getId() + cCategories[3] + oth.getId());
-			double priceValue = p != null ? p.getPrice() : 0.;
+			BigDecimal priceValue = p != null ? p.getPrice() : BigDecimal.ZERO;
 			othNodes.addItem(
 					new PriceNode(new Price(null, cCategories[3], Integer.toString(oth.getId()), oth.getDescription(), priceValue, !oth.isUndefined())));
 		}

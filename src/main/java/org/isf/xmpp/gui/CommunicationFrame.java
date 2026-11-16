@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -545,7 +545,7 @@ public class CommunicationFrame extends JFrame implements MessageListener, FileT
 				LOGGER.error(xmppException.getMessage(), xmppException);
 			}
 
-			printNotification((getArea(user, true)), MessageBundle.formatMessage("angal.xmpp.thefiletransferofbetweenyouandendedsuccesfully.fmt.msg",
+			printNotification((getArea(user, true)), MessageBundle.formatMessage("angal.xmpp.thefiletransferofbetweenyouandendedsuccessfully.fmt.msg",
 					request.getFileName(), user));
 			sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenaccepted.fmt.msg", request.getFileName()),
 					request.getRequestor(), false);

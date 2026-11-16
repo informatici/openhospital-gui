@@ -42,7 +42,7 @@ public class UserTotal {
 		return paymentsFromPeriod.stream()
 				.filter(payment -> notDeletedBills.contains(payment.getBill().getId()))
 				.filter(payment -> payment.getUser().equals(user))
-				.map(payment -> new BigDecimal(Double.toString(payment.getAmount())))
+				.map(BillPayments::getAmount)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 

@@ -1,24 +1,23 @@
 /*
- * Open Hospital (www.open-hospital.org) Copyright © 2006-2023 Informatici Senza
- * Frontiere (info@informaticisenzafrontiere.org)
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
- * Open Hospital is a free and open source software for healthcare data
- * management.
+ * Open Hospital is a free and open source software for healthcare data management.
  *
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * https://www.gnu.org/licenses/gpl-3.0-standalone.html
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 package org.isf.stat.reportlauncher.gui;
 
@@ -236,17 +235,27 @@ public class ReportLauncher extends ModalJFrame {
 
 				reportNameFileMap = new HashMap<>();
 				List<String> jRptComboBoxList = new LinkedList<>();
-				String language = new Locale(GeneralData.LANGUAGE).getLanguage();
+				String language = GeneralData.LANGUAGE;
 
 				for (File f : jasperFilesInFolder) {
 					try {
-						Path localizedPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", "_" + language + ".properties"));
+						Path parent = f.toPath().getParent();
+						if (parent == null) {
+							continue;
+						}
+						Path localizedPropsPath = parent.resolve(language).resolve(f.getName().replace(".jasper", ".properties"));
+						Path fallbackPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", ".properties"));
 
-						Properties props = MessageBundle.loadPropertiesFileUtf8(localizedPropsPath, LOGGER);
+						Properties props = null;
+						if (Files.exists(localizedPropsPath)) {
+							props = MessageBundle.loadPropertiesFileUtf8(localizedPropsPath, LOGGER);
+						}
 
-						String title = props.getProperty("jTitle");
+						String title = props != null ? props.getProperty("jTitle") : null;
 						if (title == null || title.isBlank()) {
-							Path fallbackPropsPath = f.toPath().resolveSibling(f.getName().replace(".jasper", ".properties"));
+							if (props == null && !Locale.ENGLISH.getLanguage().equals(language)) {
+								LOGGER.debug(">> no bundle for '{}' in language '{}', using default", f.getName(), language);
+							}
 							props = MessageBundle.loadPropertiesFileUtf8(fallbackPropsPath, LOGGER);
 							title = props.getProperty("jTitle");
 						}

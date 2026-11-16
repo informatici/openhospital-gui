@@ -62,9 +62,14 @@ LOG_LEVEL="INFO"
 DEMO_DATA="off"
 DEMO_DATABASE="ohdemo"
 
+##################### JAVA/JRE configuration ######################
 # set JAVA_BIN
 # Uncomment this if you want to use system wide JAVA
 #JAVA_BIN=`which java`
+
+# set JAVA_HOME
+# Uncomment this if you want to use system wide JAVA_HOME
+#JAVA_HOME="/opt/jdk/"
 
 ##################### Database configuration #######################
 DATABASE_SERVER="localhost"
@@ -110,6 +115,9 @@ EXT="tar.gz"
 
 # mysql configuration file
 MYSQL_CONF_FILE="my.cnf"
+
+# seconds to wait for the database to start listening, or to release its port on shutdown
+DATABASE_WAIT_TIMEOUT=90
 
 # OH configuration files - see also settings.properties
 OH_SETTINGS="settings.properties"
@@ -163,9 +171,9 @@ EXPERT_MODE="off"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-MYSQL_VERSION="10.6.23"
+MYSQL_VERSION="10.6.28"
 #MYSQL_VERSION="11.6.2"
-MYSQL32_VERSION="10.5.27"
+MYSQL32_VERSION="10.5.28"
 PACKAGE_TYPE="systemd" 
 
 ######## define system and software architecture
@@ -206,12 +214,12 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ### JRE 17 - zulu distribution
 #JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-linux_$JAVA_PACKAGE_ARCH"
-JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu17.68.203-ca-fx-jre17.0.20.1-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
 JAVA_DIR=$JAVA_DISTRO
 
 # Tomcat 11
-TOMCAT_VERSION="11.0.15"
+TOMCAT_VERSION="11.0.25"
 TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION"
 TOMCAT_DIR=$TOMCAT_DISTRO
@@ -225,13 +233,13 @@ function script_menu {
 	# show help / user options
 	echo " ------------------------------------------------------------------------"
 	echo "|                                                                        |"
-	echo "|                Open Hospital - v$OH_VERSION                                 |"
+	echo "|                   Open Hospital - v$OH_VERSION                              |"
 	echo "|                                                                        |"
 	echo " ------------------------------------------------------------------------"
 	echo "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
 	echo " ------------------------------------------------------------------------"
 	if [ "$EXPERT_MODE" == "on" ]; then
-		echo "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		echo "| Expert mode: $EXPERT_MODE | EXPERIMENTAL: API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
 		echo " ------------------------------------------------------------------------"
 	fi
 	echo ""
@@ -347,7 +355,7 @@ function read_settings {
 		
 		OH_MODE=$MODE
 		OH_LANGUAGE=$LANGUAGE
-		OH_SINGLE_USER=$SINGLE_USER
+		OH_SINGLE_USER=$SINGLEUSER
 		OH_DOC_DIR=$OH_DOC_DIR
 		DEMO_DATA=$DEMODATA
 		API_SERVER=$APISERVER
@@ -643,6 +651,13 @@ fi
 
 echo "Java found!"
 echo "Using $JAVA_BIN"
+
+# set JAVA_HOME
+if ( [ ! -x "$JAVA_HOME" ] ); then
+	echo "Setting JAVA_HOME..."
+	JAVA_HOME="$OH_PATH/$JAVA_DIR"
+	export JAVA_HOME
+fi
 }
 
 ###################################################################
@@ -727,7 +742,7 @@ echo "Using $TOMCAT_BIN"
 if [ ! -d "$OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD" ] ; then
 	echo "Unpacking $OH_API_PROD.war..."
 	mkdir -p $OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD/
-	unzip -qq $OH_PATH/$OH_DIR/bin/$OH_API_WAR -d $OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD 
+	unzip -qq -u $OH_PATH/$OH_DIR/bin/$OH_API_WAR -d $OH_PATH/$TOMCAT_DIR/webapps/$OH_API_PROD 
 else
 	echo "Using $OH_API_PROD deployed application..."
 fi
@@ -782,6 +797,16 @@ function initialize_database {
 }
 
 ###################################################################
+# Whether the database is accepting connections on its TCP port.
+#
+# The port is probed with bash's own /dev/tcp redirection rather than with `nc`, which is not part
+# of the package and is absent from many minimal installations: there the probe never succeeded, so
+# the wait loop below span forever and the launcher hung with no message and no way to tell why.
+function database_port_open {
+	(exec 3<>/dev/tcp/$DATABASE_SERVER/$DATABASE_PORT) > /dev/null 2>&1
+}
+
+###################################################################
 function start_database {
 	echo "Checking if $MYSQL_NAME is running..."
 	if [ -f "$OH_PATH/$TMP_DIR/mysql.sock" ] || [ -f "$OH_PATH/$TMP_DIR/mysql.pid" ] ; then
@@ -796,12 +821,41 @@ function start_database {
 
 	echo "Starting $MYSQL_NAME server... "
 	./$MYSQL_DIR/bin/mysqld_safe --defaults-file=./$CONF_DIR/$MYSQL_CONF_FILE >> ./$LOG_DIR/$LOG_FILE 2>&1 &
+	DATABASE_LAUNCHER_PID=$!
 	if [ $? -ne 0 ]; then
 		echo "Error: $MYSQL_NAME server not started! Exiting."
 		exit 2
 	fi
-	# wait till the MariaDB/MySQL tcp port is open
-	until nc -z $DATABASE_SERVER $DATABASE_PORT; do sleep 1; done
+
+	# wait till the MariaDB/MySQL tcp port is open.
+	#
+	# A start that has already failed is not waited out: mysqld_safe stays alive for as long as the
+	# server does, so once it is gone the port will never open and there is nothing left to wait for.
+	# That is the common failure - a port already taken, a data directory the server will not accept,
+	# a bad configuration - and it is now reported in about a second rather than at the end of the
+	# timeout. The timeout is what remains for the rarer case of a server that runs but does not get
+	# to listening, where waiting is the right thing to do: a start that has to build its system
+	# tables, or one recovering after an unclean shutdown, takes its time and does succeed.
+
+	WAITED=0
+	until database_port_open; do
+		if ! kill -0 $DATABASE_LAUNCHER_PID 2>/dev/null; then
+			echo "Error: $MYSQL_NAME server exited before it started listening on $DATABASE_SERVER:$DATABASE_PORT."
+			echo "See ./$LOG_DIR/$LOG_FILE for the reason. Exiting."
+			exit 2
+		fi
+		if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+			echo "Error: $MYSQL_NAME server is not listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+			echo "See ./$LOG_DIR/$LOG_FILE for the reason. Exiting."
+			exit 2
+		fi
+		# say something while waiting, so that a slow start is not mistaken for the hang this replaced
+		if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+			echo "Still waiting for $MYSQL_NAME to listen on $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
+		fi
+		sleep 1
+		WAITED=$((WAITED+1))
+	done
 	echo "$MYSQL_NAME server started!"
 }
 
@@ -864,9 +918,10 @@ function import_database {
 	echo "Importing database [$DATABASE_NAME] with user [$DATABASE_USER@$DATABASE_SERVER]..."
 	cd "./$SQL_DIR"
 #	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
-	../$MYSQL_DIR/bin/mysql --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
+	# --abort-source-on-error: the client otherwise carries on after a failed statement inside a sourced file and still exits 0
+	../$MYSQL_DIR/bin/mysql --abort-source-on-error --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME < ./$DB_CREATE_SQL >> ../$LOG_DIR/$LOG_FILE 2>&1
 	if [ $? -ne 0 ]; then
-		echo "Error: Database not imported! Exiting."
+		echo "Error: Database [$DATABASE_NAME] not imported! Exiting."
 		shutdown_database;
 		cd "$CURRENT_DIR"
 		exit 2
@@ -920,7 +975,19 @@ function shutdown_database {
 		cd "$OH_PATH"
 		./$MYSQL_DIR/bin/mysqladmin -u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
 		# wait till the MySQL tcp port is closed
-		until !( nc -z $DATABASE_SERVER $DATABASE_PORT ); do sleep 1; done
+		WAITED=0
+		while database_port_open; do
+			if [ $WAITED -ge $DATABASE_WAIT_TIMEOUT ]; then
+				echo "Warning: $MYSQL_NAME is still listening on $DATABASE_SERVER:$DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds."
+				echo "See ./$LOG_DIR/$LOG_FILE for the reason."
+				return
+			fi
+			if [ $WAITED -gt 0 ] && [ $((WAITED % 10)) -eq 0 ]; then
+				echo "Still waiting for $MYSQL_NAME to release $DATABASE_SERVER:$DATABASE_PORT ($WAITED s)..."
+			fi
+			sleep 1
+			WAITED=$((WAITED+1))
+		done
 		echo "$MYSQL_NAME stopped!"
 	else
 		exit 1
@@ -1013,10 +1080,13 @@ function write_config_files {
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/$OH_SETTINGS ]; then
 		[ -f ./$OH_DIR/rsc/$OH_SETTINGS ] && mv -f ./$OH_DIR/rsc/$OH_SETTINGS ./$OH_DIR/rsc/$OH_SETTINGS.old
 		echo "Writing OH configuration file -> $OH_SETTINGS..."
+		# anchored: UI_INTERFACE is a substring of GUI_INTERFACE
 		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&../$OH_DOC_DIR&g" \
 		-e "s/DEMODATA=off/"DEMODATA=$DEMO_DATA"/g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
-		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" -e "s/APISERVER=off/"APISERVER=$API_SERVER"/g" \
-		-e "s/GUI_INTERFACE=on/"$GUI_INTERFACE=$GUI_INTERFACE"/g" -e "s/UI_INTERFACE=off/"UI_INTERFACE=$UI_INTERFACE"/g" \
+		-e "s/PHOTO_DIR/$PHOTO_DIR_ESCAPED/g" \
+		-e "s/^APISERVER=off/APISERVER=$API_SERVER/" \
+		-e "s/^GUI_INTERFACE=on/GUI_INTERFACE=$GUI_INTERFACE/" \
+		-e "s/^UI_INTERFACE=off/UI_INTERFACE=$UI_INTERFACE/" \
 		./$OH_DIR/rsc/$OH_SETTINGS.dist > ./$OH_DIR/rsc/$OH_SETTINGS
 	fi
 
@@ -1089,7 +1159,7 @@ function start_gui {
 	# OH GUI launch
 	cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
 
-	$JAVA_BIN -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> ../$LOG_DIR/$LOG_FILE 2>&1
+	$JAVA_BIN -client --add-opens java.desktop/javax.imageio.stream=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.Application >> ../$LOG_DIR/$LOG_FILE 2>&1
 
 	if [ $? -ne 0 ]; then
 		echo "An error occurred while starting Open Hospital. Exiting."
@@ -1755,7 +1825,7 @@ if [ "$DEMO_DATA" = "on" ]; then
 		echo "Found SQL demo database, starting OH with Demo data..."
 		DB_CREATE_SQL=$DB_DEMO
 	else
-		echo "Error: no $DB_DEMO found! Exiting."
+		echo "Error: no database [$DB_DEMO] found! Exiting."
 		exit 1
 	fi
 	set_db_name;
@@ -1786,8 +1856,20 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 	mysql_check;
 	# config database
 	config_database;
+
 	# check if OH database already exists
+	#
+	# The data directory alone does not say that: initialize_database creates it as its very first
+	# step, so an installation interrupted at any point afterwards looked complete on the next run
+	# and the launcher went straight to start_database on a database that could not work, with no
+	# hint that the first attempt had never finished. What tells a finished installation apart is
+	# the directory the database engine creates for the [$DATABASE_NAME] schema itself. It is looked
+	# up without regard to case, because the shipped my.cnf sets lower_case_table_names and the
+	# engine then stores the schema of a database named MyHospital in a directory called myhospital,
+	# while DATA_DIR keeps the name as the user typed it.
+
 	if [ ! -d ./"$DATA_DIR" ]; then
+		# if mariadb data directory does not exist, start from scratch
 		echo "OH database not found, starting from scratch..."
 		# prepare database
 		initialize_database;
@@ -1801,8 +1883,14 @@ if [ "$OH_MODE" = "PORTABLE" ] || [ "$OH_MODE" = "SERVER" ] ; then
 		create_database;
 		# load data
 		import_database;
+		# check if broken/unfinished OH database references already exist
+	elif [ -z "$(find ./"$DATA_DIR" -mindepth 1 -maxdepth 1 -type d -iname "$DATABASE_NAME" -print -quit 2>/dev/null)" ]; then
+		echo "Error: a previous installation of the [$DATABASE_NAME] database was left unfinished in ./$DATA_DIR."
+		echo "Remove that directory, or reset the installation with option [X] which deletes the data for you,"
+		echo "then run this script again. Exiting."
+		exit 2
 	else
-	        echo "OH database found!"
+	        echo "OH database [$DATABASE_NAME] found!"
 		# start database
 		start_database;
 	fi
@@ -1815,9 +1903,10 @@ test_database_connection;
 
 # check for API server
 if [ "$API_SERVER" = "on" ]; then
-	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# Deploy API and copy the updated properties.
+	tomcat_setup;
 	# workaround to have UI files in correct place
 	setup_ui;
 	# start API server
