@@ -263,31 +263,40 @@ public class UserEdit extends JDialog {
 					user.setPasswd(hashed);
 					user.setUserGroupName((UserGroup) userGroupComboBox.getSelectedItem());
 
-					try {
-						userBrowsingManager.newUser(user);
-						fireUserInserted(user);
-						dispose();
-					} catch (OHServiceException e1) {
-						MessageDialog.info(null, "angal.common.datacouldnotbesaved.msg");
-						OHServiceExceptionUtil.showMessages(e1);
-					}
 					Arrays.fill(password, '0');
 					Arrays.fill(repeatPassword, '0');
 				} else {
 					user.setUserGroupName((UserGroup) userGroupComboBox.getSelectedItem());
-					try {
+				}
+
+				try {
+					boolean result = false;
+					if (insert) {
+						User insertedUser = userBrowsingManager.newUser(user);
+						if (insertedUser != null) {
+							result = true;
+							fireUserInserted(user);
+						}
+					} else {
 						if (user.isAccountLocked() && !accountLocked.isSelected()) {
 							userBrowsingManager.unlockUser(user);
 						} else if (!user.isAccountLocked() && accountLocked.isSelected()) {
 							userBrowsingManager.lockUser(user);
 						}
-						userBrowsingManager.updateUser(user);
-						fireUserUpdated();
-						dispose();
-					} catch (OHServiceException e1) {
-						MessageDialog.info(null, "angal.common.datacouldnotbesaved.msg");
-						OHServiceExceptionUtil.showMessages(e1);
+						User updatedUser = userBrowsingManager.updateUser(user);
+						if (updatedUser != null) {
+							result = true;
+							fireUserUpdated();
+						}
 					}
+					if (result) {
+						dispose();
+					} else {
+						MessageDialog.info(null, "angal.common.datacouldnotbesaved.msg");
+					}
+				} catch (OHServiceException e1) {
+					MessageDialog.info(null, "angal.common.datacouldnotbesaved.msg");
+					OHServiceExceptionUtil.showMessages(e1);
 				}
 			});
 		}

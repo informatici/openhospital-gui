@@ -198,23 +198,33 @@ public class DeliveryTypeBrowserEdit extends JDialog {
             okButton.addActionListener(actionEvent -> {
 
                 try {
-                    if (descriptionTextField.getText().equals(lastdescription)) {
-                        dispose();
-                    }
                     deliveryType.setDescription(descriptionTextField.getText());
                     deliveryType.setCode(codeTextField.getText());
+
+                    boolean result = false;
+                    DeliveryType savedDeliveryType;
+
                     if (insert) {      // inserting
-                        deliveryTypeBrowserManager.newDeliveryType(deliveryType);
-                        fireDeliveryInserted();
-                        dispose();
+                        savedDeliveryType = deliveryTypeBrowserManager.newDeliveryType(deliveryType);
+                        if (savedDeliveryType != null) {
+                            result = true;
+                            fireDeliveryInserted();
+                        }
                     } else {                          // updating
                         if (descriptionTextField.getText().equals(lastdescription)) {
                             dispose();
-                        } else {
-                            deliveryTypeBrowserManager.updateDeliveryType(deliveryType);
-                            fireDeliveryUpdated();
-                            dispose();
+                            return;
                         }
+                        savedDeliveryType = deliveryTypeBrowserManager.updateDeliveryType(deliveryType);
+                        if (savedDeliveryType != null) {
+                            result = true;
+                            fireDeliveryUpdated();
+                        }
+                    }
+                    if (result) {
+                        dispose();
+                    } else {
+                        MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                     }
                 } catch (OHServiceException ohServiceException) {
                     MessageDialog.showExceptions(ohServiceException);

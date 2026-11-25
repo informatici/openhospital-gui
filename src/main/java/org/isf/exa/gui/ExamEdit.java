@@ -236,37 +236,31 @@ public class ExamEdit extends JDialog {
 					exam.setDefaultResult(defTextField.getText().toUpperCase());
 					exam.setProcedure(procedure);
 
-					boolean inError = false;
-					if (insert) {
-						try {
+					try {
+						Exam savedExam;
+						if (insert) {
 							if (examBrowsingManager.isKeyPresent(exam)) {
 								MessageDialog.error(this, "angal.exa.changethecodebecauseisalreadyinuse");
 								return;
 							}
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-							inError = true;
+							savedExam = examBrowsingManager.newExam(exam);
+						} else {
+							savedExam = examBrowsingManager.updateExam(exam);
 						}
-						try {
-							examBrowsingManager.newExam(exam);
-							fireExamInserted();
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-							inError = true;
+
+						if (savedExam != null) {
+							exam.setLock(savedExam.getLock());
+							if (insert) {
+								fireExamInserted();
+							} else {
+								fireExamUpdated();
+							}
+							dispose();
+						} else {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
-					} else {
-						try {
-							examBrowsingManager.updateExam(exam);
-							fireExamUpdated();
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-							inError = true;
-						}
-					}
-					if (inError) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-					} else {
-						dispose();
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1);
 					}
 				}
 			});

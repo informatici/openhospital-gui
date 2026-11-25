@@ -210,36 +210,32 @@ public class MedicalDsrStockMovementTypeBrowserEdit extends JDialog {
 				medicalDsrStockMovementType.setType((String) typeComboBox.getSelectedItem());
 				medicalDsrStockMovementType.setCategory(category);
 
-				if (insert) { // inserting
-					try {
-						MovementType insertedMovementType = medicalDsrStockMovementTypeBrowserManager
+				try {
+					MovementType savedMovementType;
+					if (insert) { // inserting
+						savedMovementType = medicalDsrStockMovementTypeBrowserManager
 										.newMedicalDsrStockMovementType(medicalDsrStockMovementType);
-						if (insertedMovementType != null) {
-							fireMedicaldsrstockmovInserted(medicalDsrStockMovementType);
+					} else { // updating
+						if (description.equals(lastdescription) && category.equals(lastCategory)) {
 							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							return;
 						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
+						savedMovementType = medicalDsrStockMovementTypeBrowserManager
+										.updateMedicalDsrStockMovementType(medicalDsrStockMovementType);
 					}
-				} else { // updating
-					if (description.equals(lastdescription) && category.equals(lastCategory)) {
+
+					if (savedMovementType != null) {
+						if (insert) {
+							fireMedicaldsrstockmovInserted(medicalDsrStockMovementType);
+						} else {
+							fireMedicaldsrstockmovUpdated();
+						}
 						dispose();
 					} else {
-						try {
-							MovementType updatedMovementType = medicalDsrStockMovementTypeBrowserManager
-											.updateMedicalDsrStockMovementType(medicalDsrStockMovementType);
-							if (updatedMovementType != null) {
-								fireMedicaldsrstockmovUpdated();
-								dispose();
-							} else {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							}
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-						}
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
 				}
 			});
 		}

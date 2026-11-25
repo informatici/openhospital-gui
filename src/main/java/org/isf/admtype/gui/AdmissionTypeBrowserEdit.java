@@ -41,6 +41,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
@@ -194,35 +195,39 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 
-				if (descriptionTextField.getText().equals(lastdescription)) {
-					dispose();
-				}
-
 				admissionType.setDescription(descriptionTextField.getText());
 				admissionType.setCode(codeTextField.getText());
-				if (insert) {      // inserting
-					try {
-						admissionTypeBrowserManager.newAdmissionType(admissionType);
-						fireAdmissionInserted(admissionType);
-						dispose();
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
+
+				try {
+					boolean result = false;
+					AdmissionType savedAdmissionType;
+					if (insert) {      // inserting
+						savedAdmissionType = admissionTypeBrowserManager.newAdmissionType(admissionType);
+						if (savedAdmissionType != null) {
+							result = true;
+							fireAdmissionInserted(admissionType);
+						}
+					} else {                          // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
+							dispose();
+							return;
+						}
+						savedAdmissionType = admissionTypeBrowserManager.updateAdmissionType(admissionType);
+						if (savedAdmissionType != null) {
+							result = true;
+							fireAdmissionUpdated();
+						}
 					}
-				} else {                          // updating
-					if (descriptionTextField.getText().equals(lastdescription)) {
+					if (result) {
 						dispose();
 					} else {
-						try {
-							admissionTypeBrowserManager.updateAdmissionType(admissionType);
-							fireAdmissionUpdated();
-							dispose();
-						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
-							if (!lastdescription.isBlank()) {
-								descriptionTextField.setText(lastdescription);
-								admissionType.setDescription(lastdescription);
-							}
-						}
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+				} catch (OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
+					if (!insert && !lastdescription.isBlank()) {
+						descriptionTextField.setText(lastdescription);
+						admissionType.setDescription(lastdescription);
 					}
 				}
 			});

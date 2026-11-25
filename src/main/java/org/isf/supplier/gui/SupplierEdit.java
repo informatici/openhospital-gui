@@ -262,24 +262,22 @@ public class SupplierEdit extends JDialog {
 				} else {
 					supplier.setSupDeleted('N');
 				}
-				if (insert) {	// inserting
-					try {
-						Supplier insertedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
-						fireSupplierInserted();
+				try {
+					Supplier savedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
+					if (savedSupplier != null) {
+						supplier.setSupId(savedSupplier.getSupId());
+						supplier.setLock(savedSupplier.getLock());
+						if (insert) {
+							fireSupplierInserted();
+						} else {
+							fireSupplierUpdated();
+						}
 						dispose();
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
+					} else {
 						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
-				} else {	// updating
-					try {
-						Supplier updatedSupplier = supplierBrowserManager.saveOrUpdate(supplier);
-						fireSupplierUpdated();
-						dispose();
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-					}
+				} catch (OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 		}

@@ -41,6 +41,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
@@ -198,26 +199,34 @@ public class DischargeTypeBrowserEdit extends JDialog {
 
 				dischargeType.setDescription(descriptionTextField.getText());
 				dischargeType.setCode(codeTextField.getText());
-				if (insert) {      // inserting
-					try {
-						dischargeTypeBrowserManager.newDischargeType(dischargeType);
-						fireDischargeInserted(dischargeType);
-						dispose();
-					} catch (OHServiceException serviceException) {
-						OHServiceExceptionUtil.showMessages(serviceException, this);
-					}
-				} else {                          // updating
-					if (descriptionTextField.getText().equals(lastdescription)) {
-						dispose();
-					} else {
-						try {
-							dischargeTypeBrowserManager.updateDischargeType(dischargeType);
-							fireDischargeUpdated();
+
+				try {
+					boolean result = false;
+					DischargeType savedDischargeType;
+					if (insert) {      // inserting
+						savedDischargeType = dischargeTypeBrowserManager.newDischargeType(dischargeType);
+						if (savedDischargeType != null) {
+							result = true;
+							fireDischargeInserted(dischargeType);
+						}
+					} else {                          // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
-						} catch (OHServiceException serviceException) {
-							OHServiceExceptionUtil.showMessages(serviceException, this);
+							return;
+						}
+						savedDischargeType = dischargeTypeBrowserManager.updateDischargeType(dischargeType);
+						if (savedDischargeType != null) {
+							result = true;
+							fireDischargeUpdated();
 						}
 					}
+					if (result) {
+						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+				} catch (OHServiceException serviceException) {
+					OHServiceExceptionUtil.showMessages(serviceException, this);
 				}
 			});
 		}

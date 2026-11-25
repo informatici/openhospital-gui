@@ -222,40 +222,30 @@ public class VaccineEdit extends JDialog {
 
 				boolean result = false;
 				Vaccine savedVaccine;
-				if (insert) {
-					try {
+				try {
+					if (insert) {
 						savedVaccine = vaccineBrowserManager.newVaccine(vaccine);
-						if (savedVaccine != null) {
-							vaccine.setLock(savedVaccine.getLock());
-							result = true;
-						}
-
-						if (result) {
-							fireVaccineInserted();
-							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
-					}
-				} else {
-					try {
+					} else {
 						savedVaccine = vaccineBrowserManager.updateVaccine(vaccine);
-						if (savedVaccine != null) {
-							vaccine.setLock(savedVaccine.getLock());
-							result = true;
-						}
-
-						if (result) {
-							fireVaccineUpdated();
-							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1);
 					}
+
+					if (savedVaccine != null) {
+						vaccine.setLock(savedVaccine.getLock());
+						result = true;
+						if (insert) {
+							fireVaccineInserted();
+						} else {
+							fireVaccineUpdated();
+						}
+					}
+
+					if (result) {
+						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
 				}
 			});
 		}
