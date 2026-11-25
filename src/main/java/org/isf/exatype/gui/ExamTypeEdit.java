@@ -220,8 +220,8 @@ public class ExamTypeEdit extends JDialog {
 							return;
 						}
 
-						// Update existing ExamType (uses same method here)
-						savedExamType = examTypeBrowserManager.newExamType(examType);
+						// Update existing ExamType
+						savedExamType = examTypeBrowserManager.updateExamType(examType);
 						if (savedExamType != null) {
 							result = true;
 							fireExamTypeUpdated();

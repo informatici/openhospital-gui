@@ -206,6 +206,7 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 					PregnantTreatmentType savedPregnantTreatmentType = null;
 
 					if (insert) {
+						// Create and save a new PregnantTreatmentType
 						savedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
 						if (savedPregnantTreatmentType != null) {
 							result = true;
@@ -218,13 +219,14 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 							return;
 						}
 
-						savedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
+						savedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.updatePregnantTreatmentType(pregnantTreatmentType);
 						if (savedPregnantTreatmentType != null) {
 							result = true;
 							firePregnantTreatmentUpdated();
 						}
 					}
 
+					// Close dialog if operation succeeded; otherwise show error message
 					if (result) {
 						dispose();
 					} else {

@@ -250,8 +250,8 @@ public class MedicalEdit extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					boolean result = false;
+					Medical newMedical = null;
 					if (insert) { // inserting
-						Medical newMedical = null;
 						try {
 							newMedical = (Medical) medical.clone();
 							newMedical.setType((MedicalType) typeComboBox.getSelectedItem());
@@ -291,10 +291,6 @@ public class MedicalEdit extends JDialog {
 								}
 							}
 						}
-						if (result) {
-							fireMedicalInserted(newMedical);
-							dispose();
-						}
 					} else { // updating
 						oldMedical.setType((MedicalType) typeComboBox.getSelectedItem());
 						oldMedical.setDescription(descriptionTextField.getText());
@@ -330,7 +326,11 @@ public class MedicalEdit extends JDialog {
 								}
 							}
 						}
-						if (result) {
+					}
+					if (result) {
+						if (insert) {
+							fireMedicalInserted(newMedical);
+						} else {
 							Medical updatedMedical;
 							try {
 								updatedMedical = medicalBrowsingManager.getMedical(oldMedical.getCode());
@@ -346,10 +346,9 @@ public class MedicalEdit extends JDialog {
 							medical.setLock(updatedMedical.getLock());
 							medical.setDeleted(updatedMedical.getDeleted());
 							fireMedicalUpdated();
-							dispose();
 						}
-					}
-					if (!result) {
+						dispose();
+					} else {
 						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				}

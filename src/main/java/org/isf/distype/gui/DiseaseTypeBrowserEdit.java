@@ -196,24 +196,31 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 			okButton.addActionListener(actionEvent -> {
 
 				try {
-					if (descriptionTextField.getText().equals(lastdescription)) {
-						dispose();
-					}
 					diseaseType.setDescription(descriptionTextField.getText());
 					diseaseType.setCode(codeTextField.getText());
-					boolean result;
+					boolean result = false;
+					DiseaseType savedDiseaseType;
 					if (insert) {      // inserting
-						diseaseTypeBrowserManager.newDiseaseType(diseaseType);
-						fireDiseaseInserted();
-						dispose();
+						savedDiseaseType = diseaseTypeBrowserManager.newDiseaseType(diseaseType);
+						if (savedDiseaseType != null) {
+							result = true;
+							fireDiseaseInserted();
+						}
 					} else {                          // updating
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
-						} else {
-							diseaseTypeBrowserManager.updateDiseaseType(diseaseType);
-							fireDiseaseUpdated();
-							dispose();
+							return;
 						}
+						savedDiseaseType = diseaseTypeBrowserManager.updateDiseaseType(diseaseType);
+						if (savedDiseaseType != null) {
+							result = true;
+							fireDiseaseUpdated();
+						}
+					}
+					if (result) {
+						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);

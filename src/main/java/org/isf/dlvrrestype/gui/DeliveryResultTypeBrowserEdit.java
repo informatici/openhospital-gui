@@ -197,22 +197,33 @@ public class DeliveryResultTypeBrowserEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 				try {
-
 					deliveryresultType.setDescription(descriptionTextField.getText());
 					deliveryresultType.setCode(codeTextField.getText());
 
+					boolean result = false;
+					DeliveryResultType savedDeliveryResultType;
+
 					if (insert) {     // inserting
-						deliveryResultTypeBrowserManager.newDeliveryResultType(deliveryresultType);
-						fireDeliveryResultInserted();
-						dispose();
+						savedDeliveryResultType = deliveryResultTypeBrowserManager.newDeliveryResultType(deliveryresultType);
+						if (savedDeliveryResultType != null) {
+							result = true;
+							fireDeliveryResultInserted();
+						}
 					} else {            // updating
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
-						} else {
-							deliveryResultTypeBrowserManager.updateDeliveryResultType(deliveryresultType);
-							fireDeliveryResultUpdated();
-							dispose();
+							return;
 						}
+						savedDeliveryResultType = deliveryResultTypeBrowserManager.updateDeliveryResultType(deliveryresultType);
+						if (savedDeliveryResultType != null) {
+							result = true;
+							fireDeliveryResultUpdated();
+						}
+					}
+					if (result) {
+						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);

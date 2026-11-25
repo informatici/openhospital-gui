@@ -149,18 +149,29 @@ public class PricesOthersEdit extends JDialog {
 				pOther.setUndefined(jCheckBoxUndefined.isSelected());
 
 				try {
+					boolean result = false;
+					PricesOthers savedOther;
 					if (insert) {	// inserting
-						pricesOthersManager.newOther(pOther);
-						fireOtherInserted();
+						savedOther = pricesOthersManager.newOther(pOther);
+						if (savedOther != null) {
+							result = true;
+							fireOtherInserted();
+						}
 					} else {	// updating
-						pricesOthersManager.updateOther(pOther);
-						fireOtherUpdated();
+						savedOther = pricesOthersManager.updateOther(pOther);
+						if (savedOther != null) {
+							result = true;
+							fireOtherUpdated();
+						}
+					}
+					if (result) {
+						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				} catch (OHServiceException e) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					OHServiceExceptionUtil.showMessages(e);
 				}
-				dispose();
 			});
 		}
 		return jButtonOK;

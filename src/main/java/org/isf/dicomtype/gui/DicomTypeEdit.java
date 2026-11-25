@@ -41,6 +41,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
@@ -197,26 +198,34 @@ public class DicomTypeEdit extends JDialog {
 
 				dicomType.setDicomTypeDescription(descriptionTextField.getText());
 				dicomType.setDicomTypeID(codeTextField.getText());
-				if (insert) {    // inserting
-					try {
-						dicomTypeBrowserManager.newDicomType(dicomType);
-						fireDicomTypeInserted(dicomType);
-						dispose();
-					} catch (OHServiceException e1) {
-						OHServiceExceptionUtil.showMessages(e1, this);
-					}
-				} else {                // updating
-					if (descriptionTextField.getText().equals(lastdescription)) {
-						dispose();
-					} else {
-						try {
-							dicomTypeBrowserManager.updateDicomType(dicomType);
-							fireDicomUpdated();
+
+				try {
+					boolean result = false;
+					DicomType savedDicomType;
+					if (insert) {    // inserting
+						savedDicomType = dicomTypeBrowserManager.newDicomType(dicomType);
+						if (savedDicomType != null) {
+							result = true;
+							fireDicomTypeInserted(dicomType);
+						}
+					} else {                // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1, this);
+							return;
+						}
+						savedDicomType = dicomTypeBrowserManager.updateDicomType(dicomType);
+						if (savedDicomType != null) {
+							result = true;
+							fireDicomUpdated();
 						}
 					}
+					if (result) {
+						dispose();
+					} else {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1, this);
 				}
 			});
 		}
