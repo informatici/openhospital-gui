@@ -7,7 +7,10 @@ on:
   push:
     branches:
       - '**'
+    tags-ignore:
+      - '**'
   pull_request:
+
 
 env:
   MAVEN_ARGS: '-B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
@@ -17,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Debug GitHub variables
         env:
@@ -68,7 +71,7 @@ jobs:
           echo "BRANCH_NAME: ${{ env.BRANCH_NAME }}"
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6.0.1
         with:
           distribution: 'zulu'
           java-version: 17
@@ -78,7 +81,11 @@ jobs:
         run: |
           git clone --depth=1 --no-single-branch https://github.com/${{ env.FORK_REPO }}.git openhospital-core
           pushd openhospital-core
-          git checkout -B ${{ env.BRANCH_NAME }} origin/${{ env.BRANCH_NAME }} || git checkout develop
+          # a branch of the same name comes first, as before; a pull request against a release
+          # branch then builds core from that same branch, and anything else falls back to develop
+          git checkout -B ${{ env.BRANCH_NAME }} origin/${{ env.BRANCH_NAME }} \
+            || git checkout "${{ github.base_ref }}" \
+            || git checkout develop
           popd
 
       - name: Install core
@@ -89,3 +96,14 @@ jobs:
 
       - name: Build GUI with Maven
         run: mvn -B package --file pom.xml
+
+  # Separate from the build: it needs neither the JDK nor a companion core checkout, so it still
+  # reports when the build is held up by a dependent pull request in openhospital-core.
+  launchers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check that the launchers pin the same third-party versions
+        run: .github/scripts/check-launcher-versions.sh

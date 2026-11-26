@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -213,7 +213,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 					} else {
 						MessageDialog.info(this, "angal.login.yourpasswordwasresetbyanadministrator.msg");
 					}
-					String hashed = ChangePasswordDialog.promptForNewPassword(this, userBrowsingManager,
+					String hashed = ChangePasswordDialog.promptForNewPassword(this, userBrowsingManager, user,
 						MessageBundle.getMessage("angal.login.changepassword.title"));
 					if (hashed == null) {
 						MessageDialog.error(this, "angal.login.youmustchangethepasswordbeforeloggingin.msg");

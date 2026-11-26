@@ -119,9 +119,14 @@ $script:OH_SINGLE_USER="no"
 $script:DEMO_DATA="off"
 $script:DEMO_DATABASE="ohdemo"
 
+##################### JAVA/JRE configuration #######################
 # set JAVA_BIN 
 # Uncomment this if you want to use system wide JAVA
 #$script:JAVA_BIN="C:\Program Files\JAVA\bin\java.exe"
+
+# set JAVA_HOME
+# Uncomment this if you want to use system wide JAVA_HOME
+#$script:JAVA_HOME="C:\Program Files\JAVA\"
 
 ##################### Database configuration #######################
 $script:DATABASE_SERVER="127.0.0.1"
@@ -137,6 +142,7 @@ $script:OH_DIR="."
 $script:OH_DOC_DIR="doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
+
 $script:PHOTO_DIR="data/photo"
 $script:BACKUP_DIR="data/dump"
 $script:LOG_DIR="data/log"
@@ -172,6 +178,9 @@ $script:EXT="zip"
 
 # mysql configuration file
 $script:MYSQL_CONF_FILE="my.cnf"
+
+# seconds to wait for the database to start listening, or to release its port on shutdown
+$script:DATABASE_WAIT_TIMEOUT=90
 
 # OH configuration files - see also settings.properties
 $script:OH_SETTINGS="settings.properties"
@@ -229,7 +238,7 @@ $script:EXPERT_MODE="off"
 
 ######## MariaDB/MySQL Software
 # MariaDB version
-$script:MYSQL_VERSION="10.6.23"
+$script:MYSQL_VERSION="10.6.28"
 $script:MYSQL32_VERSION="10.6.5"
 
 ######## define system and software architecture
@@ -269,11 +278,11 @@ $script:MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ### JRE 17 - zulu distribution
 #$script:JAVA_DISTRO="zulu11.68.17-ca-jre11.0.21-win_$JAVA_PACKAGE_ARCH"
-$script:JAVA_DISTRO="zulu17.60.17-ca-jre17.0.16-win_$JAVA_PACKAGE_ARCH"
+$script:JAVA_DISTRO="zulu17.68.203-ca-fx-jre17.0.20.1-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
 
 # Tomcat 11
-$script:TOMCAT_VERSION="11.0.15"
+$script:TOMCAT_VERSION="11.0.25"
 $script:TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v$TOMCAT_VERSION/bin/"
 $script:TOMCAT_DISTRO="apache-tomcat-$TOMCAT_VERSION-windows-x64"
 $script:TOMCAT_DIR="apache-tomcat-$TOMCAT_VERSION"
@@ -297,13 +306,13 @@ function script_menu {
 	#
 	Write-Host " ------------------------------------------------------------------------"
 	Write-Host "|                                                                        |"
-	Write-Host "|                Open Hospital - v$OH_VERSION                                 |"
+	Write-Host "|                   Open Hospital - v$OH_VERSION                              |"
 	Write-Host "|                                                                        |"
 	Write-Host " ------------------------------------------------------------------------"
 	Write-Host "| arch: $ARCH | lang: $OH_LANGUAGE | mode: $OH_MODE | Demo: $DEMO_DATA | log level: $LOG_LEVEL | "
 	Write-Host " ------------------------------------------------------------------------"
 	if ( $EXPERT_MODE -eq "on" ) {
-		Write-Host "| Expert mode: $EXPERT_MODE | EXPERIMENTAL:  API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
+		Write-Host "| Expert mode: $EXPERT_MODE | EXPERIMENTAL: API server: $API_SERVER | GUI: $GUI_INTERFACE | UI: $UI_INTERFACE |"
 		Write-Host " ------------------------------------------------------------------------"
 	}
 	Write-Host ""
@@ -403,7 +412,7 @@ function read_settings {
 		
 		$script:OH_MODE=$oh_settings.MODE
 		$script:OH_LANGUAGE=$oh_settings.LANGUAGE
-		$script:OH_SINGLE_USER=$oh_settings.SINGLE_USER
+		$script:OH_SINGLE_USER=$oh_settings.SINGLEUSER
 		$script:OH_DOC_DIR=$oh_settings.OH_DOC_DIR
 		$script:DEMO_DATA=$oh_settings.DEMODATA
 		$script:API_SERVER=$oh_settings.APISERVER
@@ -709,6 +718,13 @@ function java_check {
 	}
 	Write-Host "Java found!"
 	Write-Host "Using $JAVA_BIN"
+
+	# set JAVA_HOME
+	if ( !( $JAVA_HOME ) ) {
+		# set default
+		Write-Host "Setting JAVA_HOME..."
+		$script:JAVA_HOME="$OH_PATH\$JAVA_DIR"
+	}
 }
 
 ###################################################################
@@ -893,18 +909,39 @@ function start_database {
 
 	Write-Host "Starting $MYSQL_NAME server... "
 	try {
-		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--defaults-file=`"$OH_PATH\$CONF_DIR\$MYSQL_CONF_FILE`" --tmpdir=`"$OH_PATH\$TMP_DIR`" --standalone") -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-		Start-Sleep -Seconds 2
+		$script:DATABASE_PROCESS = Start-Process -PassThru -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--defaults-file=`"$OH_PATH\$CONF_DIR\$MYSQL_CONF_FILE`" --tmpdir=`"$OH_PATH\$TMP_DIR`" --standalone") -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 	}
 	catch {
 		Write-Host "Error: $MYSQL_NAME server not started! Exiting." -ForegroundColor Red
 		Read-Host; exit 2
 	}
 
-	# wait till the MariaDB/MySQL socket file is created -> TO BE IMPLEMENTED
-	# while ( -e $OH_PATH/$MYSQL_SOCKET ); do sleep 1; done
-	# # Wait till the MariaDB/MySQL tcp port is open
-	# until nc -z $DATABASE_SERVER $DATABASE_PORT; do sleep 1; done
+	# Wait till the MariaDB/MySQL tcp port is open, instead of assuming two seconds are enough: the
+	# next thing this script does is run a mysql client, and on a slow machine, or on a start that
+	# has to build the system tables or recover after an unclean shutdown, two seconds are not.
+	#
+	# A start that has already failed is not waited out either - once mysqld has exited, the port
+	# will never open and there is nothing left to wait for. That is the common failure and it is
+	# reported at once; the timeout covers the rarer server that runs but does not get to listening.
+
+	$WAITED = 0
+	while ( !(database_port_open) ) {
+		if ( $script:DATABASE_PROCESS -And $script:DATABASE_PROCESS.HasExited ) {
+			Write-Host "Error: $MYSQL_NAME server exited before it started listening on $DATABASE_SERVER port $DATABASE_PORT." -ForegroundColor Red
+			Write-Host "See $LOG_DIR/$LOG_FILE_ERR for the reason. Exiting." -ForegroundColor Red
+			Read-Host; exit 2
+		}
+		if ( $WAITED -ge $DATABASE_WAIT_TIMEOUT ) {
+			Write-Host "Error: $MYSQL_NAME server is not listening on $DATABASE_SERVER port $DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds." -ForegroundColor Red
+			Write-Host "See $LOG_DIR/$LOG_FILE_ERR for the reason. Exiting." -ForegroundColor Red
+			Read-Host; exit 2
+		}
+		if ( ($WAITED -gt 0) -And ($WAITED % 10 -eq 0) ) {
+			Write-Host "Still waiting for $MYSQL_NAME to listen on $DATABASE_SERVER port $DATABASE_PORT ($WAITED s)..."
+		}
+		Start-Sleep -Seconds 1
+		$WAITED++
+	}
 
 	Write-Host "$MYSQL_NAME server started!"
 }
@@ -984,13 +1021,18 @@ function import_database {
 	cd "./$SQL_DIR"
 
     $SQLCOMMAND=@"
-   --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./$DB_CREATE_SQL"
+   --abort-source-on-error --local-infile=1 -u $DATABASE_USER -p$DATABASE_PASSWORD -h $DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp $DATABASE_NAME -e "source ./$DB_CREATE_SQL"
 "@
 	try {
-		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+		$process = Start-Process -PassThru -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+		# Start-Process does not fail on a non-zero exit status, so the client reporting the failure
+		# would go unnoticed just like the failure itself did
+		if ($process.ExitCode -ne 0) {
+			throw "mysql exited with status $($process.ExitCode)"
+		}
  	}
 	catch {
-		Write-Host "Error: Database not imported! Exiting." -ForeGroundColor Red
+		Write-Host "Error: Database [$DATABASE_NAME] not imported! Exiting." -ForeGroundColor Red
 		shutdown_database;
 		cd "$CURRENT_DIR"
 		Read-Host; exit 2
@@ -1020,13 +1062,41 @@ function dump_database {
 }
 
 ###################################################################
+function database_port_open {
+	# Check if the database server is accepting connections on its TCP port.
+	
+	$client = New-Object System.Net.Sockets.TcpClient
+	try {
+		return $client.ConnectAsync("$DATABASE_SERVER", $DATABASE_PORT).Wait(1000)
+	}
+	catch {
+		return $false
+	}
+	finally {
+		$client.Dispose()
+	}
+}
+
+###################################################################
 function shutdown_database {
 	if ( !( $OH_MODE -eq "CLIENT" ) ) {
 		Write-Host "Shutting down $MYSQL_NAME..."
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqladmin.exe" -ArgumentList ("-u $DATABASE_ROOT_USER -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-		# wait till the $MYSQL_NAME socket file is removed -> TO BE IMPLEMENTED
-		# while ( -e $OH_PATH/$MYSQL_SOCKET ); do sleep 1; done
-		Start-Sleep -Seconds 2
+		# wait till the port is released, rather than assuming two seconds are enough: a server with
+		# work still to flush takes longer, and the next start would then find the port still taken
+		$WAITED = 0
+		while ( database_port_open ) {
+			if ( $WAITED -ge $DATABASE_WAIT_TIMEOUT ) {
+				Write-Host "Warning: $MYSQL_NAME is still listening on $DATABASE_SERVER port $DATABASE_PORT after $DATABASE_WAIT_TIMEOUT seconds." -ForegroundColor Yellow
+				Write-Host "See $LOG_DIR/$LOG_FILE_ERR for the reason." -ForegroundColor Yellow
+				return
+			}
+			if ( ($WAITED -gt 0) -And ($WAITED % 10 -eq 0) ) {
+				Write-Host "Still waiting for $MYSQL_NAME to release $DATABASE_SERVER port $DATABASE_PORT ($WAITED s)..."
+			}
+			Start-Sleep -Seconds 1
+			$WAITED++
+		}
 		Write-Host "$MYSQL_NAME stopped!"
 	}
 
@@ -1154,10 +1224,10 @@ function write_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("DEMODATA=off","DEMODATA=$DEMO_DATA") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set API_SERVER
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("APISERVER=off","APISERVER=$API_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
-		# set GUI INTERFACE
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("GUI_INTERFACE=on","GUI_INTERFACE=$GUI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		# set GUI INTERFACE - anchored: UI_INTERFACE is a substring of GUI_INTERFACE
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS") -replace "^GUI_INTERFACE=on","GUI_INTERFACE=$GUI_INTERFACE" | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 		# set UI INTERFACE
-		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS").replace("UI_INTERFACE=off","UI_INTERFACE=$UI_INTERFACE") | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS") -replace "^UI_INTERFACE=off","UI_INTERFACE=$UI_INTERFACE" | Set-Content "$OH_PATH/$OH_DIR/rsc/$OH_SETTINGS"
 	}
 
 	######## OH - Other settings setup
@@ -1861,7 +1931,7 @@ if ( $DEMO_DATA -eq "on" ) {
 		$DB_CREATE_SQL=$DB_DEMO
 	}
 	else {
-	      	Write-Host "Error: no $DB_DEMO found! Exiting." -ForegroundColor Red
+	      	Write-Host "Error: no database [$DB_DEMO] found! Exiting." -ForegroundColor Red
 		Read-Host;
 		exit 1
 	}
@@ -1893,9 +1963,26 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 	mysql_check;
 	# config database
 	config_database;
-	# check if OH database already exists
+
+	# check if OH database already exists.
+	#
+	# The data directory alone does not say that: initialize_database creates it as its very first
+	# step, so an installation interrupted at any point afterwards looked complete on the next run
+	# and the launcher went straight to start_database on a database that could not work, with no
+	# hint that the first attempt had never finished. What tells a finished installation apart is
+	# the directory the database engine creates for the [$DATABASE_NAME] schema itself, inside the
+	# data directory.
+
+	# check if broken/unfinished OH database references already exist
+	if ( (Test-Path "$OH_PATH/$DATA_DIR") -And !(Test-Path "$OH_PATH/$DATA_DIR/$DATABASE_NAME") ) {
+		Write-Host "Error: a previous installation of the [$DATABASE_NAME] database was left unfinished in $DATA_DIR." -ForegroundColor Red
+		Write-Host "Remove that directory, or reset the installation with option [X] which deletes the data for you," -ForegroundColor Red
+		Write-Host "then run this script again. Exiting." -ForegroundColor Red
+		Read-Host; exit 2
+	}
 	if ( !(Test-Path "$OH_PATH/$DATA_DIR") ) {
-		Write-Host "OH database not found, starting from scratch..."
+		# if mariadb data directory does not exist, start from scratch
+		Write-Host "OH database [$DATABASE_NAME] not found, starting from scratch..."
 		# prepare database
 		initialize_database;
 		# start database
@@ -1910,7 +1997,7 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 		import_database;
 	}
 	else {
-		Write-Host "OH database found!"
+		Write-Host "OH database [$DATABASE_NAME] found!"
 		# start database
 		start_database;
 	}
@@ -1923,9 +2010,10 @@ test_database_connection;
 
 # check for API server
 if ( $API_SERVER -eq "on" ) {
-	tomcat_setup;
 	# generate config files if not existent
 	write_config_files;
+	# Deploy the API and copy the updated configuration.
+	tomcat_setup;
 	# workaround to have UI files in correct place
 	setup_ui;
 	# start API server

@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
@@ -91,6 +92,8 @@ import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.opd.gui.OpdEditExtended;
 import org.isf.opd.model.Opd;
+import org.isf.patadminissue.manager.PatientAdminIssueBrowserManager;
+import org.isf.patient.gui.PatientAdministrativeFlagWarning;
 import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.gui.PatientInsertExtended.PatientListener;
@@ -139,6 +142,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			MessageBundle.getMessage("angal.common.female.txt") };
 	private JComboBox patientSexBox = new JComboBox(patientSexItems);
 	private JCheckBox[] wardCheck;
+	private JCheckBox adminIssuesCheck;
+	private Set<Integer> patientsWithOpenIssues = Set.of();
 	private JTextField searchString;
 	private JButton jSearchButton;
 	private JButton jButtonExamination;
@@ -161,6 +166,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+	private PatientAdminIssueBrowserManager patientAdminIssueManager = Context.getApplicationContext().getBean(PatientAdminIssueBrowserManager.class);
 
 	protected boolean altKeyReleased = true;
 	protected Timer ageTimer = new Timer(1000, e -> filterPatient(null));
@@ -178,6 +184,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		}
 		if (found) {
 			pPatient.remove(cc);
+			// after a merge the issues follow the surviving patient
+			loadPatientsWithOpenIssues();
 			lastKey = "";
 			filterPatient(searchString.getText());
 		}
@@ -293,6 +301,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 	public void patientInserted(AWTEvent e) {
 		Patient u = (Patient) e.getSource();
 		pPatient.add(0, new AdmittedPatient(u, null));
+		loadPatientsWithOpenIssues();
 		lastKey = "";
 		filterPatient(searchString.getText());
 		try {
@@ -321,6 +330,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				break;
 			}
 		}
+		loadPatientsWithOpenIssues();
 		lastKey = "";
 		filterPatient(searchString.getText());
 		try {
@@ -345,6 +355,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			}
 		}
 
+		loadPatientsWithOpenIssues();
 		initComponents();
 		setMinimumSize(new Dimension(1270, 570));
 		pack();
@@ -482,6 +493,16 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		sexPanel.add(patientSexBox, BorderLayout.CENTER);
 		sexPanel = setMyBorder(sexPanel, MessageBundle.getMessage("angal.admission.sex.border"));
 
+		adminIssuesCheck = new JCheckBox(MessageBundle.getMessage("angal.patadminissue.onlyopenissues.txt"));
+		if (!GeneralData.ENHANCEDSEARCH) {
+			adminIssuesCheck.addActionListener(listener);
+		}
+
+		JPanel adminIssuesPanel = new JPanel(new BorderLayout());
+		adminIssuesPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
+		adminIssuesPanel.add(adminIssuesCheck, BorderLayout.CENTER);
+		adminIssuesPanel = setMyBorder(adminIssuesPanel, MessageBundle.getMessage("angal.patadminissue.border"));
+
 		JPanel searchPanel = new JPanel(new BorderLayout());
 		searchPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		searchString = new JTextField();
@@ -543,6 +564,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 										.addComponent(calendarPanel, width, width, width) //
 										.addComponent(agePanel, width, width, width) //
 										.addComponent(sexPanel, width, width, width) //
+										.addComponent(adminIssuesPanel, width, width, width) //
 										.addComponent(searchPanel, width, width, width)));
 
 		layout.setVerticalGroup(layout.createSequentialGroup()
@@ -556,6 +578,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 										.addComponent(agePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)) //
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(sexPanel, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)) //
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(adminIssuesPanel, GroupLayout.DEFAULT_SIZE,
 										GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)) //
 						.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(layout.createParallelGroup(Alignment.BASELINE) //
@@ -654,9 +679,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			}
 		}
 
-		table.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
-		table.getColumnModel().getColumn(2).setCellRenderer(new CenterTableCellRenderer());
-		table.getColumnModel().getColumn(3).setCellRenderer(new CenterTableCellRenderer());
+		for (int i = 0; i < pColumns.length; i++) {
+			table.getColumnModel().getColumn(i).setCellRenderer(new PatientTableCellRenderer(i == 0 || i == 2 || i == 3));
+		}
 
 		int tableWidth = 0;
 		for (int j : pColumnWidth) {
@@ -751,6 +776,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				}
 				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 				Patient pat = patient.getPatient();
+				if (!PatientAdministrativeFlagWarning.confirmIfFlagged(this, pat)) {
+					return;
+				}
 
 				PatientExamination patex;
 
@@ -868,6 +896,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				return;
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
+			if (!PatientAdministrativeFlagWarning.confirmIfFlagged(this, patient.getPatient())) {
+				return;
+			}
 			if (patient.getAdmission() != null) {
 				// edit previous admission or discharge
 				new AdmissionBrowser(myFrame, patient, true);
@@ -896,6 +927,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 			patient = reloadSelectedPatient(table.getSelectedRow());
 
 			if (patient != null) {
+				if (!PatientAdministrativeFlagWarning.confirmIfFlagged(this, patient.getPatient())) {
+					return;
+				}
 				Opd opd = new Opd(0, ' ', -1, new Disease());
 				OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
 				newrecord.setLocationRelativeTo(null);
@@ -914,6 +948,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				return;
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
+			if (!PatientAdministrativeFlagWarning.confirmIfFlagged(this, patient.getPatient())) {
+				return;
+			}
 			Laboratory laboratory = new Laboratory(0, new Exam("", "", new ExamType("", ""), 0, ""), TimeTools.getNow(), "P", "", new Patient(), "");
 			if (GeneralData.LABEXTENDED) {
 				if (GeneralData.LABMULTIPLEINSERT) {
@@ -943,6 +980,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 
 			if (patient != null) {
 				Patient pat = patient.getPatient();
+				if (!PatientAdministrativeFlagWarning.confirmIfFlagged(this, pat)) {
+					return;
+				}
 				PatientBillEdit pbe = new PatientBillEdit(this, pat);
 				pbe.setVisible(true);
 			}
@@ -1006,6 +1046,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				return;
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
+			if (!PatientAdministrativeFlagWarning.confirmIfFlagged(this, patient.getPatient())) {
+				return;
+			}
 
 			TherapyEdit therapy = new TherapyEdit(this, patient.getPatient(), patient.getAdmission() != null);
 			therapy.setLocationRelativeTo(null);
@@ -1087,6 +1130,15 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		return buttonClose;
 	}
 
+	/** Reads which patients have open administrative issues: they are shown in red and can be filtered. */
+	private void loadPatientsWithOpenIssues() {
+		try {
+			patientsWithOpenIssues = patientAdminIssueManager.getCodesOfPatientsWithOpenIssues();
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
+	}
+
 	private void filterPatient(String key) {
 		table.setModel(new AdmittedPatientBrowserModel(key));
 		rowCounter.setText(MessageBundle.formatMessage("angal.admission.count.fmt.txt", table.getRowCount()));
@@ -1132,6 +1184,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
+		loadPatientsWithOpenIssues();
 		filterPatient(null);
 	}
 
@@ -1213,6 +1266,10 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 				};
 
 				if (sex != null && !sex.equals(ap.getPatient().getSex())) {
+					continue;
+				}
+
+				if (adminIssuesCheck.isSelected() && !patientsWithOpenIssues.contains(ap.getPatient().getCode())) {
 					continue;
 				}
 
@@ -1299,16 +1356,32 @@ public class AdmittedPatientBrowser extends ModalJFrame implements PatientInsert
 		}
 	}
 
-	class CenterTableCellRenderer extends DefaultTableCellRenderer {
+	/** Shows in red the patients with open administrative issues. */
+	class PatientTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
+
+		private final boolean centered;
+
+		PatientTableCellRenderer(boolean centered) {
+			this.centered = centered;
+			if (centered) {
+				setHorizontalAlignment(CENTER);
+			}
+		}
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			cell.setForeground(Color.BLACK);
-			setHorizontalAlignment(CENTER);
+			AdmittedPatient admittedPatient = (AdmittedPatient) table.getModel().getValueAt(row, -1);
+			if (patientsWithOpenIssues.contains(admittedPatient.getPatient().getCode())) {
+				cell.setForeground(Color.RED);
+			} else if (centered) {
+				cell.setForeground(Color.BLACK);
+			} else {
+				cell.setForeground(isSelected ? table.getSelectionForeground() : table.getForeground());
+			}
 			return cell;
 		}
 	}
