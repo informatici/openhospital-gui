@@ -334,8 +334,7 @@ public class ReportLauncher extends ModalJFrame {
 		String reportTitle = selectedReport.toString();
 		List<String> userInputParamNames = report.getUserInputParameters();
 		if (userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
-			new GenericReportFromDateToDate(jFromDateField.getDate(), jToDateField.getDate(),
-							report.getFolder(), report.getFileName(), reportTitle, toExcel);
+			new GenericReportFromDateToDate(jFromDateField.getDate(), jToDateField.getDate(), report.getFolder(), report.getFileName(), reportTitle, toExcel);
 			if (GeneralData.XMPPMODULEENABLED) {
 				String user = (String) shareWith.getSelectedItem();
 				CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
@@ -352,8 +351,7 @@ public class ReportLauncher extends ModalJFrame {
 			if (GeneralData.XMPPMODULEENABLED) {
 				String user = (String) shareWith.getSelectedItem();
 				CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-				frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + ' ' + year + ' ' +
-								reportTitle, user, false);
+				frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + ' ' + year + ' ' + reportTitle, user, false);
 			}
 		}
 	}
