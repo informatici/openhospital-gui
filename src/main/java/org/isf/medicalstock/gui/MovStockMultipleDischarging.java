@@ -66,9 +66,13 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
+import org.isf.medicalstock.manager.MovStockDraftManager;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
+import org.isf.medicalstock.model.MovementDraft;
+import org.isf.medicalstock.model.MovementDraftKind;
+import org.isf.medicalstock.model.MovementDraftRow;
 import org.isf.medstockmovtype.manager.MedicalDsrStockMovementTypeBrowserManager;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
@@ -139,6 +143,9 @@ public class MovStockMultipleDischarging extends JDialog {
 	private MedicalDsrStockMovementTypeBrowserManager medicalDsrStockMovementTypeBrowserManager = Context.getApplicationContext()
 		.getBean(MedicalDsrStockMovementTypeBrowserManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private MovStockDraftManager movStockDraftManager = Context.getApplicationContext().getBean(MovStockDraftManager.class);
+
+	private MovementDraft currentDraft;
 
 	private boolean isAutomaticLotOut() {
 		return GeneralData.AUTOMATICLOT_OUT;
@@ -155,6 +162,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		super(owner, true);
 		initialize();
 		initcomponents();
+		offerDraftResume();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 		setLocationRelativeTo(null);
@@ -206,9 +214,16 @@ public class MovStockMultipleDischarging extends JDialog {
 			}
 		});
 		buttonPanel.add(deleteButton);
+		JButton saveDraftButton = new JButton(MessageBundle.getMessage("angal.medicalstock.draft.btn"));
+		saveDraftButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.draft.btn.key"));
+		saveDraftButton.addActionListener(actionEvent -> saveDraft());
+		buttonPanel.add(saveDraftButton);
 		JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		saveButton.addActionListener(actionEvent -> {
+			if (!checkStaleDraft()) {
+				return;
+			}
 			if (!checkAndPrepareMovements()) {
 				return;
 			}
@@ -216,6 +231,7 @@ public class MovStockMultipleDischarging extends JDialog {
 				rollBackMovements();
 				return;
 			}
+			deleteCurrentDraft();
 			dispose();
 		});
 		buttonPanel.add(saveButton);
@@ -977,6 +993,224 @@ public class MovStockMultipleDischarging extends JDialog {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		return ok;
+	}
+
+	private void offerDraftResume() {
+		List<MovementDraft> drafts;
+		try {
+			drafts = movStockDraftManager.getMovementDrafts(MovementDraftKind.discharge);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			return;
+		}
+		if (drafts.isEmpty()) {
+			return;
+		}
+		MovStockDraftChooser draftChooser = new MovStockDraftChooser(this, MovementDraftKind.discharge, drafts);
+		draftChooser.setVisible(true);
+		MovementDraft selectedDraft = draftChooser.getSelectedDraft();
+		if (selectedDraft != null) {
+			resumeDraft(selectedDraft);
+		}
+	}
+
+	private void saveDraft() {
+		// the XMPP critical-level alert pool is session-only and deliberately not persisted
+		if (currentDraft != null && currentDraft.getId() != null) {
+			// re-fetch to survive a draft deleted or finalized elsewhere: a null result makes the mapper create a fresh draft
+			try {
+				currentDraft = movStockDraftManager.getMovementDraft(currentDraft.getId());
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+				return;
+			}
+		}
+		Object selectedWard = jComboBoxDestination.getSelectedItem();
+		MovementDraft draft = MovStockDraftMapper.toDraft(currentDraft, MovementDraftKind.discharge, (MovementType) jComboBoxDischargeType.getSelectedItem(),
+			jDateChooser.getLocalDateTime(), jTextFieldReference.getText().trim(), null, selectedWard instanceof Ward ward ? ward : null);
+		List<MovementDraftRow> draftRows = new ArrayList<>();
+		List<Movement> movements = model.getMovements();
+		for (int i = 0; i < movements.size(); i++) {
+			draftRows.add(MovStockDraftMapper.toDraftRow(movements.get(i), units.get(i), false, false));
+		}
+		try {
+			currentDraft = movStockDraftManager.saveMovementDraft(draft, draftRows);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			return;
+		}
+		MessageDialog.info(this, "angal.medicalstock.draft.draftsavedsuccessfully.msg");
+		dispose();
+	}
+
+	private void resumeDraft(MovementDraft draft) {
+		currentDraft = draft;
+		boolean headerRestored = restoreDraftHeader(draft);
+		List<MovementDraftRow> draftRows;
+		try {
+			draftRows = movStockDraftManager.getMovementDraftRows(draft.getId());
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			return;
+		}
+		List<String> skippedRows = new ArrayList<>();
+		for (MovementDraftRow draftRow : draftRows) {
+			restoreDraftRow(draftRow, skippedRows);
+		}
+		if (!headerRestored) {
+			MessageDialog.warning(this, "angal.medicalstock.draft.someheaderfieldscouldnotberestored.msg");
+		}
+		if (!skippedRows.isEmpty()) {
+			MessageDialog.warning(this, "angal.medicalstock.draft.somerowscouldnotberestored.fmt.msg", String.join(", ", skippedRows));
+		}
+	}
+
+	private boolean restoreDraftHeader(MovementDraft draft) {
+		boolean ok = true;
+		if (draft.getDate() != null) {
+			jDateChooser.setDateTime(draft.getDate());
+		}
+		jTextFieldReference.setText(draft.getRefNo() == null ? "" : draft.getRefNo());
+		if (draft.getType() != null) {
+			boolean found = false;
+			for (int i = 0; i < jComboBoxDischargeType.getItemCount(); i++) {
+				if (jComboBoxDischargeType.getItemAt(i).getCode().equals(draft.getType().getCode())) {
+					jComboBoxDischargeType.setSelectedIndex(i);
+					found = true;
+					break;
+				}
+			}
+			ok = ok && found;
+		}
+		if (draft.getWard() != null) {
+			boolean found = false;
+			for (int i = 0; i < jComboBoxDestination.getItemCount(); i++) {
+				Object item = jComboBoxDestination.getItemAt(i);
+				if (item instanceof Ward ward && ward.getCode().equals(draft.getWard().getCode())) {
+					jComboBoxDestination.setSelectedIndex(i);
+					found = true;
+					break;
+				}
+			}
+			ok = ok && found;
+		}
+		return ok;
+	}
+
+	private void restoreDraftRow(MovementDraftRow draftRow, List<String> skippedRows) {
+		Medical medical = draftRow.getMedical();
+		if (medical == null || medical.getDeleted() != 'N' || medical.getTotalQuantity() == 0) {
+			skippedRows.add(describeDraftRow(draftRow));
+			return;
+		}
+		int option = draftRow.getUnitsOrPackets();
+		int ppp = medical.getPcsperpck() == 0 ? 1 : medical.getPcsperpck();
+		int total = option == UNITS ? draftRow.getQuantity() : ppp * draftRow.getQuantity();
+		if (!hasQuantityAvailable(medical, total)) {
+			skippedRows.add(describeDraftRow(draftRow));
+			return;
+		}
+		String lotCode = draftRow.getLotCode() == null ? "" : draftRow.getLotCode();
+		Lot lot;
+		if (isAutomaticLotOut()) {
+			// AUTOMATICLOT_OUT may have been off at draft time: every row is converted to an automatic
+			// lot and duplicated medicals cannot be resumed (the wizard forbids them in automatic mode)
+			if (isMedicalAlreadyRestored(medical)) {
+				skippedRows.add(describeDraftRow(draftRow));
+				return;
+			}
+			lot = new Lot(medical, "", null, null); //$NON-NLS-1$
+		} else {
+			if (lotCode.isEmpty()) {
+				// saved as automatic lot but AUTOMATICLOT_OUT is now off: the row cannot be resumed as-is
+				skippedRows.add(describeDraftRow(draftRow));
+				return;
+			}
+			lot = findAvailableLot(medical, lotCode, total);
+			if (lot == null) {
+				skippedRows.add(describeDraftRow(draftRow));
+				return;
+			}
+		}
+		Movement movement = new Movement(medical, (MovementType) jComboBoxDischargeType.getSelectedItem(), null, lot, jDateChooser.getLocalDateTime(),
+			draftRow.getQuantity(), null, jTextFieldReference.getText());
+		model.addItem(movement, option);
+	}
+
+	private boolean isMedicalAlreadyRestored(Medical med) {
+		return model.getMovements().stream().anyMatch(mov -> mov.getMedical().getCode().equals(med.getCode()));
+	}
+
+	private boolean hasQuantityAvailable(Medical med, double qty) {
+		// silent version of checkQuantityAllMovements(): no critical-level confirmation, the
+		// XMPP alert pool is not re-armed for resumed rows
+		List<Movement> movements = model.getMovements();
+		double usedQty = 0;
+		for (int i = 0; i < movements.size(); i++) {
+			Movement mov = movements.get(i);
+			if (mov.getMedical().getCode().equals(med.getCode())) {
+				usedQty += calcTotal(mov, units.get(i));
+			}
+		}
+		return qty <= med.getTotalQuantity() - usedQty;
+	}
+
+	private Lot findAvailableLot(Medical med, String lotCode, int qty) {
+		List<Lot> lots;
+		try {
+			lots = movStockInsertingManager.getLotByMedical(med, true);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			return null;
+		}
+		stripeLots(lots);
+		for (Lot lot : lots) {
+			if (lot.getCode().equals(lotCode)) {
+				return qty <= lot.getMainStoreQuantity() ? lot : null;
+			}
+		}
+		return null;
+	}
+
+	private String describeDraftRow(MovementDraftRow draftRow) {
+		return draftRow.getMedical() == null ? String.valueOf(draftRow.getId()) : draftRow.getMedical().getDescription();
+	}
+
+	private boolean checkStaleDraft() {
+		if (currentDraft == null || currentDraft.getId() == null) {
+			return true;
+		}
+		MovementDraft draft = null;
+		try {
+			draft = movStockDraftManager.getMovementDraft(currentDraft.getId());
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
+		if (draft != null) {
+			return true;
+		}
+		int answer = MessageDialog.yesNo(this, "angal.medicalstock.draft.draftnolongerexists.msg");
+		if (answer != JOptionPane.YES_OPTION) {
+			return false;
+		}
+		currentDraft = null;
+		return true;
+	}
+
+	private void deleteCurrentDraft() {
+		if (currentDraft == null || currentDraft.getId() == null) {
+			return;
+		}
+		try {
+			MovementDraft draft = movStockDraftManager.getMovementDraft(currentDraft.getId());
+			if (draft != null) {
+				movStockDraftManager.deleteMovementDraft(draft);
+			}
+		} catch (OHServiceException e) {
+			// the movements have already been inserted: only warn about the leftover draft
+			OHServiceExceptionUtil.showMessages(e);
+		}
+		currentDraft = null;
 	}
 
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
