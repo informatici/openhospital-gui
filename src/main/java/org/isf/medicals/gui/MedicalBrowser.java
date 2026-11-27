@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -490,11 +490,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 						xlsExport.exportTableToExcelOLD(table, exportFile);
 					}
 				} catch (IOException exc) {
-					JOptionPane.showMessageDialog(this,
-									exc.getMessage(),
-									MessageBundle.getMessage("angal.messagedialog.error.title"),
-									JOptionPane.PLAIN_MESSAGE);
-					LOGGER.error("Export to excel error : {}", exc.getMessage());
+					LOGGER.error("Export to excel error", exc);
+					MessageDialog.error(this, "angal.common.thefilecouldnotbesaved.msg");
 				}
 			}
 		});
