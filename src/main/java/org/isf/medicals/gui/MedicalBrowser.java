@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2024 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -56,6 +56,7 @@ import javax.swing.JTextField;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -475,20 +476,14 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			int iRetVal = fcExcel.showSaveDialog(this);
 			if (iRetVal == JFileChooser.APPROVE_OPTION) {
 				File exportFile = fcExcel.getSelectedFile();
-				if (!exportFile.getName().endsWith(".xls") && !exportFile.getName().endsWith(".xlsx")) {
-					if (fcExcel.getFileFilter().getDescription().contains("*.xlsx")) {
-						exportFile = new File(exportFile.getAbsoluteFile() + ".xlsx");
-					} else {
-						exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
-					}
+				FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();
+				String extension = selectedFilter.getExtensions()[0];
+				if (!exportFile.getName().endsWith(extension)) {
+					exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
 				}
 				ExcelExporter xlsExport = new ExcelExporter();
 				try {
-					if (exportFile.getName().endsWith(".xlsx")) {
-						xlsExport.exportTableToExcel(table, exportFile);
-					} else {
-						xlsExport.exportTableToExcelOLD(table, exportFile);
-					}
+					xlsExport.exportTable(table, exportFile);
 				} catch (IOException exc) {
 					JOptionPane.showMessageDialog(this,
 									exc.getMessage(),
