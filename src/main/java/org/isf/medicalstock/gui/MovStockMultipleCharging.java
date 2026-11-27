@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2025 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2026 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -486,8 +486,8 @@ public class MovStockMultipleCharging extends JDialog {
 	private boolean setOrValidateCost(Lot lot, int qty) {
 		BigDecimal cost = lot.getCost() != null ? lot.getCost() : BigDecimal.ZERO;
 		if (GeneralData.LOTWITHCOST && (cost.equals(BigDecimal.ZERO) || lot.getCost() == null)) {
-			cost = askCost(qty);
-			if (cost.compareTo(BigDecimal.ZERO) == 0) {
+			cost = LotCostVariance.askNewLotCost(this, movStockInsertingManager, lot.getMedical(), () -> askCost(qty));
+			if (cost == null) {
 				return false;
 			}
 			lot.setCost(cost);
